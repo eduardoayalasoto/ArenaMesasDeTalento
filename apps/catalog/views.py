@@ -16,13 +16,19 @@ def _require_admin(request):
     return request.user.is_admin
 
 
+def _can_manage_projects(request):
+    """Proyectos: Talento, Leads y Directores (crear/editar todos)."""
+    u = request.user
+    return u.is_admin or u.is_lead or u.is_director
+
+
 @login_required
 def project_admin(request):
     """Lista de proyectos (solo Talento/admin)."""
-    if not _require_admin(request):
+    if not _can_manage_projects(request):
         return render(request, "errors/403.html", {
-            "titulo": "Administración reservada a Talento",
-            "mensaje": "Solo Talento y Cultura administra los proyectos.",
+            "titulo": "No tienes acceso a Proyectos",
+            "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
         }, status=403)
     projects = (
         Project.objects.select_related("lead")
@@ -38,10 +44,10 @@ def project_admin(request):
 @login_required
 def project_edit(request, pk=None):
     """Crea o edita un proyecto y gestiona su equipo (solo Talento/admin)."""
-    if not _require_admin(request):
+    if not _can_manage_projects(request):
         return render(request, "errors/403.html", {
-            "titulo": "Administración reservada a Talento",
-            "mensaje": "Solo Talento administra los proyectos.",
+            "titulo": "No tienes acceso a Proyectos",
+            "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
         }, status=403)
 
     project = get_object_or_404(Project, pk=pk) if pk else None

@@ -40,6 +40,8 @@
   .btn-secondary { @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50; }
   .btn-ghost { @apply text-slate-600 hover:bg-slate-100; }
   .btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
+  /* Botón chico y distintivo para acciones dentro de tablas/cards */
+  .btn-soft { @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium bg-arena-50 text-arena-700 hover:bg-arena-100 transition cursor-pointer; }
 
   .card { @apply bg-white rounded-xl border border-slate-200 shadow-sm; }
   .input { @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 focus:outline-none transition; }

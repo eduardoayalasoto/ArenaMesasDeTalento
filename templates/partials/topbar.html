@@ -8,11 +8,6 @@
     <h1 class="text-base font-semibold text-slate-900 truncate">{{ page_title|default:"Evaluaciones" }}</h1>
 
     <div class="ml-auto flex items-center gap-1">
-      <!-- Ayuda -->
-      <a href="{% url 'dashboards:help' %}" class="rounded-lg p-2 hover:bg-slate-100 transition" aria-label="Ayuda" title="Centro de ayuda">
-        {% include "partials/icon.html" with name="help" cls="w-5 h-5 text-slate-600" %}
-      </a>
-
       <!-- Notificaciones / pendientes -->
       <div class="relative" x-data="{ open: false }" @keydown.escape="open = false">
         <button type="button" class="relative rounded-lg p-2 hover:bg-slate-100 transition" @click="open = !open" aria-label="Notificaciones" :aria-expanded="open">

@@ -22,7 +22,7 @@
             {% else %}
               <span class="badge bg-slate-100 text-slate-500">Sin iniciar</span>
             {% endif %}
-            <a href="{% url 'evaluations:value_delivery_capture' project_id=row.project.pk %}" class="btn-secondary">
+            <a href="{% url 'evaluations:value_delivery_capture' project_id=row.project.pk %}" class="btn-soft">
               {% if row.vd and row.vd.status == 'VALIDADA' %}Ver{% else %}Capturar{% endif %}
             </a>
           </div>

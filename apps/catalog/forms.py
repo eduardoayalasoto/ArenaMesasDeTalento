@@ -38,7 +38,7 @@ class ProjectForm(forms.ModelForm):
         labels = {
             "name": "Nombre del proyecto",
             "client": "Cliente",
-            "lead": "Líder de proyecto",
+            "lead": "Lead",
             "duration_type": "Tipo de duración",
             "is_active": "Activo",
         }
@@ -52,4 +52,4 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["lead"].queryset = self.fields["lead"].queryset.filter(is_active=True)
-        self.fields["lead"].empty_label = "— Selecciona un líder —"
+        self.fields["lead"].empty_label = "— Selecciona un Lead —"

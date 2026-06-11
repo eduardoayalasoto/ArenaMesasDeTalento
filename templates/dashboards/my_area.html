@@ -24,32 +24,32 @@
     <div class="card overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-slate-50 text-slate-600 text-left">
-            <tr>
-              <th class="px-4 py-3 font-medium">Colaborador</th>
-              <th class="px-4 py-3 font-medium">Nivel</th>
-              <th class="px-4 py-3 font-medium text-center">Enviadas</th>
-              <th class="px-4 py-3 font-medium text-center">Own.</th>
-              <th class="px-4 py-3 font-medium text-center">E. Valor</th>
-              <th class="px-4 py-3 font-medium text-center">Arena</th>
-              <th class="px-4 py-3 font-medium text-center">Final</th>
-              <th class="px-4 py-3 font-medium">Banda</th>
+          <thead class="bg-slate-50 text-slate-500 text-left text-xs">
+            <tr class="align-bottom">
+              <th class="px-3 py-2 font-medium leading-tight">Colaborador</th>
+              <th class="px-3 py-2 font-medium leading-tight">Nivel</th>
+              <th class="px-3 py-2 font-medium leading-tight text-center w-20">Evaluaciones enviadas</th>
+              <th class="px-3 py-2 font-medium leading-tight text-center w-20">Ownership</th>
+              <th class="px-3 py-2 font-medium leading-tight text-center w-20">Entrega de Valor</th>
+              <th class="px-3 py-2 font-medium leading-tight text-center w-20">Impacto Arena</th>
+              <th class="px-3 py-2 font-medium leading-tight text-center w-16">Final</th>
+              <th class="px-3 py-2 font-medium leading-tight">Banda</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
             {% for row in rows %}
               <tr>
-                <td class="px-4 py-2">
+                <td class="px-3 py-2">
                   <a href="{% url 'dashboards:user_results' pk=row.user.pk %}" class="font-medium text-arena-700 hover:text-arena-800 hover:underline">{{ row.user.full_name }}</a>
                   <p class="text-xs text-slate-500">{{ row.user.area.name|default:"Sin área" }}</p>
                 </td>
-                <td class="px-4 py-2 text-slate-600">{{ row.user.level.name|default:"—" }}</td>
-                <td class="px-4 py-2 text-center tabular-nums">{{ row.submitted }}</td>
-                <td class="px-4 py-2 text-center tabular-nums">{{ row.final.ownership_score|default:"—" }}</td>
-                <td class="px-4 py-2 text-center tabular-nums">{{ row.final.value_delivery_score|default:"—" }}</td>
-                <td class="px-4 py-2 text-center tabular-nums">{{ row.final.arena_impact_score|default:"—" }}</td>
-                <td class="px-4 py-2 text-center font-semibold tabular-nums">{{ row.final.final_score|default:"—" }}</td>
-                <td class="px-4 py-2">
+                <td class="px-3 py-2 text-slate-600">{{ row.user.level.name|default:"—" }}</td>
+                <td class="px-3 py-2 text-center tabular-nums">{{ row.submitted }}</td>
+                <td class="px-3 py-2 text-center tabular-nums">{{ row.final.ownership_score|default:"—" }}</td>
+                <td class="px-3 py-2 text-center tabular-nums">{{ row.final.value_delivery_score|default:"—" }}</td>
+                <td class="px-3 py-2 text-center tabular-nums">{{ row.final.arena_impact_score|default:"—" }}</td>
+                <td class="px-3 py-2 text-center font-semibold tabular-nums">{{ row.final.final_score|default:"—" }}</td>
+                <td class="px-3 py-2">
                   {% if row.final.band %}
                     <span class="badge
                       {% if row.final.band == 'Excede' %}bg-emerald-50 text-emerald-700

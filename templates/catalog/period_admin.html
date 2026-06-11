@@ -22,10 +22,10 @@
             <input type="hidden" name="period" value="{{ p.pk }}">
             {% if p.status == 'ABIERTO' %}
               <input type="hidden" name="action" value="close">
-              <button type="submit" class="btn-secondary">Cerrar</button>
+              <button type="submit" class="btn-soft">Cerrar</button>
             {% else %}
               <input type="hidden" name="action" value="open">
-              <button type="submit" class="btn-primary">Abrir</button>
+              <button type="submit" class="btn-soft">Abrir</button>
             {% endif %}
           </form>
         </div>

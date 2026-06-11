@@ -44,7 +44,7 @@
         <thead class="bg-slate-50 text-slate-600 text-left">
           <tr>
             <th class="px-5 py-2.5 font-medium">Proyecto</th>
-            <th class="px-5 py-2.5 font-medium">Líder</th>
+            <th class="px-5 py-2.5 font-medium">Lead</th>
             <th class="px-5 py-2.5 font-medium text-center">Ownership</th>
             <th class="px-5 py-2.5 font-medium text-center">Entrega de Valor</th>
             <th class="px-5 py-2.5 font-medium">Estado</th>
@@ -65,7 +65,7 @@
                 {% if row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
                 {% else %}<span class="badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
               </td>
-              {% if detail_links %}<td class="px-5 py-3 text-right"><a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-arena-600 hover:text-arena-700 font-medium">Ver {% include "partials/icon.html" with name="eye" cls="w-4 h-4" %}</a></td>{% endif %}
+              {% if detail_links %}<td class="px-5 py-3 text-right"><a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a></td>{% endif %}
             </tr>
           {% endfor %}
         </tbody>

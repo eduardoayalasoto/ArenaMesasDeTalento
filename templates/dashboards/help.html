@@ -12,7 +12,7 @@
         {k:'modelo', l:'El modelo', i:'rocket'},
         {k:'colaborador', l:'Colaborador', i:'user'},
         {k:'evaluador', l:'Evaluador', i:'check'},
-        {k:'lead', l:'Lead de proyecto', i:'package'},
+        {k:'lead', l:'Lead', i:'package'},
         {k:'direccion', l:'Dirección', i:'shield'},
         {k:'talento', l:'Talento', i:'settings'}
       ]" :key="t.k">
@@ -34,7 +34,7 @@
       <h3 class="font-semibold text-slate-900 mb-3">Los 3 pilares</h3>
       <div class="grid gap-4 sm:grid-cols-3">
         <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="clipboard" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Ownership</h4></div><p class="text-sm text-slate-600">Autoevaluación por proyecto con un <b>checklist</b> de actividades según tu área y nivel. El promedio excluye los ítems marcados N/A.</p></div>
-        <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="package" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Entrega de Valor</h4></div><p class="text-sm text-slate-600">Por proyecto: satisfacción del cliente, entregables y el criterio de <b>tiempo</b> según el tipo de proyecto. La captura el líder y la valida Dirección.</p></div>
+        <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="package" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Entrega de Valor</h4></div><p class="text-sm text-slate-600">Por proyecto: satisfacción del cliente, entregables y el criterio de <b>tiempo</b> según el tipo de proyecto. La captura el Lead y la valida Dirección.</p></div>
         <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="star" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Impacto Arena</h4></div><p class="text-sm text-slate-600">Contribución a la cultura y la organización, capturada por Talento y Cultura.</p></div>
       </div>
     </div>
@@ -92,7 +92,7 @@
         <li>Talento asigna área, nivel y proyectos.</li>
         <li>El colaborador hace su autoevaluación de Ownership por proyecto y elige a su evaluador.</li>
         <li>El evaluador revisa con la persona, complementa Fortalezas/Oportunidades y cierra.</li>
-        <li>El líder captura la Entrega de Valor; Dirección la valida.</li>
+        <li>El Lead captura la Entrega de Valor; Dirección la valida.</li>
         <li>Talento captura el Impacto Arena.</li>
         <li>El sistema calcula la calificación final ponderada y su banda.</li>
       </ol>
@@ -119,22 +119,22 @@
 
   <!-- Lead -->
   <div x-show="tab === 'lead'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="package" title="Captura la Entrega de Valor" text="<b>Menú → Entrega de Valor</b>: una por proyecto que lideras." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="target" title="Califica los criterios" text="Satisfacción del cliente, entregables y el criterio de <b>tiempo</b> según el tipo de proyecto (finito o indefinido)." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="send" title="Envía a validación" text="La calificación pasa al <b>Director</b> para validarse y se aplica a todo el equipo del proyecto." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="user" title="También puedes ser evaluador" text="Si alguien te elige, revisa tu sección <b>Validación de Ownership</b>." %}
+    {% include "dashboards/_help_step.html" with n=1 icon="users" title="Revisa tu área" text="<b>Menú → Mi área</b>: las personas de tu área con su avance y calificaciones." %}
+    {% include "dashboards/_help_step.html" with n=2 icon="folder" title="Gestiona proyectos y equipos" text="<b>Menú → Proyectos</b>: puedes crear proyectos, asignar equipos y editarlos." %}
+    {% include "dashboards/_help_step.html" with n=3 icon="package" title="Captura la Entrega de Valor" text="<b>Menú → Entrega de Valor</b>: una por proyecto que lideras. Califica satisfacción, entregables y el criterio de <b>tiempo</b>; se envía al Director para validar." %}
+    {% include "dashboards/_help_step.html" with n=4 icon="user" title="También puedes ser evaluador" text="Si alguien te elige como evaluador, revisa tu sección <b>Validación de Ownership</b>." %}
   </div>
 
   <!-- Dirección -->
   <div x-show="tab === 'direccion'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="shield" title="Valida la Entrega de Valor" text="<b>Menú → Validar Entrega de Valor</b>: aprueba o regresa con un comentario al líder." %}
+    {% include "dashboards/_help_step.html" with n=1 icon="shield" title="Valida la Entrega de Valor" text="<b>Menú → Validar Entrega de Valor</b>: aprueba o regresa con un comentario al Lead." %}
     {% include "dashboards/_help_step.html" with n=2 icon="table" title="Consulta la Mesa de Talento" text="<b>Menú → Mesa de Talento</b>: el informe de cada persona, con foto, scores y proyectos." %}
   </div>
 
   <!-- Talento -->
   <div x-show="tab === 'talento'" x-cloak class="space-y-4">
     {% include "dashboards/_help_step.html" with n=1 icon="id" title="Asigna área, nivel y rol" text="<b>Menú → Usuarios</b>. Sin área/nivel, una persona no puede iniciar su evaluación." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="folder" title="Administra proyectos y equipos" text="<b>Menú → Proyectos</b>: líder, tipo de duración y miembros." %}
+    {% include "dashboards/_help_step.html" with n=2 icon="folder" title="Administra proyectos y equipos" text="<b>Menú → Proyectos</b>: Lead, tipo de duración y miembros." %}
     {% include "dashboards/_help_step.html" with n=3 icon="list" title="Administra los cuestionarios" text="<b>Menú → Cuestionarios</b>: edita preguntas y publica versiones (versionado seguro)." %}
     {% include "dashboards/_help_step.html" with n=4 icon="calendar" title="Abre y cierra periodos" text="<b>Menú → Periodos</b>. Al cerrar, la captura queda en solo lectura." %}
     {% include "dashboards/_help_step.html" with n=5 icon="star" title="Captura el Impacto Arena" text="<b>Menú → Impacto Arena</b>: tabla por persona; al guardar se recalcula la calificación final." %}

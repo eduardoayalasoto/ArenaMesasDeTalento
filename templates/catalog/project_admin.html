@@ -3,7 +3,7 @@
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div>
       <h2 class="text-xl font-semibold text-slate-900">Proyectos</h2>
-      <p class="text-slate-600">Crea y edita proyectos, asigna al líder y al equipo.</p>
+      <p class="text-slate-600">Crea y edita proyectos, asigna al Lead y al equipo.</p>
     </div>
     <a href="{% url 'catalog:project_create' %}" class="btn-primary">Nuevo proyecto</a>
   </div>
@@ -19,7 +19,7 @@
           <thead class="bg-slate-50 text-slate-600 text-left">
             <tr>
               <th class="px-4 py-3 font-medium">Proyecto</th>
-              <th class="px-4 py-3 font-medium">Líder</th>
+              <th class="px-4 py-3 font-medium">Lead</th>
               <th class="px-4 py-3 font-medium">Duración</th>
               <th class="px-4 py-3 font-medium text-center">Equipo</th>
               <th class="px-4 py-3 font-medium">Estado</th>
@@ -40,7 +40,7 @@
                   {% if p.is_active %}<span class="badge bg-emerald-50 text-emerald-700">Activo</span>
                   {% else %}<span class="badge bg-slate-100 text-slate-500">Inactivo</span>{% endif %}
                 </td>
-                <td class="px-4 py-3 text-right"><a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn-secondary">Editar</a></td>
+                <td class="px-4 py-3 text-right"><a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn-soft">Editar</a></td>
               </tr>
             {% endfor %}
           </tbody>

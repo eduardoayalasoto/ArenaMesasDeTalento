@@ -41,7 +41,7 @@
         <span class="badge bg-slate-100 text-slate-600">Abierta</span>
       {% endif %}
       {% if editing and can_edit_link %}
-        <a href="{% url 'evaluations:ownership_view' pk=evaluation.pk %}" class="btn-secondary">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver</a>
+        <a href="{% url 'evaluations:ownership_view' pk=evaluation.pk %}" class="btn-secondary">Ver</a>
       {% elif not editing and can_edit_link %}
         <a href="{% url 'evaluations:ownership_edit' pk=evaluation.pk %}" class="btn-primary">{% include "partials/icon.html" with name="edit" cls="w-4 h-4" %} Editar</a>
       {% endif %}
@@ -127,7 +127,7 @@
             get ready() { return this.strengths.trim() && this.opportunities.trim(); }
           }">
       {% csrf_token %}
-      <h3 class="font-semibold text-slate-900 mb-1">Retroalimentación del líder</h3>
+      <h3 class="font-semibold text-slate-900 mb-1">Retroalimentación del evaluador</h3>
       <p class="text-sm text-slate-600 mb-5">Complementa estos campos durante la sesión con la persona. Fortalezas y Oportunidades son obligatorias para cerrar.</p>
 
       <div class="space-y-5">
@@ -150,7 +150,7 @@
           <button type="submit" name="action" value="save" class="btn-secondary">{% include "partials/icon.html" with name="save" cls="w-4 h-4" %} Guardar</button>
           <button type="button" class="btn-primary" :class="!ready && 'opacity-50'" @click="tried = true; if (ready) confirming = true">{% include "partials/icon.html" with name="lock" cls="w-4 h-4" %} Guardar y cerrar</button>
         </div>
-        <p class="text-xs text-slate-500">Al cerrar, ni la persona ni el líder podrán volver a editar la evaluación.</p>
+        <p class="text-xs text-slate-500">Al cerrar, ni la persona ni el evaluador podrán volver a editar la evaluación.</p>
       </div>
 
       <!-- Confirmación de cierre -->
@@ -175,8 +175,8 @@
   {% else %}
     <!-- Solo lectura (evaluado o evaluación cerrada) -->
     <div class="mt-8 grid gap-5 sm:grid-cols-2">
-      {% include "evaluations/_feedback_card.html" with title="Fortalezas" value=evaluation.strengths empty="Las completará tu líder." %}
-      {% include "evaluations/_feedback_card.html" with title="Oportunidades" value=evaluation.opportunities empty="Las completará tu líder." %}
+      {% include "evaluations/_feedback_card.html" with title="Fortalezas" value=evaluation.strengths empty="Las completará tu evaluador." %}
+      {% include "evaluations/_feedback_card.html" with title="Oportunidades" value=evaluation.opportunities empty="Las completará tu evaluador." %}
     </div>
     {% if evaluation.comments %}
     <div class="mt-5">{% include "evaluations/_feedback_card.html" with title="Comentarios" value=evaluation.comments empty="" %}</div>

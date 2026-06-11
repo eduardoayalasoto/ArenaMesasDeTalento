@@ -29,7 +29,7 @@
               <td class="px-4 py-3 text-center tabular-nums">{{ t.question_count }}</td>
               <td class="px-4 py-3">{% include "partials/status_badge.html" with status=t.status label=t.get_status_display %}</td>
               <td class="px-4 py-3 text-right">
-                <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn-secondary">
+                <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn-soft">
                   {% if t.status == 'BORRADOR' %}Editar{% else %}Ver{% endif %}
                 </a>
               </td>

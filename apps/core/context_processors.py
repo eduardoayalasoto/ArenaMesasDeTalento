@@ -65,13 +65,16 @@ def navigation(request):
     if user.is_director or user.is_superuser:
         add("Validar Entrega de Valor", "evaluations:value_delivery_review", "shield")
 
+    # Proyectos — Talento, Leads y Directores (crear/editar todos)
+    if user.is_admin or user.is_lead or user.is_director:
+        add("Proyectos", "catalog:project_admin", "folder")
+
     # Talento — captura de Impacto Arena y administración
     if user.is_admin:
         add("Impacto Arena", "evaluations:arena_impact", "star")
         add("Avance del periodo", "dashboards:period_progress", "chart")
         add("Cuestionarios", "questionnaires:admin_list", "list")
         add("Usuarios", "accounts:user_admin", "id")
-        add("Proyectos", "catalog:project_admin", "folder")
         add("Periodos", "catalog:period_admin", "calendar")
         add("Ponderaciones", "catalog:weight_admin", "scale")
 

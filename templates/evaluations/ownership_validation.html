@@ -20,10 +20,10 @@
             {% if ev.score %}<span class="font-semibold text-slate-900 tabular-nums">{{ ev.score }}</span>{% endif %}
             {% if ev.is_submitted %}
               <span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
-              <a href="{% url 'evaluations:ownership_view' pk=ev.pk %}" class="btn-secondary">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver</a>
+              <a href="{% url 'evaluations:ownership_view' pk=ev.pk %}" class="btn-soft">Ver {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}</a>
             {% else %}
               <span class="badge bg-slate-100 text-slate-600">Abierta</span>
-              <a href="{% url 'evaluations:ownership_edit' pk=ev.pk %}" class="btn-primary">{% include "partials/icon.html" with name="edit" cls="w-4 h-4" %} Revisar</a>
+              <a href="{% url 'evaluations:ownership_edit' pk=ev.pk %}" class="btn-soft">{% include "partials/icon.html" with name="edit" cls="w-3.5 h-3.5" %} Revisar</a>
             {% endif %}
           </div>
         </div>

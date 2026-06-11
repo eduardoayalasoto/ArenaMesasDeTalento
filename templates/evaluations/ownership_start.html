@@ -6,7 +6,7 @@
     <h2 class="text-xl font-semibold text-slate-900 mb-1">Iniciar evaluación de Ownership</h2>
     <p class="text-slate-600 mb-5">Proyecto: <span class="font-medium text-slate-900">{{ project.name }}</span></p>
 
-    {% include "partials/info_panel.html" with title="Elige a tu evaluador" text="<p>Selecciona a la persona de Arena que revisará y validará tu evaluación; suele ser quien más cerca trabajó contigo en el proyecto (no necesariamente tu líder).</p><p>Esa persona recibirá tu evaluación en su sección <strong>Validación de Ownership</strong> para completarla y cerrarla contigo.</p>" %}
+    {% include "partials/info_panel.html" with title="Elige a tu evaluador" text="<p>Selecciona a la persona de Arena que revisará y validará tu evaluación; suele ser quien más cerca trabajó contigo en el proyecto (no necesariamente tu Lead).</p><p>Esa persona recibirá tu evaluación en su sección <strong>Validación de Ownership</strong> para completarla y cerrarla contigo.</p>" %}
 
     <form method="post" class="card p-6">
       {% csrf_token %}
