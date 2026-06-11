@@ -16,7 +16,7 @@
   <!-- CSS de Tailwind compilado localmente (sin CDN ni Node) -->
   <link rel="stylesheet" href="{% static 'css/app.css' %}?v={{ asset_version }}">
 
-  <script src="{% static 'vendor/lucide.min.js' %}"></script>
+  <script defer src="{% static 'vendor/lucide.min.js' %}"></script>
   <script defer src="{% static 'vendor/htmx.min.js' %}"></script>
   <script defer src="{% static 'vendor/alpine.min.js' %}"></script>
   <script>

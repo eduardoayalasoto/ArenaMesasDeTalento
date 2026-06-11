@@ -149,6 +149,8 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # Servir estáticos con finders evita depender de `collectstatic` en serverless (Vercel).
 # El footprint de estáticos es mínimo (admin de Django); el resto de la UI va por CDN.
 WHITENOISE_USE_FINDERS = True
+# Cachea estáticos en el navegador 1 día (el CSS lleva ?v= para invalidar al cambiar).
+WHITENOISE_MAX_AGE = 86400
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {
