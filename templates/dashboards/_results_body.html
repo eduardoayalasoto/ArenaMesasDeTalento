@@ -76,14 +76,6 @@
   {% endif %}
 </div>
 
-<!-- Comentario de Impacto Arena -->
-{% if arena_notes %}
-  <div class="card p-5 mb-6">
-    <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">{% include "partials/icon.html" with name="star" cls="w-4 h-4 text-arena-600" %} Comentario de Impacto Arena</h4>
-    <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ arena_notes }}</p>
-  </div>
-{% endif %}
-
 <!-- Retroalimentación por proyecto -->
 {% for ev in feedback %}
   <div class="mb-6">
@@ -105,3 +97,11 @@
     {% endif %}
   </div>
 {% endfor %}
+
+<!-- Comentario de Impacto Arena (al final de todo) -->
+{% if arena_notes %}
+  <div class="card p-5 mt-2">
+    <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">{% include "partials/icon.html" with name="star" cls="w-4 h-4 text-arena-600" %} Comentario de Impacto Arena</h4>
+    <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ arena_notes }}</p>
+  </div>
+{% endif %}
