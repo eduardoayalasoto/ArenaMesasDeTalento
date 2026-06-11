@@ -22,3 +22,6 @@ tailwindcss.exe
 .idea/
 .vscode/
 *.swp
+
+# Credenciales de demo local (no publicar)
+CREDENCIALES.md
