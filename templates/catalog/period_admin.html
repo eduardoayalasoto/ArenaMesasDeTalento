@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Periodos</h2>
-    <p class="text-slate-600">Abre o cierra periodos de evaluación. Al cerrar, la captura queda en solo lectura.</p>
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Periodos</h2>
+      <p class="text-slate-600">Abre o cierra periodos de evaluación. Al cerrar, la captura queda en solo lectura.</p>
+    </div>
+    <a href="{% url 'catalog:period_create' %}" class="btn-primary">{% include "partials/icon.html" with name="calendar" cls="w-4 h-4" %} Nuevo periodo</a>
   </div>
 
   <div class="card divide-y divide-slate-100">

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-3"><a href="{% url 'accounts:user_admin' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Usuarios</a></div>
+  <h2 class="text-xl font-semibold text-slate-900 mb-1">Nuevo usuario</h2>
+  <p class="text-slate-600 mb-6">Crea una cuenta con su área, nivel, rol y contraseña inicial.</p>
+
+  <form method="post" class="card p-6 max-w-2xl space-y-4">
+    {% csrf_token %}
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label class="label" for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
+        {{ form.full_name }}
+        {% for e in form.full_name.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% for e in form.email.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="label" for="{{ form.area.id_for_label }}">{{ form.area.label }}</label>
+        {{ form.area }}
+      </div>
+      <div>
+        <label class="label" for="{{ form.level.id_for_label }}">{{ form.level.label }}</label>
+        {{ form.level }}
+      </div>
+      <div>
+        <label class="label" for="{{ form.role.id_for_label }}">{{ form.role.label }}</label>
+        {{ form.role }}
+        <p class="mt-1 text-xs text-slate-500">Talento administra; Director valida Entrega de Valor; Lead se deriva del nivel.</p>
+      </div>
+      <div>
+        <label class="label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% if form.password.help_text %}<p class="mt-1 text-xs text-slate-500">{{ form.password.help_text }}</p>{% endif %}
+        {% for e in form.password.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      </div>
+    </div>
+
+    <label class="flex items-center gap-2 cursor-pointer pt-1">
+      {{ form.must_change_password }}<span class="text-sm text-slate-700">{{ form.must_change_password.label }}</span>
+    </label>
+
+    <div class="pt-2">
+      <button type="submit" class="btn-primary">Crear usuario</button>
+    </div>
+  </form>
+{% endblock %}

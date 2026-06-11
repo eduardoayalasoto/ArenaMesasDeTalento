@@ -7,9 +7,32 @@ from django.shortcuts import redirect, render
 
 from apps.catalog.models import Area, SeniorityLevel
 
-from .forms import ProfileInfoForm, SpanishPasswordChangeForm
+from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserCreateForm
 
 User = get_user_model()
+
+
+@login_required
+def user_create(request):
+    """Alta de un usuario nuevo (solo Talento/admin)."""
+    if not request.user.is_admin:
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento y Cultura crea usuarios.",
+        }, status=403)
+
+    form = UserCreateForm()
+    if request.method == "POST":
+        form = UserCreateForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f"Creaste a {user.full_name} ({user.email}).")
+            return redirect("accounts:user_admin")
+
+    return render(request, "accounts/user_create.html", {
+        "page_title": "Nuevo usuario",
+        "form": form,
+    })
 
 
 @login_required

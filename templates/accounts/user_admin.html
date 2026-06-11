@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-4">
-    <h2 class="text-xl font-semibold text-slate-900">Usuarios</h2>
-    <p class="text-slate-600">Asigna área, nivel y rol a cada colaborador.</p>
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Usuarios</h2>
+      <p class="text-slate-600">Asigna área, nivel y rol a cada colaborador.</p>
+    </div>
+    <a href="{% url 'accounts:user_create' %}" class="btn-primary">{% include "partials/icon.html" with name="user" cls="w-4 h-4" %} Nuevo usuario</a>
   </div>
   {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El nivel <strong>Lead</strong> habilita ver a toda su área. El rol <strong>Director</strong> habilita validar la Entrega de Valor; <strong>Talento</strong> administra todo. Los cambios se guardan al presionar «Guardar cambios».</p>" %}
 

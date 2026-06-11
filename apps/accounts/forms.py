@@ -118,6 +118,58 @@ class ProfileInfoForm(forms.ModelForm):
         return user
 
 
+class UserCreateForm(forms.ModelForm):
+    """Alta de usuario por Talento, con todas sus propiedades."""
+
+    password = forms.CharField(
+        label="Contraseña inicial",
+        initial="Arena2026!",
+        widget=forms.TextInput(attrs={"class": _INPUT}),
+        help_text="La persona entrará con esta contraseña.",
+    )
+    must_change_password = forms.BooleanField(
+        label="Pedir cambio de contraseña al ingresar",
+        required=False,
+    )
+
+    class Meta:
+        model = User
+        fields = ["full_name", "email", "area", "level", "role"]
+        labels = {
+            "full_name": "Nombre completo",
+            "email": "Correo electrónico",
+            "area": "Área",
+            "level": "Nivel",
+            "role": "Rol",
+        }
+        widgets = {
+            "full_name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Nombre y apellidos"}),
+            "email": forms.EmailInput(attrs={"class": _INPUT, "placeholder": "nombre@arena-analytics.com"}),
+            "area": forms.Select(attrs={"class": _INPUT}),
+            "level": forms.Select(attrs={"class": _INPUT}),
+            "role": forms.Select(attrs={"class": _INPUT}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["area"].required = False
+        self.fields["level"].required = False
+        self.fields["area"].empty_label = "— Sin área —"
+        self.fields["level"].empty_label = "— Sin nivel —"
+
+    def clean_email(self):
+        return self.cleaned_data["email"].strip().lower()
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        user.must_change_password = self.cleaned_data.get("must_change_password", False)
+        user.is_active = True
+        if commit:
+            user.save()
+        return user
+
+
 class SpanishPasswordChangeForm(PasswordChangeForm):
     """Cambio de contraseña con etiquetas en español."""
 

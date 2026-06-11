@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import ProjectForm
+from .forms import PeriodForm, ProjectForm
 from .models import EvaluationPeriod, Project, ProjectMembership
 
 User = get_user_model()
@@ -82,6 +82,27 @@ def project_edit(request, pk=None):
         "project": project,
         "members": members,
         "available": available,
+    })
+
+
+@login_required
+def period_create(request):
+    """Alta de un periodo (solo Talento/admin)."""
+    if not _require_admin(request):
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento administra los periodos.",
+        }, status=403)
+    form = PeriodForm()
+    if request.method == "POST":
+        form = PeriodForm(request.POST)
+        if form.is_valid():
+            period = form.save()
+            messages.success(request, f"Creaste el periodo {period.name}.")
+            return redirect("catalog:period_admin")
+    return render(request, "catalog/period_form.html", {
+        "page_title": "Nuevo periodo",
+        "form": form,
     })
 
 
