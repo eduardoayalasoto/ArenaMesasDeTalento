@@ -109,7 +109,7 @@ def notifications(request):
     items: list[dict] = []
 
     # Recordatorio: subir fotografía (obligatoria).
-    if not user.photo:
+    if not user.has_photo:
         items.append({
             "project": "Tu fotografía",
             "text": "Sube tu foto de perfil (obligatoria)",

@@ -76,6 +76,9 @@ class User(AbstractUser):
         "fotografía", upload_to="fotos/", null=True, blank=True,
         help_text="Obligatoria; se muestra en tus resultados.",
     )
+    # La foto se guarda en la BD (Vercel tiene FS de solo lectura): bytes + tipo MIME.
+    photo_data = models.BinaryField(null=True, blank=True, editable=False)
+    photo_mime = models.CharField(max_length=40, blank=True, default="")
     must_change_password = models.BooleanField(
         "debe cambiar contraseña", default=False,
         help_text="Si está activo, se obliga a crear una nueva contraseña al ingresar.",
@@ -127,7 +130,7 @@ class User(AbstractUser):
 
     @property
     def has_photo(self) -> bool:
-        return bool(self.photo)
+        return bool(self.photo_data)
 
     @property
     def initials(self) -> str:

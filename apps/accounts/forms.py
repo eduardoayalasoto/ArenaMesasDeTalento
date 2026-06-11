@@ -6,6 +6,21 @@ from django import forms
 
 User = get_user_model()
 
+
+def square_jpeg_bytes(upload) -> bytes:
+    """Recorta a cuadrado y devuelve la imagen como JPEG 400x400 (bytes), en memoria."""
+    import io
+
+    from PIL import Image, ImageOps
+
+    img = Image.open(upload)
+    img = ImageOps.exif_transpose(img).convert("RGB")
+    img = ImageOps.fit(img, (400, 400), Image.LANCZOS)
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=85, optimize=True)
+    return buf.getvalue()
+
+
 _INPUT = (
     "w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 "
     "shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 "
@@ -61,21 +76,11 @@ class PhotoForm(forms.ModelForm):
     )
 
     def save(self, commit=True):
-        import io
-
-        from django.core.files.base import ContentFile
-        from PIL import Image, ImageOps
-
         user = super().save(commit=False)
         upload = self.cleaned_data.get("photo")
         if upload and hasattr(upload, "file"):
-            img = Image.open(upload)
-            img = ImageOps.exif_transpose(img).convert("RGB")
-            # Recorte centrado a cuadrado y escala a 400x400 (sin deformar).
-            img = ImageOps.fit(img, (400, 400), Image.LANCZOS)
-            buf = io.BytesIO()
-            img.save(buf, format="JPEG", quality=85, optimize=True)
-            user.photo.save(f"u{user.pk}.jpg", ContentFile(buf.getvalue()), save=False)
+            user.photo_data = square_jpeg_bytes(upload)
+            user.photo_mime = "image/jpeg"
         if commit:
             user.save()
         return user
@@ -99,20 +104,11 @@ class ProfileInfoForm(forms.ModelForm):
     )
 
     def save(self, commit=True):
-        import io
-
-        from django.core.files.base import ContentFile
-        from PIL import Image, ImageOps
-
         user = super().save(commit=False)
         upload = self.cleaned_data.get("photo")
         if upload and hasattr(upload, "file"):
-            img = Image.open(upload)
-            img = ImageOps.exif_transpose(img).convert("RGB")
-            img = ImageOps.fit(img, (400, 400), Image.LANCZOS)
-            buf = io.BytesIO()
-            img.save(buf, format="JPEG", quality=85, optimize=True)
-            user.photo.save(f"u{user.pk}.jpg", ContentFile(buf.getvalue()), save=False)
+            user.photo_data = square_jpeg_bytes(upload)
+            user.photo_mime = "image/jpeg"
         if commit:
             user.save()
         return user

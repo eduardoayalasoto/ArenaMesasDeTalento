@@ -28,8 +28,8 @@
           </template>
           <template x-if="!preview">
             <div>
-              {% if user.photo %}
-                <img src="{{ user.photo.url }}?v={{ asset_version }}" alt="Tu foto" class="w-28 h-28 rounded-full object-cover ring-1 ring-slate-200">
+              {% if user.has_photo %}
+                <img src="{% url 'accounts:user_photo' user.pk %}" alt="Tu foto" class="w-28 h-28 rounded-full object-cover ring-1 ring-slate-200">
               {% else %}
                 <span class="w-28 h-28 rounded-full bg-arena-50 text-arena-400 grid place-items-center ring-1 ring-arena-100"><i data-lucide="user-round" class="w-12 h-12"></i></span>
               {% endif %}
@@ -40,7 +40,7 @@
             <input type="file" name="photo" accept="image/*" class="sr-only"
                    @change="const f=$event.target.files[0]; preview = f ? URL.createObjectURL(f) : null">
           </label>
-          {% if not user.photo %}<p class="text-xs text-rose-600 text-center">Foto obligatoria</p>{% endif %}
+          {% if not user.has_photo %}<p class="text-xs text-rose-600 text-center">Foto obligatoria</p>{% endif %}
           {% for e in info_form.photo.errors %}<p class="text-xs text-rose-600 text-center">{{ e }}</p>{% endfor %}
         </div>
 

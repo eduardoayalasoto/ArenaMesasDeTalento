@@ -31,7 +31,7 @@ class PhotoRequiredMiddleware:
 
     def __call__(self, request):
         user = getattr(request, "user", None)
-        if user and user.is_authenticated and not user.is_superuser and not user.photo:
+        if user and user.is_authenticated and not user.is_superuser and not user.has_photo:
             path = request.path
             exempt_prefixes = ("/static/", "/media/", "/admin/")
             if not path.startswith(exempt_prefixes):

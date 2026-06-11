@@ -10,6 +10,7 @@ app_name = "accounts"
 
 urlpatterns = [
     path("perfil/", views.profile, name="profile"),
+    path("foto/<int:pk>/", views.user_photo, name="user_photo"),
     path("cambiar-contrasena/", views.password_change, name="password_change"),
     path("usuarios/", views.user_admin, name="user_admin"),
     path("usuarios/nuevo/", views.user_create, name="user_create"),

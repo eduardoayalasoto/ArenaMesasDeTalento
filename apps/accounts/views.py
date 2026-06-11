@@ -3,6 +3,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 
 from apps.catalog.models import Area, SeniorityLevel
@@ -33,6 +34,17 @@ def user_create(request):
         "page_title": "Nuevo usuario",
         "form": form,
     })
+
+
+@login_required
+def user_photo(request, pk):
+    """Sirve la foto guardada en la BD (Vercel no tiene FS de escritura)."""
+    u = User.objects.filter(pk=pk).only("photo_data", "photo_mime").first()
+    if not u or not u.photo_data:
+        raise Http404("Sin foto")
+    resp = HttpResponse(bytes(u.photo_data), content_type=u.photo_mime or "image/jpeg")
+    resp["Cache-Control"] = "private, max-age=86400"
+    return resp
 
 
 @login_required
