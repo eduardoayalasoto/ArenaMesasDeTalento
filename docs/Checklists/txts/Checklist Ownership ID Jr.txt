@@ -1,0 +1,285 @@
+Checklist Ownership ID Jr
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+20
+Present
+
+Templates
+Checklist Ownership ID Jr
+Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+ID Jr
+ID Mid
+ID Snr
+ID Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+5.Notas de alcanceRequired to answer. Single choice. 
+Ejecutar proceso de discovery para identificar fuentes principales, el flujo E2E de los datos y los primeros pasos a tomar una vez que el proyecto arranca. Levantar dudas antes de empezar a desarrollar, no solo durante.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Documento de alcance técnicoRequired to answer. Single choice. 
+Contribuir en la definición de qué se construye y qué no en el proyecto, documentando los componentes asignados a su nivel con precisión. No asumir que algo está en scope si no está explícitamente documentado.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Checklist de requerimientosRequired to answer. Single choice. 
+Completar el checklist de requerimientos técnicos y funcionales para los componentes bajo su responsabilidad, verificando que cada ítem tiene un estado claro (cumple / no cumple / pendiente) y escalando los pendientes críticos antes del inicio del desarrollo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Propuesta de conectividadRequired to answer. Single choice. 
+Documentar los conectores asignados a su nivel: el medio de acceso a la fuente, la frecuencia de actualización y el método de carga (append, overwrite, delta). Levantar dudas sobre accesos o permisos antes de comenzar el desarrollo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Reporte de calidad de datosRequired to answer. Single choice. 
+Ejecutar los checks de calidad de datos asignados a su nivel para las fuentes o desarrollos bajo su responsabilidad. Documentar los resultados y comunicar anomalías detectadas de forma inmediata.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Reportes de pruebasRequired to answer. Single choice. 
+Ejecutar los casos de prueba asignados a su nivel, documentando resultados esperados vs obtenidos y registrando issues o errores detectados. No declarar un componente como 'done' sin haber ejecutado, documentado y presentado sus pruebas.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Reporte técnico de calidad de datosRequired to answer. Single choice. 
+Ejecutar y compartir los reportes de calidad de datos de los componentes bajo su responsabilidad, documentando las reglas aplicadas, los resultados obtenidos y las excepciones encontradas.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Scripts de validaciónRequired to answer. Single choice. 
+Ejecutar los scripts de validación automática pre y post carga asignados a su nivel. Comunicar de inmediato cuando un script de validación falla o genera resultados inesperados.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Esquema preliminar de tablasRequired to answer. Single choice. 
+Construir el esquema preliminar de tablas para los componentes asignados con base en los comentarios y mockups del DE Sr/Mid/Lead, aplicando correctamente las convenciones de nombres, tipos de datos y claves definidas.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Notas técnicasRequired to answer. Single choice. 
+Registrar las decisiones técnicas, supuestos, trade-offs y dudas relevantes de los componentes bajo su responsabilidad durante todo el proyecto. Externalizar dudas al DE Mid/Sr antes de tomar decisiones técnicas por cuenta propia.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Scripts, Notebooks y pipelinesRequired to answer. Single choice. 
+Implementar las tareas de desarrollo asignadas a su nivel siguiendo los estándares de calidad y versionado del proyecto (SOLID, naming conventions, modularidad). No entregar código sin haber ejecutado pruebas básicas.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Checklist de ejecuciónRequired to answer. Single choice. 
+Completar el checklist de ejecución para los componentes bajo su responsabilidad antes del despliegue, verificando que todos los ítems están marcados como completos y que no existen bloqueadores críticos sin resolver.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Documentación de scriptsRequired to answer. Single choice. 
+Documentar el código desarrollado explicando propósito, inputs, outputs, dependencias y consideraciones de uso. La documentación es parte del entregable, no un paso opcional al final.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Inventario de fuentesRequired to answer. Single choice. 
+Recopilar la información básica de las fuentes de datos asignadas a su nivel: nombre, owner, frecuencia de actualización, formato y calidad estimada. Escalar cuando una fuente no tiene owner claro o cuando su accesibilidad es incierta.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Diagrama de arquitecturaRequired to answer. Single choice. 
+Entender completamente la arquitectura del proyecto y sus componentes. Identificar la posición de los desarrollos bajo su responsabilidad dentro del flujo end-to-end y comunicar al DE Mid/Sr/Lead cuando detecta que algo en su implementación se desvía del diseño arquitectónico.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Modelado de datosRequired to answer. Single choice. 
+Documentar los campos y tipos de datos de las tablas asignadas correctamente, siguiendo las convenciones del proyecto. Verificar con el DE Mid/Sr/Lead antes de implementar si hay dudas sobre granularidad o relaciones.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Diseño de pipelinesRequired to answer. Single choice. 
+Entender el diseño lógico del pipeline y documentar los pasos correspondientes a los componentes bajo su responsabilidad. Comunicar al DE Mid/Sr/Lead cuando la implementación requiere ajustes al diseño definido.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Desarrollo de pipelines Required to answer. Single choice. 
+Implementar las tareas de desarrollo de pipelines asignadas a su nivel: ingestión de datos, transformaciones simples y cargas bajo supervisión del DE Mid/Sr/Lead. No entregar componentes sin haber ejecutado una prueba end-to-end básica.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Scripts de validación y calidad de datos Required to answer. Single choice. 
+Ejecutar los scripts de validación técnica y de negocio asignados a su nivel, verificando completitud, unicidad y consistencia básica. Analizar los resultados y comunicar al DE Mid/Sr/Lead cualquier incumplimiento detectado.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Pruebas técnicas y de integración Required to answer. Single choice. 
+Ejecutar las pruebas unitarias asignadas a su nivel para los componentes bajo su responsabilidad. Documentar los resultados y escalar los defectos encontrados al DE Mid/Sr/Lead con evidencia.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Documentación técnica integral Required to answer. Single choice. 
+Documentar correctamente los componentes bajo su responsabilidad como parte del proceso de desarrollo, asegurando que la documentación está actualizada con el código final antes de considerarlo terminado.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Rutinas de gestión y control interno 1Required to answer. Single choice. 
+Asistir al daily preparado, comunicando claramente el avance de sus componentes, bloqueos activos y dependencias. No llegar al daily a descubrir sus propios bloqueos: deben estar identificados y comunicados antes de la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Rutinas de gestión y control interno 2Required to answer. Single choice. 
+Asistir al sprint planning preparado con una propuesta de sus actividades y estimaciones de tiempo para el sprint. No llegar al planning sin haber revisado el backlog y sin saber qué puede comprometer.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+28.Rutinas de gestión y control interno 3Required to answer. Single choice. 
+Asistir al sprint review preparado para exponer el resultado de sus componentes, explicar qué completó y qué no, y recibir retroalimentación técnica sin ponerse a la defensiva.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+29.Coordinación con DS y PMRequired to answer. Single choice. 
+Alinear con el equipo de Ciencia de Datos los requerimientos de datos y las interfaces de entrega antes de cada fase de desarrollo. No comenzar a desarrollar una exposición de datos sin haber validado el formato y la granularidad esperada con el equipo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+30.Cumplimiento de lineamientos de trabajo remoto 1Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+31.Cumplimiento de lineamientos de trabajo remoto 2Required to answer. Single choice. 
+Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+32.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+33.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+34.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 2
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+35.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+36.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

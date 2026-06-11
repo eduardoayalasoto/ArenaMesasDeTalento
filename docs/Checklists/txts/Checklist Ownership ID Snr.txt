@@ -1,0 +1,325 @@
+Checklist Ownership ID Snr
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+6
+Present
+
+Templates
+Checklist Ownership ID SnrChecklist Ownership ID Snr
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+ID Jr
+ID Mid
+ID Snr
+ID Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+5.Notas de alcanceRequired to answer. Single choice. 
+Liderar el discovery identificando fuentes críticas a nivel de negocio, diseñando la estrategia de implementación escalable y mapeando fuentes legacy y dependencias entre fuentes. Anticipar riesgos de implementación que no son visibles para el DE Mid.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Esquemas de Bases de datosRequired to answer. Single choice. 
+Realizar el diagrama entidad-relación de las tablas fuente y de las tablas destino, con campos tipificados, formatos y relaciones (PK/FK) claramente definidas. Asegurar que las reglas de negocio están correctamente interpretadas, modeladas y alineadas con la arquitectura.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Matriz de trazabilidadRequired to answer. Single choice. 
+Construir y mantener la matriz de trazabilidad que mapea las reglas de transformación entre fuentes y destinos. Compartirla con el equipo y explicar su funcionamiento para que el DE Mid y DE Jr puedan utilizarla como referencia durante el desarrollo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Documento de alcance técnicoRequired to answer. Single choice. 
+Definir los límites técnicos del proyecto con criterio, identificar riesgos de alcance y alinear el documento con todos los stakeholders técnicos y de negocio antes del inicio del desarrollo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Checklist de requerimientosRequired to answer. Single choice. 
+Identificar riesgos técnicos en los requerimientos y asegurar que la alineación entre negocio y el equipo técnico es completa antes del inicio del desarrollo. Escalar al cliente los requerimientos que son técnicamente inviables tal como están definidos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Propuesta de conectividadRequired to answer. Single choice. 
+Evaluar las opciones de conectividad considerando costos, performance, seguridad y escalabilidad. Aprobar la propuesta final y asegurar su alineación con la arquitectura definida.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Reporte de calidad de datosRequired to answer. Single choice. 
+Proponer las reglas de calidad del proyecto y definir el framework de data quality que el equipo implementará. Asegurar que el framework es adoptado consistentemente por el DE Mid y DE Jr.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Reportes de pruebasRequired to answer. Single choice. 
+Proponer las reglas de calidad y monitorear los resultados de las pruebas del equipo. Tomar la decisión final de liberar o no liberar a producción basado en la evidencia del reporte del DE Mid.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Reporte técnico de calidad de datosRequired to answer. Single choice. 
+Analizar los resultados de calidad del período, dar retroalimentación constante al equipo y asegurar que las métricas mejoran entre períodos. Escalar a Negocio cuando los problemas de calidad tienen impacto en los modelos del DS.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Scripts de validaciónRequired to answer. Single choice. 
+Optimizar y estandarizar los scripts de validación del proyecto. Definir las librerías comunes de validación que el equipo reutilizará en futuros desarrollos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Esquema preliminar de tablasRequired to answer. Single choice. 
+Construir el mockup del esquema inicial, compartirlo con el equipo y dar seguimiento constante al cumplimiento de las convenciones durante el desarrollo. Realizar la revisión final del esquema antes del deployment.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Notas técnicasRequired to answer. Single choice. 
+Concentrar las notas técnicas del equipo, esclarecer las dudas levantadas y convertir las decisiones técnicas en tareas o metas claras en el backlog. Asegurar que ninguna decisión técnica relevante queda sin documentar.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Scripts, Notebooks y pipelinesRequired to answer. Single choice. 
+Optimizar y escalar los desarrollos del equipo. Definir los patrones de desarrollo que el DE Mid y DE Jr seguirán para asegurar modularidad, reutilización y cumplimiento de estándares.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Checklist de ejecuciónRequired to answer. Single choice. 
+Revisar el cumplimiento del checklist de ejecución y dar retroalimentación al equipo sobre desviaciones detectadas. Aprobar el despliegue solo cuando todos los ítems están verificados.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Documentación de scriptsRequired to answer. Single choice. 
+Revisar la documentación del equipo y dar retroalimentación sobre completitud y calidad técnica. Asegurar que la documentación del proyecto está lista para auditoría o handover en cualquier momento.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Inventario de fuentesRequired to answer. Single choice. 
+Evaluar la calidad, estabilidad y riesgos técnicos de las fuentes del proyecto. Identificar fuentes con historial de inestabilidad o problemas de calidad y proponer estrategias de mitigación.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Diagrama de arquitecturaRequired to answer. Single choice. 
+Refinar el diseño de arquitectura para escalabilidad y operación en producción. Aprobar la arquitectura final y comunicarla al equipo con suficiente detalle para que el DE Mid pueda implementar sin ambigüedades.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Modelado de datosRequired to answer. Single choice. 
+Definir el modelo de datos completo y la granularidad correcta para las métricas del negocio. Validar la alineación del modelo con el negocio y con la arquitectura definida.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Diseño de pipelinesRequired to answer. Single choice. 
+Validar el diseño de pipelines del DE Mid considerando fallos, escalabilidad y escenarios de error. Aprobar el diseño final antes del inicio del desarrollo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Desarrollo de pipelines Required to answer. Single choice. 
+Refactorizar, optimizar y asegurar la calidad de los pipelines del equipo. Definir los estándares de desarrollo que el DE Mid y DE Jr seguirán durante el proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Scripts de validación y calidad de datos Required to answer. Single choice. 
+Diseñar las reglas de calidad robustas del proyecto y aprobar el enfoque y cobertura de los scripts del DE Mid. Asegurar que las reglas cubren los escenarios de negocio más críticos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Pruebas técnicas y de integración Required to answer. Single choice. 
+Diseñar la estrategia de testing del proyecto y aprobar los resultados finales antes del pase a producción. Asegurar que los casos críticos y los escenarios de error están cubiertos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Optimización de pipelinesRequired to answer. Single choice. 
+Optimizar el performance y los costos de los pipelines del proyecto. Validar el impacto técnico y financiero de las optimizaciones del DE Mid.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+28.RunbooksRequired to answer. Single choice. 
+Diseñar los flujos de soporte y definir los SLAs y niveles de soporte del proyecto. Asegurar que los runbooks son suficientemente completos para que el equipo de operaciones del cliente pueda operar sin apoyo de Arena.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+29.Documentación técnica integral Required to answer. Single choice. 
+Validar la coherencia técnica de la documentación del proyecto y garantizar su completitud y calidad antes del cierre. Asegurar que la documentación es suficiente para una auditoría o handover sin apoyo del equipo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+30.Informe de transiciónRequired to answer. Single choice. 
+Asegurar que la transferencia de conocimiento técnico está completa y aprobar el cierre del proyecto. Garantizar que el equipo receptor puede operar sin apoyo de Arena.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+31.Rutinas de gestión y control interno 1Required to answer. Single choice. 
+Asistir al daily reportando avance propio en definición, coordinación y validación. Identificar y anticipar riesgos técnicos del equipo como principal responsable de la gestión de riesgos técnicos del proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+32.Rutinas de gestión y control interno 2Required to answer. Single choice. 
+Asistir al sprint planning liderando la definición de actividades técnicas del equipo. Hacer challenge de estimaciones no realistas y asegurar que todas las tareas tienen definition of completeness antes de comprometerse.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+33.Rutinas de gestión y control interno 3Required to answer. Single choice. 
+Exponer resultados técnicos del equipo en el sprint review, identificar áreas de mejora propias y del equipo, y dar retroalimentación técnica profunda al DE Mid.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+34.Coordinación con DS y PMRequired to answer. Single choice. 
+Liderar la alineación técnica con el equipo de Ciencia de Datos definiendo las interfaces de datos, formatos y granularidades que el pipeline proveerá. Comunicar al PM impactos técnicos que afecten el plan con suficiente anticipación para renegociar con el cliente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+35.Cumplimiento de lineamientos de trabajo remoto 1Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+36.Cumplimiento de lineamientos de trabajo remoto 2Required to answer. Single choice. 
+Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+37.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+38.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+39.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 2
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+40.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+41.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

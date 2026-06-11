@@ -1,0 +1,15 @@
+"""Rutas de administración de catálogos."""
+
+from django.urls import path
+
+from . import views
+
+app_name = "catalog"
+
+urlpatterns = [
+    path("proyectos/", views.project_admin, name="project_admin"),
+    path("proyectos/nuevo/", views.project_edit, name="project_create"),
+    path("proyectos/<int:pk>/", views.project_edit, name="project_edit"),
+    path("periodos/", views.period_admin, name="period_admin"),
+    # Pendiente: weight_admin, area/level admin (hoy vía Django admin)
+]

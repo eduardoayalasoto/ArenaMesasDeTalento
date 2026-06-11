@@ -1,0 +1,11 @@
+# Webapp de Evaluaciones Arena — dependencias de producción
+Django>=6.0,<6.1
+whitenoise>=6.6
+python-dotenv>=1.0
+PyYAML>=6.0
+django-simple-history>=3.5
+psycopg[binary]>=3.2  ; Postgres gestionado en preview/producción
+
+# Desarrollo / pruebas
+pytest>=8.0
+pytest-django>=4.8

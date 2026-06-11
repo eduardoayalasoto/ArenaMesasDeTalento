@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Hola, {{ user.get_short_name }}</h2>
+    <p class="text-slate-600">
+      {% if period %}Periodo <span class="font-medium">{{ period.name }}</span> en curso.{% else %}Sin periodo abierto por ahora.{% endif %}
+    </p>
+  </div>
+
+  {% if not period %}
+    {% include "partials/empty_state.html" with icon="calendar" title="No hay un periodo abierto" message="Tus evaluaciones se habilitarán cuando Talento abra el periodo." %}
+  {% elif my_projects == 0 %}
+    {% include "partials/empty_state.html" with icon="folder" title="Aún no tienes proyectos asignados" message="Cuando Talento te asigne a un proyecto en este periodo, verás aquí tus evaluaciones de Ownership." %}
+  {% else %}
+    <div class="grid gap-4 sm:grid-cols-3 mb-6">
+      <div class="card p-5">
+        <p class="text-sm text-slate-500">Mis proyectos</p>
+        <p class="mt-1 text-3xl font-semibold text-slate-900 tabular-nums">{{ my_projects }}</p>
+      </div>
+      <div class="card p-5">
+        <p class="text-sm text-slate-500">Evaluaciones enviadas</p>
+        <p class="mt-1 text-3xl font-semibold text-slate-900 tabular-nums">{{ my_submitted }}<span class="text-lg text-slate-400">/{{ my_projects }}</span></p>
+      </div>
+      <div class="card p-5 flex flex-col justify-between">
+        <p class="text-sm text-slate-500">Acciones</p>
+        <a href="{% url 'evaluations:ownership_list' %}" class="btn-primary mt-2">Ir a mis evaluaciones</a>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <a href="{% url 'dashboards:my_results' %}" class="btn-secondary">Ver mis resultados</a>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,253 @@
+Checklist Ownership UX UI Mid
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+4
+Present
+
+Templates
+Checklist Ownership UX UI MidChecklist Ownership UX UI Mid
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+UX UI Jr
+UX UI Mid
+UX UI Snr
+UX UI Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+5.Definición del problema de experienciaRequired to answer. Single choice. 
+Documentar el problema real que se está resolviendo desde la perspectiva del usuario y del negocio antes de abrir Figma. Formular el problema como hipótesis falsable con una métrica asociada. No aceptar como punto de partida 'necesitamos rediseñar X' sin cuestionarlo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Investigación y validación de supuestosRequired to answer. Single choice. 
+Identificar los supuestos críticos que sostienen la hipótesis de diseño antes de desarrollar pantallas en alta fidelidad. Validarlos con evidencia mínima viable (entrevistas, datos existentes, tests rápidos). Documentar qué se sabe, qué se supone y qué se desconoce.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Diseño de flujo y arquitectura de decisiónRequired to answer. Single choice. 
+Diseñar el journey completo del usuario incluyendo todos los estados, edge cases y microdecisiones críticas. No diseñar pantallas en aislamiento: cada pantalla existe dentro de un flujo que el Mid define de forma explícita.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Diseño UI con rigor sistémicoRequired to answer. Single choice. 
+Construir la interfaz visual alineada al Design System, principios cognitivos básicos y accesibilidad mínima (WCAG AA). Justificar funcionalmente las decisiones estéticas. Si no hay Design System definido, proponer los patrones base que el equipo seguirá.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Validación de prototipo antes de desarrolloRequired to answer. Single choice. 
+Validar el prototipo con al menos 3 usuarios o stakeholders relevantes antes del handoff a desarrollo. Documentar hallazgos, incorporar ajustes y comunicar al equipo qué se validó y qué decisiones se tomaron a partir de la validación.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Handoff estratégico a desarrolloRequired to answer. Single choice. 
+Preparar la transferencia del diseño a desarrollo con especificaciones completas: estados, microcopy, reglas de interacción, criterios de aceptación medibles en el backlog. El Mid es responsable de que desarrollo pueda implementar sin ambigüedades.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Medición post-releaseRequired to answer. Single choice. 
+Analizar el impacto de los diseños entregados en las métricas definidas al inicio de la iniciativa. Documentar el aprendizaje y tomar una decisión explícita: iterar, escalar o descartar.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Documentación del proyectoRequired to answer. Single choice. 
+Mantener la estructura de archivos del proyecto en Teams/SharePoint actualizada y accesible: todos los archivos de trabajo en el canal del proyecto, indicadores de avance actualizados semanalmente, ningún archivo en drives personales.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Rutinas de gestión — DailyRequired to answer. Single choice. 
+Facilitar o participar activamente en el daily asegurando que la sesión dura entre 15 y 20 minutos, que cada participante reporta avance real con bloqueos identificados y que los bloqueos críticos se gestionan antes de que impacten el sprint. Si el Mid opera solo, reporta su avance al PM o stakeholder correspondiente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Rutinas de gestión — Sprint PlanningRequired to answer. Single choice. 
+Liderar o participar activamente en el sprint planning: proponer actividades y estimaciones propias, asegurar que todas las tareas tienen criterio de aceptación claro antes de comprometerse, y validar que el plan es ejecutable dentro del sprint.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Rutinas de gestión — Sprint ReviewRequired to answer. Single choice. 
+Exponer los resultados del sprint al equipo y al cliente con honestidad: qué se completó, qué no se completó y por qué. Dar retroalimentación técnica de diseño al equipo si hay niveles Junior. Documentar los acuerdos de mejora.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Rutinas de gestión — Sprint RetrospectivaRequired to answer. Single choice. 
+Facilitar o participar activamente en la retrospectiva con aportaciones concretas sobre el proceso de trabajo. Asegurar que los acuerdos de mejora se implementan en el siguiente sprint.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Rutinas de gestión — Refinamiento de backlogRequired to answer. Single choice. 
+Facilitar o participar en el refinamiento para aclarar criterios de aceptación ambiguos, identificar dependencias y priorizar el backlog antes del planning. No comprometerse a actividades sin criterio de aceptación claro.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Cuestionamiento y validación de resultadosRequired to answer. Single choice. 
+Generar y presentar los diseños de solución (a nivel técnico y de negocio) con el nivel de detalle suficiente para obtener un sign-off explícito del cliente. Documentar los retrabajos solicitados y la percepción del cliente en cada sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Preparación de reunionesRequired to answer. Single choice. 
+Preparar cada reunión con cliente usando el Formato de Preparación de Reuniones: objetivo, agenda, material de soporte, preguntas anticipadas y acciones críticas a lograr. Completarlo al menos 24 horas antes.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Sesiones 1:1 de retroalimentación con clienteRequired to answer. Single choice. 
+Agendar y ejecutar sesiones one-on-one con el cliente para identificar su percepción de calidad, expectativas no explícitas y sugerencias de mejora. Documentar el feedback y comunicarlo al equipo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Seguimiento a acuerdos — Pre-reads y minutasRequired to answer. Single choice. 
+Enviar pre-reads con el material de la sesión al menos 24 horas antes de cada reunión con cliente. Documentar y enviar minutas con validaciones, acuerdos y siguientes pasos dentro de las 24 horas posteriores a cada sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Comunicación de avance con stakeholdersRequired to answer. Single choice. 
+Mantener informados a todos los stakeholders relevantes sobre el avance del proyecto mediante mensajes directos o en chat grupal 2-3 veces por semana, sin esperar las sesiones formales.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Análisis de impactos ante cambiosRequired to answer. Single choice. 
+Evaluar el impacto en fechas, dependencias y carga del equipo antes de aceptar o ejecutar cambios en el alcance o plan de trabajo. Documentar el análisis y comunicarlo al cliente y al equipo directivo de Arena antes de comprometerse.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Gestión de dependenciasRequired to answer. Single choice. 
+Identificar y gestionar activamente las dependencias que impactan la ejecución del sprint: con desarrollo, con el cliente, con otros equipos de Arena. Comunicar bloqueos por dependencias antes de que afecten un entregable.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Traducción técnica a stakeholdersRequired to answer. Single choice. 
+Explicar aspectos técnicos de UX de forma comprensible para stakeholders no técnicos, adaptando el lenguaje y nivel de detalle al perfil del interlocutor en cada sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Cumplimiento de lineamientos de trabajo remoto 1Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Cumplimiento de lineamientos de trabajo remoto 2Required to answer. Single choice. 
+Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+28.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+29.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+30.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 2
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+31.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+32.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

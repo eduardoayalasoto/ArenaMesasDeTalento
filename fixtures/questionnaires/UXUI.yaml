@@ -1,0 +1,292 @@
+templates:
+  - area: UXUI
+    level: JR
+    questions:
+      - title: "Diseño UI alineado a Design System"
+        text: >-
+          Construir pantallas respetando los componentes, tokens y patrones del Design System del proyecto. Si no existe Design System definido, usar el de Figma de Arena como referencia base y documentar cualquier excepción.
+      - title: "Diseño de flujos asignados"
+        text: >-
+          Diseñar los flujos específicos asignados, entregando un user flow completo que incluya todos los estados de la pantalla (normal, vacío, error, loading) y los edge cases identificados. No entregar pantallas sueltas sin flujo.
+      - title: "Documentación de estados y edge cases"
+        text: >-
+          Documentar explícitamente todos los estados de cada pantalla diseñada: estado vacío, estado de error, estado de carga, estado de éxito y edge cases identificados. No asumir que el equipo de desarrollo puede inferir los estados no diseñados.
+      - title: "Preparación de handoff a desarrollo"
+        text: >-
+          Preparar los archivos de Figma para entrega a desarrollo: nombrar capas correctamente, agrupar componentes, especificar espaciados, tipografías, colores con tokens y anotar reglas de interacción que no son evidentes visualmente.
+      - title: "Documentación del trabajo de diseño"
+        text: >-
+          Documentar en la herramienta de seguimiento del proyecto (Figma, Planner u otra definida) las tareas ejecutadas, el estado de cada pantalla o flujo y el avance del sprint. Actualizar el registro antes del daily, no en el review.
+      - title: "Pruebas de usabilidad básicas"
+        text: >-
+          Ejecutar pruebas de usabilidad básicas bajo el protocolo definido por el Mid o Sr del proyecto, o por el propio Jr si trabaja solo: mostrar el prototipo a al menos 3 usuarios o stakeholders relevantes, documentar observaciones y comunicar hallazgos al equipo antes del handoff a desarrollo.
+      - title: "Documentación del plan y avance"
+        text: >-
+          Mantener actualizada la estructura de archivos del proyecto en Teams/SharePoint: todos los archivos de trabajo en el canal del proyecto, ningún archivo en un drive personal. Actualizar los indicadores de avance definidos para el proyecto (% avance, actividades completadas) de forma semanal.
+      - title: "Rutinas de gestión — Daily"
+        text: >-
+          Asistir al daily preparado: saber qué avanzó desde el día anterior, qué hará hoy y qué le impide avanzar. Comunicar bloqueos antes de que impacten un entregable del sprint.
+      - title: "Rutinas de gestión — Sprint Planning"
+        text: >-
+          Asistir al sprint planning sabiendo qué puede comprometer para el sprint: revisar el backlog antes de la sesión, tener propuesta de actividades propias y sus estimaciones, y salir de la sesión con claridad total de sus entregables, criterios de aceptación y dependencias.
+      - title: "Rutinas de gestión — Sprint Review"
+        text: >-
+          Asistir al sprint review preparado para exponer los entregables del sprint: qué completó, qué no completó y por qué. Recibir retroalimentación técnica y de diseño con apertura y documentar los acuerdos de mejora.
+      - title: "Rutinas de gestión — Sprint Retrospectiva"
+        text: >-
+          Participar activamente en la retrospectiva: expresar lo que funcionó bien, lo que no funcionó y proponer al menos un ajuste concreto al proceso de trabajo del equipo.
+      - title: "Rutinas de gestión — Refinamiento de backlog"
+        text: >-
+          Asistir al refinamiento preparado para aclarar dudas sobre las actividades del backlog antes de que entren al planning. Identificar y comunicar ambigüedades en criterios de aceptación antes de comprometerse a ejecutarlos.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Preparar y presentar los diseños para revisión y validación con el cliente o stakeholders. Documentar el feedback recibido, los retrabajos solicitados y la percepción del cliente tras cada sesión de revisión.
+      - title: "Preparación de reuniones"
+        text: >-
+          Preparar cada reunión con cliente usando el Formato de Preparación de Reuniones del proyecto: definir objetivo, agenda, material de soporte, posibles preguntas del cliente y acciones críticas a lograr. Completarlo al menos 24 horas antes de la sesión.
+      - title: "Seguimiento a acuerdos — Pre-reads y minutas"
+        text: >-
+          Enviar pre-reads con el material de la sesión al menos 24 horas antes de cada reunión con cliente. Documentar y enviar minutas con validaciones, acuerdos y siguientes pasos dentro de las 24 horas posteriores a cada sesión.
+      - title: "Comunicación de avance con stakeholders"
+        text: >-
+          Comunicar el avance del proyecto a los stakeholders relevantes mediante mensajes directos o en chat grupal 2-3 veces por semana, sin esperar a las sesiones formales para dar visibilidad del progreso.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+  - area: UXUI
+    level: MID
+    questions:
+      - title: "Definición del problema de experiencia"
+        text: >-
+          Documentar el problema real que se está resolviendo desde la perspectiva del usuario y del negocio antes de abrir Figma. Formular el problema como hipótesis falsable con una métrica asociada. No aceptar como punto de partida 'necesitamos rediseñar X' sin cuestionarlo.
+      - title: "Investigación y validación de supuestos"
+        text: >-
+          Identificar los supuestos críticos que sostienen la hipótesis de diseño antes de desarrollar pantallas en alta fidelidad. Validarlos con evidencia mínima viable (entrevistas, datos existentes, tests rápidos). Documentar qué se sabe, qué se supone y qué se desconoce.
+      - title: "Diseño de flujo y arquitectura de decisión"
+        text: >-
+          Diseñar el journey completo del usuario incluyendo todos los estados, edge cases y microdecisiones críticas. No diseñar pantallas en aislamiento: cada pantalla existe dentro de un flujo que el Mid define de forma explícita.
+      - title: "Diseño UI con rigor sistémico"
+        text: >-
+          Construir la interfaz visual alineada al Design System, principios cognitivos básicos y accesibilidad mínima (WCAG AA). Justificar funcionalmente las decisiones estéticas. Si no hay Design System definido, proponer los patrones base que el equipo seguirá.
+      - title: "Validación de prototipo antes de desarrollo"
+        text: >-
+          Validar el prototipo con al menos 3 usuarios o stakeholders relevantes antes del handoff a desarrollo. Documentar hallazgos, incorporar ajustes y comunicar al equipo qué se validó y qué decisiones se tomaron a partir de la validación.
+      - title: "Handoff estratégico a desarrollo"
+        text: >-
+          Preparar la transferencia del diseño a desarrollo con especificaciones completas: estados, microcopy, reglas de interacción, criterios de aceptación medibles en el backlog. El Mid es responsable de que desarrollo pueda implementar sin ambigüedades.
+      - title: "Medición post-release"
+        text: >-
+          Analizar el impacto de los diseños entregados en las métricas definidas al inicio de la iniciativa. Documentar el aprendizaje y tomar una decisión explícita: iterar, escalar o descartar.
+      - title: "Documentación del proyecto"
+        text: >-
+          Mantener la estructura de archivos del proyecto en Teams/SharePoint actualizada y accesible: todos los archivos de trabajo en el canal del proyecto, indicadores de avance actualizados semanalmente, ningún archivo en drives personales.
+      - title: "Rutinas de gestión — Daily"
+        text: >-
+          Facilitar o participar activamente en el daily asegurando que la sesión dura entre 15 y 20 minutos, que cada participante reporta avance real con bloqueos identificados y que los bloqueos críticos se gestionan antes de que impacten el sprint. Si el Mid opera solo, reporta su avance al PM o stakeholder correspondiente.
+      - title: "Rutinas de gestión — Sprint Planning"
+        text: >-
+          Liderar o participar activamente en el sprint planning: proponer actividades y estimaciones propias, asegurar que todas las tareas tienen criterio de aceptación claro antes de comprometerse, y validar que el plan es ejecutable dentro del sprint.
+      - title: "Rutinas de gestión — Sprint Review"
+        text: >-
+          Exponer los resultados del sprint al equipo y al cliente con honestidad: qué se completó, qué no se completó y por qué. Dar retroalimentación técnica de diseño al equipo si hay niveles Junior. Documentar los acuerdos de mejora.
+      - title: "Rutinas de gestión — Sprint Retrospectiva"
+        text: >-
+          Facilitar o participar activamente en la retrospectiva con aportaciones concretas sobre el proceso de trabajo. Asegurar que los acuerdos de mejora se implementan en el siguiente sprint.
+      - title: "Rutinas de gestión — Refinamiento de backlog"
+        text: >-
+          Facilitar o participar en el refinamiento para aclarar criterios de aceptación ambiguos, identificar dependencias y priorizar el backlog antes del planning. No comprometerse a actividades sin criterio de aceptación claro.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Generar y presentar los diseños de solución (a nivel técnico y de negocio) con el nivel de detalle suficiente para obtener un sign-off explícito del cliente. Documentar los retrabajos solicitados y la percepción del cliente en cada sesión.
+      - title: "Preparación de reuniones"
+        text: >-
+          Preparar cada reunión con cliente usando el Formato de Preparación de Reuniones: objetivo, agenda, material de soporte, preguntas anticipadas y acciones críticas a lograr. Completarlo al menos 24 horas antes.
+      - title: "Sesiones 1:1 de retroalimentación con cliente"
+        text: >-
+          Agendar y ejecutar sesiones one-on-one con el cliente para identificar su percepción de calidad, expectativas no explícitas y sugerencias de mejora. Documentar el feedback y comunicarlo al equipo.
+      - title: "Seguimiento a acuerdos — Pre-reads y minutas"
+        text: >-
+          Enviar pre-reads con el material de la sesión al menos 24 horas antes de cada reunión con cliente. Documentar y enviar minutas con validaciones, acuerdos y siguientes pasos dentro de las 24 horas posteriores a cada sesión.
+      - title: "Comunicación de avance con stakeholders"
+        text: >-
+          Mantener informados a todos los stakeholders relevantes sobre el avance del proyecto mediante mensajes directos o en chat grupal 2-3 veces por semana, sin esperar las sesiones formales.
+      - title: "Análisis de impactos ante cambios"
+        text: >-
+          Evaluar el impacto en fechas, dependencias y carga del equipo antes de aceptar o ejecutar cambios en el alcance o plan de trabajo. Documentar el análisis y comunicarlo al cliente y al equipo directivo de Arena antes de comprometerse.
+      - title: "Gestión de dependencias"
+        text: >-
+          Identificar y gestionar activamente las dependencias que impactan la ejecución del sprint: con desarrollo, con el cliente, con otros equipos de Arena. Comunicar bloqueos por dependencias antes de que afecten un entregable.
+      - title: "Traducción técnica a stakeholders"
+        text: >-
+          Explicar aspectos técnicos de UX de forma comprensible para stakeholders no técnicos, adaptando el lenguaje y nivel de detalle al perfil del interlocutor en cada sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+  - area: UXUI
+    level: SNR
+    questions:
+      - title: "Definición estratégica del problema de experiencia"
+        text: >-
+          Definir el problema estratégico de experiencia antes de cualquier actividad de diseño: conectar el objetivo de negocio con el comportamiento actual del usuario, la brecha deseada y el impacto económico estimado. Priorizar el problema frente a otras iniciativas con criterio explícito.
+      - title: "Identificación y validación de supuestos críticos"
+        text: >-
+          Identificar, clasificar por riesgo y validar con evidencia los supuestos que sostienen la hipótesis de diseño. Definir el método de validación adecuado al contexto del proyecto (entrevistas, datos cuantitativos, tests rápidos, shadowing). Documentar qué se sabe y qué se asume con distinción explícita.
+      - title: "Arquitectura de decisión y flujo completo"
+        text: >-
+          Diseñar el sistema de decisiones del usuario: user flow end-to-end, mapa de estados, microdecisiones críticas, puntos de abandono potencial y reglas de negocio con implicación de experiencia. El Sr define el flujo completo aunque opere solo.
+      - title: "Diseño de interfaz con rigor sistémico"
+        text: >-
+          Construir o supervisar la construcción visual de la interfaz con alineación al Design System, criterios cognitivos, accesibilidad WCAG AA y consistencia cross-product. Definir los patrones de diseño que el equipo seguirá. Justificar funcionalmente todas las decisiones estéticas.
+      - title: "Validación de prototipo antes de desarrollo"
+        text: >-
+          Diseñar el protocolo de validación, ejecutar o supervisar las pruebas con usuarios y sintetizar los aprendizajes en insights accionables. El Sr valida comprensión, confianza, claridad, fluidez de tarea y fricción emocional, no solo si 'se ve bien'.
+      - title: "Handoff estratégico y criterios de aceptación"
+        text: >-
+          Convertir el diseño en especificación ejecutable: definir estados, microcopy, reglas de interacción, animaciones y criterios de aceptación medibles en el backlog. El Sr es responsable de que desarrollo no tenga que suponer nada.
+      - title: "Medición post-release y aprendizaje"
+        text: >-
+          Analizar el impacto de los diseños en los KPIs definidos al inicio. Sintetizar cambios en comportamiento, feedback cualitativo e impacto sistémico en otros flows. Tomar una decisión documentada: iterar, escalar o descartar.
+      - title: "Documentación del proyecto"
+        text: >-
+          Garantizar que la estructura de archivos del proyecto en Teams/SharePoint está actualizada, accesible y organizada en todo momento. Si hay Jr o Mid en el equipo, establecer el estándar de organización y revisarlo periódicamente.
+      - title: "Rutinas de gestión — Daily"
+        text: >-
+          Asistir o facilitar el daily con criterio de calidad de ejecución: verificar que el equipo reporta avance real, que los bloqueos se gestionan antes de impactar el sprint y que la sesión dura entre 15 y 20 minutos. Si opera solo, reporta avance al PM o stakeholder.
+      - title: "Rutinas de gestión — Sprint Planning"
+        text: >-
+          Liderar el sprint planning con criterio técnico de UX: desafiar estimaciones irreales, asegurar que todas las tareas tienen definición de terminado clara y que el plan es ejecutable dados los supuestos del proyecto.
+      - title: "Rutinas de gestión — Sprint Review"
+        text: >-
+          Exponer los resultados técnicos del sprint con criterio estratégico: qué se completó, qué impacto tiene en el KPI definido y qué se aprendió. Dar retroalimentación técnica profunda al Mid y Jr si los hay.
+      - title: "Rutinas de gestión — Sprint Retrospectiva"
+        text: >-
+          Facilitar o participar en la retrospectiva identificando los patrones de proceso que generan retrabajo recurrente y proponiendo cambios sistémicos, no solo ajustes puntuales.
+      - title: "Rutinas de gestión — Refinamiento de backlog"
+        text: >-
+          Liderar el refinamiento con criterio técnico de UX: identificar actividades mal definidas, proponer criterios de aceptación técnicamente correctos y priorizar con criterio de impacto en el problema original.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Presentar los diseños de solución con el nivel de detalle estratégico suficiente para generar decisiones informadas del cliente, no solo aprobación visual. Obtener sign-off explícito y documentado antes de pasar a desarrollo.
+      - title: "Preparación de reuniones"
+        text: >-
+          Preparar y liderar la preparación de reuniones críticas usando el Formato de Preparación de Reuniones: definir el objetivo estratégico, la estructura de la sesión, las preguntas clave para el cliente y los posibles escenarios de respuesta.
+      - title: "Sesiones 1:1 de retroalimentación con cliente"
+        text: >-
+          Agendar y ejecutar sesiones one-on-one con stakeholders clave del cliente para detectar señales tempranas de insatisfacción, alinear expectativas estratégicas y construir una relación de confianza que va más allá del proyecto.
+      - title: "Seguimiento a acuerdos — Pre-reads y minutas"
+        text: >-
+          Asegurar que todas las sesiones con cliente tienen pre-read 24 horas antes y minuta dentro de las 24 horas posteriores. Si hay Jr o Mid en el equipo, el Sr establece el estándar de calidad y revisa antes de enviar.
+      - title: "Comunicación de avance con stakeholders"
+        text: >-
+          Mantener informados a todos los stakeholders relevantes 2-3 veces por semana mediante mensajes directos o en chat grupal. Comunicar proactivamente desviaciones o riesgos antes de que el cliente los descubra.
+      - title: "Análisis de impactos ante cambios"
+        text: >-
+          Evaluar el impacto estratégico de los cambios de alcance en fechas, dependencias, calidad del diseño y relación con el cliente. Comunicar el análisis al cliente y al equipo directivo de Arena antes de comprometerse a cualquier cambio.
+      - title: "Definición y defensa de límites de alcance"
+        text: >-
+          Establecer y defender el alcance del proyecto en negociaciones sobre entregables, equipo y tiempos. Documentar los acuerdos de alcance y comunicar al equipo directivo los intentos de scope creep.
+      - title: "Reencuadre de problemas del cliente"
+        text: >-
+          Cuestionar el problema que el cliente o el equipo busca resolver cuando las actividades propuestas no atacan la causa raíz. Proponer un reencuadre con argumentos de impacto y alinear al cliente en el nuevo enfoque antes de ejecutar.
+      - title: "Intervención temprana en riesgos"
+        text: >-
+          Anticipar, comunicar y actuar ante señales tempranas de riesgo de proyecto (técnicos, de relación con el cliente, de alcance, de calidad) involucrando al equipo de Arena y al cliente según la naturaleza del riesgo.
+      - title: "Transferencia de criterio al equipo"
+        text: >-
+          Desarrollar el criterio técnico de diseño del Mid y Jr mediante coaching en contexto: retroalimentación técnica en sesiones de diseño, preguntas que desarrollan el razonamiento y espacios para que el equipo proponga soluciones antes de que el Sr las proponga.
+      - title: "Posicionamiento como asesor de confianza con el cliente"
+        text: >-
+          Desarrollar una relación de confianza y cercanía con los stakeholders clave del cliente que vaya más allá del entregable del sprint. Identificar necesidades del cliente más allá del proyecto actual y comunicar oportunidades al equipo directivo de Arena.
+      - title: "Autonomía en la gestión del proyecto"
+        text: >-
+          Gestionar y entregar el proyecto durante períodos largos sin necesitar apoyo o presencia constante del equipo directivo, manteniendo tiempo, calidad y confianza del cliente.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+  - area: UXUI
+    level: LEAD
+    questions:
+      - title: "Aseguramiento de gestión de proyectos — Seguimiento a PMs"
+        text: >-
+          Realizar seguimiento a los PMs con los que trabaja en el proyecto para evaluar el cumplimiento del checklist correspondiente y definir ajustes.
+      - title: "Aseguramiento de gestión de proyectos — Cumplimiento PMO"
+        text: >-
+          Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Oficina de PMO.
+      - title: "Aseguramiento de gestión de proyectos — Leads técnicos"
+        text: >-
+          Identificar y hacer equipo con leads técnicos para asegurar que el proyecto cuenta con las bases y diseños técnicos requeridos.
+      - title: "Guía y soporte al equipo de proyecto — Dailys"
+        text: >-
+          Asistir y participar activamente a los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre.
+      - title: "Guía y soporte al equipo de proyecto — Planning y review"
+        text: >-
+          Asistir y participar activamente a los planning y review del proyecto.
+      - title: "Guía y soporte al equipo de proyecto — Alineación con alcance"
+        text: >-
+          Asegurar y revisar la alineación recurrente del trabajo del equipo vs el alcance de la propuesta.
+      - title: "Guía y soporte al equipo de proyecto — Sesiones críticas con stakeholders senior"
+        text: >-
+          Identificar, validar el material y preparación y participar en sesiones críticas donde asistirán stakeholders senior del cliente que requieran apoyo del lead.
+      - title: "Guía y soporte al equipo de proyecto — Mapeo de stakeholders"
+        text: >-
+          Ayudar al equipo a mapear y entender a todos los stakeholders involucrados.
+      - title: "Guía y soporte al equipo de proyecto — One on ones con stakeholders senior"
+        text: >-
+          Agendar one on ones con stakeholders senior del proyecto para alinear expectativas y generar una relación de confianza y cercanía.
+      - title: "Guía y soporte al equipo de proyecto — Participación de directores"
+        text: >-
+          Anticipar participación de directores en momentos y sesiones críticas, dando claridad de la comunicación o influencia requerida de su parte.
+      - title: "Guía y soporte al equipo de proyecto — Plan de transición y staffing"
+        text: >-
+          Crear y ejecutar un plan de transición, onboarding, KTs y seguimiento al staffing del proyecto al inicio, durante y al final.
+      - title: "Guía y soporte al equipo interno — Mesa de Talento"
+        text: >-
+          Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Mesa de Talento.
+      - title: "Guía y soporte al equipo interno — Planes de capacitación"
+        text: >-
+          Monitorear el avance de los planes de capacitación del equipo de Producto en sus proyectos.
+      - title: "Guía y soporte al equipo interno — Sesiones de mentoring"
+        text: >-
+          Monitorear la ejecución y calidad de las sesiones de mentoring de los equipos de producto en sus proyectos.
+      - title: "Guía y soporte al equipo interno — Vacaciones y ausencias"
+        text: >-
+          Dar seguimiento a la planeación y anticipación de los días de vacaciones y ausencias del equipo en sus proyectos para evitar riesgos en la ejecución.
+      - title: "Guía y soporte al equipo interno — Dudas de procedimientos internos"
+        text: >-
+          Dar seguimiento a resolver directamente dudas de los procedimientos internos de Arena (e.g. PMO, Odoo, Mesa de Talento, Vacaciones, etc.).
+      - title: "Guía y soporte al equipo interno — Sesiones de aprendizaje con PMs"
+        text: >-
+          Planear y ejecutar sesiones de aprendizaje con el equipo de PMs.
+      - title: "Guía y soporte al equipo interno — Directorio de KO y accesos"
+        text: >-
+          Asegurar el mantenimiento del directorio de KO, accesos internos Arena y otros clientes (bajas, altas, cambios de reporte).
+      - title: "Guía y soporte al equipo interno — Mejoras a metodologías y estándares"
+        text: >-
+          Identificar y gestionar la implementación de mejoras a las metodologías, estándares de trabajo y herramientas en coordinación con el resto de los leads y del equipo de Arena.
+      - title: "Soporte comercial — Identificación de oportunidades"
+        text: >-
+          Dar soporte comercial a través de la identificación de oportunidades, necesidades, evolución de soluciones actuales y sensibilización en temas de innovación para el cliente.
+      - title: "Soporte comercial — Construcción de propuestas"
+        text: >-
+          Dar soporte comercial a través de la construcción y validación de propuestas en conjunto con otros leads y el director.
+      - title: "Soporte comercial — Facturación y temas administrativos"
+        text: >-
+          Dar soporte comercial a través del seguimiento a facturación y temas administrativos en caso de ser requerido.
+      - title: "Soporte comercial — Sesiones presenciales"
+        text: >-
+          Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para desarrollar una relación más cercana y mantener una presencia activa.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.

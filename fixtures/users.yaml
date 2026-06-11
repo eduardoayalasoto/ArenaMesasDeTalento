@@ -1,0 +1,56 @@
+# Colaboradores de Analítica 2026 (Anexo C del KB). Área/nivel quedan null hasta
+# asignación por Talento. Los nombres se normalizan a Title Case al sembrar.
+users:
+  - { name: "RAMIRO ABAD ARELLANO CARMONA", email: "abad.arellano@arena-analytics.com" }
+  - { name: "ABRAHAM MARTÍNEZ RAMIREZ", email: "abraham.martinez@arena-analytics.com" }
+  - { name: "ADRIÁN LANDAVERDE NAVA", email: "adrian@arena-analytics.com" }
+  - { name: "ADRIÁN PÉREZ ÁNGELES", email: "adrian.perez@arena-analytics.com" }
+  - { name: "ALDO ALEJANDRO GALLEGOS RUIZ", email: "aldo.gallegos@arena-analytics.com" }
+  - { name: "JESÚS ALEJANDRO OLIVARES PADILLA", email: "alejandro.olivares@arena-analytics.com" }
+  - { name: "ANDREA GUADALUPE PLASCENCIA RODRÍGUEZ", email: "andrea.plascencia@arena-analytics.com" }
+  - { name: "JOSÉ ANTONIO PEDRAZA RANGEL", email: "jose.pedraza@arena-analytics.com" }
+  - { name: "CARLOS ALBERTO RUIZ ESTAÑÓN", email: "carlos.ruiz@arena-analytics.com" }
+  - { name: "CARLOS ALFONSO BARRÓN RIVERA", email: "alfonso.barron@arena-analytics.com" }
+  - { name: "DANTE OCTAVIO GODINEZ ALDANA", email: "dante.godinez@arena-analytics.com" }
+  - { name: "DAVID PASTOR MARTÍNEZ ULLOA", email: "dpastor@arena-analytics.com" }
+  - { name: "DIANA ITZEL VAZQUEZ SANTIAGO", email: "divazquez@arena-analytics.com" }
+  - { name: "EDUARDO ALAIN ESPINOZA DE LA CRUZ", email: "eduardo.espinoza@arena-analytics.com" }
+  - { name: "RAUL EDUARDO AYALA SOTO", email: "eduardo.ayala@arena-analytics.com" }
+  - { name: "EDWARD IGNACIO GÓMEZ RUIZ", email: "edward.gomez@arena-analytics.com" }
+  - { name: "ELÍAS ABRAHAM GARCÍA MENDOZA", email: "elias.garcia@arena-analytics.com" }
+  - { name: "EMILIO OLMOS SÁNCHEZ", email: "emilio.olmos@arena-analytics.com" }
+  - { name: "ERICK LÓPEZ CRUZ", email: "erick.lopez@arena-analytics.com" }
+  - { name: "FEDERICO LAGOS GUIZAR", email: "flagos@arena-analytics.com" }
+  - { name: "FELIPE DE JESÚS ZETINA SALGADO", email: "felipe.zetina@arena-analytics.com" }
+  - { name: "FRANCISCO MANUEL BARRIOS PANIAGUA", email: "fbarrios@arena-analytics.com" }
+  - { name: "ERIKA GABRIELA TOSTADO MILLAN", email: "gabriela.tostado@arena-analytics.com" }
+  - { name: "JOSE GERARDO ESPINOZA JIMENEZ", email: "gerardo@arena-analytics.com" }
+  - { name: "HECTOR RANGEL CASTRO", email: "hector@arena-analytics.com" }
+  - { name: "ILSE HERNÁNDEZ MINUTTI", email: "ilse.hernandez@arena-analytics.com" }
+  - { name: "IÑAKI FERNÁNDEZ FISCAL", email: "inaki.fernandez@arena-analytics.com" }
+  - { name: "JAVIER MARTÍNEZ CARRANZA", email: "javier.martinez@arena-analytics.com" }
+  - { name: "JORGE ANTONIO VARGAS RAMOS", email: "jorge.vargas@arena-analytics.com" }
+  - { name: "JOSE ROBLES NORIEGA", email: "jrobles@arena-analytics.com" }
+  - { name: "JUAN DANIEL GRANADOS ROMO", email: "juan.granados@arena-analytics.com" }
+  - { name: "JUAN LUIS VELÁZQUEZ MORALES", email: "juan.velazquez@arena-analytics.com" }
+  - { name: "JUAN PABLO MONTOYA GUZMÁN", email: "juan.montoya@arena-analytics.com" }
+  - { name: "KAREEM GALVÁN DELGADILLO", email: "kareem.galvan@arena-analytics.com" }
+  - { name: "LORENA MONSERRAT CAMPUZANO SÁNCHEZ", email: "lorena.campuzano@arena-analytics.com" }
+  - { name: "LORENZO LLAGUNO", email: "lorenzo@arena-analytics.com" }
+  - { name: "LOURDES MARTINEZ MARTINEZ", email: "lourdes.martinez@arena-analytics.com" }
+  - { name: "LUIS ADRIÁN LARA GARCÍA", email: "luis.lara@arena-analytics.com" }
+  - { name: "LUIS ANTONIO FLORES CASTRO", email: "luis.flores@arena-analytics.com" }
+  - { name: "LUIS JESUS BECERRIL VILLASEÑOR", email: "luis@arena-analytics.com" }
+  - { name: "LUZ MARÍA GURROLA RAMOS", email: "lmgurrola@arena-analytics.com" }
+  - { name: "MARCO ANTONIO ARISTEO GARCÍA", email: "marco.aristeo@arena-analytics.com" }
+  - { name: "MARÍA MAGDALENA CASTRO SAM", email: "maria.castro@arena-analytics.com" }
+  - { name: "MARIANA CONTRERAS MENDEZ", email: "mariana.contreras@arena-analytics.com" }
+  - { name: "MAX BURKLE GOYA", email: "mburkle@arena-analytics.com" }
+  - { name: "MICHAEL STEVEN DELGADO", email: "mdelgado@arena-analytics.com" }
+  - { name: "MIGUEL ANGEL AGUILAR CAMPA", email: "angel.aguilar@arena-analytics.com" }
+  - { name: "OSCAR ANDRÉS MANCHA", email: "omancha@arena-analytics.com" }
+  - { name: "RODOLFO NAVARRETE PEREZ", email: "rodolfo@arena-analytics.com" }
+  - { name: "RODRIGO CASIANO MORALES", email: "rodrigo.casiano@arena-analytics.com" }
+  - { name: "RUBÉN ALEJANDRO RUIZ GÓMEZ", email: "alejandro.ruiz@arena-analytics.com" }
+  - { name: "SAMUEL AGUILAR RAMIREZ", email: "samuel.aguilar@arena-analytics.com" }
+  - { name: "SEBASTIÁN JIMÉNEZ JIMÉNEZ", email: "sebastian.jimenez@arena-analytics.com" }

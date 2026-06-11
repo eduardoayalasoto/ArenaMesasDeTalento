@@ -1,0 +1,9 @@
+{% comment %}Tarjeta de pilar. Params: title, score (Decimal|None), weight (Decimal|None).{% endcomment %}
+<div class="card p-5">
+  <p class="text-sm text-slate-500">{{ title }}</p>
+  <p class="mt-1 text-3xl font-semibold text-slate-900 tabular-nums">{{ score|default:"—" }}</p>
+  {% if weight %}<p class="mt-1 text-xs text-slate-500">Peso en tu nivel: {% widthratio weight 1 100 %}%</p>{% endif %}
+  <div class="mt-3 h-2 rounded-full bg-slate-100 overflow-hidden">
+    <div class="h-full bg-arena-500" style="width: {% if score %}{% widthratio score 4 100 %}{% else %}0{% endif %}%"></div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-2"><a href="{% url 'questionnaires:admin_list' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Cuestionarios</a></div>
+  <div class="flex flex-wrap items-start justify-between gap-3 mb-6">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">
+        {% if template.kind == 'OWNERSHIP' %}Ownership · {{ template.area.name }} · {{ template.level.name }}{% else %}Entrega de Valor{% endif %}
+      </h2>
+      <p class="text-slate-600">Versión {{ template.version }} · {% include "partials/status_badge.html" with status=template.status label=template.get_status_display %}</p>
+    </div>
+    <div class="flex items-center gap-2">
+      {% if editable %}
+        <form method="post"><input type="hidden" name="action" value="publish">{% csrf_token %}
+          <button type="submit" class="btn-primary">Publicar versión</button>
+        </form>
+      {% else %}
+        <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
+          <button type="submit" class="btn-primary">Crear nueva versión para editar</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if not editable %}
+    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-6 text-sm text-slate-600">
+      Este cuestionario está {{ template.get_status_display|lower }} y es de solo lectura para no alterar resultados históricos. Crea una nueva versión para hacer cambios.
+    </div>
+  {% endif %}
+
+  <!-- Nota de escala -->
+  <form method="post" class="card p-5 mb-6">
+    {% csrf_token %}<input type="hidden" name="action" value="save_meta">
+    <label class="label" for="scale_note">Nota de escala (la ve el evaluado)</label>
+    <textarea id="scale_note" name="scale_note" rows="2" class="input" {% if not editable %}disabled{% endif %}>{{ template.scale_note }}</textarea>
+    {% if editable %}<button type="submit" class="btn-secondary mt-3">Guardar nota</button>{% endif %}
+  </form>
+
+  <!-- Escala (solo lectura) -->
+  <div class="card p-5 mb-6">
+    <h3 class="font-semibold text-slate-900 mb-2">Escala de respuestas</h3>
+    <div class="flex flex-wrap gap-2">
+      {% for opt in scale %}
+        <span class="badge bg-slate-100 text-slate-700" title="{{ opt.description }}">{% if opt.value is not None %}{{ opt.value }} · {% endif %}{{ opt.label }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Secciones y preguntas -->
+  {% for section in sections %}
+    <section class="mb-8">
+      <h3 class="font-semibold text-slate-900 mb-3">{{ section.title }} <span class="text-slate-400 font-normal">({{ section.questions.all|length }})</span></h3>
+      <div class="space-y-3">
+        {% for q in section.questions.all %}
+          <div class="card p-4" x-data="{ edit: false }">
+            <div x-show="!edit">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="font-medium text-slate-900">{{ forloop.counter }}. {{ q.title }}</p>
+                  {% if q.text %}<p class="mt-1 text-sm text-slate-600">{{ q.text }}</p>{% endif %}
+                </div>
+                {% if editable %}
+                <div class="flex items-center gap-1 shrink-0">
+                  <button type="button" class="btn-ghost p-2" @click="edit = true" aria-label="Editar">{% include "partials/icon.html" with name="clipboard" cls="w-4 h-4" %}</button>
+                  <form method="post"><input type="hidden" name="action" value="move_question"><input type="hidden" name="question" value="{{ q.id }}"><input type="hidden" name="dir" value="up">{% csrf_token %}<button class="btn-ghost p-2" aria-label="Subir">↑</button></form>
+                  <form method="post"><input type="hidden" name="action" value="move_question"><input type="hidden" name="question" value="{{ q.id }}"><input type="hidden" name="dir" value="down">{% csrf_token %}<button class="btn-ghost p-2" aria-label="Bajar">↓</button></form>
+                  <form method="post" onsubmit="return confirm('¿Eliminar esta pregunta?')"><input type="hidden" name="action" value="delete_question"><input type="hidden" name="question" value="{{ q.id }}">{% csrf_token %}<button class="btn-ghost p-2 text-rose-600" aria-label="Eliminar">{% include "partials/icon.html" with name="close" cls="w-4 h-4" %}</button></form>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% if editable %}
+            <form method="post" x-show="edit" x-cloak class="space-y-3">
+              {% csrf_token %}<input type="hidden" name="action" value="save_question"><input type="hidden" name="question" value="{{ q.id }}">
+              <div><label class="label">Título</label><input type="text" name="title" value="{{ q.title }}" class="input"></div>
+              <div><label class="label">Descripción</label><textarea name="text" rows="2" class="input">{{ q.text }}</textarea></div>
+              <div class="flex gap-2"><button type="submit" class="btn-primary">Guardar</button><button type="button" class="btn-secondary" @click="edit = false">Cancelar</button></div>
+            </form>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if editable %}
+      <form method="post" class="card p-4 mt-3 border-dashed">
+        {% csrf_token %}<input type="hidden" name="action" value="add_question"><input type="hidden" name="section" value="{{ section.id }}">
+        <p class="label">Agregar pregunta a esta sección</p>
+        <input type="text" name="title" class="input mb-2" placeholder="Título de la pregunta" required>
+        <textarea name="text" rows="2" class="input mb-2" placeholder="Descripción (opcional)"></textarea>
+        <button type="submit" class="btn-secondary">Agregar pregunta</button>
+      </form>
+      {% endif %}
+    </section>
+  {% endfor %}
+{% endblock %}

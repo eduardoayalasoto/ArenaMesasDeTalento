@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="es-MX" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{% block title %}{{ page_title|default:"Evaluaciones" }} · Arena{% endblock %}</title>
+  <meta name="description" content="Modelo de Desempeño Analítica 2026 · Arena Analytics">
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- CSS de Tailwind compilado localmente (sin CDN ni Node) -->
+  <link rel="stylesheet" href="{% static 'css/app.css' %}?v={{ asset_version }}">
+
+  <script src="{% static 'vendor/lucide.min.js' %}"></script>
+  <script defer src="{% static 'vendor/htmx.min.js' %}"></script>
+  <script defer src="{% static 'vendor/alpine.min.js' %}"></script>
+  <script>
+    // Renderiza los iconos Lucide al cargar y tras cada actualización de htmx.
+    function renderIcons() { if (window.lucide) lucide.createIcons(); }
+    document.addEventListener('DOMContentLoaded', renderIcons);
+    document.addEventListener('htmx:afterSwap', renderIcons);
+
+    // Evita doble envío: deshabilita el botón tras enviar (sin perder su name/value).
+    document.addEventListener('submit', function (e) {
+      const btn = e.submitter;
+      if (!btn || btn.dataset.noLock) return;
+      setTimeout(function () {
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'pointer-events-none');
+      }, 0);
+    });
+  </script>
+  <script>
+    // Store global de notificaciones (toasts) y estado de la barra lateral.
+    document.addEventListener('alpine:init', () => {
+      Alpine.store('ui', {
+        sidebarOpen: false,
+        toasts: [],
+        notify(message, level = 'info') {
+          const id = Date.now() + Math.floor(Math.random() * 1000);
+          this.toasts.push({ id, message, level });
+          setTimeout(() => this.dismiss(id), 4500);
+        },
+        dismiss(id) { this.toasts = this.toasts.filter(t => t.id !== id); },
+      });
+    });
+    // Errores de red en htmx → toast amigable (flujo nunca bloqueado).
+    document.body && document.body.addEventListener('htmx:sendError', () => {
+      window.Alpine && Alpine.store('ui').notify('Sin conexión. Reintentando…', 'warning');
+    });
+  </script>
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow">Saltar al contenido</a>
+
+  {% if user.is_authenticated %}
+  <div class="min-h-dvh lg:flex" x-data>
+    {% include "partials/sidebar.html" %}
+
+    <div class="flex-1 min-w-0 lg:pl-0">
+      {% include "partials/topbar.html" %}
+
+      <main id="contenido" class="px-4 sm:px-6 lg:px-8 py-6 max-w-6xl mx-auto w-full">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+  {% else %}
+    {% block auth_content %}{% endblock %}
+  {% endif %}
+
+  {% include "partials/toasts.html" %}
+</body>
+</html>

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-2"><a href="{% url 'catalog:project_admin' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Proyectos</a></div>
+  <h2 class="text-xl font-semibold text-slate-900 mb-6">{% if project %}{{ project.name }}{% else %}Nuevo proyecto{% endif %}</h2>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <!-- Datos del proyecto -->
+    <form method="post" class="card p-5 lg:col-span-2 space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="save">
+
+      <div>
+        <label class="label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        {{ form.name }}
+        {% for e in form.name.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <label class="label" for="{{ form.client.id_for_label }}">{{ form.client.label }}</label>
+        {{ form.client }}
+      </div>
+      <div>
+        <label class="label" for="{{ form.lead.id_for_label }}">{{ form.lead.label }}</label>
+        {{ form.lead }}
+        {% for e in form.lead.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div>
+        <span class="label">{{ form.duration_type.label }}</span>
+        <div class="space-y-2">
+          {% for radio in form.duration_type %}
+            <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 cursor-pointer hover:bg-slate-50">
+              {{ radio.tag }}<span class="text-sm text-slate-700">{{ radio.choice_label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+        <p class="mt-1 text-xs text-slate-500">Define qué criterio de tiempo se evalúa en la Entrega de Valor.</p>
+      </div>
+      <label class="flex items-center gap-2 cursor-pointer">
+        {{ form.is_active }}<span class="text-sm text-slate-700">{{ form.is_active.label }}</span>
+      </label>
+
+      <button type="submit" class="btn-primary">{% if project %}Guardar cambios{% else %}Crear proyecto{% endif %}</button>
+    </form>
+
+    <!-- Equipo -->
+    <div class="card p-5">
+      <h3 class="font-semibold text-slate-900 mb-1">Equipo</h3>
+      {% if not project %}
+        <p class="text-sm text-slate-500">Guarda el proyecto primero para asignar a su equipo.</p>
+      {% else %}
+        <p class="text-sm text-slate-500 mb-3">Las evaluaciones de Ownership se habilitan para cada miembro.</p>
+        <ul class="space-y-2 mb-4">
+          {% for m in members %}
+            <li class="flex items-center justify-between gap-2 text-sm">
+              <span class="text-slate-700">{{ m.user.full_name }}</span>
+              <form method="post">{% csrf_token %}
+                <input type="hidden" name="action" value="remove_member">
+                <input type="hidden" name="membership" value="{{ m.pk }}">
+                <button class="text-rose-600 hover:text-rose-700" aria-label="Quitar">Quitar</button>
+              </form>
+            </li>
+          {% empty %}
+            <li class="text-sm text-slate-400">Sin miembros aún.</li>
+          {% endfor %}
+        </ul>
+        <form method="post" class="flex gap-2">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_member">
+          <select name="user" class="input py-1.5" required>
+            <option value="">Agregar persona…</option>
+            {% for u in available %}<option value="{{ u.id }}">{{ u.full_name }}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn-secondary shrink-0">Agregar</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

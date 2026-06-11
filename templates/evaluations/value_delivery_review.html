@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Validar Entrega de Valor</h2>
+    <p class="text-slate-600">Revisa y valida (o regresa) las evaluaciones enviadas por los líderes.</p>
+  </div>
+
+  {% if not queue %}
+    {% include "partials/empty_state.html" with icon="shield" title="No hay nada por validar" message="Cuando un líder envíe una Entrega de Valor a validación, aparecerá aquí." %}
+  {% else %}
+    <div class="space-y-4">
+      {% for vd in queue %}
+        <div class="card p-5" x-data="{ rejecting: false }">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="font-semibold text-slate-900">{{ vd.project.name }}</h3>
+              <p class="text-sm text-slate-500">Capturada por {{ vd.evaluator.full_name }}</p>
+            </div>
+            <span class="text-lg font-semibold text-slate-900 tabular-nums">{{ vd.score }}</span>
+          </div>
+          <dl class="mt-3 grid grid-cols-3 gap-3 text-sm">
+            <div><dt class="text-slate-500">Satisfacción</dt><dd class="font-medium">{{ vd.client_satisfaction|default:"—" }}</dd></div>
+            <div><dt class="text-slate-500">Entregables</dt><dd class="font-medium">{{ vd.deliverables|default:"—" }}</dd></div>
+            <div><dt class="text-slate-500">Tiempo</dt><dd class="font-medium">{% if vd.project.is_finite %}{{ vd.time_finite|default:"—" }}{% else %}{{ vd.time_indefinite|default:"—" }}{% endif %}</dd></div>
+          </dl>
+
+          <div class="mt-4 flex items-center gap-2">
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="vd" value="{{ vd.pk }}">
+              <input type="hidden" name="action" value="validate">
+              <button type="submit" class="btn-primary">Validar</button>
+            </form>
+            <button type="button" class="btn-secondary" @click="rejecting = !rejecting">Regresar a borrador</button>
+          </div>
+
+          <form method="post" x-show="rejecting" x-cloak class="mt-3">
+            {% csrf_token %}
+            <input type="hidden" name="vd" value="{{ vd.pk }}">
+            <input type="hidden" name="action" value="reject">
+            <label class="label" for="comment-{{ vd.pk }}">Motivo del rechazo</label>
+            <textarea id="comment-{{ vd.pk }}" name="comment" rows="2" class="input" required placeholder="Explica qué debe ajustar el líder."></textarea>
+            <button type="submit" class="btn-danger mt-2">Confirmar regreso</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

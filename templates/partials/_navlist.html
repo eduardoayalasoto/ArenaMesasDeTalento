@@ -1,0 +1,12 @@
+{% comment %}Lista de enlaces de navegación; resalta el activo.{% endcomment %}
+<nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1" aria-label="Navegación principal">
+  {% for item in nav_items %}
+    <a href="{{ item.url }}"
+       class="nav-link {% if item.active %}nav-link-active{% endif %}"
+       @click="$store.ui.sidebarOpen = false"
+       {% if item.active %}aria-current="page"{% endif %}>
+      {% include "partials/icon.html" with name=item.icon cls="w-5 h-5 shrink-0" %}
+      <span>{{ item.label }}</span>
+    </a>
+  {% endfor %}
+</nav>

@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+# Nota: el logo vive en static/img/ (sí se versiona); media/ son subidas de usuarios.
+
+# Entorno
+.env
+
+# CLI de Tailwind (binario de 117 MB; NO subir). El CSS compilado (static/css/app.css) SÍ se versiona.
+tailwindcss.exe
+
+# Editores / SO
+.DS_Store
+.idea/
+.vscode/
+*.swp

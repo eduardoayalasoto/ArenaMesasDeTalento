@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Mis evaluaciones de Ownership</h2>
+    {% if period %}
+      <p class="text-slate-600">Periodo <span class="font-medium">{{ period.name }}</span>. Una evaluación por proyecto.</p>
+    {% endif %}
+  </div>
+
+  <div class="rounded-lg bg-arena-50 border border-arena-100 px-4 py-3 mb-6 text-sm text-arena-800">
+    No envíes tu evaluación hasta tener tu sesión de validación con tu líder: una vez enviada, no se puede modificar.
+  </div>
+
+  {% if not period %}
+    {% include "partials/empty_state.html" with icon="calendar" title="No hay un periodo abierto" message="Tus evaluaciones se habilitarán cuando Talento abra el periodo." %}
+  {% elif not cards %}
+    {% include "partials/empty_state.html" with icon="folder" title="Aún no tienes proyectos asignados" message="Cuando Talento te asigne a un proyecto en este periodo, verás aquí tu evaluación de Ownership." %}
+  {% else %}
+    <div class="grid gap-4 sm:grid-cols-2">
+      {% for card in cards %}
+        <div class="card p-5 flex flex-col">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="font-semibold text-slate-900">{{ card.project.name }}</h3>
+              {% if card.project.client %}<p class="text-sm text-slate-500">{{ card.project.client }}</p>{% endif %}
+            </div>
+            {% if card.evaluation %}
+              {% include "partials/status_badge.html" with status=card.evaluation.status label=card.evaluation.get_status_display %}
+            {% else %}
+              <span class="badge bg-slate-100 text-slate-500">Sin iniciar</span>
+            {% endif %}
+          </div>
+
+          {% if card.evaluation %}
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-sm text-slate-600 mb-1">
+                <span>{{ card.answered }}/{{ card.total }} respondidas</span>
+                {% if card.evaluation.score %}<span class="font-semibold text-slate-900 tabular-nums">{{ card.evaluation.score }}</span>{% endif %}
+              </div>
+              <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full bg-arena-500" style="width: {% widthratio card.answered card.total 100 %}%"></div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            {% if card.evaluation and card.evaluation.is_submitted %}
+              <a href="{% url 'evaluations:ownership_view' pk=card.evaluation.pk %}" class="btn-secondary w-full">Ver evaluación cerrada</a>
+            {% elif card.evaluation %}
+              <a href="{% url 'evaluations:ownership_edit' pk=card.evaluation.pk %}" class="btn-primary w-full">Continuar</a>
+            {% else %}
+              <form method="post" action="{% url 'evaluations:ownership_start' project_id=card.project.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary w-full">Comenzar evaluación</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

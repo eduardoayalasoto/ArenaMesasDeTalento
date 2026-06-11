@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  {% with locked=vd.status|stringformat:"s" %}
+  <div class="mb-2"><a href="{% url 'evaluations:value_delivery_list' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Entrega de Valor</a></div>
+  <div class="flex items-start justify-between gap-3 mb-4">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">{{ project.name }}</h2>
+      <p class="text-slate-600">{{ project.get_duration_type_display }}</p>
+    </div>
+    {% include "partials/status_badge.html" with status=vd.status label=vd.get_status_display %}
+  </div>
+
+  <div class="rounded-lg bg-arena-50 border border-arena-100 px-4 py-3 mb-6 text-sm text-arena-800">
+    Esta calificación se aplicará a las <span class="font-semibold">{{ members_count }}</span> personas del equipo del proyecto.
+  </div>
+
+  {% if vd.rejection_comment %}
+  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6 text-sm text-amber-800">
+    El director regresó esta evaluación: “{{ vd.rejection_comment }}”
+  </div>
+  {% endif %}
+
+  <form method="post" class="card p-5 space-y-6">
+    {% csrf_token %}
+    {% if vd.status == 'VALIDADA' %}
+      <p class="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">Validada. Calificación: <span class="font-semibold">{{ vd.score }}</span>.</p>
+    {% endif %}
+
+    {% include "evaluations/_vd_criterion.html" with name="client_satisfaction" label="Satisfacción del cliente" help="Nivel de satisfacción del cliente con el trabajo entregado." current=vd.client_satisfaction values=scale_values disabled=vd.status %}
+    {% include "evaluations/_vd_criterion.html" with name="deliverables" label="Entregables" help="Cumplimiento y calidad de los entregables comprometidos." current=vd.deliverables values=scale_values disabled=vd.status %}
+
+    {% if project.is_finite %}
+      {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — cumplimiento de la fecha de entrega" help="Aplica porque el proyecto tiene fecha de cierre definida." current=vd.time_finite values=scale_values disabled=vd.status %}
+    {% else %}
+      {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — consistencia del servicio" help="Aplica porque el proyecto es de tiempo indefinido." current=vd.time_indefinite values=scale_values disabled=vd.status %}
+    {% endif %}
+
+    {% if vd.status != 'VALIDADA' %}
+      <button type="submit" class="btn-primary w-full">Enviar a validación del director</button>
+    {% endif %}
+  </form>
+  {% endwith %}
+{% endblock %}

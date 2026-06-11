@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-3">
+    <a href="{% url 'dashboards:my_area' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Mi área</a>
+  </div>
+
+  {% if not period %}
+    {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="No hay resultados que consultar por ahora." %}
+  {% else %}
+    {% include "dashboards/_results_body.html" with subject=target final=final weight=weight projects=projects feedback=feedback arena_notes=arena_notes period=period detail_links=True %}
+  {% endif %}
+{% endblock %}

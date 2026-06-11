@@ -1,0 +1,10 @@
+{% comment %}Avatar circular. Params: subject (User), size (clases w/h, def w-10 h-10), icon (clases del icono).
+Si no hay foto, muestra un icono de usuario de Lucide.{% endcomment %}
+{% if subject.photo %}
+  <img src="{{ subject.photo.url }}" alt="Foto de {{ subject.full_name }}"
+       class="{{ size|default:'w-10 h-10' }} rounded-full object-cover ring-1 ring-slate-200 shrink-0">
+{% else %}
+  <span class="{{ size|default:'w-10 h-10' }} rounded-full bg-arena-50 text-arena-500 grid place-items-center ring-1 ring-arena-100 shrink-0">
+    <i data-lucide="user-round" class="{{ icon|default:'w-1/2 h-1/2' }}"></i>
+  </span>
+{% endif %}

@@ -1,0 +1,287 @@
+Checklist Ownership PM Lead
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+9
+Present
+
+Templates
+Checklist Ownership PM LeadChecklist Ownership PM Lead
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad considerando el impacto real en los proyectos y el equipo a tu cargo durante el período. 
+1. No cumple — La actividad no se ejecutó o generó un impacto negativo en el proyecto, el equipo o el cliente.
+2. Cumple parcial — La actividad se ejecutó de forma incompleta, tardía o sin el impacto esperado para el nivel Lead.
+3. Cumple — La actividad se ejecutó de forma consistente, con el criterio y la proactividad esperados del nivel Lead.
+4. Excede — La actividad generó un impacto diferencial: resolvió un riesgo antes de que escalara, fortaleció significativamente la relación con el cliente o desarrolló capacidades reales en el equipo.
+N/A — La actividad no aplicó en ninguno de los proyectos del período.
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+PM Jr
+PM Mid
+PM Snr
+PM Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+Section 2
+Aseguramiento de gestión de proyectos
+
+5.Required to answer. Single choice. 
+Realizar seguimiento a los PMs con los que trabaja en el proyecto para evaluar el cumplimiento del checklist correspondiente y definir ajustes
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Required to answer. Single choice. 
+Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Oficina de PMO
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Required to answer. Single choice. 
+Identificar y hacer equipo con leads técnicos para asegurar que el proyecto cuenta con las bases y diseños técnicos requeridos
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 3
+Guía y soporte al equipo de proyecto
+
+8.Required to answer. Single choice. 
+Asistir y participar activamente a los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Required to answer. Single choice. 
+Asistir y participar activamente a los planning y review del proyecto
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Required to answer. Single choice. 
+Asegurar y revisar la alineación recurrente del trabajo del equipo vs el alcance de la propuesta
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Required to answer. Single choice. 
+Identificar, validar el material y preparación y participar en sesiones críticas donde asistirán stakeholders senior del cliente que requieran apoyo del lead
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Required to answer. Single choice. 
+Ayudar al equipo a mapear y entender a todos los stakeholders involucrados
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Required to answer. Single choice. 
+Agendar one on ones con stakeholders senior del proyecto para alinear expectativas y generar una relación de confianza y cercanía
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Required to answer. Single choice. 
+Anticipar participación de directores en momentos y sesiones críticas, dando claridad de la comunicación o influencia requerida de su parte
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Required to answer. Single choice. 
+Crear y ejecuta un plan de transición, onboarding, KTs y seguimiento al staffing del proyecto al inicio, durante y al final
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 4
+Guía y soporte al equipo interno
+
+16.Required to answer. Single choice. 
+Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Mesa de Talento
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Required to answer. Single choice. 
+Monitorear el avance de los planes de capacitación del equipo de Producto en sus proyectos
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Required to answer. Single choice. 
+Monitorear la ejecución y calidad de las sesiones de mentoring de los equipos de producto en sus proyectos
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Required to answer. Single choice. 
+Dar seguimiento a la planeación y anticipación de los días de vacaciones y ausencias del equipo en sus proyectos para evitar riesgos en la ejecución
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Required to answer. Single choice. 
+Dar seguimiento a resolver directamente dudas de los procedimientos internos de Arena (e.g. PMO, Odoo, Mesa de Talento, Vacaciones, etc.)
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Required to answer. Single choice. 
+Planear y ejecutar sesiones de aprendizaje con el equipo de PMs
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Required to answer. Single choice. 
+Asegurar el mantenimiento del directorio de KO, accesos internos Arena y otros clientes (bajas, altas, cambios de reporte)
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Required to answer. Single choice. 
+Identificar y gestionar la implementación de mejoras a las metodologías, estándares de trabajo y herramientas en coordinación con el resto de los leads y del equipo de Arena
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 5
+Soporte comercial
+
+24.Required to answer. Single choice. 
+Dar soporte comercial a través de la identificación de oportunidades, necesidades, evolución de soluciones actuales y sensibilización en temas de innovación para el cliente
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Required to answer. Single choice. 
+Dar soporte comercial a través de la construcción y validación de propuestas en conjunto con otros leads y el director
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Required to answer. Single choice. 
+Dar soporte comercial a través del seguimiento a facturación y temas administrativos en caso de ser requerido
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Required to answer. Single choice. 
+Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para desarrollar una relación más cercana y mentener una presencia activa
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 6
+Cumplimiento lineamientos de trabajo remoto
+
+28.Required to answer. Single choice. 
+Asistir y  mantenerse enfocado en las reuniones
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+29.Required to answer. Single choice. 
+Responder correos y mensajes por teams en tiempo y forma
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 7
+Conclusión
+
+30.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+31.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+32.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 8
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+33.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+34.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder
+

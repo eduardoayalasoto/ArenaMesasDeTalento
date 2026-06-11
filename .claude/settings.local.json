@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude update *)",
+      "Bash(pip --version)",
+      "Bash(git --version)",
+      "Bash(py --version)",
+      "Bash(python -m pip --version)",
+      "Bash(python -m venv --help)",
+      "Bash(.venv/Scripts/python.exe -m pip install \"Django>=6.0,<6.1\" whitenoise python-dotenv PyYAML django-simple-history pytest pytest-django)"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Impacto Arena</h2>
+    {% if period %}<p class="text-slate-600">Captura por periodo <span class="font-medium">{{ period.name }}</span> (escala 1–4). Se guarda en lote.</p>{% endif %}
+  </div>
+
+  {% if not period %}
+    {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="Abre un periodo para capturar el Impacto Arena." %}
+  {% else %}
+    {% include "partials/info_panel.html" with title="Cómo capturar" text="<p>Escribe la calificación de cada persona del 1 al 4 (admite decimales, p. ej. 3.5). Las notas son opcionales.</p><p>Puedes dejar filas en blanco y volver luego. Al guardar, se recalcula automáticamente la calificación final de cada persona afectada.</p>" %}
+    <form method="post" class="card overflow-hidden">
+      {% csrf_token %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600 text-left">
+            <tr>
+              <th class="px-4 py-3 font-medium">Colaborador</th>
+              <th class="px-4 py-3 font-medium w-32">Calificación</th>
+              <th class="px-4 py-3 font-medium">Notas</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for row in rows %}
+              <tr>
+                <td class="px-4 py-2">
+                  <p class="font-medium text-slate-900">{{ row.user.full_name }}</p>
+                  <p class="text-xs text-slate-500">{{ row.user.email }}</p>
+                </td>
+                <td class="px-4 py-2">
+                  <input type="number" name="score-{{ row.user.id }}" min="1" max="4" step="0.01"
+                         value="{{ row.impact.score|default_if_none:'' }}" class="input py-1.5" placeholder="1–4">
+                </td>
+                <td class="px-4 py-2">
+                  <input type="text" name="notes-{{ row.user.id }}" value="{{ row.impact.notes|default:'' }}"
+                         class="input py-1.5" placeholder="Opcional">
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+        <button type="submit" class="btn-primary">Guardar Impacto Arena</button>
+      </div>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% comment %}Tarjeta de estadística con icono. Params: icon, label, value, tone (arena|emerald|amber|rose).{% endcomment %}
+<div class="card p-5 flex items-center gap-4">
+  <span class="grid place-items-center w-11 h-11 rounded-xl shrink-0
+    {% if tone == 'emerald' %}bg-emerald-50 text-emerald-600
+    {% elif tone == 'amber' %}bg-amber-50 text-amber-600
+    {% elif tone == 'rose' %}bg-rose-50 text-rose-600
+    {% else %}bg-arena-50 text-arena-600{% endif %}">
+    {% include "partials/icon.html" with name=icon cls="w-5 h-5" %}
+  </span>
+  <div class="min-w-0">
+    <p class="text-2xl font-bold text-slate-900 tabular-nums leading-tight">{{ value }}</p>
+    <p class="text-xs text-slate-500 truncate">{{ label }}</p>
+  </div>
+</div>

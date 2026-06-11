@@ -1,0 +1,253 @@
+Checklist Ownership CD Snr
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+6
+Present
+
+Templates
+Checklist Ownership CD Snr
+Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+CD Jr
+CD Mid
+CD Snr
+CD Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+5.Backlog de tareasRequired to answer. Single choice. 
+Definir y mantener el backlog técnico del equipo de Ciencia, incluyendo deuda técnica, entrenamiento/reentrenamiento de modelos, métricas, sesgo, anomalías y validaciones. Asegurar que el backlog está priorizado de acuerdo con el valor al cliente y la viabilidad técnica, no solo con la urgencia operativa.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Documentación del avanceRequired to answer. Single choice. 
+Coordinar con el DS Mid la distribución de tareas del sprint y asegurar que el plan refleja las fases de diseño y modelación con el nivel de detalle necesario. Detectar riesgos estructurales del sprint antes de que ocurran.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Documentación de los estándares de desarrollo y buenas prácticasRequired to answer. Single choice. 
+Definir, validar y asegurar la correcta aplicación de estándares de trabajo, desarrollo y buenas prácticas en todos los entregables del equipo de Ciencia. Resolver conflictos entre los estándares de Arena y los requerimientos de Negocio con criterio técnico documentado.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Diseño de arquitectura de datosRequired to answer. Single choice. 
+Diseñar, documentar y validar con DE y Producto la arquitectura de datos necesaria para el despliegue de soluciones en ambiente productivo. Comunicar explícitamente los componentes que no existen en el ecosistema de Negocio o que implican costos adicionales.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Excelencia técnica de métodos estadísticosRequired to answer. Single choice. 
+Diseñar, coordinar, implementar, ejecutar, evaluar y criticar, con bases teóricas sólidas y buenas prácticas del trabajo estadístico, todos los aspectos matemáticos o estadísticos (modelos, pruebas de hipótesis, pruebas, muestreo, etc.) que requiera el producto, validando cuidadosamente los suspuestos que defina o elija en cada caso.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Funcionalidad óptima de código y excelencia técnica en programaciónRequired to answer. Single choice. 
+Diseñar, asignar y supervisar, apegado a las buenas prácticas y requerimientos (técnicos y de staff) establecidos en el proyecto, el pseudocódigo y los algoritmos que resuelven el problema de negocio. Dependiendo de la naturaleza del proyecto, le da seguimiento a la integración de pipelines, soluciones de GenAI, modelos de analítica avanzada y POC, cerciorándose de su correcto funcionamiento, mantenimiento, accesibilidad y escalabilidad.  
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Documentación de reglas de negocioRequired to answer. Single choice. 
+Definir y validar con Negocio y Producto las reglas de negocio dentro de los supuestos estadísticos del proyecto. Supervisar su correcta implementación en el pipeline y gestionar la deprecación de reglas que pierdan vigencia.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Rutinas de gestión y control interno 1Required to answer. Single choice. 
+Asistir al daily reportando su avance en definición, coordinación y validación. Identificar y anticipar riesgos del sprint como principal responsable de la gestión de riesgos técnicos del equipo de Ciencia.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Rutinas de gestión y control interno 2Required to answer. Single choice. 
+Asistir al touchpoint semanal con el DS Lead preparado con updates de proyectos, riesgos técnicos, plan de mentoring y compromisos del período. En ausencia del DS Lead, asumir la conducción del touchpoint.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Rutinas de gestión y control interno 3Required to answer. Single choice. 
+Asistir al touchpoint con los Leads de DE y Producto representando al equipo de Ciencia con criterio propio. En ausencia del DS Lead, ser el vocero del equipo y documentar los acuerdos inter-equipo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Rutinas de gestión y control interno 4Required to answer. Single choice. 
+Liderar el sprint planning definiendo qué ejecutará, coordinará y validará durante el sprint. Hacer challenge de las actividades del equipo que no estén alineadas, no sean realistas o tengan definiciones incompletas.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Rutinas de gestión y control interno 5Required to answer. Single choice. 
+Exponer su desempeño en el sprint review y retro, identificar áreas de mejora propias y del equipo, y proponer cambios concretos para el siguiente sprint. Dar retroalimentación técnica profunda al DS Mid.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Rutinas de gestión y control interno 6Required to answer. Single choice. 
+Liderar el biweekly de datos con Negocio mostrando supuestos estadísticos, reglas de negocio, benchmark entre modelos y arquitectura del producto de datos. Validar supuestos con Negocio y documentar acuerdos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Rutinas de gestión y control interno 7Required to answer. Single choice. 
+Supervisar y coordinar las ceremonias de actualización al backlog, asegurando que cualquier redistribución de trabajo esté validada técnicamente y sea realista para el equipo disponible.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Checklist de validacionesRequired to answer. Single choice. 
+Definir los criterios de validación estadística del sprint, incluyendo horizontes de reentrenamiento, QA de modelos y arquitecturas de datos. Ser el árbitro final de la validez de un criterio de aceptación técnico.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Plan de deployment y roll-outRequired to answer. Single choice. 
+Diseñar el plan de despliegue y respuesta a contingencias del equipo de Ciencia. Asesorar al DS Mid y DS Jr sobre el plan de roll-back. Asegurarse de que el plan está alineado con los tiempos de Producto y Negocio.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Minuta de reuniones con NegocioRequired to answer. Single choice. 
+Liderar sesiones técnicas con Negocio y asegurarse de que los acuerdos de alto impacto técnico están correctamente documentados. Revisar y aprobar internamente las minutas del DS Mid antes de compartirlas con Negocio.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Checklist de documentación y revisiones de códigoRequired to answer. Single choice. 
+Definir los requisitos de documentación del proyecto según la expectativa de Negocio y las buenas prácticas de Arena. Hacer la revisión final de código y documentación antes del cierre del proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Plan de KT y legacyRequired to answer. Single choice. 
+Definir y supervisar el plan de KT y legacy. Asegurar que la solución es escalable, mantenible y operable por Negocio. Participar en las sesiones de KT críticas con Negocio.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Resumen de herramientas y necesidades técnicasRequired to answer. Single choice. 
+Anticipar y comunicar las necesidades técnicas del equipo de Ciencia a nivel de herramientas, licencias y capacidades. Supervisar el avance del plan de mentoring del DS Mid.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Preparación y participación en sesiones con NegocioRequired to answer. Single choice. 
+Preparar y liderar sesiones con Negocio anticipando preguntas de alto nivel técnico y estratégico sobre los modelos y la arquitectura. Proponer el enfoque correcto cuando Negocio plantea una solución técnicamente inviable o subóptima.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Cumplimiento de lineamientos de trabajo remoto 1Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Cumplimiento de lineamientos de trabajo remoto 2Required to answer. Single choice. 
+Responder correos y mensajes de Teams en tiempo y forma, dentro de las 24 horas hábiles de haberlos recibido.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+28.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+29.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+30.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 2
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+31.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+32.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

@@ -1,0 +1,6 @@
+{% comment %}Marca: logo de Arena (fondo blanco) + módulo.{% endcomment %}
+{% load static %}
+<a href="{% url 'dashboards:home' %}" class="flex items-center gap-2.5">
+  <img src="{% static 'img/arena-logo.gif' %}" alt="Arena Analytics" class="h-8 w-auto">
+  <span class="text-sm font-medium text-slate-600 border-l border-slate-200 pl-2.5 leading-tight font-display">Mesa de Talento</span>
+</a>

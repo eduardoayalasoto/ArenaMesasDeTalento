@@ -1,0 +1,271 @@
+Checklist Ownership ID Lead
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+8
+Present
+
+Templates
+Checklist Ownership ID LeadChecklist Ownership ID Lead
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad considerando el impacto real en los proyectos y el equipo a tu cargo durante el período. 
+1. No cumple — La actividad no se ejecutó o generó un impacto negativo en el proyecto, el equipo o el cliente.
+2. Cumple parcial — La actividad se ejecutó de forma incompleta, tardía o sin el impacto esperado para el nivel Lead.
+3. Cumple — La actividad se ejecutó de forma consistente, con el criterio y la proactividad esperados del nivel Lead.
+4. Excede — La actividad generó un impacto diferencial: resolvió un riesgo antes de que escalara, fortaleció significativamente la relación con el cliente o desarrolló capacidades reales en el equipo.
+N/A — La actividad no aplicó en ninguno de los proyectos del período.
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+ID Jr
+ID Mid
+ID Snr
+ID Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+Section 2
+Aseguramiento de calidad técnica del equipo
+
+5.Required to answer. Single choice. 
+Realizar seguimiento a los DE Sr/Mid de sus proyectos para evaluar el cumplimiento de sus checklists correspondientes. Documentar hallazgos y dar retro directa en sesión 1:1.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Required to answer. Single choice. 
+Asegurar que los proyectos a su cargo cumplen con las actividades de la Oficina de PMO y con los estándares de arquitectura de datos de Arena. Identificar brechas técnicas y escalarlas al director de Analítica cuando no puedan resolverse a nivel de proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Required to answer. Single choice. 
+Hacer equipo con los leads técnicos de DS, Producto y UX para asegurar que los proyectos cuentan con los diseños de integración de datos correctos y que no hay brechas entre lo que el pipeline entrega y lo que el DS necesita.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 3
+Guía y soporte al equipo de proyecto
+
+8.Required to answer. Single choice. 
+Asistir y participar activamente en los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre. Evaluar en cada asistencia la preparación del equipo, el foco técnico y el cumplimiento de agenda y tiempos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Required to answer. Single choice. 
+Asistir y participar activamente en los sprint planning y sprint review. Hacer challenge técnico de estimaciones de pipeline, diseños de arquitectura comprometidos y consistencia entre lo que se planea construir y la propuesta original.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Required to answer. Single choice. 
+Ayudar al equipo a mapear y entender todos los stakeholders técnicos y de negocio involucrados en el proyecto, incluyendo sus motivaciones, nivel de influencia y postura hacia las decisiones de arquitectura.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Required to answer. Single choice. 
+Identificar, validar el material técnico y participar en sesiones críticas con stakeholders senior del cliente o de tecnología del cliente que requieran el criterio del DE Lead. Asegurar que el equipo tiene clara la agenda y el objetivo técnico antes de construir el material.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Required to answer. Single choice. 
+Agendar y ejecutar one-on-ones con stakeholders técnicos senior del cliente (CTO, arquitectos, equipo de infraestructura) para alinear expectativas técnicas, anticipar restricciones de ambiente y construir una relación de confianza técnica.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Required to answer. Single choice. 
+Anticipar y coordinar la participación del director de Analítica en momentos críticos del proyecto (revisiones de arquitectura, escalamientos de cliente, decisiones de alcance técnico), comunicando con claridad el contexto y el tipo de apoyo requerido.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Required to answer. Single choice. 
+Crear y ejecutar un plan de transición, onboarding técnico, KT y seguimiento al staffing del proyecto al inicio, durante y al final, considerando riesgos de pérdida de conocimiento de arquitectura ante cambios de equipo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 4
+Guía y soporte al equipo interno
+
+15.Required to answer. Single choice. 
+Asegurar que los proyectos a su cargo cumplen con las actividades de la Mesa de Talento, incluyendo evaluaciones de desempeño cerradas antes de que el equipo se reasigne a otros proyectos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Required to answer. Single choice. 
+Monitorear el avance de los planes de capacitación técnica del equipo de Ingeniería en sus proyectos. Identificar quién no puede avanzar por carga de trabajo y escalar al director de Analítica con propuesta de solución.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Required to answer. Single choice. 
+Monitorear la ejecución y calidad de las sesiones de mentoring de los DE Sr/Mid en sus proyectos. Actuar sobre el mentoring que no está generando desarrollo real en el mentee.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Required to answer. Single choice. 
+Dar seguimiento a la planeación y anticipación de vacaciones y ausencias del equipo de DE en sus proyectos, gestionándolas como riesgo de continuidad de pipeline, no como trámite administrativo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Required to answer. Single choice. 
+Ser el punto de referencia del equipo de DE para resolver dudas sobre procedimientos internos de Arena (PMO, Odoo, Mesa de Talento, vacaciones, etc.) sin necesidad de intermediación de RH o PMO.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Required to answer. Single choice. 
+Planear y ejecutar sesiones de aprendizaje técnico con el equipo de DE. Las sesiones deben desarrollar capacidades de arquitectura, ingeniería de datos o consultoría técnica que el equipo pueda aplicar en proyectos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Required to answer. Single choice. 
+Identificar y gestionar la implementación de mejoras a las metodologías, estándares de arquitectura y herramientas del equipo de DE, en coordinación con los demás leads y el director de Analítica.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 5
+Soporte comercial
+
+22.Required to answer. Single choice. 
+Identificar oportunidades de expansión del trabajo de DE en los proyectos: nuevas fuentes de datos, modernización de arquitecturas legacy, automatización de procesos manuales del cliente o expansión de la cobertura del pipeline actual.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Required to answer. Single choice. 
+Dar soporte en la construcción y validación técnica de propuestas de ingeniería de datos: viabilidad de arquitectura, estimaciones de esfuerzo de pipeline, alcance técnico y dependencias con el cliente.
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Required to answer. Single choice. 
+Dar soporte en el seguimiento a facturación y temas administrativos del proyecto cuando sea requerido por el director.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Required to answer. Single choice. 
+Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para fortalecer la relación técnica y mantener una presencia activa de Arena con el equipo de tecnología del cliente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 6
+Cumplimiento de lineamientos de trabajo remoto
+
+26.Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Required to answer. Single choice. 
+Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 7
+Conclusión
+
+28.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+29.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+30.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 8
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+31.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+32.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder
+

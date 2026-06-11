@@ -1,0 +1,229 @@
+Checklist Ownership CD Jr
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+9
+Present
+
+Templates
+Checklist Ownership CD JrChecklist Ownership CD Jr
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+CD Jr
+CD Mid
+CD Snr
+CD Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+5.Backlog de tareasRequired to answer. Single choice. 
+Mantener un backlog de tareas de sus actividades, confirmando prioridades, expectativas de tiempo de entrega y dependencias (técnicas y operativas) de acuerdo con los estándares de la Oficina de PMO.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Documentación del avanceRequired to answer. Single choice. 
+Actualizar y documentar el avance de sus tareas en la herramienta de seguimiento correspondiente y de acuerdo con los estándares de la Oficina de PMO. Incluir riesgos, dependencias y bloqueos activos.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Documentación de los estándares de desarrollo y buenas prácticasRequired to answer. Single choice. 
+Revisar, entender y aplicar los estándares de desarrollo y documentación vigentes para el proyecto desde el inicio del mismo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Diseño de arquitectura de datosRequired to answer. Single choice. 
+Entender y documentar el diseño de arquitectura definido por el DS Sr/Lead y aplicarlo correctamente en sus desarrollos. Identificar cuando sus implementaciones se desvían del diseño acordado y comunicarlo de inmediato.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Excelencia técnica de métodos estadísticosRequired to answer. Single choice. 
+Implementar, ejecutar y darle seguimiento, con una base teórica sólida y siguiendo las buenas prácticas del trabajo estadístico, a las distintas pruebas (paramétricas o no), planes de muestreo, pruebas de hipótesis y modelación matemática que requiera el producto, validando cuidadosamente los suspuestos empleados en cada caso.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Funcionalidad óptima de código y excelencia técnica en programaciónRequired to answer. Single choice. 
+Realizar, de manera óptima y de acuerdo con las pautas (técnicas y de infraestructura) establecidas en el proyecto, el código que ejecute la solución (o una parte de ella) asignada por el DS Mid, siguiendo las buenas prácticas y los más altos estándares de calidad en su programación.  
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Documentación de reglas de negocioRequired to answer. Single choice. 
+Entender las reglas de negocio definidas y validar que sus implementaciones las incorporan correctamente. Levantar dudas sobre la aplicación de una regla antes de codificarla.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Rutinas de gestión y control interno 1Required to answer. Single choice. 
+Asistir al daily preparado, comunicando claramente el avance de sus actividades, bloqueos, dependencias y riesgos. No llegar al daily a descubrir sus propios bloqueos: deben estar identificados antes de la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Rutinas de gestión y control interno 2Required to answer. Single choice. 
+Asistir al touchpoint o one-on-one interno con el DS Lead/Mid comunicando proactivamente los puntos más críticos de sus actividades, dudas técnicas y personales, y compromisos del período.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Rutinas de gestión y control interno 3Required to answer. Single choice. 
+Asistir al sprint planning preparado, con una propuesta propia de sus actividades, estimaciones de tiempo, criterios de aceptación y dependencias relevantes para el sprint.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Rutinas de gestión y control interno 4Required to answer. Single choice. 
+Asistir al sprint review y retro preparado, exponiendo los resultados de sus tareas, aprendizajes del sprint y áreas de mejora concretas. Recibir feedback sin ponerse a la defensiva.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Checklist de validacionesRequired to answer. Single choice. 
+Ejecutar y documentar las validaciones técnicas de cada entregable antes de considerarlo completo. No declarar una tarea como 'done' sin haber ejecutado el checklist correspondiente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Plan de deployment y roll-outRequired to answer. Single choice. 
+Entender el plan de despliegue definido y ejecutar las actividades de deployment asignadas siguiendo los lineamientos del DS Sr/Lead. Comunicar cualquier incidente o desviación durante el roll-out de forma inmediata.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Minuta de reuniones con NegocioRequired to answer. Single choice. 
+Apoyar en el registro de acuerdos, definiciones y peticiones de Negocio (relacionadas con Ciencia de Datos) durante sesiones donde participe. Garantizar que los acuerdos relevantes para sus tareas están capturados correctamente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Checklist de documentación y revisiones de códigoRequired to answer. Single choice. 
+Documentar el código desarrollado siguiendo las buenas prácticas definidas por Arena y los requerimientos de Negocio. La documentación es parte del entregable, no un paso opcional al final.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Plan de KT y legacyRequired to answer. Single choice. 
+Ejecutar las sesiones de KT asignadas a su nivel, garantizando que Negocio puede operar los desarrollos del DS Jr de forma autónoma después del cierre del proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Resumen de herramientas y necesidades técnicasRequired to answer. Single choice. 
+Comunicar proactivamente sus necesidades técnicas, de capacitación y accesos requeridos para ejecutar su trabajo en cada sprint. No esperar a que le pregunten si tiene todo lo que necesita.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Preparación y participación en sesiones con NegocioRequired to answer. Single choice. 
+Prepararse para cada sesión con Negocio anticipando preguntas técnicas que puedan surgir sobre los desarrollos bajo su responsabilidad. Llevar respuestas preparadas, no improvisar en sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Cumplimiento de lineamientos de trabajo remoto 1Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Cumplimiento de lineamientos de trabajo remoto 2Required to answer. Single choice. 
+Responder correos y mensajes de Teams en tiempo y forma, dentro de las 24 horas hábiles de haberlos recibido.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+26.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+27.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 2
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+28.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+29.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

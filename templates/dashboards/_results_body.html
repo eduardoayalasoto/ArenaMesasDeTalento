@@ -1,0 +1,107 @@
+{% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period.{% endcomment %}
+
+<!-- Hero: identidad + calificación final -->
+<div class="card overflow-hidden mb-5">
+  <div class="grid md:grid-cols-3">
+    <div class="md:col-span-2 p-6 flex items-center gap-5">
+      {% include "partials/avatar.html" with subject=subject size="w-24 h-24 sm:w-28 sm:h-28" icon="w-12 h-12" %}
+      <div class="min-w-0">
+        <h2 class="text-3xl font-bold text-slate-900 leading-tight truncate">{{ subject.full_name }}</h2>
+        <p class="mt-1 text-lg text-slate-600">{{ subject.area.name|default:"Sin área" }}{% if subject.level %} · {{ subject.level.name }}{% endif %}</p>
+        <p class="mt-1 text-sm text-slate-500">Periodo {{ period.name }}</p>
+      </div>
+    </div>
+    <div class="bg-arena-700 text-white p-6 flex flex-col justify-center items-center text-center">
+      {% if final.is_complete %}
+        <p class="text-sm text-arena-100 uppercase tracking-wide">Calificación final</p>
+        <p class="text-6xl font-bold leading-none my-1 tabular-nums">{{ final.final_score }}</p>
+        <span class="badge bg-white/15 text-white px-3 py-1 text-sm mt-1">{{ final.band }}</span>
+      {% else %}
+        <p class="text-sm text-arena-100 uppercase tracking-wide">Calificación final</p>
+        <p class="text-2xl font-semibold my-2">En proceso</p>
+        <p class="text-xs text-arena-100">Faltan pilares por capturar o validar</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Pilares -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+  {% include "dashboards/_pillar_card.html" with title="Ownership" score=final.ownership_score weight=weight.w_ownership %}
+  {% include "dashboards/_pillar_card.html" with title="Entrega de Valor" score=final.value_delivery_score weight=weight.w_value_delivery %}
+  {% include "dashboards/_pillar_card.html" with title="Impacto Arena" score=final.arena_impact_score weight=weight.w_arena_impact %}
+</div>
+
+<!-- Proyectos del periodo con su calificación -->
+<div class="card overflow-hidden mb-6">
+  <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
+    {% include "partials/icon.html" with name="folder" cls="w-4 h-4 text-arena-600" %}
+    <h3 class="font-semibold text-slate-900">Proyectos del periodo</h3>
+  </div>
+  {% if projects %}
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600 text-left">
+          <tr>
+            <th class="px-5 py-2.5 font-medium">Proyecto</th>
+            <th class="px-5 py-2.5 font-medium">Líder</th>
+            <th class="px-5 py-2.5 font-medium text-center">Ownership</th>
+            <th class="px-5 py-2.5 font-medium text-center">Entrega de Valor</th>
+            <th class="px-5 py-2.5 font-medium">Estado</th>
+            {% if detail_links %}<th class="px-5 py-2.5 font-medium"></th>{% endif %}
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for row in projects %}
+            <tr>
+              <td class="px-5 py-3">
+                <p class="font-medium text-slate-900">{{ row.project.name }}</p>
+                {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
+              </td>
+              <td class="px-5 py-3 text-slate-600">{{ row.project.lead.full_name }}</td>
+              <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
+              <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
+              <td class="px-5 py-3">
+                {% if row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
+                {% else %}<span class="badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
+              </td>
+              {% if detail_links %}<td class="px-5 py-3 text-right"><a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-arena-600 hover:text-arena-700 font-medium">Ver {% include "partials/icon.html" with name="eye" cls="w-4 h-4" %}</a></td>{% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="px-5 py-6 text-sm text-slate-500">Sin proyectos en este periodo.</p>
+  {% endif %}
+</div>
+
+<!-- Comentario de Impacto Arena -->
+{% if arena_notes %}
+  <div class="card p-5 mb-6">
+    <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">{% include "partials/icon.html" with name="star" cls="w-4 h-4 text-arena-600" %} Comentario de Impacto Arena</h4>
+    <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ arena_notes }}</p>
+  </div>
+{% endif %}
+
+<!-- Retroalimentación por proyecto -->
+{% for ev in feedback %}
+  <div class="mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+      <h3 class="font-semibold text-slate-900">Retroalimentación · {{ ev.project.name }}</h3>
+      {% with author=ev.validator|default:ev.project.lead %}
+        <span class="inline-flex items-center gap-1.5 text-sm text-slate-500">
+          {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
+          Por {{ author.full_name }}
+        </span>
+      {% endwith %}
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      {% include "evaluations/_feedback_card.html" with title="Fortalezas" value=ev.strengths empty="Sin información." %}
+      {% include "evaluations/_feedback_card.html" with title="Oportunidades" value=ev.opportunities empty="Sin información." %}
+    </div>
+    {% if ev.comments %}
+      <div class="mt-5">{% include "evaluations/_feedback_card.html" with title="Comentarios" value=ev.comments empty="" %}</div>
+    {% endif %}
+  </div>
+{% endfor %}

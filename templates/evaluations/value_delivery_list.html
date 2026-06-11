@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Entrega de Valor</h2>
+    <p class="text-slate-600">Captura la Entrega de Valor de los proyectos que lideras. La calificación se aplicará a todo el equipo.</p>
+  </div>
+
+  {% if not rows %}
+    {% include "partials/empty_state.html" with icon="package" title="No lideras proyectos en este periodo" message="Cuando seas líder de un proyecto, podrás capturar aquí su Entrega de Valor." %}
+  {% else %}
+    <div class="card divide-y divide-slate-100">
+      {% for row in rows %}
+        <div class="flex items-center justify-between gap-4 p-4">
+          <div class="min-w-0">
+            <p class="font-medium text-slate-900 truncate">{{ row.project.name }}</p>
+            <p class="text-sm text-slate-500">{{ row.project.get_duration_type_display }}</p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            {% if row.vd %}
+              {% if row.vd.score %}<span class="font-semibold text-slate-900 tabular-nums">{{ row.vd.score }}</span>{% endif %}
+              {% include "partials/status_badge.html" with status=row.vd.status label=row.vd.get_status_display %}
+            {% else %}
+              <span class="badge bg-slate-100 text-slate-500">Sin iniciar</span>
+            {% endif %}
+            <a href="{% url 'evaluations:value_delivery_capture' project_id=row.project.pk %}" class="btn-secondary">
+              {% if row.vd and row.vd.status == 'VALIDADA' %}Ver{% else %}Capturar{% endif %}
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

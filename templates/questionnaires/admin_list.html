@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Cuestionarios</h2>
+    <p class="text-slate-600">16 de Ownership (por área y nivel) + 1 de Entrega de Valor. Los publicados son de solo lectura; crea una versión para editar.</p>
+  </div>
+
+  <div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600 text-left">
+          <tr>
+            <th class="px-4 py-3 font-medium">Cuestionario</th>
+            <th class="px-4 py-3 font-medium text-center">Versión</th>
+            <th class="px-4 py-3 font-medium text-center">Preguntas</th>
+            <th class="px-4 py-3 font-medium">Estado</th>
+            <th class="px-4 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for t in templates %}
+            <tr>
+              <td class="px-4 py-3">
+                <p class="font-medium text-slate-900">
+                  {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.name }} · {{ t.level.name }}{% else %}Entrega de Valor{% endif %}
+                </p>
+              </td>
+              <td class="px-4 py-3 text-center tabular-nums">v{{ t.version }}</td>
+              <td class="px-4 py-3 text-center tabular-nums">{{ t.question_count }}</td>
+              <td class="px-4 py-3">{% include "partials/status_badge.html" with status=t.status label=t.get_status_display %}</td>
+              <td class="px-4 py-3 text-right">
+                <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn-secondary">
+                  {% if t.status == 'BORRADOR' %}Editar{% else %}Ver{% endif %}
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

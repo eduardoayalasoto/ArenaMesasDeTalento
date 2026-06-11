@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if not period %}
+    {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="Tus resultados se mostrarán cuando haya un periodo en curso." %}
+  {% else %}
+    {% include "dashboards/_results_body.html" with subject=user final=final weight=weight projects=projects feedback=feedback arena_notes=arena_notes period=period %}
+  {% endif %}
+{% endblock %}

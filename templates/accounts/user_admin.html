@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold text-slate-900">Usuarios</h2>
+    <p class="text-slate-600">Asigna área, nivel y rol a cada colaborador.</p>
+  </div>
+  {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El nivel <strong>Lead</strong> habilita ver a toda su área. El rol <strong>Director</strong> habilita validar la Entrega de Valor; <strong>Talento</strong> administra todo. Los cambios se guardan al presionar «Guardar cambios».</p>" %}
+
+  <form method="get" class="mb-4">
+    <input type="search" name="q" value="{{ q }}" class="input max-w-sm" placeholder="Buscar por nombre…">
+  </form>
+
+  <form method="post" class="card overflow-hidden">
+    {% csrf_token %}
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600 text-left">
+          <tr>
+            <th class="px-4 py-3 font-medium">Colaborador</th>
+            <th class="px-4 py-3 font-medium w-40">Área</th>
+            <th class="px-4 py-3 font-medium w-40">Nivel</th>
+            <th class="px-4 py-3 font-medium w-48">Rol</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for u in users %}
+            <tr>
+              <td class="px-4 py-2">
+                <p class="font-medium text-slate-900">{{ u.full_name }}</p>
+                <p class="text-xs text-slate-500">{{ u.email }}</p>
+              </td>
+              <td class="px-4 py-2">
+                <select name="area-{{ u.id }}" class="input py-1.5">
+                  <option value="">—</option>
+                  {% for a in areas %}<option value="{{ a.code }}" {% if u.area_id == a.id %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+                </select>
+              </td>
+              <td class="px-4 py-2">
+                <select name="level-{{ u.id }}" class="input py-1.5">
+                  <option value="">—</option>
+                  {% for l in levels %}<option value="{{ l.code }}" {% if u.level_id == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+                </select>
+              </td>
+              <td class="px-4 py-2">
+                <select name="role-{{ u.id }}" class="input py-1.5">
+                  {% for value, label in roles %}<option value="{{ value }}" {% if u.role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                </select>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end sticky bottom-0">
+      <button type="submit" class="btn-primary">Guardar cambios</button>
+    </div>
+  </form>
+{% endblock %}

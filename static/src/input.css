@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* Fuentes a escanear para generar solo las utilidades usadas */
+@source "../../templates";
+@source "../../apps";
+
+@theme {
+  --font-sans: "Lato", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Ubuntu", "Lato", ui-sans-serif, sans-serif;
+  /* Tema azul marino (navy) sobre fondos blancos */
+  --color-arena-50:  #eef3f8;
+  --color-arena-100: #d5e1ee;
+  --color-arena-200: #adc4dd;
+  --color-arena-300: #7ea0c5;
+  --color-arena-400: #5079a8;
+  --color-arena-500: #345d8c;
+  --color-arena-600: #1e3a5f;
+  --color-arena-700: #182f4d;
+  --color-arena-800: #14273e;
+  --color-arena-900: #101f31;
+  --color-arena-950: #0a1422;
+}
+
+@layer base {
+  body { @apply bg-slate-50 text-slate-800 font-sans antialiased; }
+  h1, h2, h3 { @apply text-slate-900 font-semibold tracking-tight; font-family: var(--font-display); }
+}
+
+/* Títulos con la fuente display (Ubuntu) */
+.font-display { font-family: var(--font-display); }
+
+@layer components {
+  /* Base compartida de botones (sin @apply de clases propias) */
+  .btn, .btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition cursor-pointer;
+    @apply focus-visible:ring-2 focus-visible:ring-arena-500 focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary { @apply bg-arena-600 text-white shadow-sm hover:bg-arena-700; }
+  .btn-secondary { @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50; }
+  .btn-ghost { @apply text-slate-600 hover:bg-slate-100; }
+  .btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
+
+  .card { @apply bg-white rounded-xl border border-slate-200 shadow-sm; }
+  .input { @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 focus:outline-none transition; }
+  .label { @apply block text-sm font-medium text-slate-700 mb-1; }
+  .badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium; }
+
+  .nav-link { @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition; }
+  .nav-link-active { @apply bg-arena-50 text-arena-700; }
+}
+
+/* Utilidad para x-cloak de Alpine (evita parpadeo de elementos ocultos) */
+[x-cloak] { display: none !important; }

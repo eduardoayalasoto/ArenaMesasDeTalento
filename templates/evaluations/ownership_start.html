@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-3"><a href="{% url 'evaluations:ownership_list' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Mis evaluaciones</a></div>
+
+  <div class="max-w-xl">
+    <h2 class="text-xl font-semibold text-slate-900 mb-1">Iniciar evaluación de Ownership</h2>
+    <p class="text-slate-600 mb-5">Proyecto: <span class="font-medium text-slate-900">{{ project.name }}</span></p>
+
+    {% include "partials/info_panel.html" with title="Elige a tu evaluador" text="<p>Selecciona a la persona de Arena que revisará y validará tu evaluación; suele ser quien más cerca trabajó contigo en el proyecto (no necesariamente tu líder).</p><p>Esa persona recibirá tu evaluación en su sección <strong>Validación de Ownership</strong> para completarla y cerrarla contigo.</p>" %}
+
+    <form method="post" class="card p-6">
+      {% csrf_token %}
+      <label class="label" for="evaluator">Evaluador</label>
+      <select name="evaluator" id="evaluator" class="input" required>
+        <option value="">— Selecciona una persona —</option>
+        {% for e in evaluators %}
+          <option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>
+        {% endfor %}
+      </select>
+      <p class="mt-2 text-xs text-slate-500">Podrás capturar tus respuestas enseguida; tu evaluador complementará Fortalezas y Oportunidades.</p>
+      <button type="submit" class="btn-primary mt-5 w-full">Comenzar evaluación</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,349 @@
+templates:
+  - area: ID
+    level: JR
+    questions:
+      - title: "Notas de alcance"
+        text: >-
+          Ejecutar proceso de discovery para identificar fuentes principales, el flujo E2E de los datos y los primeros pasos a tomar una vez que el proyecto arranca. Levantar dudas antes de empezar a desarrollar, no solo durante.
+      - title: "Documento de alcance técnico"
+        text: >-
+          Contribuir en la definición de qué se construye y qué no en el proyecto, documentando los componentes asignados a su nivel con precisión. No asumir que algo está en scope si no está explícitamente documentado.
+      - title: "Checklist de requerimientos"
+        text: >-
+          Completar el checklist de requerimientos técnicos y funcionales para los componentes bajo su responsabilidad, verificando que cada ítem tiene un estado claro (cumple / no cumple / pendiente) y escalando los pendientes críticos antes del inicio del desarrollo.
+      - title: "Propuesta de conectividad"
+        text: >-
+          Documentar los conectores asignados a su nivel: el medio de acceso a la fuente, la frecuencia de actualización y el método de carga (append, overwrite, delta). Levantar dudas sobre accesos o permisos antes de comenzar el desarrollo.
+      - title: "Reporte de calidad de datos"
+        text: >-
+          Ejecutar los checks de calidad de datos asignados a su nivel para las fuentes o desarrollos bajo su responsabilidad. Documentar los resultados y comunicar anomalías detectadas de forma inmediata.
+      - title: "Reportes de pruebas"
+        text: >-
+          Ejecutar los casos de prueba asignados a su nivel, documentando resultados esperados vs obtenidos y registrando issues o errores detectados. No declarar un componente como 'done' sin haber ejecutado, documentado y presentado sus pruebas.
+      - title: "Reporte técnico de calidad de datos"
+        text: >-
+          Ejecutar y compartir los reportes de calidad de datos de los componentes bajo su responsabilidad, documentando las reglas aplicadas, los resultados obtenidos y las excepciones encontradas.
+      - title: "Scripts de validación"
+        text: >-
+          Ejecutar los scripts de validación automática pre y post carga asignados a su nivel. Comunicar de inmediato cuando un script de validación falla o genera resultados inesperados.
+      - title: "Esquema preliminar de tablas"
+        text: >-
+          Construir el esquema preliminar de tablas para los componentes asignados con base en los comentarios y mockups del DE Sr/Mid/Lead, aplicando correctamente las convenciones de nombres, tipos de datos y claves definidas.
+      - title: "Notas técnicas"
+        text: >-
+          Registrar las decisiones técnicas, supuestos, trade-offs y dudas relevantes de los componentes bajo su responsabilidad durante todo el proyecto. Externalizar dudas al DE Mid/Sr antes de tomar decisiones técnicas por cuenta propia.
+      - title: "Scripts, Notebooks y pipelines"
+        text: >-
+          Implementar las tareas de desarrollo asignadas a su nivel siguiendo los estándares de calidad y versionado del proyecto (SOLID, naming conventions, modularidad). No entregar código sin haber ejecutado pruebas básicas.
+      - title: "Checklist de ejecución"
+        text: >-
+          Completar el checklist de ejecución para los componentes bajo su responsabilidad antes del despliegue, verificando que todos los ítems están marcados como completos y que no existen bloqueadores críticos sin resolver.
+      - title: "Documentación de scripts"
+        text: >-
+          Documentar el código desarrollado explicando propósito, inputs, outputs, dependencias y consideraciones de uso. La documentación es parte del entregable, no un paso opcional al final.
+      - title: "Inventario de fuentes"
+        text: >-
+          Recopilar la información básica de las fuentes de datos asignadas a su nivel: nombre, owner, frecuencia de actualización, formato y calidad estimada. Escalar cuando una fuente no tiene owner claro o cuando su accesibilidad es incierta.
+      - title: "Diagrama de arquitectura"
+        text: >-
+          Entender completamente la arquitectura del proyecto y sus componentes. Identificar la posición de los desarrollos bajo su responsabilidad dentro del flujo end-to-end y comunicar al DE Mid/Sr/Lead cuando detecta que algo en su implementación se desvía del diseño arquitectónico.
+      - title: "Modelado de datos"
+        text: >-
+          Documentar los campos y tipos de datos de las tablas asignadas correctamente, siguiendo las convenciones del proyecto. Verificar con el DE Mid/Sr/Lead antes de implementar si hay dudas sobre granularidad o relaciones.
+      - title: "Diseño de pipelines"
+        text: >-
+          Entender el diseño lógico del pipeline y documentar los pasos correspondientes a los componentes bajo su responsabilidad. Comunicar al DE Mid/Sr/Lead cuando la implementación requiere ajustes al diseño definido.
+      - title: "Desarrollo de pipelines"
+        text: >-
+          Implementar las tareas de desarrollo de pipelines asignadas a su nivel: ingestión de datos, transformaciones simples y cargas bajo supervisión del DE Mid/Sr/Lead. No entregar componentes sin haber ejecutado una prueba end-to-end básica.
+      - title: "Scripts de validación y calidad de datos"
+        text: >-
+          Ejecutar los scripts de validación técnica y de negocio asignados a su nivel, verificando completitud, unicidad y consistencia básica. Analizar los resultados y comunicar al DE Mid/Sr/Lead cualquier incumplimiento detectado.
+      - title: "Pruebas técnicas y de integración"
+        text: >-
+          Ejecutar las pruebas unitarias asignadas a su nivel para los componentes bajo su responsabilidad. Documentar los resultados y escalar los defectos encontrados al DE Mid/Sr/Lead con evidencia.
+      - title: "Documentación técnica integral"
+        text: >-
+          Documentar correctamente los componentes bajo su responsabilidad como parte del proceso de desarrollo, asegurando que la documentación está actualizada con el código final antes de considerarlo terminado.
+      - title: "Rutinas de gestión — Daily"
+        text: >-
+          Asistir al daily preparado, comunicando claramente el avance de sus componentes, bloqueos activos y dependencias. No llegar al daily a descubrir sus propios bloqueos: deben estar identificados y comunicados antes de la sesión.
+      - title: "Rutinas de gestión — Sprint Planning"
+        text: >-
+          Asistir al sprint planning preparado con una propuesta de sus actividades y estimaciones de tiempo para el sprint. No llegar al planning sin haber revisado el backlog y sin saber qué puede comprometer.
+      - title: "Rutinas de gestión — Sprint Review"
+        text: >-
+          Asistir al sprint review preparado para exponer el resultado de sus componentes, explicar qué completó y qué no, y recibir retroalimentación técnica sin ponerse a la defensiva.
+      - title: "Coordinación con DS y PM"
+        text: >-
+          Alinear con el equipo de Ciencia de Datos los requerimientos de datos y las interfaces de entrega antes de cada fase de desarrollo. No comenzar a desarrollar una exposición de datos sin haber validado el formato y la granularidad esperada con el equipo.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+  - area: ID
+    level: MID
+    questions:
+      - title: "Notas de alcance"
+        text: >-
+          Liderar el proceso de discovery identificando posibles bloqueos durante la implementación, dependencias entre fuentes y riesgos técnicos. Documentar supuestos críticos y escalar al DE Sr/Lead los que requieran decisión de arquitectura.
+      - title: "Documento de alcance técnico"
+        text: >-
+          Redactar el alcance técnico del proyecto, definiendo explícitamente qué se construye y qué queda fuera. Alinear el alcance con las notas de discovery y obtener el sign-off del equipo y del cliente antes de comenzar el desarrollo.
+      - title: "Checklist de requerimientos"
+        text: >-
+          Validar técnicamente los requerimientos del proyecto, identificando ambigüedades, conflictos entre requerimientos y riesgos de implementación. Asegurar que todos los requerimientos críticos tienen estado definido antes del inicio del desarrollo.
+      - title: "Propuesta de conectividad"
+        text: >-
+          Definir los métodos de carga, frecuencias y características técnicas de los conectores del proyecto. Evaluar opciones de conectividad considerando restricciones de acceso, seguridad y volumen de datos.
+      - title: "Reporte de calidad de datos"
+        text: >-
+          Ejecutar y analizar los resultados de los reportes de calidad de datos, identificar tendencias, priorizar las acciones de mejora y comunicar hallazgos al equipo con recomendaciones concretas.
+      - title: "Reportes de pruebas"
+        text: >-
+          Ejecutar y analizar los resultados de las pruebas del equipo, validar que los defectos detectados están correctamente clasificados y tomar la decisión de si un componente está listo para producción.
+      - title: "Reporte técnico de calidad de datos"
+        text: >-
+          Ejecutar y analizar los resultados de calidad, dar seguimiento al incremento de los indicadores entre períodos y asegurar que las recomendaciones del reporte anterior se implementaron.
+      - title: "Scripts de validación"
+        text: >-
+          Desarrollar los scripts de validación automática pre y post carga, asegurando que las fallas generan alertas o logs claros y que los scripts están integrados al flujo de ejecución.
+      - title: "Esquema preliminar de tablas"
+        text: >-
+          Revisar el esquema de tablas constantemente, dar retroalimentación al equipo sobre inconsistencias detectadas y asegurar que el esquema está alineado con el modelo lógico antes del inicio del desarrollo.
+      - title: "Notas técnicas"
+        text: >-
+          Concentrar las notas técnicas del equipo, aclarar las dudas levantadas por el equipo y el cliente y convertir las notas en tareas o metas claras en el backlog del proyecto.
+      - title: "Scripts, Notebooks y pipelines"
+        text: >-
+          Orquestar los pipelines del equipo, asegurando la correcta integración de los componentes del flujo completo. Identificar y corregir problemas de modularidad o reutilización antes del sprint review.
+      - title: "Checklist de ejecución"
+        text: >-
+          Revisar el checklist de ejecución del equipo, dar retroalimentación al equipo sobre ítems incompletos y asegurar que no existen bloqueadores críticos antes de aprobar el despliegue.
+      - title: "Documentación de scripts"
+        text: >-
+          Revisar la documentación del equipo y dar retroalimentación sobre completitud y claridad antes de considerarla como entregable. Documentar la integración de los pipelines orquestados.
+      - title: "Inventario de fuentes"
+        text: >-
+          Analizar la estructura, frecuencia, volumen y calidad de las fuentes de datos del proyecto. Identificar riesgos y limitaciones de cada fuente y documentarlos con propuestas de mitigación.
+      - title: "Diagrama de arquitectura"
+        text: >-
+          Entender la arquitectura definida para el proyecto y comunicarla con precisión al equipo y al cliente. Detectar desviaciones de implementación del equipo respecto al diseño durante el sprint, antes del roll-out.
+      - title: "Modelado de datos"
+        text: >-
+          Diseñar las tablas del proyecto y validar la granularidad correcta con el equipo. Asegurar que el modelo de datos es coherente con las métricas y entidades de negocio definidas.
+      - title: "Diseño de pipelines"
+        text: >-
+          Diseñar los pipelines estándar del proyecto: pasos, dependencias, manejo de errores, reintentos y ventanas de tiempo. Asegurar que el diseño es consistente con la arquitectura definida y aprobado antes del desarrollo.
+      - title: "Desarrollo de pipelines"
+        text: >-
+          Implementar pipelines completos: ingestión, transformaciones, cargas incrementales e historificación. Asegurar que los pipelines del desarrollo están correctamente integrados en el flujo completo.
+      - title: "Scripts de validación y calidad de datos"
+        text: >-
+          Desarrollar los scripts de validación técnica y de negocio del proyecto. Asegurar que los resultados son auditables y que las alertas son accionables por cualquier miembro del equipo.
+      - title: "Pruebas técnicas y de integración"
+        text: >-
+          Ejecutar las pruebas de integración del proyecto, verificando que los pipelines funcionan correctamente de forma conjunta. Asegurar que los casos críticos y los escenarios de error están cubiertos.
+      - title: "Optimización de pipelines"
+        text: >-
+          Analizar el desempeño de los pipelines e identificar oportunidades de optimización en tiempo de ejecución, consumo de recursos y costos. Implementar optimizaciones conocidas y documentar el impacto con métricas comparativas.
+      - title: "Runbooks"
+        text: >-
+          Actualizar y mantener los runbooks operativos del proyecto, asegurando que los procedimientos ante fallas son claros y utilizables por personal no desarrollador.
+      - title: "Documentación técnica integral"
+        text: >-
+          Mantener la documentación técnica del proyecto actualizada a lo largo del desarrollo. Revisar la documentación del equipo y asegurar que la documentación del proyecto está lista para auditoría o handover en cualquier momento.
+      - title: "Informe de transición"
+        text: >-
+          Ejecutar la transición formal del producto de datos a operación o al equipo receptor. Asegurar que el conocimiento técnico, los riesgos conocidos y las responsabilidades están claramente documentados y aceptados por el receptor.
+      - title: "Rutinas de gestión — Daily"
+        text: >-
+          Asistir al daily preparado, reportando el avance propio y el del equipo a su cargo. Identificar bloqueos del equipo antes de que impacten entregables y gestionarlos activamente.
+      - title: "Rutinas de gestión — Sprint Planning"
+        text: >-
+          Asistir al sprint planning preparado con propuesta de actividades propias y del equipo a su cargo, incluyendo estimaciones, definitions of completeness y dependencias inter-equipo.
+      - title: "Rutinas de gestión — Sprint Review"
+        text: >-
+          Asistir al sprint review exponiendo resultados propios, identificando qué se completó y qué no. Dar retroalimentación técnica honesta y documentada al equipo.
+      - title: "Coordinación con DS y PM"
+        text: >-
+          Alinear con el equipo de Ciencia de Datos los requerimientos de datos, interfaces y formatos de entrega antes de cada fase. Comunicar al PM cuando un cambio técnico en las fuentes impacta el plan de entrega.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+  - area: ID
+    level: SNR
+    questions:
+      - title: "Notas de alcance"
+        text: >-
+          Liderar el discovery identificando fuentes críticas a nivel de negocio, diseñando la estrategia de implementación escalable y mapeando fuentes legacy y dependencias entre fuentes. Anticipar riesgos de implementación que no son visibles para el DE Mid.
+      - title: "Esquemas de Bases de datos"
+        text: >-
+          Realizar el diagrama entidad-relación de las tablas fuente y de las tablas destino, con campos tipificados, formatos y relaciones (PK/FK) claramente definidas. Asegurar que las reglas de negocio están correctamente interpretadas, modeladas y alineadas con la arquitectura.
+      - title: "Matriz de trazabilidad"
+        text: >-
+          Construir y mantener la matriz de trazabilidad que mapea las reglas de transformación entre fuentes y destinos. Compartirla con el equipo y explicar su funcionamiento para que el DE Mid y DE Jr puedan utilizarla como referencia durante el desarrollo.
+      - title: "Documento de alcance técnico"
+        text: >-
+          Definir los límites técnicos del proyecto con criterio, identificar riesgos de alcance y alinear el documento con todos los stakeholders técnicos y de negocio antes del inicio del desarrollo.
+      - title: "Checklist de requerimientos"
+        text: >-
+          Identificar riesgos técnicos en los requerimientos y asegurar que la alineación entre negocio y el equipo técnico es completa antes del inicio del desarrollo. Escalar al cliente los requerimientos que son técnicamente inviables tal como están definidos.
+      - title: "Propuesta de conectividad"
+        text: >-
+          Evaluar las opciones de conectividad considerando costos, performance, seguridad y escalabilidad. Aprobar la propuesta final y asegurar su alineación con la arquitectura definida.
+      - title: "Reporte de calidad de datos"
+        text: >-
+          Proponer las reglas de calidad del proyecto y definir el framework de data quality que el equipo implementará. Asegurar que el framework es adoptado consistentemente por el DE Mid y DE Jr.
+      - title: "Reportes de pruebas"
+        text: >-
+          Proponer las reglas de calidad y monitorear los resultados de las pruebas del equipo. Tomar la decisión final de liberar o no liberar a producción basado en la evidencia del reporte del DE Mid.
+      - title: "Reporte técnico de calidad de datos"
+        text: >-
+          Analizar los resultados de calidad del período, dar retroalimentación constante al equipo y asegurar que las métricas mejoran entre períodos. Escalar a Negocio cuando los problemas de calidad tienen impacto en los modelos del DS.
+      - title: "Scripts de validación"
+        text: >-
+          Optimizar y estandarizar los scripts de validación del proyecto. Definir las librerías comunes de validación que el equipo reutilizará en futuros desarrollos.
+      - title: "Esquema preliminar de tablas"
+        text: >-
+          Construir el mockup del esquema inicial, compartirlo con el equipo y dar seguimiento constante al cumplimiento de las convenciones durante el desarrollo. Realizar la revisión final del esquema antes del deployment.
+      - title: "Notas técnicas"
+        text: >-
+          Concentrar las notas técnicas del equipo, esclarecer las dudas levantadas y convertir las decisiones técnicas en tareas o metas claras en el backlog. Asegurar que ninguna decisión técnica relevante queda sin documentar.
+      - title: "Scripts, Notebooks y pipelines"
+        text: >-
+          Optimizar y escalar los desarrollos del equipo. Definir los patrones de desarrollo que el DE Mid y DE Jr seguirán para asegurar modularidad, reutilización y cumplimiento de estándares.
+      - title: "Checklist de ejecución"
+        text: >-
+          Revisar el cumplimiento del checklist de ejecución y dar retroalimentación al equipo sobre desviaciones detectadas. Aprobar el despliegue solo cuando todos los ítems están verificados.
+      - title: "Documentación de scripts"
+        text: >-
+          Revisar la documentación del equipo y dar retroalimentación sobre completitud y calidad técnica. Asegurar que la documentación del proyecto está lista para auditoría o handover en cualquier momento.
+      - title: "Inventario de fuentes"
+        text: >-
+          Evaluar la calidad, estabilidad y riesgos técnicos de las fuentes del proyecto. Identificar fuentes con historial de inestabilidad o problemas de calidad y proponer estrategias de mitigación.
+      - title: "Diagrama de arquitectura"
+        text: >-
+          Refinar el diseño de arquitectura para escalabilidad y operación en producción. Aprobar la arquitectura final y comunicarla al equipo con suficiente detalle para que el DE Mid pueda implementar sin ambigüedades.
+      - title: "Modelado de datos"
+        text: >-
+          Definir el modelo de datos completo y la granularidad correcta para las métricas del negocio. Validar la alineación del modelo con el negocio y con la arquitectura definida.
+      - title: "Diseño de pipelines"
+        text: >-
+          Validar el diseño de pipelines del DE Mid considerando fallos, escalabilidad y escenarios de error. Aprobar el diseño final antes del inicio del desarrollo.
+      - title: "Desarrollo de pipelines"
+        text: >-
+          Refactorizar, optimizar y asegurar la calidad de los pipelines del equipo. Definir los estándares de desarrollo que el DE Mid y DE Jr seguirán durante el proyecto.
+      - title: "Scripts de validación y calidad de datos"
+        text: >-
+          Diseñar las reglas de calidad robustas del proyecto y aprobar el enfoque y cobertura de los scripts del DE Mid. Asegurar que las reglas cubren los escenarios de negocio más críticos.
+      - title: "Pruebas técnicas y de integración"
+        text: >-
+          Diseñar la estrategia de testing del proyecto y aprobar los resultados finales antes del pase a producción. Asegurar que los casos críticos y los escenarios de error están cubiertos.
+      - title: "Optimización de pipelines"
+        text: >-
+          Optimizar el performance y los costos de los pipelines del proyecto. Validar el impacto técnico y financiero de las optimizaciones del DE Mid.
+      - title: "Runbooks"
+        text: >-
+          Diseñar los flujos de soporte y definir los SLAs y niveles de soporte del proyecto. Asegurar que los runbooks son suficientemente completos para que el equipo de operaciones del cliente pueda operar sin apoyo de Arena.
+      - title: "Documentación técnica integral"
+        text: >-
+          Validar la coherencia técnica de la documentación del proyecto y garantizar su completitud y calidad antes del cierre. Asegurar que la documentación es suficiente para una auditoría o handover sin apoyo del equipo.
+      - title: "Informe de transición"
+        text: >-
+          Asegurar que la transferencia de conocimiento técnico está completa y aprobar el cierre del proyecto. Garantizar que el equipo receptor puede operar sin apoyo de Arena.
+      - title: "Rutinas de gestión — Daily"
+        text: >-
+          Asistir al daily reportando avance propio en definición, coordinación y validación. Identificar y anticipar riesgos técnicos del equipo como principal responsable de la gestión de riesgos técnicos del proyecto.
+      - title: "Rutinas de gestión — Sprint Planning"
+        text: >-
+          Asistir al sprint planning liderando la definición de actividades técnicas del equipo. Hacer challenge de estimaciones no realistas y asegurar que todas las tareas tienen definition of completeness antes de comprometerse.
+      - title: "Rutinas de gestión — Sprint Review"
+        text: >-
+          Exponer resultados técnicos del equipo en el sprint review, identificar áreas de mejora propias y del equipo, y dar retroalimentación técnica profunda al DE Mid.
+      - title: "Coordinación con DS y PM"
+        text: >-
+          Liderar la alineación técnica con el equipo de Ciencia de Datos definiendo las interfaces de datos, formatos y granularidades que el pipeline proveerá. Comunicar al PM impactos técnicos que afecten el plan con suficiente anticipación para renegociar con el cliente.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+  - area: ID
+    level: LEAD
+    questions:
+      - title: "Aseguramiento de calidad técnica del equipo — Seguimiento a checklists"
+        text: >-
+          Realizar seguimiento a los DE Sr/Mid de sus proyectos para evaluar el cumplimiento de sus checklists correspondientes. Documentar hallazgos y dar retro directa en sesión 1:1.
+      - title: "Aseguramiento de calidad técnica del equipo — Cumplimiento PMO y estándares de arquitectura"
+        text: >-
+          Asegurar que los proyectos a su cargo cumplen con las actividades de la Oficina de PMO y con los estándares de arquitectura de datos de Arena. Identificar brechas técnicas y escalarlas al director de Analítica cuando no puedan resolverse a nivel de proyecto.
+      - title: "Aseguramiento de calidad técnica del equipo — Integración con leads de DS, Producto y UX"
+        text: >-
+          Hacer equipo con los leads técnicos de DS, Producto y UX para asegurar que los proyectos cuentan con los diseños de integración de datos correctos y que no hay brechas entre lo que el pipeline entrega y lo que el DS necesita.
+      - title: "Guía y soporte al equipo de proyecto — Participación en dailys"
+        text: >-
+          Asistir y participar activamente en los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre. Evaluar en cada asistencia la preparación del equipo, el foco técnico y el cumplimiento de agenda y tiempos.
+      - title: "Guía y soporte al equipo de proyecto — Participación en sprint planning y review"
+        text: >-
+          Asistir y participar activamente en los sprint planning y sprint review. Hacer challenge técnico de estimaciones de pipeline, diseños de arquitectura comprometidos y consistencia entre lo que se planea construir y la propuesta original.
+      - title: "Guía y soporte al equipo de proyecto — Mapeo de stakeholders"
+        text: >-
+          Ayudar al equipo a mapear y entender todos los stakeholders técnicos y de negocio involucrados en el proyecto, incluyendo sus motivaciones, nivel de influencia y postura hacia las decisiones de arquitectura.
+      - title: "Guía y soporte al equipo de proyecto — Sesiones críticas con stakeholders senior"
+        text: >-
+          Identificar, validar el material técnico y participar en sesiones críticas con stakeholders senior del cliente o de tecnología del cliente que requieran el criterio del DE Lead. Asegurar que el equipo tiene clara la agenda y el objetivo técnico antes de construir el material.
+      - title: "Guía y soporte al equipo de proyecto — One-on-ones con stakeholders técnicos senior"
+        text: >-
+          Agendar y ejecutar one-on-ones con stakeholders técnicos senior del cliente (CTO, arquitectos, equipo de infraestructura) para alinear expectativas técnicas, anticipar restricciones de ambiente y construir una relación de confianza técnica.
+      - title: "Guía y soporte al equipo de proyecto — Participación del director de Analítica"
+        text: >-
+          Anticipar y coordinar la participación del director de Analítica en momentos críticos del proyecto (revisiones de arquitectura, escalamientos de cliente, decisiones de alcance técnico), comunicando con claridad el contexto y el tipo de apoyo requerido.
+      - title: "Guía y soporte al equipo de proyecto — Plan de transición y staffing"
+        text: >-
+          Crear y ejecutar un plan de transición, onboarding técnico, KT y seguimiento al staffing del proyecto al inicio, durante y al final, considerando riesgos de pérdida de conocimiento de arquitectura ante cambios de equipo.
+      - title: "Guía y soporte al equipo interno — Cumplimiento de Mesa de Talento"
+        text: >-
+          Asegurar que los proyectos a su cargo cumplen con las actividades de la Mesa de Talento, incluyendo evaluaciones de desempeño cerradas antes de que el equipo se reasigne a otros proyectos.
+      - title: "Guía y soporte al equipo interno — Seguimiento a planes de capacitación"
+        text: >-
+          Monitorear el avance de los planes de capacitación técnica del equipo de Ingeniería en sus proyectos. Identificar quién no puede avanzar por carga de trabajo y escalar al director de Analítica con propuesta de solución.
+      - title: "Guía y soporte al equipo interno — Calidad del mentoring"
+        text: >-
+          Monitorear la ejecución y calidad de las sesiones de mentoring de los DE Sr/Mid en sus proyectos. Actuar sobre el mentoring que no está generando desarrollo real en el mentee.
+      - title: "Guía y soporte al equipo interno — Gestión de vacaciones y ausencias"
+        text: >-
+          Dar seguimiento a la planeación y anticipación de vacaciones y ausencias del equipo de DE en sus proyectos, gestionándolas como riesgo de continuidad de pipeline, no como trámite administrativo.
+      - title: "Guía y soporte al equipo interno — Punto de referencia en procedimientos internos"
+        text: >-
+          Ser el punto de referencia del equipo de DE para resolver dudas sobre procedimientos internos de Arena (PMO, Odoo, Mesa de Talento, vacaciones, etc.) sin necesidad de intermediación de RH o PMO.
+      - title: "Guía y soporte al equipo interno — Sesiones de aprendizaje técnico"
+        text: >-
+          Planear y ejecutar sesiones de aprendizaje técnico con el equipo de DE. Las sesiones deben desarrollar capacidades de arquitectura, ingeniería de datos o consultoría técnica que el equipo pueda aplicar en proyectos.
+      - title: "Guía y soporte al equipo interno — Mejora de metodologías y estándares"
+        text: >-
+          Identificar y gestionar la implementación de mejoras a las metodologías, estándares de arquitectura y herramientas del equipo de DE, en coordinación con los demás leads y el director de Analítica.
+      - title: "Soporte comercial — Oportunidades de expansión"
+        text: >-
+          Identificar oportunidades de expansión del trabajo de DE en los proyectos: nuevas fuentes de datos, modernización de arquitecturas legacy, automatización de procesos manuales del cliente o expansión de la cobertura del pipeline actual.
+      - title: "Soporte comercial — Validación técnica de propuestas"
+        text: >-
+          Dar soporte en la construcción y validación técnica de propuestas de ingeniería de datos: viabilidad de arquitectura, estimaciones de esfuerzo de pipeline, alcance técnico y dependencias con el cliente.
+      - title: "Soporte comercial — Seguimiento a facturación y administración"
+        text: >-
+          Dar soporte en el seguimiento a facturación y temas administrativos del proyecto cuando sea requerido por el director.
+      - title: "Soporte comercial — Sesiones presenciales con el cliente"
+        text: >-
+          Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para fortalecer la relación técnica y mantener una presencia activa de Arena con el equipo de tecnología del cliente.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 1"
+        text: >-
+          Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+      - title: "Cumplimiento de lineamientos de trabajo remoto 2"
+        text: >-
+          Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.

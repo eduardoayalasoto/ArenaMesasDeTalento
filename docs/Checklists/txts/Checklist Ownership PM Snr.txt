@@ -1,0 +1,404 @@
+Checklist Ownership PM Snr
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+16
+Present
+
+Templates
+Checklist Ownership PM SnrChecklist Ownership PM Snr
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+PM Jr
+PM Mid
+PM Snr
+PM Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+Section 2
+Documentación del plan y del avance 
+
+5.Required to answer. Single choice. 
+Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Required to answer. Single choice. 
+Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Required to answer. Single choice. 
+Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Required to answer. Single choice. 
+Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo
+1. No cumple
+2. Cumple parcial 
+3. Cumple
+4. Excede
+N/A
+
+9.Required to answer. Single choice. 
+Documentar y enviar por escrito (correo + chat grupal + chat individial) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Required to answer. Single choice. 
+Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Required to answer. Single choice. 
+Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Required to answer. Single choice. 
+Mantener una estructura de canal y archivos en teams, donde todo el equipo trabajo sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 3
+Rutinas de gestión 
+
+13.Required to answer. Single choice. 
+Asegurar dailys recurrentes agendados
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Required to answer. Single choice. 
+Ejecutar weekly status reports con cliente técnico y de negocio
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Required to answer. Single choice. 
+Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Required to answer. Single choice. 
+Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Required to answer. Single choice. 
+Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Required to answer. Single choice. 
+Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 4
+Cuestionamiento y validación de resultados
+
+19.Required to answer. Single choice. 
+Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Required to answer. Single choice. 
+Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Required to answer. Single choice. 
+Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio
+1. No cumple
+2. Cumple parcial 
+3. Cumple
+4. Excede
+N/A
+
+Section 5
+Preparación de reuniones y seguimiento con el cliente
+
+22.Required to answer. Single choice. 
+Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Required to answer. Single choice. 
+Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Required to answer. Single choice. 
+Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 6
+Seguimiento a acuerdos y definiciones de las sesiones
+
+25.Required to answer. Single choice. 
+Enviar pre-reads para sesiones internas y con clientes
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Required to answer. Single choice. 
+Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Required to answer. Single choice. 
+Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 7
+
+28.Análisis de impactos ante cambiosRequired to answer. Single choice. 
+Analizar el impacto en fechas, dependencias y carga del equipo antes de ejecutar cambios en alcance o plan de trabajo
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+29.Clarificación de criterios de aceptación ambiguosRequired to answer. Single choice. 
+Detectar y resolver criterios incompletos o ambiguos comunicados por cliente o definidos en el alcance antes de la ejecución de los entregables relacionados
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+30.Detección temprana de desviaciones de calidadRequired to answer. Single choice. 
+Identificar desviaciones de calidad de forma recurrente durante la ejecución
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+31.Gestión consciente de dependenciasRequired to answer. Single choice. 
+Identificar y destrabar dependencias que impactan la ejecución a través de un seguimiento y comunicación clara y puntual
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+32.Preparación para validacionesRequired to answer. Single choice. 
+Asegurar que entregables estén listos antes de sesiones con cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+33.Traducción técnica de los elementos del proyecto al stakeholderRequired to answer. Single choice. 
+Aprovechar sesiones del proyecto para explicar aspectos técnicos de una forma clara a los stakeholders que no son técnicos, con el lenguaje y detalle que se adapta al stakeholder
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+34.Dominio de estrategias de comunicación con stakeholdersRequired to answer. Single choice. 
+Identificar el orden, tipo de mensaje y momentos para comunicar con cada stakeholders las validaciones y puntos clave del proyecto
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+35.Evaluación de impacto sistémicoRequired to answer. Single choice. 
+Evaluar impacto y sinergias en otras iniciativas, equipos o capacidades y comunicar a otros equipos para lograr una mejor ejecución y entrega
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+36.Definición y defensa de límites de alcanceRequired to answer. Single choice. 
+Establecer y sostener claramente el alcance del proyecto en los momentos donde haya negociaciones respecto a los entregables, equipo y tiempos del proyecto
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+37.Re encuadre de problemas del clienteRequired to answer. Single choice. 
+Cuestionar el problema que el equipo interno o el cliente busca solucionar cuando las actividades no atacan la causa raíz
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+38.Intervención temprana en riesgosRequired to answer. Single choice. 
+Anticipar, comunicar y actuar ante señales tempranas de riesgo involucrando a equipo interno de Arena y al cliente
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+39.Transferencia de criterio al equipoRequired to answer. Single choice. 
+Elevar el nivel de decisión del equipo mediante coaching
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+40.Posicionamiento como asesor de confianza con stakeholderRequired to answer. Single choice. 
+Desarrollar una relación de confianza, cercanía y apoyo con los stakeholders clave a través de los one on ones del proyecto
+1. No cumple
+2. Cumple parcial
+3. Cumple 
+4. Excede
+N/A
+
+41.Autonomía en la gestión y ejecución del proyectoRequired to answer. Single choice. 
+Ejecutar y entregar el proyecto durante periodos largos sin requerir apoyo o presencia constante del equipo directivo, manteniendo tiempo, calidad y confianza
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 8
+Cumplimiento lineamientos de trabajo remoto
+
+42.Required to answer. Single choice. 
+Asistir y  mantenerse enfocado en las reuniones
+1. No cumple
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+43.Required to answer. Single choice. 
+Responder correos y mensajes por teams en tiempo y forma
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+Section 9
+Conclusión
+
+44.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+45.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+46.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 10
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+47.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+48.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Required to answer. Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

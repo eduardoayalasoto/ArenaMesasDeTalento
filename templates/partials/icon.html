@@ -1,0 +1,43 @@
+{% comment %}Icono Lucide. Uso: {% include "partials/icon.html" with name="home" cls="w-5 h-5" %}
+Lucide reemplaza el <i data-lucide> por un SVG al cargar (lucide.createIcons()).{% endcomment %}
+{% if name == "home" %}<i data-lucide="house" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "chart" %}<i data-lucide="bar-chart-3" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "clipboard" %}<i data-lucide="clipboard-list" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "users" %}<i data-lucide="users" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "check" %}<i data-lucide="circle-check-big" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "package" %}<i data-lucide="package" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "shield" %}<i data-lucide="shield-check" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "star" %}<i data-lucide="star" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "list" %}<i data-lucide="list" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "id" %}<i data-lucide="id-card" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "folder" %}<i data-lucide="folder" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "calendar" %}<i data-lucide="calendar" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "scale" %}<i data-lucide="scale" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "logout" %}<i data-lucide="log-out" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "menu" %}<i data-lucide="menu" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "close" %}<i data-lucide="x" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "chevron-down" %}<i data-lucide="chevron-down" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "info" %}<i data-lucide="info" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "edit" %}<i data-lucide="pencil" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "eye" %}<i data-lucide="eye" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "lock" %}<i data-lucide="lock" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "camera" %}<i data-lucide="camera" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "save" %}<i data-lucide="save" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "arrow-up" %}<i data-lucide="arrow-up" class="{{ cls|default:'w-4 h-4' }}"></i>
+{% elif name == "arrow-down" %}<i data-lucide="arrow-down" class="{{ cls|default:'w-4 h-4' }}"></i>
+{% elif name == "table" %}<i data-lucide="layout-list" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "trophy" %}<i data-lucide="trophy" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "target" %}<i data-lucide="target" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "trending-up" %}<i data-lucide="trending-up" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "briefcase" %}<i data-lucide="briefcase" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "user" %}<i data-lucide="user-round" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "bell" %}<i data-lucide="bell" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "mail" %}<i data-lucide="mail" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "help" %}<i data-lucide="circle-help" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "rocket" %}<i data-lucide="rocket" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "send" %}<i data-lucide="send" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "settings" %}<i data-lucide="settings" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "shield-user" %}<i data-lucide="shield" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "upload" %}<i data-lucide="upload" class="{{ cls|default:'w-5 h-5' }}"></i>
+{% elif name == "check-small" %}<i data-lucide="check" class="{{ cls|default:'w-4 h-4' }}"></i>
+{% else %}<i data-lucide="circle" class="{{ cls|default:'w-5 h-5' }}"></i>{% endif %}

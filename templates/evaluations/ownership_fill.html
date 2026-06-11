@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load dict_extras %}
+{% block content %}
+<div x-data="ownershipForm({
+        url: '{% url 'evaluations:ownership_autosave' pk=evaluation.pk %}',
+        csrf: '{{ csrf_token }}',
+        answered: {{ answered }},
+        total: {{ total }},
+        average: {% if average is not None %}'{{ average }}'{% else %}null{% endif %}
+     })">
+
+  <div class="mb-3"><a href="{% url 'evaluations:ownership_list' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Volver</a></div>
+
+  <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">{{ evaluation.project.name }}</h2>
+      <p class="text-slate-600">Checklist de Ownership · {{ evaluation.template.area.name }} · {{ evaluation.template.level.name }} · <span class="text-slate-500">{{ evaluation.user.full_name }}</span></p>
+      <div class="mt-2" {% if can_change_evaluator %}x-data="{ editing: false }"{% endif %}>
+        <p class="text-sm text-slate-500 flex items-center gap-1.5">
+          {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
+          Evaluador: <span class="font-medium text-slate-700">{{ evaluation.validator.full_name|default:"sin asignar" }}</span>
+          {% if can_change_evaluator %}<button type="button" class="text-arena-600 hover:text-arena-700 font-medium ml-1" @click="editing = !editing">cambiar</button>{% endif %}
+        </p>
+        {% if can_change_evaluator %}
+        <form method="post" action="{% url 'evaluations:ownership_set_evaluator' pk=evaluation.pk %}" x-show="editing" x-cloak class="mt-2 flex flex-wrap gap-2">
+          {% csrf_token %}
+          <select name="evaluator" class="input max-w-xs py-1.5" required>
+            <option value="">— Elegir evaluador —</option>
+            {% for e in evaluators %}<option value="{{ e.id }}" {% if evaluation.validator_id == e.id %}selected{% endif %}>{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn-secondary py-1.5">Guardar</button>
+        </form>
+        <p class="text-xs text-slate-400 mt-1">Puedes cambiarlo solo mientras la evaluación esté abierta.</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      {% if evaluation.is_submitted %}
+        <span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
+      {% else %}
+        <span class="badge bg-slate-100 text-slate-600">Abierta</span>
+      {% endif %}
+      {% if editing and can_edit_link %}
+        <a href="{% url 'evaluations:ownership_view' pk=evaluation.pk %}" class="btn-secondary">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver</a>
+      {% elif not editing and can_edit_link %}
+        <a href="{% url 'evaluations:ownership_edit' pk=evaluation.pk %}" class="btn-primary">{% include "partials/icon.html" with name="edit" cls="w-4 h-4" %} Editar</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if evaluation.is_submitted %}
+    <div class="rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 mb-6 text-sm text-emerald-800 flex items-center gap-2">
+      {% include "partials/icon.html" with name="lock" cls="w-4 h-4" %}
+      <span>Evaluación cerrada el {{ evaluation.submitted_at|date:"d/m/Y H:i" }} — ya no puede modificarse. Calificación: <span class="font-semibold">{{ evaluation.score }}</span>.</span>
+    </div>
+  {% endif %}
+
+  <!-- Barra de progreso fija -->
+  <div class="sticky top-16 z-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 bg-slate-50/95 backdrop-blur border-b border-slate-200 mb-8">
+    <div class="flex items-center gap-4">
+      <div class="flex-1">
+        <div class="flex items-center justify-between text-sm mb-1">
+          <span class="text-slate-600"><span x-text="answered"></span>/<span x-text="total"></span> respondidas</span>
+          {% if answers_editable %}
+          <span class="text-slate-500" x-show="saving" x-cloak>Guardando…</span>
+          <span class="text-emerald-600" x-show="!saving && touched" x-cloak>Guardado</span>
+          {% endif %}
+        </div>
+        <div class="h-2 rounded-full bg-slate-200 overflow-hidden">
+          <div class="h-full bg-arena-600 transition-all" :style="`width: ${total ? (answered/total*100) : 0}%`"></div>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-xs text-slate-500">Promedio en vivo</p>
+        <p class="text-lg font-semibold text-slate-900 tabular-nums" x-text="average ?? '—'"></p>
+      </div>
+    </div>
+  </div>
+
+  {% if evaluation.template.scale_note %}
+  <div class="card p-4 mb-8"><p class="text-sm text-slate-600">{{ evaluation.template.scale_note }}</p></div>
+  {% endif %}
+
+  <!-- Secciones y preguntas -->
+  {% for section in sections %}
+    <section class="mb-10">
+      <h3 class="font-semibold text-slate-900 mb-4">{{ section.title }}</h3>
+      <div class="space-y-5">
+        {% for question in section.questions.all %}
+          {% with ans=answers|get_item:question.id %}
+          <div class="card p-5">
+            <div class="flex items-start gap-3">
+              <span class="text-sm font-semibold text-slate-400 tabular-nums mt-0.5">{{ forloop.counter }}.</span>
+              <div class="flex-1">
+                <p class="font-medium text-slate-900">{{ question.title }}</p>
+                {% if question.text %}<p class="mt-1.5 text-sm text-slate-600 leading-relaxed">{{ question.text }}</p>{% endif %}
+                <div class="mt-4 flex flex-wrap gap-3">
+                  {% for opt in scale %}
+                    <label class="cursor-pointer">
+                      <input type="radio" name="q-{{ question.id }}" class="peer sr-only"
+                             {% if not answers_editable %}disabled{% endif %}
+                             {% if opt.value is None and ans.is_na %}checked{% elif opt.value is not None and ans.value == opt.value %}checked{% endif %}
+                             {% if answers_editable %}@change="save({{ question.id }}, {% if opt.value is None %}null, true{% else %}{{ opt.value }}, false{% endif %})"{% endif %}>
+                      <span class="badge border border-slate-300 text-slate-600 px-3.5 py-2 peer-checked:bg-arena-600 peer-checked:text-white peer-checked:border-arena-600 transition"
+                            title="{{ opt.description }}">
+                        {% if opt.value is not None %}{{ opt.value }} · {% endif %}{{ opt.label }}
+                      </span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endwith %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+
+  <!-- Fortalezas / Oportunidades / Comentarios (los complementa el líder) -->
+  {% if can_complement %}
+    <form method="post" action="{% url 'evaluations:ownership_save' pk=evaluation.pk %}" class="card p-5 mt-8"
+          x-data="{
+            strengths: `{{ evaluation.strengths|escapejs }}`,
+            opportunities: `{{ evaluation.opportunities|escapejs }}`,
+            tried: false, confirming: false,
+            get ready() { return this.strengths.trim() && this.opportunities.trim(); }
+          }">
+      {% csrf_token %}
+      <h3 class="font-semibold text-slate-900 mb-1">Retroalimentación del líder</h3>
+      <p class="text-sm text-slate-600 mb-5">Complementa estos campos durante la sesión con la persona. Fortalezas y Oportunidades son obligatorias para cerrar.</p>
+
+      <div class="space-y-5">
+        <div>
+          <label class="label" for="strengths">Fortalezas <span class="text-rose-500">*</span></label>
+          <textarea id="strengths" name="strengths" rows="3" class="input" x-model="strengths" placeholder="Lo que la persona hizo especialmente bien.">{{ evaluation.strengths }}</textarea>
+          <p x-show="tried && !strengths.trim()" x-cloak class="mt-1 text-sm text-rose-600">Captura las Fortalezas para poder cerrar.</p>
+        </div>
+        <div>
+          <label class="label" for="opportunities">Oportunidades <span class="text-rose-500">*</span></label>
+          <textarea id="opportunities" name="opportunities" rows="3" class="input" x-model="opportunities" placeholder="Lo que conviene mejorar el siguiente periodo.">{{ evaluation.opportunities }}</textarea>
+          <p x-show="tried && !opportunities.trim()" x-cloak class="mt-1 text-sm text-rose-600">Captura las Oportunidades para poder cerrar.</p>
+        </div>
+        <div>
+          <label class="label" for="comments">Comentarios <span class="text-slate-400 font-normal">(opcional)</span></label>
+          <textarea id="comments" name="comments" rows="2" class="input">{{ evaluation.comments }}</textarea>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2 pt-1">
+          <button type="submit" name="action" value="save" class="btn-secondary">{% include "partials/icon.html" with name="save" cls="w-4 h-4" %} Guardar</button>
+          <button type="button" class="btn-primary" :class="!ready && 'opacity-50'" @click="tried = true; if (ready) confirming = true">{% include "partials/icon.html" with name="lock" cls="w-4 h-4" %} Guardar y cerrar</button>
+        </div>
+        <p class="text-xs text-slate-500">Al cerrar, ni la persona ni el líder podrán volver a editar la evaluación.</p>
+      </div>
+
+      <!-- Confirmación de cierre -->
+      <div x-show="confirming" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900/50" @click="confirming = false"></div>
+        <div x-show="confirming" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+             class="relative bg-white rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
+          <div class="flex items-start gap-3">
+            <span class="grid place-items-center w-10 h-10 rounded-full bg-amber-50 text-amber-600 shrink-0">{% include "partials/icon.html" with name="lock" cls="w-5 h-5" %}</span>
+            <div>
+              <h4 class="font-semibold text-slate-900">¿Cerrar la evaluación?</h4>
+              <p class="mt-1 text-sm text-slate-600">Una vez cerrada, ni la persona ni tú podrán volver a editarla. Se calculará y registrará la calificación.</p>
+            </div>
+          </div>
+          <div class="mt-5 flex justify-end gap-2">
+            <button type="button" class="btn-secondary" @click="confirming = false">Cancelar</button>
+            <button type="submit" name="action" value="save_close" class="btn-primary">Sí, cerrar</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  {% else %}
+    <!-- Solo lectura (evaluado o evaluación cerrada) -->
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      {% include "evaluations/_feedback_card.html" with title="Fortalezas" value=evaluation.strengths empty="Las completará tu líder." %}
+      {% include "evaluations/_feedback_card.html" with title="Oportunidades" value=evaluation.opportunities empty="Las completará tu líder." %}
+    </div>
+    {% if evaluation.comments %}
+    <div class="mt-5">{% include "evaluations/_feedback_card.html" with title="Comentarios" value=evaluation.comments empty="" %}</div>
+    {% endif %}
+  {% endif %}
+</div>
+
+<script>
+  function ownershipForm(cfg) {
+    return {
+      ...cfg, saving: false, touched: false,
+      async save(question, value, isNa) {
+        this.saving = true;
+        try {
+          const r = await fetch(this.url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.csrf },
+            body: JSON.stringify({ question, value, is_na: isNa }),
+          });
+          const data = await r.json();
+          if (data.ok) { this.answered = data.answered; this.total = data.total; this.average = data.average; this.touched = true; }
+          else { Alpine.store('ui').notify('No se pudo guardar la respuesta.', 'error'); }
+        } catch (e) { Alpine.store('ui').notify('Sin conexión. Reintenta en un momento.', 'warning'); }
+        finally { this.saving = false; }
+      },
+    };
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% comment %}Barra superior: hamburguesa (móvil), título y menú de usuario.{% endcomment %}
+<header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-slate-200">
+  <div class="flex items-center gap-3 h-16 px-4 sm:px-6 lg:px-8">
+    <button type="button" class="btn-ghost p-2 lg:hidden" @click="$store.ui.sidebarOpen = true" aria-label="Abrir menú">
+      {% include "partials/icon.html" with name="menu" %}
+    </button>
+
+    <h1 class="text-base font-semibold text-slate-900 truncate">{{ page_title|default:"Evaluaciones" }}</h1>
+
+    <div class="ml-auto flex items-center gap-1">
+      <!-- Ayuda -->
+      <a href="{% url 'dashboards:help' %}" class="rounded-lg p-2 hover:bg-slate-100 transition" aria-label="Ayuda" title="Centro de ayuda">
+        {% include "partials/icon.html" with name="help" cls="w-5 h-5 text-slate-600" %}
+      </a>
+
+      <!-- Notificaciones / pendientes -->
+      <div class="relative" x-data="{ open: false }" @keydown.escape="open = false">
+        <button type="button" class="relative rounded-lg p-2 hover:bg-slate-100 transition" @click="open = !open" aria-label="Notificaciones" :aria-expanded="open">
+          {% include "partials/icon.html" with name="bell" cls="w-5 h-5 text-slate-600" %}
+          {% if pending_count %}
+            <span class="absolute -top-0.5 -right-0.5 grid place-items-center min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[11px] font-semibold">{{ pending_count }}</span>
+          {% endif %}
+        </button>
+        <div x-show="open" x-cloak @click.outside="open = false"
+             x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+             class="absolute right-0 mt-2 w-80 card p-0 z-40 overflow-hidden" role="menu">
+          <div class="px-4 py-3 border-b border-slate-100">
+            <p class="font-semibold text-slate-900 text-sm">Pendientes</p>
+            <p class="text-xs text-slate-500">Cuestionarios por llenar este periodo</p>
+          </div>
+          <div class="max-h-80 overflow-y-auto divide-y divide-slate-100">
+            {% for item in pending_items %}
+              <a href="{{ item.url }}" class="flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition">
+                <span class="grid place-items-center w-8 h-8 rounded-lg bg-arena-50 text-arena-600 shrink-0">{% include "partials/icon.html" with name=item.icon|default:"clipboard" cls="w-4 h-4" %}</span>
+                <span class="min-w-0">
+                  <span class="block text-sm font-medium text-slate-900 truncate">{{ item.project }}</span>
+                  <span class="block text-xs text-slate-500">{{ item.text }}</span>
+                </span>
+              </a>
+            {% empty %}
+              <div class="px-4 py-8 text-center">
+                <span class="inline-grid place-items-center w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 mb-2">{% include "partials/icon.html" with name="check" cls="w-5 h-5" %}</span>
+                <p class="text-sm text-slate-600">Estás al día. No tienes pendientes.</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Menú de usuario -->
+      <div class="relative" x-data="{ open: false }" @keydown.escape="open = false">
+        <button type="button" class="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-100 transition"
+                @click="open = !open" :aria-expanded="open" aria-haspopup="true">
+          {% include "partials/avatar.html" with subject=user size="w-8 h-8" icon="w-4 h-4" %}
+          <span class="hidden sm:block text-sm font-medium text-slate-700 max-w-40 truncate">{{ user.full_name }}</span>
+          {% include "partials/icon.html" with name="chevron-down" cls="w-4 h-4 text-slate-400" %}
+        </button>
+
+        <div x-show="open" x-cloak @click.outside="open = false"
+             x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+             class="absolute right-0 mt-2 w-64 card p-1.5 z-40" role="menu">
+          <div class="px-3 py-2 border-b border-slate-100 mb-1">
+            <p class="text-sm font-medium text-slate-900 truncate">{{ user.full_name }}</p>
+            <p class="text-xs text-slate-500 truncate">{{ user.email }}</p>
+            <p class="mt-1 text-xs text-slate-500">
+              {{ user.get_role_display }}{% if user.area %} · {{ user.area.name }}{% endif %}{% if user.level %} · {{ user.level.name }}{% endif %}
+            </p>
+          </div>
+          <a href="{% url 'accounts:profile' %}" class="nav-link w-full" role="menuitem">
+            {% include "partials/icon.html" with name="id" cls="w-5 h-5" %}<span>Mi perfil</span>
+          </a>
+          <form method="post" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-link w-full text-left text-rose-600 hover:bg-rose-50 hover:text-rose-700" role="menuitem">
+              {% include "partials/icon.html" with name="logout" cls="w-5 h-5" %}
+              <span>Cerrar sesión</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

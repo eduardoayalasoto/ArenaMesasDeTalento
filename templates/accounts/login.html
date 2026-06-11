@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Ingresar · Mesa de Talento{% endblock %}
+
+{% block auth_content %}
+<main class="min-h-dvh grid lg:grid-cols-2">
+  <!-- Panel de marca (navy) -->
+  <section class="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-arena-800 via-arena-700 to-arena-600 text-white p-12">
+    <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-white/5"></div>
+    <div class="absolute -bottom-32 -left-16 w-96 h-96 rounded-full bg-white/5"></div>
+
+    <div class="relative flex items-center gap-2.5">
+      <span class="grid place-items-center w-10 h-10 rounded-xl bg-white/15 backdrop-blur">{% include "partials/icon.html" with name="user" cls="w-5 h-5 text-white" %}</span>
+      <span class="font-semibold text-lg font-display">Arena Analytics</span>
+    </div>
+
+    <div class="relative max-w-md">
+      <h2 class="text-4xl font-bold leading-tight text-white font-display">Mesa de Talento</h2>
+      <p class="mt-4 text-lg text-arena-100 leading-relaxed">“Para impulsar el desarrollo y crecimiento profesional de cada colaborador.”</p>
+      <div class="mt-6 flex items-center gap-2 text-sm text-arena-200">
+        {% include "partials/icon.html" with name="shield" cls="w-4 h-4" %}
+        <span>Tu información es confidencial: solo tú, tu evaluador y Talento la ven.</span>
+      </div>
+    </div>
+
+    <p class="relative text-sm text-arena-200/80">Uso interno · Arena Analytics 2026</p>
+  </section>
+
+  <!-- Formulario -->
+  <section class="flex items-center justify-center p-6 sm:p-12 bg-white">
+    <div class="w-full max-w-sm">
+      <img src="{% static 'img/arena-logo.gif' %}" alt="Arena Analytics" class="h-12 w-auto mb-8">
+
+      <h1 class="text-2xl font-semibold text-slate-900">Te damos la bienvenida</h1>
+      <p class="mt-1 text-slate-600">Ingresa a la Mesa de Talento con tu correo de Arena.</p>
+
+      {% if form.non_field_errors %}
+      <div role="alert" class="mt-5 rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-700">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'accounts:login' %}" class="mt-6 space-y-4" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div>
+          <label class="label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+          {{ form.username }}
+          {% for error in form.username.errors %}<p class="mt-1 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="label mb-0" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+            <a href="{% url 'accounts:password_reset' %}" class="text-sm font-medium text-arena-600 hover:text-arena-700">¿Olvidaste tu contraseña?</a>
+          </div>
+          {{ form.password }}
+          {% for error in form.password.errors %}<p class="mt-1 text-sm text-rose-600">{{ error }}</p>{% endfor %}
+        </div>
+
+        <button type="submit" class="btn-primary w-full">Ingresar</button>
+      </form>
+
+      <p class="mt-8 text-xs text-slate-500 text-center">¿Problemas para entrar? Escribe a Talento y Cultura.</p>
+    </div>
+  </section>
+</main>
+{% endblock %}

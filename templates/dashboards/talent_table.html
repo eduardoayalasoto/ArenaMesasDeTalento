@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Mesa de Talento</h2>
+    <p class="text-slate-600">Informe de la evaluación de cada colaborador{% if period %} · {{ period.name }}{% endif %}.</p>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    {% include "dashboards/_stat_card.html" with icon="users" label="Colaboradores" value=stat_total tone="arena" %}
+    {% include "dashboards/_stat_card.html" with icon="check" label="Calificaciones completas" value=stat_complete tone="emerald" %}
+    {% include "dashboards/_stat_card.html" with icon="trophy" label="Exceden expectativas" value=stat_excede tone="amber" %}
+    {% include "dashboards/_stat_card.html" with icon="trending-up" label="Promedio general" value=stat_avg|default:"—" tone="arena" %}
+  </div>
+
+  <!-- Filtros y búsqueda -->
+  <form method="get" class="flex flex-wrap items-center gap-2 mb-4">
+    <input type="search" name="q" value="{{ q }}" placeholder="Buscar por nombre…" class="input max-w-xs py-1.5">
+    <select name="area" class="input max-w-44 py-1.5" onchange="this.form.submit()">
+      <option value="">Todas las áreas</option>
+      {% for a in areas %}<option value="{{ a.code }}" {% if area_filter == a.code %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+    </select>
+    <select name="level" class="input max-w-40 py-1.5" onchange="this.form.submit()">
+      <option value="">Todos los niveles</option>
+      {% for l in levels %}<option value="{{ l.code }}" {% if level_filter == l.code %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="btn-secondary py-1.5">Buscar</button>
+  </form>
+
+  <!-- Lista de colaboradores -->
+  <div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600 text-left">
+          <tr>
+            <th class="px-4 py-3 font-medium">Colaborador</th>
+            <th class="px-4 py-3 font-medium text-center hidden sm:table-cell">Proy.</th>
+            <th class="px-4 py-3 font-medium hidden lg:table-cell">Evaluador(es)</th>
+            <th class="px-4 py-3 font-medium text-center">Calif.</th>
+            <th class="px-4 py-3 font-medium hidden sm:table-cell">Banda</th>
+            <th class="px-4 py-3 font-medium text-right">Acción</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for row in rows %}
+            <tr class="hover:bg-slate-50/70 transition">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-3">
+                  {% include "partials/avatar.html" with subject=row.user size="w-10 h-10" icon="w-5 h-5" %}
+                  <div class="min-w-0">
+                    <p class="font-medium text-slate-900 truncate">{{ row.user.full_name }}</p>
+                    <p class="text-xs text-slate-500 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user.level.name|default:"Sin nivel" }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-center tabular-nums hidden sm:table-cell">{{ row.user.num_projects }}</td>
+              <td class="px-4 py-3 text-slate-600 hidden lg:table-cell">
+                {% for name in row.evaluators %}<span class="block truncate text-sm">{{ name }}</span>{% empty %}<span class="text-slate-400">—</span>{% endfor %}
+              </td>
+              <td class="px-4 py-3 text-center">
+                {% if row.final.is_complete %}<span class="font-semibold text-slate-900 tabular-nums">{{ row.final.final_score }}</span>{% else %}<span class="text-slate-400">—</span>{% endif %}
+              </td>
+              <td class="px-4 py-3 hidden sm:table-cell">
+                {% if row.final.is_complete %}
+                  <span class="badge
+                    {% if row.final.band == 'Excede' %}bg-emerald-50 text-emerald-700
+                    {% elif row.final.band == 'Cumple' %}bg-arena-50 text-arena-700
+                    {% elif row.final.band == 'Cumple parcial' %}bg-amber-50 text-amber-700
+                    {% else %}bg-rose-50 text-rose-700{% endif %}">{{ row.final.band }}</span>
+                {% else %}
+                  <span class="badge bg-slate-100 text-slate-500">En proceso</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-3 text-right">
+                <a href="{% url 'dashboards:user_results' pk=row.user.pk %}" class="btn-primary py-1.5" aria-label="Ver informe de {{ row.user.full_name }}">
+                  {% include "partials/icon.html" with name="eye" cls="w-4 h-4" %}<span class="hidden sm:inline">Ver</span>
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">No hay colaboradores con esos filtros.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="flex items-center justify-between gap-3 mt-4 text-sm">
+    <p class="text-slate-500">Mostrando {{ page_obj.start_index }}–{{ page_obj.end_index }} de {{ page_obj.paginator.count }}</p>
+    <div class="flex items-center gap-2">
+      {% if page_obj.has_previous %}<a href="?{{ base_qs }}&page={{ page_obj.previous_page_number }}" class="btn-secondary py-1.5">Anterior</a>{% endif %}
+      <span class="text-slate-600">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?{{ base_qs }}&page={{ page_obj.next_page_number }}" class="btn-secondary py-1.5">Siguiente</a>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

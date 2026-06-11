@@ -1,0 +1,15 @@
+{% comment %}Tarjeta centrada para flujos de cuenta sin sesión.{% endcomment %}
+{% extends "base.html" %}
+{% block auth_content %}
+<main class="min-h-dvh grid place-items-center px-4 py-12">
+  <div class="w-full max-w-sm">
+    <div class="flex items-center gap-2.5 mb-8 justify-center">
+      <span class="grid place-items-center w-9 h-9 rounded-lg bg-arena-600 text-white font-bold text-lg">A</span>
+      <span class="font-semibold text-slate-900">Arena Evaluaciones</span>
+    </div>
+    <div class="card p-6">
+      {% block card %}{% endblock %}
+    </div>
+  </div>
+</main>
+{% endblock %}

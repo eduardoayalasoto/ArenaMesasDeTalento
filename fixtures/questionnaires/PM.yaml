@@ -1,0 +1,376 @@
+templates:
+  - area: PM
+    level: JR
+    questions:
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Documentar y enviar por escrito (correo + chat grupal + chat individual) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener una estructura de canal y archivos en Teams, donde todo el equipo trabaja sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar dailys recurrentes agendados.
+      - title: "Rutinas de gestión"
+        text: >-
+          Ejecutar weekly status reports con cliente técnico y de negocio.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo.
+      - title: "Rutinas de gestión"
+        text: >-
+          Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Enviar pre-reads para sesiones internas y con clientes.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Asistir y mantenerse enfocado en las reuniones.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Responder correos y mensajes por Teams en tiempo y forma.
+  - area: PM
+    level: MID
+    questions:
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Documentar y enviar por escrito (correo + chat grupal + chat individual) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener una estructura de canal y archivos en Teams, donde todo el equipo trabaja sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar dailys recurrentes agendados.
+      - title: "Rutinas de gestión"
+        text: >-
+          Ejecutar weekly status reports con cliente técnico y de negocio.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo.
+      - title: "Rutinas de gestión"
+        text: >-
+          Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Enviar pre-reads para sesiones internas y con clientes.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente.
+      - title: "Análisis de impactos ante cambios"
+        text: >-
+          Analizar el impacto en fechas, dependencias y carga del equipo antes de ejecutar cambios en alcance o plan de trabajo.
+      - title: "Clarificación de criterios de aceptación ambiguos"
+        text: >-
+          Detectar y resolver criterios incompletos o ambiguos comunicados por cliente o definidos en el alcance antes de la ejecución de los entregables relacionados.
+      - title: "Detección temprana de desviaciones de calidad"
+        text: >-
+          Identificar desviaciones de calidad de forma recurrente durante la ejecución.
+      - title: "Gestión consciente de dependencias"
+        text: >-
+          Identificar y destrabar dependencias que impactan la ejecución a través de un seguimiento y comunicación clara y puntual.
+      - title: "Preparación para validaciones"
+        text: >-
+          Asegurar que entregables estén listos antes de sesiones con cliente.
+      - title: "Traducción técnica de los elementos del proyecto al stakeholder"
+        text: >-
+          Aprovechar sesiones del proyecto para explicar aspectos técnicos de una forma clara a los stakeholders que no son técnicos, con el lenguaje y detalle que se adapta al stakeholder.
+      - title: "Dominio de estrategias de comunicación con stakeholders"
+        text: >-
+          Identificar el orden, tipo de mensaje y momentos para comunicar con cada stakeholder las validaciones y puntos clave del proyecto.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Asistir y mantenerse enfocado en las reuniones.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Responder correos y mensajes por Teams en tiempo y forma.
+  - area: PM
+    level: SNR
+    questions:
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Documentar y enviar por escrito (correo + chat grupal + chat individual) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente.
+      - title: "Documentación del plan y del avance"
+        text: >-
+          Mantener una estructura de canal y archivos en Teams, donde todo el equipo trabaja sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar dailys recurrentes agendados.
+      - title: "Rutinas de gestión"
+        text: >-
+          Ejecutar weekly status reports con cliente técnico y de negocio.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan.
+      - title: "Rutinas de gestión"
+        text: >-
+          Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo.
+      - title: "Rutinas de gestión"
+        text: >-
+          Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad.
+      - title: "Cuestionamiento y validación de resultados"
+        text: >-
+          Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente.
+      - title: "Preparación de reuniones y seguimiento con el cliente"
+        text: >-
+          Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Enviar pre-reads para sesiones internas y con clientes.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan.
+      - title: "Seguimiento a acuerdos y definiciones de las sesiones"
+        text: >-
+          Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente.
+      - title: "Análisis de impactos ante cambios"
+        text: >-
+          Analizar el impacto en fechas, dependencias y carga del equipo antes de ejecutar cambios en alcance o plan de trabajo.
+      - title: "Clarificación de criterios de aceptación ambiguos"
+        text: >-
+          Detectar y resolver criterios incompletos o ambiguos comunicados por cliente o definidos en el alcance antes de la ejecución de los entregables relacionados.
+      - title: "Detección temprana de desviaciones de calidad"
+        text: >-
+          Identificar desviaciones de calidad de forma recurrente durante la ejecución.
+      - title: "Gestión consciente de dependencias"
+        text: >-
+          Identificar y destrabar dependencias que impactan la ejecución a través de un seguimiento y comunicación clara y puntual.
+      - title: "Preparación para validaciones"
+        text: >-
+          Asegurar que entregables estén listos antes de sesiones con cliente.
+      - title: "Traducción técnica de los elementos del proyecto al stakeholder"
+        text: >-
+          Aprovechar sesiones del proyecto para explicar aspectos técnicos de una forma clara a los stakeholders que no son técnicos, con el lenguaje y detalle que se adapta al stakeholder.
+      - title: "Dominio de estrategias de comunicación con stakeholders"
+        text: >-
+          Identificar el orden, tipo de mensaje y momentos para comunicar con cada stakeholder las validaciones y puntos clave del proyecto.
+      - title: "Evaluación de impacto sistémico"
+        text: >-
+          Evaluar impacto y sinergias en otras iniciativas, equipos o capacidades y comunicar a otros equipos para lograr una mejor ejecución y entrega.
+      - title: "Definición y defensa de límites de alcance"
+        text: >-
+          Establecer y sostener claramente el alcance del proyecto en los momentos donde haya negociaciones respecto a los entregables, equipo y tiempos del proyecto.
+      - title: "Reencuadre de problemas del cliente"
+        text: >-
+          Cuestionar el problema que el equipo interno o el cliente busca solucionar cuando las actividades no atacan la causa raíz.
+      - title: "Intervención temprana en riesgos"
+        text: >-
+          Anticipar, comunicar y actuar ante señales tempranas de riesgo involucrando a equipo interno de Arena y al cliente.
+      - title: "Transferencia de criterio al equipo"
+        text: >-
+          Elevar el nivel de decisión del equipo mediante coaching.
+      - title: "Posicionamiento como asesor de confianza con stakeholder"
+        text: >-
+          Desarrollar una relación de confianza, cercanía y apoyo con los stakeholders clave a través de los one on ones del proyecto.
+      - title: "Autonomía en la gestión y ejecución del proyecto"
+        text: >-
+          Ejecutar y entregar el proyecto durante períodos largos sin requerir apoyo o presencia constante del equipo directivo, manteniendo tiempo, calidad y confianza.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Asistir y mantenerse enfocado en las reuniones.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Responder correos y mensajes por Teams en tiempo y forma.
+  - area: PM
+    level: LEAD
+    questions:
+      - title: "Aseguramiento de gestión de proyectos"
+        text: >-
+          Realizar seguimiento a los PMs con los que trabaja en el proyecto para evaluar el cumplimiento del checklist correspondiente y definir ajustes.
+      - title: "Aseguramiento de gestión de proyectos"
+        text: >-
+          Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Oficina de PMO.
+      - title: "Aseguramiento de gestión de proyectos"
+        text: >-
+          Identificar y hacer equipo con leads técnicos para asegurar que el proyecto cuenta con las bases y diseños técnicos requeridos.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Asistir y participar activamente a los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Asistir y participar activamente a los planning y review del proyecto.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Asegurar y revisar la alineación recurrente del trabajo del equipo vs el alcance de la propuesta.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Identificar, validar el material y preparación y participar en sesiones críticas donde asistirán stakeholders senior del cliente que requieran apoyo del lead.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Ayudar al equipo a mapear y entender a todos los stakeholders involucrados.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Agendar one on ones con stakeholders senior del proyecto para alinear expectativas y generar una relación de confianza y cercanía.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Anticipar participación de directores en momentos y sesiones críticas, dando claridad de la comunicación o influencia requerida de su parte.
+      - title: "Guía y soporte al equipo de proyecto"
+        text: >-
+          Crear y ejecutar un plan de transición, onboarding, KTs y seguimiento al staffing del proyecto al inicio, durante y al final.
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Mesa de Talento.
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Monitorear el avance de los planes de capacitación del equipo de Producto en sus proyectos.
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Monitorear la ejecución y calidad de las sesiones de mentoring de los equipos de producto en sus proyectos.
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Dar seguimiento a la planeación y anticipación de los días de vacaciones y ausencias del equipo en sus proyectos para evitar riesgos en la ejecución.
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Dar seguimiento a resolver directamente dudas de los procedimientos internos de Arena (e.g. PMO, Odoo, Mesa de Talento, Vacaciones, etc.).
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Planear y ejecutar sesiones de aprendizaje con el equipo de PMs.
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Asegurar el mantenimiento del directorio de KO, accesos internos Arena y otros clientes (bajas, altas, cambios de reporte).
+      - title: "Guía y soporte al equipo interno"
+        text: >-
+          Identificar y gestionar la implementación de mejoras a las metodologías, estándares de trabajo y herramientas en coordinación con el resto de los leads y del equipo de Arena.
+      - title: "Soporte comercial"
+        text: >-
+          Dar soporte comercial a través de la identificación de oportunidades, necesidades, evolución de soluciones actuales y sensibilización en temas de innovación para el cliente.
+      - title: "Soporte comercial"
+        text: >-
+          Dar soporte comercial a través de la construcción y validación de propuestas en conjunto con otros leads y el director.
+      - title: "Soporte comercial"
+        text: >-
+          Dar soporte comercial a través del seguimiento a facturación y temas administrativos en caso de ser requerido.
+      - title: "Soporte comercial"
+        text: >-
+          Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para desarrollar una relación más cercana y mantener una presencia activa.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Asistir y mantenerse enfocado en las reuniones.
+      - title: "Cumplimiento lineamientos de trabajo remoto"
+        text: >-
+          Responder correos y mensajes por Teams en tiempo y forma.

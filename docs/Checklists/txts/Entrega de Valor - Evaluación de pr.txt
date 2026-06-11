@@ -1,0 +1,98 @@
+Entrega de Valor - Evaluación de proyecto
+
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+14
+Present
+
+Templates
+Evaluación Proyecto - Entrega de ValorEvaluación Proyecto - Entrega de Valor
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Este formulario evalúa la participación del equipo en un proyecto específico. Deberás evaluar su contribución con base en evidencia observable.
+Importante: Todos los colaboradores involucrados en el mismo proyecto serán evaluados bajo los mismos criterios y sobre el mismo contexto de entrega.
+
+1.Correo de todos los evaluados (separados por comas y sin espacios)Required to answer. Single line text. 
+Enter your answer
+
+2.Nombre del ProyectoRequired to answer. Single line text. 
+Enter your answer
+
+3.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+4.Satisfacción del clienteRequired to answer. Single choice. 
+Evalúa qué tan satisfecho quedó el cliente con el trabajo entregado en este proyecto.
+
+4 — Muy Alto: Cliente satisfecho todo el proyecto, es sponsor de Arena
+3 — Alto: Dio retro directa, se hicieron ajustes que corrigieron su percepción
+2 — Medio: Dio retro en repetidas ocasiones, se logró ajustar
+1 — Bajo: Dio retro repetida y se tuvieron que escalar oportunidades de mejora
+0 — Muy Bajo: Cliente no quedó satisfecho o se paró el proyecto
+0. Muy bajo 
+1. Bajo
+2. Medio
+3. Alto
+4. Muy alto 
+
+5.Cumplimiento de entregables
+ 
+Required to answer. Single choice. 
+Evalúa si se entregó lo comprometido con la calidad esperada para el proyecto.
+
+4 — Muy Alto: Entregables cumplidos en tiempo, forma y calidad sin retrabajos
+3 — Alto: Cumplidos en tiempo, forma y calidad con retrabajos menores por ajustes del cliente
+2 — Medio: Cumplidos en tiempo, forma y calidad con retrabajos mayores por ajustes del cliente
+1 — Bajo: Cumplidos pero sin calidad comprometida, cliente expresó inconformidad múltiples veces
+0 — Muy Bajo: No se cumplió en tiempo, forma ni calidad comprometida
+0. Muy bajo 
+1. Bajo
+2. Medio
+3. Alto
+4. Muy alto 
+
+6.Cumplimiento en tiempo (proyectos con tiempo finito) 
+ 
+Required to answer. Single choice. 
+Aplica únicamente si el proyecto tiene una fecha de entrega definida. Si el proyecto es de servicio indefinido, selecciona N/A.
+
+4 — Muy Alto: Retraso menor al 10% vs semanas planeadas
+3 — Alto: Retraso entre 10% y 15% vs semanas planeadas
+2 — Medio: Retraso entre 15% y 20% vs semanas planeadas
+1 — Bajo: Retraso entre 20% y 25% vs semanas planeadas
+0 — Muy Bajo: Retraso mayor al 25% vs semanas planeadas
+0. Muy bajo 
+1. Bajo
+2. Medio
+3. Alto
+4. Muy alto 
+N/A
+
+7.Cumplimiento en tiempo (servicios o iniciativas con tiempo indefinido) 
+ 
+Required to answer. Single choice. 
+Aplica únicamente si el proyecto es un servicio continuo sin fecha de cierre definida. Si el proyecto tiene fecha de entrega, selecciona N/A.
+
+4 — Muy Alto: Entregas y actividades cumplidas consistentemente vs fechas planeadas
+3 — Alto: La mayoría del tiempo se cumplen entregas y actividades vs fechas planeadas
+2 — Medio: Inconsistencias en el cumplimiento de entregas vs fechas planeadas
+1 — Bajo: Más del 50% de entregas no cumplidas vs fechas planeadas
+0 — Muy Bajo: Consistentemente no se logran cumplir entregas vs fechas planeadas
+0. Muy bajo 
+1. Bajo
+2. Medio
+3. Alto
+4. Muy alto 
+N/A

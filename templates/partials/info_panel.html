@@ -1,0 +1,9 @@
+{% comment %}Panel de instrucciones/guía colapsable. Params: title (def. "¿Cómo funciona?"), tone (info|warning). Contenido en el bloque caller via {% include with body=... %} o usar como include con 'text'.{% endcomment %}
+<div class="rounded-lg px-4 py-3 mb-6 text-sm flex gap-3
+  {% if tone == 'warning' %}bg-amber-50 border border-amber-200 text-amber-800{% else %}bg-arena-50 border border-arena-100 text-arena-800{% endif %}">
+  <div class="shrink-0 mt-0.5">{% include "partials/icon.html" with name="info" cls="w-5 h-5" %}</div>
+  <div>
+    {% if title %}<p class="font-medium mb-0.5">{{ title }}</p>{% endif %}
+    <div class="space-y-1">{{ text|safe }}</div>
+  </div>
+</div>

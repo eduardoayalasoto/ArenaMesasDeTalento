@@ -1,0 +1,22 @@
+{% load static %}{% comment %}Plantilla de error standalone: no usa context processors ni navegación (segura incluso en 500).{% endcomment %}
+<!doctype html>
+<html lang="es-MX" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ titulo }} · Arena</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+</head>
+<body class="min-h-dvh grid place-items-center px-4">
+  <main class="text-center max-w-md">
+    <p class="text-7xl font-bold text-arena-600">{% block code %}{% endblock %}</p>
+    <h1 class="mt-4 text-2xl font-semibold text-slate-900">{{ titulo }}</h1>
+    <p class="mt-2 text-slate-600">{{ mensaje }}</p>
+    <a href="/" class="mt-6 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold bg-arena-600 text-white hover:bg-arena-700 transition">
+      Volver a mi tablero
+    </a>
+  </main>
+</body>
+</html>

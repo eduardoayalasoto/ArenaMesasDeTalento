@@ -1,0 +1,288 @@
+Checklist Ownership UX UI Snr
+-
+Saved
+
+
+Jorge Toxtli Enriquez
+JEJE
+Style
+Settings
+Preview
+
+Collect responses
+
+View responses
+1
+Present
+
+Templates
+Checklist Ownership UX UI Snr (Copia)Checklist Ownership UX UI Snr (Copia)
+Jun 9, 2026Jun 9, 2026
+
+Section 1
+Evalúa cada actividad con base en evidencia concreta del período: entregables, sesiones, documentación o retroalimentación del cliente y del equipo.
+
+1. No cumple — La actividad no se ejecutó o se ejecutó con deficiencias significativas que impactaron el proyecto o al equipo.
+ 
+2. Cumple parcial — La actividad se ejecutó pero con omisiones, inconsistencias o calidad por debajo del estándar esperado para el nivel.
+ 
+3. Cumple — La actividad se ejecutó de forma consistente y completa, cumpliendo el estándar esperado para el nivel.
+ 
+4. Excede — La actividad se ejecutó por encima del estándar del nivel, con iniciativa, precisión o impacto adicional notable.
+ 
+N/A — La actividad no aplicó en este período por razones justificadas (tipo de proyecto, fase, etc.).
+
+1.Nombre del evaluadoRequired to answer. Single line text. 
+Enter your answer
+
+2.ÁreaRequired to answer. Single choice. 
+Ingeniería de Datos
+Ciencia de Datos
+Product Manager
+UX/UI
+
+3.Puesto del evaluadoRequired to answer. Single choice. 
+UX UI Jr
+UX UI Mid
+UX UI Snr
+UX UI Lead
+
+4.Nombre del evaluador(es)Required to answer. Multi Line Text. 
+Enter your answer
+
+5.Definición estratégica del problema de experienciaRequired to answer. Single choice. 
+Definir el problema estratégico de experiencia antes de cualquier actividad de diseño: conectar el objetivo de negocio con el comportamiento actual del usuario, la brecha deseada y el impacto económico estimado. Priorizar el problema frente a otras iniciativas con criterio explícito.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+6.Identificación y validación de supuestos críticosRequired to answer. Single choice. 
+Identificar, clasificar por riesgo y validar con evidencia los supuestos que sostienen la hipótesis de diseño. Definir el método de validación adecuado al contexto del proyecto (entrevistas, datos cuantitativos, tests rápidos, shadowing). Documentar qué se sabe y qué se asume con distinción explícita.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+7.Arquitectura de decisión y flujo completoRequired to answer. Single choice. 
+Diseñar el sistema de decisiones del usuario: user flow end-to-end, mapa de estados, microdecisiones críticas, puntos de abandono potencial y reglas de negocio con implicación de experiencia. El Sr define el flujo completo aunque opere solo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+8.Diseño de interfaz con rigor sistémicoRequired to answer. Single choice. 
+Construir o supervisar la construcción visual de la interfaz con alineación al Design System, criterios cognitivos, accesibilidad WCAG AA y consistencia cross-product. Definir los patrones de diseño que el equipo seguirá. Justificar funcionalmente todas las decisiones estéticas.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+9.Validación de prototipo antes de desarrolloRequired to answer. Single choice. 
+Diseñar el protocolo de validación, ejecutar o supervisar las pruebas con usuarios y sintetizar los aprendizajes en insights accionables. El Sr valida comprensión, confianza, claridad, fluidez de tarea y fricción emocional, no solo si 'se ve bien'.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+10.Handoff estratégico y criterios de aceptaciónRequired to answer. Single choice. 
+Convertir el diseño en especificación ejecutable: definir estados, microcopy, reglas de interacción, animaciones y criterios de aceptación medibles en el backlog. El Sr es responsable de que desarrollo no tenga que suponer nada.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+11.Medición post-release y aprendizajeRequired to answer. Single choice. 
+Analizar el impacto de los diseños en los KPIs definidos al inicio. Sintetizar cambios en comportamiento, feedback cualitativo e impacto sistémico en otros flows. Tomar una decisión documentada: iterar, escalar o descartar.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+12.Documentación del proyectoRequired to answer. Single choice. 
+Garantizar que la estructura de archivos del proyecto en Teams/SharePoint está actualizada, accesible y organizada en todo momento. Si hay Jr o Mid en el equipo, establecer el estándar de organización y revisarlo periódicamente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+13.Rutinas de gestión — DailyRequired to answer. Single choice. 
+Asistir o facilitar el daily con criterio de calidad de ejecución: verificar que el equipo reporta avance real, que los bloqueos se gestionan antes de impactar el sprint y que la sesión dura entre 15 y 20 minutos. Si opera solo, reporta avance al PM o stakeholder.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+14.Rutinas de gestión — Sprint PlanningRequired to answer. Single choice. 
+Liderar el sprint planning con criterio técnico de UX: desafiar estimaciones irreales, asegurar que todas las tareas tienen definición de terminado clara y que el plan es ejecutable dados los supuestos del proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+15.Rutinas de gestión — Sprint ReviewRequired to answer. Single choice. 
+Exponer los resultados técnicos del sprint con criterio estratégico: qué se completó, qué impacto tiene en el KPI definido y qué se aprendió. Dar retroalimentación técnica profunda al Mid y Jr si los hay.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+16.Rutinas de gestión — Sprint RetrospectivaRequired to answer. Single choice. 
+Facilitar o participar en la retrospectiva identificando los patrones de proceso que generan retrabajo recurrente y proponiendo cambios sistémicos, no solo ajustes puntuales.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+17.Rutinas de gestión — Refinamiento de backlogRequired to answer. Single choice. 
+Liderar el refinamiento con criterio técnico de UX: identificar actividades mal definidas, proponer criterios de aceptación técnicamente correctos y priorizar con criterio de impacto en el problema original.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+18.Cuestionamiento y validación de resultadosRequired to answer. Single choice. 
+Presentar los diseños de solución con el nivel de detalle estratégico suficiente para generar decisiones informadas del cliente, no solo aprobación visual. Obtener sign-off explícito y documentado antes de pasar a desarrollo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+19.Preparación de reunionesRequired to answer. Single choice. 
+Preparar y liderar la preparación de reuniones críticas usando el Formato de Preparación de Reuniones: definir el objetivo estratégico, la estructura de la sesión, las preguntas clave para el cliente y los posibles escenarios de respuesta.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+20.Sesiones 1:1 de retroalimentación con clienteRequired to answer. Single choice. 
+Agendar y ejecutar sesiones one-on-one con stakeholders clave del cliente para detectar señales tempranas de insatisfacción, alinear expectativas estratégicas y construir una relación de confianza que va más allá del proyecto.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+21.Seguimiento a acuerdos — Pre-reads y minutasRequired to answer. Single choice. 
+Asegurar que todas las sesiones con cliente tienen pre-read 24 horas antes y minuta dentro de las 24 horas posteriores. Si hay Jr o Mid en el equipo, el Sr establece el estándar de calidad y revisa antes de enviar.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+22.Comunicación de avance con stakeholdersRequired to answer. Single choice. 
+Mantener informados a todos los stakeholders relevantes 2-3 veces por semana mediante mensajes directos o en chat grupal. Comunicar proactivamente desviaciones o riesgos antes de que el cliente los descubra.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+23.Análisis de impactos ante cambiosRequired to answer. Single choice. 
+Evaluar el impacto estratégico de los cambios de alcance en fechas, dependencias, calidad del diseño y relación con el cliente. Comunicar el análisis al cliente y al equipo directivo de Arena antes de comprometerse a cualquier cambio.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+24.Definición y defensa de límites de alcanceRequired to answer. Single choice. 
+Establecer y defender el alcance del proyecto en negociaciones sobre entregables, equipo y tiempos. Documentar los acuerdos de alcance y comunicar al equipo directivo los intentos de scope creep.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+25.Reencuadre de problemas del clienteRequired to answer. Single choice. 
+Cuestionar el problema que el cliente o el equipo busca resolver cuando las actividades propuestas no atacan la causa raíz. Proponer un reencuadre con argumentos de impacto y alinear al cliente en el nuevo enfoque antes de ejecutar.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+26.Intervención temprana en riesgosRequired to answer. Single choice. 
+Anticipar, comunicar y actuar ante señales tempranas de riesgo de proyecto (técnicos, de relación con el cliente, de alcance, de calidad) involucrando al equipo de Arena y al cliente según la naturaleza del riesgo.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+27.Transferencia de criterio al equipoRequired to answer. Single choice. 
+Desarrollar el criterio técnico de diseño del Mid y Jr mediante coaching en contexto: retroalimentación técnica en sesiones de diseño, preguntas que desarrollan el razonamiento y espacios para que el equipo proponga soluciones antes de que el Sr las proponga.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+28.Posicionamiento como asesor de confianza con el clienteRequired to answer. Single choice. 
+Desarrollar una relación de confianza y cercanía con los stakeholders clave del cliente que vaya más allá del entregable del sprint. Identificar necesidades del cliente más allá del proyecto actual y comunicar oportunidades al equipo directivo de Arena.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+29.Autonomía en la gestión del proyectoRequired to answer. Single choice. 
+Gestionar y entregar el proyecto durante períodos largos sin necesitar apoyo o presencia constante del equipo directivo, manteniendo tiempo, calidad y confianza del cliente.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+30.Cumplimiento de lineamientos de trabajo remoto 1Required to answer. Single choice. 
+Confirmar asistencia a reuniones, conectarse de forma puntual, prender cámara y mantenerse atento y participativo durante toda la sesión.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+31.Cumplimiento de lineamientos de trabajo remoto 2Required to answer. Single choice. 
+Responder correos y mensajes de Teams dentro de las 24 horas hábiles. Si no puede dar respuesta completa, confirmar recepción dentro de las 4 horas y estimar cuándo la tendrá.
+1. No cumple 
+2. Cumple parcial
+3. Cumple
+4. Excede
+N/A
+
+32.FortalezasRequired to answer. Multi Line Text. 
+Enter your answer
+
+33.OportunidadesRequired to answer. Multi Line Text. 
+Enter your answer
+
+34.ComentariosMulti Line Text. 
+Enter your answer
+
+Section 2
+CONFIRMACIÓN DE ENVÍO
+⚠️ No des clic en Enviar (Submit) hasta haber revisado esta evaluación con tu líder. Una vez enviada, no se tomarán en cuenta cambios posteriores.
+
+35.Confirmo que ya revisé esta autoevaluación con mi líder y cuento con su validaciónRequired to answer. Single choice. 
+Si
+No
+
+36.Puedes cerrar este formulario ahora y volverlo a abrir una vez que estés en tu sesión de evaluación con tu líder. Las respuestas no se perderán. No des clic en Enviar (Submit) en este momento.Single choice. 
+Entendido
+Ya he validado las respuestas con mi líder

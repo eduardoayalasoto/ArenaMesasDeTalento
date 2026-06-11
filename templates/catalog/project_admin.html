@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Proyectos</h2>
+      <p class="text-slate-600">Crea y edita proyectos, asigna al líder y al equipo.</p>
+    </div>
+    <a href="{% url 'catalog:project_create' %}" class="btn-primary">Nuevo proyecto</a>
+  </div>
+
+  {% include "partials/info_panel.html" with title="Tipo de duración y Entrega de Valor" text="<p>El <strong>tipo de duración</strong> del proyecto define qué criterio de tiempo aparece en su Entrega de Valor: los proyectos <strong>finitos</strong> evalúan el cumplimiento de la fecha de entrega; los <strong>indefinidos</strong>, la consistencia del servicio.</p>" %}
+
+  {% if not projects %}
+    {% include "partials/empty_state.html" with icon="folder" title="Aún no hay proyectos" message="Crea el primer proyecto para asignar equipos y habilitar las evaluaciones." cta_url="" %}
+  {% else %}
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600 text-left">
+            <tr>
+              <th class="px-4 py-3 font-medium">Proyecto</th>
+              <th class="px-4 py-3 font-medium">Líder</th>
+              <th class="px-4 py-3 font-medium">Duración</th>
+              <th class="px-4 py-3 font-medium text-center">Equipo</th>
+              <th class="px-4 py-3 font-medium">Estado</th>
+              <th class="px-4 py-3 font-medium"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for p in projects %}
+              <tr>
+                <td class="px-4 py-3">
+                  <p class="font-medium text-slate-900">{{ p.name }}</p>
+                  {% if p.client %}<p class="text-xs text-slate-500">{{ p.client }}</p>{% endif %}
+                </td>
+                <td class="px-4 py-3 text-slate-600">{{ p.lead.full_name }}</td>
+                <td class="px-4 py-3 text-slate-600">{{ p.get_duration_type_display }}</td>
+                <td class="px-4 py-3 text-center tabular-nums">{{ p.members }}</td>
+                <td class="px-4 py-3">
+                  {% if p.is_active %}<span class="badge bg-emerald-50 text-emerald-700">Activo</span>
+                  {% else %}<span class="badge bg-slate-100 text-slate-500">Inactivo</span>{% endif %}
+                </td>
+                <td class="px-4 py-3 text-right"><a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn-secondary">Editar</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
