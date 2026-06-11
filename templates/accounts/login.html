@@ -5,14 +5,9 @@
 {% block auth_content %}
 <main class="min-h-dvh grid lg:grid-cols-2">
   <!-- Panel de marca (navy) -->
-  <section class="relative hidden lg:flex flex-col justify-between overflow-hidden bg-gradient-to-br from-arena-800 via-arena-700 to-arena-600 text-white p-12">
+  <section class="relative hidden lg:flex flex-col justify-center overflow-hidden bg-gradient-to-br from-arena-800 via-arena-700 to-arena-600 text-white p-12">
     <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-white/5"></div>
     <div class="absolute -bottom-32 -left-16 w-96 h-96 rounded-full bg-white/5"></div>
-
-    <div class="relative flex items-center gap-2.5">
-      <span class="grid place-items-center w-10 h-10 rounded-xl bg-white/15 backdrop-blur">{% include "partials/icon.html" with name="user" cls="w-5 h-5 text-white" %}</span>
-      <span class="font-semibold text-lg font-display">Arena Analytics</span>
-    </div>
 
     <div class="relative max-w-md">
       <h2 class="text-4xl font-bold leading-tight text-white font-display">Mesa de Talento</h2>
@@ -23,13 +18,13 @@
       </div>
     </div>
 
-    <p class="relative text-sm text-arena-200/80">Uso interno · Arena Analytics 2026</p>
+    <p class="absolute bottom-10 left-12 text-sm text-arena-200/80">Uso interno · Arena Analytics 2026</p>
   </section>
 
   <!-- Formulario -->
   <section class="flex items-center justify-center p-6 sm:p-12 bg-white">
     <div class="w-full max-w-sm">
-      <img src="{% static 'img/arena-logo.gif' %}" alt="Arena Analytics" class="h-12 w-auto mb-8">
+      <img src="{% static 'img/arena-logo.gif' %}" alt="Arena Analytics" class="h-24 w-auto mb-8">
 
       <h1 class="text-2xl font-semibold text-slate-900">Te damos la bienvenida</h1>
       <p class="mt-1 text-slate-600">Ingresa a la Mesa de Talento con tu correo de Arena.</p>
