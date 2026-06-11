@@ -1,10 +1,12 @@
-# Webapp de Evaluaciones Arena — dependencias de producción
+# Webapp Mesa de Talento (Arena Analytics) — dependencias
 Django>=6.0,<6.1
 whitenoise>=6.6
 python-dotenv>=1.0
 PyYAML>=6.0
 django-simple-history>=3.5
-psycopg[binary]>=3.2  ; Postgres gestionado en preview/producción
+Pillow>=10.0
+# Postgres gestionado (preview/producción)
+psycopg[binary]>=3.2
 
 # Desarrollo / pruebas
 pytest>=8.0
