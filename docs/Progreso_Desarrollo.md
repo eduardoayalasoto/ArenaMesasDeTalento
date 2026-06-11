@@ -2,7 +2,7 @@
 
 > Documento vivo. Se actualiza conforme avanza la implementación del `Plan_Desarrollo_Webapp_Evaluaciones.md`.
 > Estado: ⬜ pendiente · 🟡 en curso · ✅ hecho · ⚠️ con nota
-> Última actualización: 2026-06-10
+> Última actualización: 2026-06-11 · **Desplegado en Vercel + Neon** · Ver `CONTEXTO_Sistema.md` para el panorama completo.
 
 ## Convenciones del proyecto (recordatorio permanente)
 - **Idioma:** sistema 100% en español (etiquetas, mensajes, correos, validaciones). Código (modelos, variables) en inglés.
@@ -89,14 +89,15 @@
 - ✅ Pantalla de **consulta de persona** (drill-down desde "Mi área" → resultados + evaluaciones, con permiso por visibilidad)
 - ✅ Estados vacíos y mensajes guía en todas las pantallas; banners de proceso (no enviar antes de validar, etc.)
 
-### Fase 7 — Endurecimiento y despliegue 🟡
-- ✅ Auditoría `simple-history` en modelos críticos (catalog y evaluations)
-- ✅ Tests de permisos por rol (13) + smoke E2E
-- ✅ **Configuración de deploy lista**: `vercel.json`, `.vercelignore`, `wsgi.app`, WhiteNoise sin collectstatic (USE_FINDERS), `psycopg` en requirements, modo prod (DEBUG=0) probado localmente
-- ✅ Guía `docs/Deploy_Vercel.md` (pasos + variables + qué se necesita)
-- ⬜ **Ejecutar el deploy** — bloqueado: requiere cuenta Vercel (login interactivo), Postgres gestionado y, opcionalmente, repo Git. No hay CLI de Vercel ni npm en este equipo.
-- ⬜ Compilar Tailwind para producción (hoy CDN) — mejora, no bloquea
-- ⬜ Manual de usuario por rol
+### Fase 7 — Endurecimiento y despliegue ✅ (desplegado)
+- ✅ Auditoría `simple-history` + tests de permisos + smoke E2E
+- ✅ **Desplegado en Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.json`) + **Neon Postgres** (migrado y sembrado)
+- ✅ Repo en GitHub: `eduardoayalasoto/ArenaMesasDeTalento` (push → auto-deploy)
+- ✅ Estáticos locales (Tailwind compilado, Lucide/Alpine/htmx vendorizados) + cache-busting; perf (lucide defer)
+- ✅ Variables de entorno documentadas (`.env.vercel`, `docs/Deploy_Vercel.md`)
+- ✅ Ayuda por rol en la app (`/ayuda/`) — sustituye al manual
+- ⬜ Compilar Tailwind en el build de Vercel (hoy se versiona el CSS ya compilado) — opcional
+- ⬜ Recordatorios agendados (Cron) — comando listo, falta agendar
 
 ---
 
@@ -117,3 +118,11 @@
   - Calificación final materializada + vista "Mis resultados" (banda + pilares).
   - Servicios `ownership_flow`, `value_delivery_flow`, `final_flow` añadidos. **39 pruebas en verde** + smoke E2E de los 3 pilares (final 2.92 “Cumple parcial” para un MID, verificado a mano).
 - **Pendiente:** Fase 6 (Mi área del Lead, dashboard de avance de Talento, exportes, cierre de periodo), editor visual de cuestionarios y pantallas admin propias de Talento (hoy vía Django admin), y **deploy a Vercel (requiere credenciales del usuario)**.
+
+### 2026-06-11
+- **Desplegado a producción:** Vercel (entrypoint `api/wsgi.py`) + **Neon Postgres**. Repo en GitHub `eduardoayalasoto/ArenaMesasDeTalento`. Resueltos: entrypoint Django, parseo de `requirements.txt`, `DATABASE_URL` inválido (fallback a `POSTGRES_URL`), `connect_timeout`. Neon migrado y sembrado.
+- **Usuarios reales:** import desde `docs/Modelos/usuarios.csv` (`import_csv_users`); deducción de área/nivel por puesto. Quitada la gente de Tecnología (salvo Óscar = Director). **2 directores** (Héctor, Óscar). UX→MID. Todos con `Arena2026!` y **sin cambio forzado**. 57 usuarios.
+- **Pantallas de alta propias de Talento:** crear **usuario** (`/cuenta/usuarios/nuevo/`) y **periodo** (`/catalogo/periodos/nuevo/`). (Proyectos ya tenían alta.)
+- **UX/branding:** tema **azul marino**; fuentes **Lato + Ubuntu**; **Lucide** en todo; logo de Arena en nav y login; favicon **user-star** blanco; toasts arriba-derecha; perfil con tabs (foto + contraseña, nombre editable); informe estilo slide; comentario de Impacto Arena al final; login rediseñado (sin ícono/“Arena Analytics”, logo grande).
+- **Mejoras de error handling/UX:** modal de confirmación al cerrar Ownership, anti-doble-envío, buscador+paginación en Mesa de Talento, recordatorios por correo (comando), logging + Sentry opcional, switch de cambio de contraseña forzado.
+- Creado **`docs/CONTEXTO_Sistema.md`** (referencia rápida del sistema).
