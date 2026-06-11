@@ -97,7 +97,23 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 # --- Base de datos --------------------------------------------------------
-DATABASE_URL = os.environ.get("DATABASE_URL", "")
+def _resolve_database_url() -> str:
+    """Devuelve la primera cadena de conexión Postgres VÁLIDA disponible.
+
+    Tolera un DATABASE_URL mal configurado (p. ej. un placeholder) cayendo a las
+    variables que inyecta la integración de Neon/Vercel.
+    """
+    for key in (
+        "DATABASE_URL", "POSTGRES_URL", "POSTGRES_URL_NON_POOLING",
+        "DATABASE_URL_UNPOOLED",
+    ):
+        value = os.environ.get(key, "").strip()
+        if value.startswith(("postgres://", "postgresql://")):
+            return value
+    return ""
+
+
+DATABASE_URL = _resolve_database_url()
 if DATABASE_URL:
     # Postgres gestionado (Neon / Vercel Postgres / Supabase)
     from urllib.parse import parse_qs, urlparse
