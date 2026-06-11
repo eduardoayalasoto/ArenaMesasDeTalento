@@ -77,19 +77,17 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - `send_pending_reminders [--dry-run]` — correos de pendientes (agendable).
 
 ## 10. Despliegue (producción)
-- **Repo:** github.com/eduardoayalasoto/ArenaMesasDeTalento (push → auto-deploy en Vercel).
-- **Vercel:** entrypoint `api/wsgi.py` (builder Django, zero-config; **sin `vercel.json`**). Estáticos por WhiteNoise (`WHITENOISE_USE_FINDERS`, sin `collectstatic`).
-- **BD:** Neon Postgres. La app lee `DATABASE_URL` (o cae a `POSTGRES_URL` si es inválida). Ya migrada y sembrada.
-- **Variables en Vercel** (ver `docs/Deploy_Vercel.md` y `.env.vercel`): `DATABASE_URL` (pooled), `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=0`, `DJANGO_ALLOWED_HOSTS=.vercel.app`, `DJANGO_CSRF_TRUSTED_ORIGINS=https://*.vercel.app`.
-- **Migrar contra prod (local):** exportar `DATABASE_URL` (unpooled de Neon) y `manage.py migrate`.
+Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.json`) + **Neon Postgres**. Repo `github.com/eduardoayalasoto/ArenaMesasDeTalento` (push a `main` → auto‑deploy). Estáticos por WhiteNoise (`WHITENOISE_USE_FINDERS`, sin `collectstatic`). La app lee `DATABASE_URL` (o cae a `POSTGRES_URL`).
+
+➡️ **Variables de entorno, migraciones y respaldos/restauración: ver `Deploy_Vercel.md`** (y `.env.vercel`). No se duplican aquí para evitar inconsistencias.
 
 ## 11. Peculiaridades del entorno (no obvias)
 - **No hay Node/npm.** Tailwind se compila con `tailwindcss.exe` (standalone). `build_css.ps1` borra `static/css` antes de compilar (bug EEXIST en OneDrive). El `<link>` del CSS lleva `?v={{ asset_version }}` (mtime) para cache-busting.
 - **Consola Windows = cp1252:** evitar glifos no-latin en salidas; correr con `PYTHONIOENCODING=utf-8`.
 - **Plantillas no recargan en caliente** → reiniciar runserver tras editar templates.
 - **Fuentes:** Lato (cuerpo) + Ubuntu (títulos, clase `font-display`). Tema **azul marino** (token `arena`).
-- **Foto:** obligatoria (middleware `PhotoRequiredMiddleware` redirige a perfil); se procesa a círculo 400×400; sin foto → icono Lucide.
+- **Foto:** obligatoria (middleware `PhotoRequiredMiddleware`); se procesa a 400×400 y se **guarda en la BD** (`User.photo_data`, porque el FS de Vercel es de solo lectura), servida en `/cuenta/foto/<id>/`; sin foto → icono Lucide.
 
 ## 12. Estado actual
-- **Fases 0–6 funcionales**; desplegado en Vercel+Neon. 57 usuarios reales (todos `Arena2026!`, sin cambio forzado), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO.
-- **Pendiente/opcional:** asignar proyectos/equipos reales; compilar Tailwind en el build de Vercel (hoy se versiona el CSS compilado); recordatorios agendados (Cron); endurecimiento final (Fase 7).
+- **Fases 0–7 funcionales y desplegadas** (Vercel + Neon). ~59 usuarios reales (todos `Arena2026!`, sin cambio forzado), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO. En **pruebas con Talento**.
+- **Pendiente/opcional:** asignar proyectos/equipos reales; compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).
