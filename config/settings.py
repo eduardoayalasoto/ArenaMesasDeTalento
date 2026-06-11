@@ -100,9 +100,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 if DATABASE_URL:
     # Postgres gestionado (Neon / Vercel Postgres / Supabase)
-    from urllib.parse import urlparse
+    from urllib.parse import parse_qs, urlparse
 
     url = urlparse(DATABASE_URL)
+    qs = parse_qs(url.query)
+    options = {
+        "sslmode": qs.get("sslmode", [os.environ.get("DB_SSLMODE", "require")])[0],
+        # Falla rápido si no alcanza la BD (evita colgarse hasta el timeout de la función).
+        "connect_timeout": int(os.environ.get("DB_CONNECT_TIMEOUT", "10")),
+    }
+    if "channel_binding" in qs:
+        options["channel_binding"] = qs["channel_binding"][0]
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -112,7 +120,7 @@ if DATABASE_URL:
             "HOST": url.hostname,
             "PORT": url.port or "5432",
             "CONN_MAX_AGE": 0,  # serverless: sin conexiones persistentes
-            "OPTIONS": {"sslmode": os.environ.get("DB_SSLMODE", "require")},
+            "OPTIONS": options,
         }
     }
 else:
