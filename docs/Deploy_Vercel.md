@@ -1,6 +1,8 @@
 # Deploy a Vercel — Guía paso a paso
 
-> Estado: **configuración lista** (`vercel.json`, `.vercelignore`, `wsgi.app`, WhiteNoise sin collectstatic, `psycopg` en requirements). Falta ejecutar el deploy, que requiere tu cuenta de Vercel y un Postgres gestionado.
+> Estado: **configuración lista** (entrypoint `api/wsgi.py` que detecta el builder de Django de Vercel, `.vercelignore`, WhiteNoise sin collectstatic, `psycopg` en requirements). Falta ejecutar el deploy, que requiere tu cuenta de Vercel y un Postgres gestionado.
+
+> **Entrypoint:** el builder nuevo de Vercel busca `wsgi.py`/`api/wsgi.py`/etc. (no `config/wsgi.py`). Por eso existe `api/wsgi.py` que reexpone la app. No se usa `vercel.json` (el builder es zero-config). Si prefieres otra ruta, define `[tool.vercel] entrypoint` en `pyproject.toml`.
 
 ## Lo que necesito de ti (bloqueantes)
 1. **Cuenta de Vercel** y autenticación de la CLI — es interactivo, lo corres tú:
