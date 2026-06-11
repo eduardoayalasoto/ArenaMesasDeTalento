@@ -91,8 +91,8 @@ class ProfileInfoForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["full_name", "photo"]
-        labels = {"full_name": "Nombre para mostrar", "photo": "Fotografía"}
+        fields = ["full_name"]  # 'photo' es solo del formulario (no toca el ImageField del modelo)
+        labels = {"full_name": "Nombre para mostrar"}
         widgets = {
             "full_name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Como quieres que aparezca tu nombre"}),
         }
