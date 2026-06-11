@@ -56,7 +56,28 @@ vercel --prod
 
 ## Notas técnicas
 - **Runtime Python 3.12** en Vercel (el código es compatible; el equipo local usa 3.14).
-- **Estáticos:** WhiteNoise con `WHITENOISE_USE_FINDERS=True` sirve los assets del admin sin `collectstatic`. El resto de la UI (Tailwind/Alpine/htmx) carga por CDN.
+- **Estáticos:** WhiteNoise con `WHITENOISE_USE_FINDERS=True` sirve sin `collectstatic`. Tailwind/Alpine/htmx/Lucide son **locales** (sin CDN), ver nota siguiente.
 - **Tailwind/Alpine/htmx:** ya están **locales** (sin CDN). El CSS se compila con `tailwindcss.exe` → `static/css/app.css` (versionado), y Alpine/htmx están en `static/vendor/`. WhiteNoise los sirve. Si editas plantillas y agregas clases nuevas, recompila con `.\build_css.ps1` antes de subir.
 - **Migraciones:** Vercel no las corre solo; se ejecutan desde local contra el `DATABASE_URL` de producción (paso 4).
 - **Cold starts:** aceptable para el volumen (~54 usuarios). `CONN_MAX_AGE=0` ya está configurado para serverless.
+- **Fotos de perfil:** se guardan en la **BD** (campo `photo_data`), no en archivos — porque el FS de Vercel es de **solo lectura**. Se sirven en `/cuenta/foto/<id>/`.
+
+## Respaldos y restauración (punto de retorno)
+
+**Crear un snapshot** (antes de pruebas o cambios grandes), apuntando a Neon:
+```powershell
+$env:DATABASE_URL = "<URL de Neon (unpooled)>"
+$env:PYTHONUTF8 = "1"   # asegura UTF-8 en el archivo
+.\.venv\Scripts\python.exe manage.py dumpdata accounts catalog questionnaires evaluations --indent 2 -o backups\snapshot_AAAA-MM-DD.json
+```
+Los snapshots viven en `backups/` (carpeta **ignorada por git**; contiene datos personales).
+
+**Restaurar — opción A (recomendada, reseteo real): Neon.**
+En la consola de Neon usa **Branches / Restore (point‑in‑time)** para rebobinar la base al momento deseado. Es la única que **borra** lo creado después del punto.
+
+**Restaurar — opción B: snapshot (loaddata).**
+```powershell
+$env:DATABASE_URL = "<URL de Neon (unpooled)>"
+.\.venv\Scripts\python.exe manage.py loaddata backups\snapshot_AAAA-MM-DD.json
+```
+Reinserta/actualiza por id; **no borra** filas creadas después del snapshot. Para un reseteo total, usa la opción A o un `flush` previo (destructivo).
