@@ -266,7 +266,7 @@ def test_resolve_or_create_crea_usuario_faltante():
         "Carolina Palacio", index, password="x", dry=False
     )
     assert action == "created"
-    assert user.email == "carolina.palacio@arena-analytics.com"
+    assert user.email == "cpalacio@arena-analytics.com"
     # segunda vez: ya existe en el índice
     user2, action2 = imports.resolve_or_create_user(
         "Carolina Palacio", index, password="x", dry=False
@@ -309,10 +309,10 @@ from apps.core.text import normalize_name
 # clave: nombre normalizado -> (nombre completo, correo)
 USERS_TO_CREATE = {
     normalize_name("Carolina Palacio"): (
-        "Carolina Palacio", "carolina.palacio@arena-analytics.com",
+        "Carolina Palacio", "cpalacio@arena-analytics.com",
     ),
     normalize_name("Carlos Alejandro Rodríguez Ochoa"): (
-        "Carlos Alejandro Rodríguez Ochoa", "carlos.rodriguez@arena-analytics.com",
+        "Carlos Alejandro Rodríguez Ochoa", "crodriguez@arena-analytics.com",
     ),
     normalize_name("Arturo Carranza Lucio"): (
         "Arturo Carranza Lucio", "arturo.carranza@arena-analytics.com",
@@ -548,7 +548,7 @@ def test_import_projects_crea_proyectos_y_usuario_faltante(xlsx, ana):
 
     # Carolina Palacio se creó como usuario y quedó como lead de Coppel
     coppel = Project.objects.get(name__startswith="Coppel Portal")
-    assert coppel.lead.email == "carolina.palacio@arena-analytics.com"
+    assert coppel.lead.email == "cpalacio@arena-analytics.com"
     assert coppel.status == Project.Status.DELAYED
 
 

@@ -56,8 +56,8 @@ Rol COLABORADOR, sin área/nivel, contraseña por defecto (`Arena2026!`),
 
 | Persona | Correo |
 |---|---|
-| Carolina Palacio | carolina.palacio@arena-analytics.com |
-| Carlos Alejandro Rodríguez Ochoa | carlos.rodriguez@arena-analytics.com |
+| Carolina Palacio | cpalacio@arena-analytics.com |
+| Carlos Alejandro Rodríguez Ochoa | crodriguez@arena-analytics.com |
 | Arturo Carranza Lucio | arturo.carranza@arena-analytics.com |
 
 ## Clasificación FINITO / INDEFINIDO (validada)
