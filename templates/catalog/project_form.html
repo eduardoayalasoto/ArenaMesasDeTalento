@@ -24,6 +24,25 @@
         {% for e in form.lead.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
       </div>
       <div>
+        <label class="label" for="{{ form.responsable.id_for_label }}">{{ form.responsable.label }}</label>
+        {{ form.responsable }}
+        {% for e in form.responsable.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="label" for="{{ form.kickoff.id_for_label }}">{{ form.kickoff.label }}</label>
+          {{ form.kickoff }}
+        </div>
+        <div>
+          <label class="label" for="{{ form.target_close.id_for_label }}">{{ form.target_close.label }}</label>
+          {{ form.target_close }}
+        </div>
+      </div>
+      <div>
+        <label class="label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+        {{ form.status }}
+      </div>
+      <div>
         <span class="label">{{ form.duration_type.label }}</span>
         <div class="space-y-2">
           {% for radio in form.duration_type %}

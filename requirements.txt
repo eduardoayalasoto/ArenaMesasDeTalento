@@ -11,3 +11,5 @@ psycopg[binary]>=3.2
 # Desarrollo / pruebas
 pytest>=8.0
 pytest-django>=4.8
+# Lectura de xlsx para importaciones de Talento (comandos import_*)
+openpyxl>=3.1

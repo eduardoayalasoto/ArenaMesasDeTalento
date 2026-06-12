@@ -1,5 +1,7 @@
 """Utilidades de texto en español."""
 
+import unicodedata
+
 # Partículas que van en minúscula dentro de un nombre propio.
 _LOWER_PARTICLES = {"de", "del", "la", "las", "los", "y", "e"}
 
@@ -15,3 +17,12 @@ def titlecase_name(raw: str) -> str:
         else:
             out.append(lower.capitalize())
     return " ".join(out)
+
+
+def normalize_name(raw) -> str:
+    """Minúsculas, sin acentos y espacios colapsados, para emparejar nombres."""
+    if not raw:
+        return ""
+    s = unicodedata.normalize("NFKD", str(raw))
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return " ".join(s.lower().split())

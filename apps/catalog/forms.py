@@ -34,22 +34,37 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ["name", "client", "lead", "duration_type", "is_active"]
+        fields = [
+            "name", "client", "lead", "responsable",
+            "duration_type", "status", "kickoff", "target_close", "is_active",
+        ]
         labels = {
             "name": "Nombre del proyecto",
             "client": "Cliente",
-            "lead": "Lead",
+            "lead": "Lead (Owner)",
+            "responsable": "Responsable",
             "duration_type": "Tipo de duración",
+            "status": "Estatus",
+            "kickoff": "Kick-off",
+            "target_close": "Cierre objetivo",
             "is_active": "Activo",
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Tablero Comercial"}),
             "client": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Cliente Retail (opcional)"}),
             "lead": forms.Select(attrs={"class": _INPUT}),
+            "responsable": forms.Select(attrs={"class": _INPUT}),
             "duration_type": forms.RadioSelect(),
+            "status": forms.Select(attrs={"class": _INPUT}),
+            "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
+            "target_close": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["lead"].queryset = self.fields["lead"].queryset.filter(is_active=True)
+        active = self.fields["lead"].queryset.filter(is_active=True)
+        self.fields["lead"].queryset = active
         self.fields["lead"].empty_label = "— Selecciona un Lead —"
+        self.fields["responsable"].queryset = active
+        self.fields["responsable"].empty_label = "— Sin responsable —"
+        self.fields["responsable"].required = False

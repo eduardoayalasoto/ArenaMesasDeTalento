@@ -119,6 +119,10 @@ class Project(models.Model):
         FINITO = "FINITO", "Tiempo finito (con fecha de entrega)"
         INDEFINIDO = "INDEFINIDO", "Servicio / iniciativa de tiempo indefinido"
 
+    class Status(models.TextChoices):
+        ON_TRACK = "ON_TRACK", "On track"
+        DELAYED = "DELAYED", "Delayed"
+
     name = models.CharField("nombre", max_length=160)
     client = models.CharField("cliente", max_length=160, blank=True)
     lead = models.ForeignKey(
@@ -132,6 +136,18 @@ class Project(models.Model):
         default=Duration.FINITO,
     )
     is_active = models.BooleanField("activo", default=True)
+    responsable = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True, blank=True,
+        related_name="responsible_projects",
+        verbose_name="responsable",
+    )
+    kickoff = models.DateField("kick-off", null=True, blank=True)
+    target_close = models.DateField("cierre objetivo", null=True, blank=True)
+    status = models.CharField(
+        "estatus", max_length=10, choices=Status.choices, default=Status.ON_TRACK
+    )
     history = HistoricalRecords()
 
     class Meta:
