@@ -2,22 +2,29 @@
 {% block content %}
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-slate-900">Impacto Arena</h2>
-    {% if period %}<p class="text-slate-600">Captura por periodo <span class="font-medium">{{ period.name }}</span> (escala 1–4). Se guarda en lote.</p>{% endif %}
+    {% if period %}<p class="text-slate-600">Captura por periodo <span class="font-medium">{{ period.name }}</span> (escala 1–4).</p>{% endif %}
   </div>
 
   {% if not period %}
     {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="Abre un periodo para capturar el Impacto Arena." %}
   {% else %}
-    {% include "partials/info_panel.html" with title="Cómo capturar" text="<p>Escribe la calificación de cada persona del 1 al 4 (admite decimales, p. ej. 3.5). Las notas son opcionales.</p><p>Puedes dejar filas en blanco y volver luego. Al guardar, se recalcula automáticamente la calificación final de cada persona afectada.</p>" %}
-    <form method="post" class="card overflow-hidden">
-      {% csrf_token %}
+    {% include "partials/info_panel.html" with title="Cómo capturar" text="<p>Escribe la calificación de cada persona del 1 al 4 (admite decimales, p. ej. 3.5). Las notas son opcionales.</p><p><strong>Cada campo se guarda automáticamente</strong> al salir de él: puedes capturar en varias sesiones y nada se pierde. Al guardar, se recalcula la calificación final de la persona.</p>" %}
+
+    {{ saved_ids|json_script:"arena-saved-ids" }}
+    <div class="card overflow-hidden"
+         x-data="arenaImpact({
+           url: '{% url 'evaluations:arena_impact_autosave' %}',
+           csrf: '{{ csrf_token }}',
+           saved: JSON.parse(document.getElementById('arena-saved-ids').textContent)
+         })">
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead class="bg-slate-50 text-slate-600 text-left">
             <tr>
               <th class="px-4 py-3 font-medium">Colaborador</th>
-              <th class="px-4 py-3 font-medium w-32">Calificación</th>
+              <th class="px-4 py-3 font-medium w-28">Calificación</th>
               <th class="px-4 py-3 font-medium">Notas</th>
+              <th class="px-4 py-3 font-medium w-32">Estado</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
@@ -29,20 +36,64 @@
                 </td>
                 <td class="px-4 py-2">
                   <input type="number" name="score-{{ row.user.id }}" min="1" max="4" step="0.01"
-                         value="{{ row.impact.score|default_if_none:'' }}" class="input py-1.5" placeholder="1–4">
+                         value="{{ row.impact.score|default_if_none:'' }}" class="input py-1.5" placeholder="1–4"
+                         @change="save({{ row.user.id }})">
                 </td>
                 <td class="px-4 py-2">
                   <input type="text" name="notes-{{ row.user.id }}" value="{{ row.impact.notes|default:'' }}"
-                         class="input py-1.5" placeholder="Opcional">
+                         class="input py-1.5" placeholder="Opcional"
+                         @change="save({{ row.user.id }})">
+                </td>
+                <td class="px-4 py-2 text-xs">
+                  <span x-show="state[{{ row.user.id }}] === 'saving'" class="text-slate-400">Guardando…</span>
+                  <span x-show="state[{{ row.user.id }}] === 'saved'" x-cloak class="text-emerald-600 inline-flex items-center gap-1">{% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %} Guardado</span>
+                  <span x-show="state[{{ row.user.id }}] === 'error'" x-cloak class="text-rose-600 inline-flex items-center gap-1">{% include "partials/icon.html" with name="info" cls="w-3.5 h-3.5" %} Revisa</span>
                 </td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
-        <button type="submit" class="btn-primary">Guardar Impacto Arena</button>
+      <div class="p-3 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-1.5">
+        {% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %}
+        Los cambios se guardan automáticamente al salir de cada campo.
       </div>
-    </form>
+    </div>
+
+    <script>
+      function arenaImpact(cfg) {
+        return {
+          url: cfg.url, csrf: cfg.csrf,
+          // state[userId] = 'saving' | 'saved' | 'error'
+          state: (cfg.saved || []).reduce((acc, id) => (acc[id] = 'saved', acc), {}),
+          async save(userId) {
+            const scoreEl = document.querySelector(`[name="score-${userId}"]`);
+            const notesEl = document.querySelector(`[name="notes-${userId}"]`);
+            const score = scoreEl.value.trim();
+            const notes = notesEl.value.trim();
+            // Fila vacía sin cambios: no hace falta guardar.
+            if (!score && !notes && this.state[userId] === undefined) return;
+            this.state[userId] = 'saving';
+            try {
+              const r = await fetch(this.url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.csrf },
+                body: JSON.stringify({ user_id: userId, score, notes }),
+              });
+              const data = await r.json();
+              if (data.ok) {
+                this.state[userId] = 'saved';
+              } else {
+                this.state[userId] = 'error';
+                Alpine.store('ui').notify(data.error || 'No se pudo guardar.', 'error');
+              }
+            } catch (e) {
+              this.state[userId] = 'error';
+              Alpine.store('ui').notify('Sin conexión. Reintenta en un momento.', 'warning');
+            }
+          },
+        };
+      }
+    </script>
   {% endif %}
 {% endblock %}

@@ -62,3 +62,24 @@ def test_close_is_idempotent_guard(collaborator, project_finite, period, ownersh
     ownership_flow.close_ownership_evaluation(ev)
     errors = ownership_flow.close_ownership_evaluation(ev)
     assert any("cerrada" in e.lower() for e in errors)
+
+
+@pytest.mark.django_db
+def test_reopen_returns_to_draft_and_recomputes_final(collaborator, project_finite, period, ownership_template):
+    from apps.catalog.models import ProjectMembership
+    from apps.evaluations.models import FinalScore
+
+    ProjectMembership.objects.get_or_create(project=project_finite, user=collaborator)
+    ev = _draft(collaborator, project_finite, period, ownership_template)
+    ev.strengths = "F"; ev.opportunities = "O"; ev.save()
+    ownership_flow.close_ownership_evaluation(ev)
+    fs = FinalScore.objects.get(user=collaborator, period=period)
+    assert fs.ownership_score == Decimal("3.00")
+
+    ownership_flow.reopen_ownership_evaluation(ev)
+    ev.refresh_from_db()
+    assert ev.status == OwnershipEvaluation.Status.BORRADOR
+    assert ev.submitted_at is None
+    # Al reabrir, la evaluación deja de contar: el pilar de Ownership se recalcula.
+    fs.refresh_from_db()
+    assert fs.ownership_score is None

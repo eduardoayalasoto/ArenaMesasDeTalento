@@ -54,9 +54,9 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Bandas** (RN-20): ≥3.50 Excede · 3.00–3.49 Cumple · 2.00–2.99 Cumple parcial · <2.00 No cumple.
 
 ## 6. Flujos principales
-- **Ownership:** el colaborador inicia su evaluación y **elige evaluador** (cualquiera de Arena) → captura respuestas (autosave, promedio en vivo). El **evaluador** entra a *Validación de Ownership*, complementa **Fortalezas/Oportunidades/Comentarios** y hace **Guardar y cerrar** (modal de confirmación) → queda **inmutable** y se calcula el score. El evaluado puede cambiar de evaluador solo mientras esté abierta. Vistas **Ver** y **Editar** separadas.
+- **Ownership:** el colaborador inicia su evaluación y **elige evaluador** (cualquiera de Arena) → captura respuestas (autosave, promedio en vivo). El **evaluador** entra a *Validación de Ownership*, complementa **Fortalezas/Oportunidades/Comentarios** y hace **Guardar y cerrar** (modal de confirmación) → queda **inmutable** y se calcula el score. El evaluado puede cambiar de evaluador solo mientras esté abierta. Vistas **Ver** y **Editar** separadas. **Reapertura (RN-06):** solo Talento/admin puede **Reabrir** una evaluación cerrada (botón con modal en la vista) → vuelve a borrador y recalcula la final.
 - **Entrega de Valor:** el **líder del proyecto** captura (criterio de tiempo según FINITO/INDEFINIDO) → **Director** valida o regresa con comentario → recalcula finales del equipo.
-- **Impacto Arena:** **Talento** captura en tabla masiva → recalcula finales.
+- **Impacto Arena:** **Talento** captura en tabla con **autoguardado por campo** (carga los datos de la BD; guarda calificación/nota al salir del campo; indicador por fila) → recalcula finales. Mismo patrón que el autosave de Ownership.
 - **Calificación final:** `FinalScore` materializado; se recalcula al validar EV / guardar Impacto / abrir resultados.
 
 ## 7. Capa de servicios (`apps/core/services/`)
@@ -68,7 +68,7 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Evaluador:** `/evaluaciones/ownership/validacion/` (solo si tiene validaciones asignadas).
 - **Líder:** `/evaluaciones/entrega-valor/` (captura).
 - **Director:** `/evaluaciones/entrega-valor/validar/`, `/mesa-talento/`.
-- **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`), Avance (`/avance-periodo/`), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar).
+- **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`, autoguardado), **reabrir** evaluaciones de Ownership cerradas (botón en la vista), Avance (`/avance-periodo/`), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar).
 
 ## 9. Seed y comandos (`manage.py`)
 - `seed_all` = `seed_superuser` + `seed_catalogs` + `seed_users` + `seed_questionnaires` (+ `seed_demo` con `--demo`).
@@ -89,5 +89,5 @@ Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.
 - **Foto:** obligatoria (middleware `PhotoRequiredMiddleware`); se procesa a 400×400 y se **guarda en la BD** (`User.photo_data`, porque el FS de Vercel es de solo lectura), servida en `/cuenta/foto/<id>/`; sin foto → icono Lucide.
 
 ## 12. Estado actual
-- **Fases 0–7 funcionales y desplegadas** (Vercel + Neon). ~59 usuarios reales (todos `Arena2026!`, sin cambio forzado), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO. En **pruebas con Talento**.
+- **Fases 0–7 funcionales y desplegadas** (Vercel + Neon). ~62 usuarios reales (todos `Arena2026!`, sin cambio forzado), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO. En **pruebas con Talento**. Durante las pruebas se añadieron: **reapertura de Ownership** por Talento y **autoguardado en Impacto Arena**.
 - **Pendiente/opcional:** asignar proyectos/equipos reales; compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).

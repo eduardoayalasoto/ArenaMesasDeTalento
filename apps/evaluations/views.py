@@ -178,6 +178,8 @@ def _render_ownership(request, pk, *, editing):
         "evaluators": evaluators,
         # El usuario puede alternar a edición si tiene algún permiso de edición.
         "can_edit_link": (can_edit_answers or can_complement),
+        # Solo Talento/admin puede reabrir una evaluación ya cerrada (RN-06).
+        "can_reopen": evaluation.is_submitted and request.user.is_admin,
     })
 
 
@@ -272,6 +274,27 @@ def ownership_save(request, pk):
         return redirect("evaluations:ownership_validation")
 
     messages.success(request, "Guardaste los cambios. La evaluación sigue abierta.")
+    return redirect("evaluations:ownership_edit", pk=pk)
+
+
+@login_required
+@require_POST
+def ownership_reopen(request, pk):
+    """Reapertura de una evaluación cerrada (ENVIADA → BORRADOR). Solo Talento/admin (RN-06)."""
+    evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
+    if not request.user.is_admin:
+        messages.error(request, "Solo Talento y Cultura puede reabrir una evaluación cerrada.")
+        return redirect("evaluations:ownership_view", pk=pk)
+    if not evaluation.is_submitted:
+        messages.info(request, "Esta evaluación ya está abierta.")
+        return redirect("evaluations:ownership_edit", pk=pk)
+
+    ownership_flow.reopen_ownership_evaluation(evaluation)
+    messages.success(
+        request,
+        f"Reabriste la evaluación de {evaluation.user.full_name} "
+        f"({evaluation.project.name}). Ahora puede editarse de nuevo.",
+    )
     return redirect("evaluations:ownership_edit", pk=pk)
 
 
@@ -450,15 +473,57 @@ def arena_impact(request):
         return redirect("evaluations:arena_impact")
 
     rows = []
+    saved_ids = []
     if period:
         scores = {a.user_id: a for a in ArenaImpactScore.objects.filter(period=period)}
         for user in User.objects.filter(is_active=True, role="COLABORADOR").order_by("full_name"):
-            rows.append({"user": user, "impact": scores.get(user.id)})
+            impact = scores.get(user.id)
+            rows.append({"user": user, "impact": impact})
+            if impact and impact.score is not None:
+                saved_ids.append(user.id)
     return render(request, "evaluations/arena_impact.html", {
         "page_title": "Impacto Arena",
         "rows": rows,
         "period": period,
+        "saved_ids": saved_ids,
     })
+
+
+@login_required
+@require_POST
+def arena_impact_autosave(request):
+    """Guarda la calificación/nota de una persona al instante (JSON). Solo Talento/admin."""
+    if not request.user.is_admin:
+        return JsonResponse({"ok": False, "error": "No autorizado."}, status=403)
+
+    period = _open_period()
+    if not period:
+        return JsonResponse({"ok": False, "error": "No hay un periodo abierto."}, status=400)
+
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    payload = json.loads(request.body or "{}")
+    user = get_object_or_404(
+        User, pk=payload.get("user_id"), is_active=True, role="COLABORADOR"
+    )
+
+    raw_score = payload.get("score")
+    has_score = raw_score not in (None, "")
+    score = _parse_decimal(raw_score) if has_score else None
+    if has_score and score is None:
+        return JsonResponse(
+            {"ok": False, "error": "La calificación debe ser un número del 1 al 4."},
+            status=400,
+        )
+    notes = (payload.get("notes") or "").strip()
+
+    ArenaImpactScore.objects.update_or_create(
+        user=user, period=period,
+        defaults={"score": score, "notes": notes, "captured_by": request.user},
+    )
+    final_flow.recompute_final_score(user, period)
+    return JsonResponse({"ok": True, "has_score": score is not None})
 
 
 def _parse_decimal(raw):

@@ -84,9 +84,16 @@ def close_ownership_evaluation(evaluation) -> list[str]:
 
 
 def reopen_ownership_evaluation(evaluation):
-    """Reapertura por Talento/admin: ENVIADA → BORRADOR (RN-06)."""
+    """Reapertura por Talento/admin: ENVIADA → BORRADOR (RN-06).
+
+    Al reabrir, la evaluación deja de contar como enviada, así que se recalcula
+    la calificación final del colaborador (el pilar de Ownership solo promedia
+    las evaluaciones ENVIADAS).
+    """
+    from apps.core.services import final_flow
     from apps.evaluations.models import OwnershipEvaluation
 
     evaluation.status = OwnershipEvaluation.Status.BORRADOR
     evaluation.submitted_at = None
     evaluation.save(update_fields=["status", "submitted_at", "updated_at"])
+    final_flow.recompute_final_score(evaluation.user, evaluation.period)

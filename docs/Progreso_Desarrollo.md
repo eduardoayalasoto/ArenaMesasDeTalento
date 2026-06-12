@@ -126,3 +126,11 @@
 - **UX/branding:** tema **azul marino**; fuentes **Lato + Ubuntu**; **Lucide** en todo; logo de Arena en nav y login; favicon **user-star** blanco; toasts arriba-derecha; perfil con tabs (foto + contraseña, nombre editable); informe estilo slide; comentario de Impacto Arena al final; login rediseñado (sin ícono/“Arena Analytics”, logo grande).
 - **Mejoras de error handling/UX:** modal de confirmación al cerrar Ownership, anti-doble-envío, buscador+paginación en Mesa de Talento, recordatorios por correo (comando), logging + Sentry opcional, switch de cambio de contraseña forzado.
 - Creado **`docs/CONTEXTO_Sistema.md`** (referencia rápida del sistema).
+- **Fix foto en BD:** la foto se guarda en `User.photo_data` (BinaryField) y se sirve en `/cuenta/foto/<id>/`, porque el FS de Vercel es de solo lectura (resuelto el 500 al subir foto/guardar contraseña).
+- **Docs reorganizados:** índice `docs/README.md`; deduplicación de deploy (CONTEXTO apunta a `Deploy_Vercel.md`).
+
+### 2026-06-11 (durante pruebas con Talento)
+- **Reapertura de Ownership (RN-06):** botón **"Reabrir"** (con modal) en la evaluación cerrada, visible solo para Talento/admin → `ENVIADA→BORRADOR` y **recálculo de la final**. Vistas `ownership_reopen` + URL `ownership/<pk>/reabrir/`; el servicio `reopen_ownership_evaluation` ahora recalcula. Antes el texto de ayuda prometía algo sin botón.
+- **Impacto Arena con autoguardado:** la tabla **trae datos de la BD** y guarda **cada campo al instante** (calificación + notas), con indicador por fila *Guardando/Guardado/Revisa* y recálculo de la final por persona. Endpoint `arena_impact_autosave` + URL; validación 1–4 en servidor; ahora **sí se puede limpiar un campo** y capturar por sesiones sin perder nada (elimina el riesgo de "lote" reportado).
+- **Pruebas:** +5 (recálculo al reabrir; autosave guarda/recalcula, rechaza fuera de rango, bloquea no-admin, render de la tabla). **45 en verde.**
+- **Snapshot:** `backups/snapshot_2026-06-11_post-altas.json` (62 usuarios, 967 objetos) tras altas nuevas de Talento.
