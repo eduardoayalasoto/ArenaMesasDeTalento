@@ -88,3 +88,41 @@ def test_import_projects_es_idempotente(xlsx, ana):
 def test_import_projects_dry_run_no_escribe(xlsx, ana):
     call_command("import_projects", "--path", xlsx, "--dry-run")
     assert Project.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_import_memberships_crea_membresias_con_fechas(xlsx, ana):
+    call_command("import_projects", "--path", xlsx)
+    call_command("import_memberships", "--path", xlsx)
+
+    weather = Project.objects.get(name="Weather")
+    m = ProjectMembership.objects.get(project=weather, user=ana)
+    assert m.start is not None and m.end is not None
+
+
+@pytest.mark.django_db
+def test_import_memberships_idempotente(xlsx, ana):
+    call_command("import_projects", "--path", xlsx)
+    call_command("import_memberships", "--path", xlsx)
+    call_command("import_memberships", "--path", xlsx)
+    weather = Project.objects.get(name="Weather")
+    assert ProjectMembership.objects.filter(project=weather).count() == 1
+
+
+@pytest.mark.django_db
+def test_import_memberships_fill_down_empleado_en_blanco(tmp_path, ana):
+    # Hoja Proyectos con relleno hacia abajo: 2da fila sin Employee
+    path = tmp_path / "fd.xlsx"
+    _build_workbook(path)
+    wb = openpyxl.load_workbook(path)
+    proj = wb["Proyectos"]
+    proj.append([None, "Coppel Portal (Sistema de Gestión de Categorías)",
+                 datetime(2025, 1, 13), datetime(2026, 5, 15)])
+    wb.save(path)
+
+    call_command("import_projects", "--path", str(path))
+    call_command("import_memberships", "--path", str(path))
+
+    coppel = Project.objects.get(name__startswith="Coppel Portal")
+    # La fila en blanco se atribuye a Ana (la de arriba)
+    assert ProjectMembership.objects.filter(project=coppel, user=ana).exists()
