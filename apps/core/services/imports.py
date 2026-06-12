@@ -106,11 +106,23 @@ def resolve_or_create_user(name, index, *, password, dry):
 
 
 def to_date(value):
-    """Convierte celdas datetime/date/None a date o None."""
+    """Convierte celdas datetime/date/str(ISO)/None a date o None.
+
+    Algunas hojas guardan las fechas como texto 'YYYY-MM-DD' (p. ej.
+    'Proyectos Dueños'); otras como datetime. Toleramos ambas.
+    """
     if value is None:
         return None
     if isinstance(value, datetime):
         return value.date()
     if isinstance(value, date):
         return value
+    if isinstance(value, str):
+        s = value.strip()
+        if not s:
+            return None
+        try:
+            return date.fromisoformat(s[:10])
+        except ValueError:
+            return None
     return None

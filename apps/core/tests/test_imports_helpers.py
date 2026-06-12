@@ -83,3 +83,14 @@ def test_resolve_or_create_desconocido_unmatched():
         "Persona Inexistente", {}, password="x", dry=False
     )
     assert action == "unmatched" and user is None
+
+
+def test_to_date_parsea_iso_datetime_y_none():
+    from datetime import date, datetime
+    assert imports.to_date("2026-01-01") == date(2026, 1, 1)
+    assert imports.to_date("2026-04-13 00:00:00") == date(2026, 4, 13)
+    assert imports.to_date(datetime(2026, 6, 5, 0, 0)) == date(2026, 6, 5)
+    assert imports.to_date(date(2026, 6, 5)) == date(2026, 6, 5)
+    assert imports.to_date("") is None
+    assert imports.to_date(None) is None
+    assert imports.to_date("basura") is None
