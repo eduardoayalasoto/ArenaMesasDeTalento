@@ -1,7 +1,7 @@
 # Contexto del Sistema — Mesa de Talento (Arena Analytics)
 
 > Documento de referencia rápida para retomar el proyecto sin leer todo el código.
-> Última actualización: 2026-06-11.
+> Última actualización: 2026-06-12.
 
 ## 1. Qué es
 Webapp interna del **Modelo de Desempeño Analítica 2026**. Cada colaborador se evalúa por **3 pilares** (escala 1–4): **Ownership**, **Entrega de Valor** e **Impacto Arena**. La **calificación final** es el promedio **ponderado por nivel** de los 3 pilares. Reglas de negocio en `docs/KB_Modelo_Desempeno_2026.md` (RN-xx).
@@ -38,7 +38,7 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 
 ## 4. Modelo de datos (resumen)
 - **User** (`accounts`): `email` (login), `full_name`, `area`→Area, `level`→SeniorityLevel, `role` (COLABORADOR/TALENTO/DIRECTOR), `photo` (obligatoria, se recorta a 400×400), `must_change_password`. Propiedades derivadas: `is_lead` (level.code==LEAD), `is_talento`, `is_director`, `is_admin` (superuser o talento), `leads_projects`.
-- **catalog:** `Area` (ID/CD/PM/UXUI), `SeniorityLevel` (JR/MID/SNR/LEAD), `PillarWeight` (pesos por nivel, suman 1.00), `EvaluationPeriod` (PLANEADO/ABIERTO/CERRADO), `Project` (lead, duration_type FINITO/INDEFINIDO), `ProjectMembership`.
+- **catalog:** `Area` (ID/CD/PM/UXUI), `SeniorityLevel` (JR/MID/SNR/LEAD), `PillarWeight` (pesos por nivel, suman 1.00), `EvaluationPeriod` (PLANEADO/ABIERTO/CERRADO), `Project` (lead, responsable FK, kickoff, target_close, status ON_TRACK/DELAYED, duration_type FINITO/INDEFINIDO), `ProjectMembership`. Editables desde la pantalla de proyecto en Talento.
 - **questionnaires:** `QuestionnaireTemplate` (kind OWNERSHIP/VALUE_DELIVERY, area, level, version, status BORRADOR/PUBLICADO/ARCHIVADO; solo 1 PUBLICADO por kind/area/level) → `Section` → `Question` (SCALE/TEXT_LONG) → `ScaleOption`.
 - **evaluations:**
   - `OwnershipEvaluation` (user×project×period, `template`, `validator`=evaluador elegido, `status` BORRADOR→ENVIADA(=cerrada), strengths/opportunities/comments, score) → `OwnershipAnswer` (value 1–4 o is_na).
@@ -73,6 +73,8 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 ## 9. Seed y comandos (`manage.py`)
 - `seed_all` = `seed_superuser` + `seed_catalogs` + `seed_users` + `seed_questionnaires` (+ `seed_demo` con `--demo`).
 - `import_csv_users` — crea/actualiza usuarios desde `docs/Modelos/usuarios.csv` (deduce área/nivel del puesto, fija contraseña, `must_change_password=False`).
+- `import_projects [--path xlsx] [--dry-run]` — lee hoja **'Proyectos Dueños'** del xlsx de Talento; idempotente por nombre; crea/actualiza lead, responsable, kickoff, target_close, status, duration_type. Crea usuarios faltantes (3 predefinidos en `imports.py`).
+- `import_memberships [--path xlsx] [--dry-run]` — lee hoja **'HC Total'** del xlsx; **cada fila = una persona**, columnas `Proyecto N` = sus proyectos (columnas `Evaluador N` se ignoran). Sincroniza: crea membresías faltantes **y elimina** las que ya no están en el xlsx. Idempotente. La clave de matching es el correo (strip para tolerar espacios/`\xa0`).
 - `require_password_change --all [--temp-password X] [--clear]` — switch de cambio de contraseña forzado.
 - `send_pending_reminders [--dry-run]` — correos de pendientes (agendable).
 
@@ -89,5 +91,6 @@ Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.
 - **Foto:** obligatoria (middleware `PhotoRequiredMiddleware`); se procesa a 400×400 y se **guarda en la BD** (`User.photo_data`, porque el FS de Vercel es de solo lectura), servida en `/cuenta/foto/<id>/`; sin foto → icono Lucide.
 
 ## 12. Estado actual
-- **Fases 0–7 funcionales y desplegadas** (Vercel + Neon). ~62 usuarios reales (todos `Arena2026!`, sin cambio forzado), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO. En **pruebas con Talento**. Durante las pruebas se añadieron: **reapertura de Ownership** por Talento y **autoguardado en Impacto Arena**.
-- **Pendiente/opcional:** asignar proyectos/equipos reales; compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).
+- **Fases 0–7 funcionales y desplegadas** (Vercel + Neon). **65 usuarios reales** (todos `Arena2026!`, sin cambio forzado; 3 altas el 2026-06-12: cpalacio@, crodriguez@, arturo.carranza@), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO. En **pruebas con Talento**.
+- **17 proyectos y 71 membresías** importados y sincronizados desde `docs/Modelos/Quien evalua a quien Analítica 1er S 2026.xlsx` (2026-06-12). Modelo `Project` ampliado con responsable, kickoff, target_close, status (editables en la pantalla de proyecto). Fuente canónica de membresías: hoja **'HC Total'** del xlsx (columnas `Proyecto N`).
+- **Pendiente/opcional:** compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).

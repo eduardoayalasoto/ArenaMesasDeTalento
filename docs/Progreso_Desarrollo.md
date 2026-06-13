@@ -2,7 +2,7 @@
 
 > Documento vivo. Se actualiza conforme avanza la implementación del `Plan_Desarrollo_Webapp_Evaluaciones.md`.
 > Estado: ⬜ pendiente · 🟡 en curso · ✅ hecho · ⚠️ con nota
-> Última actualización: 2026-06-11 · **Desplegado en Vercel + Neon** · Ver `CONTEXTO_Sistema.md` para el panorama completo.
+> Última actualización: 2026-06-12 · **Desplegado en Vercel + Neon** · Ver `CONTEXTO_Sistema.md` para el panorama completo.
 
 ## Convenciones del proyecto (recordatorio permanente)
 - **Idioma:** sistema 100% en español (etiquetas, mensajes, correos, validaciones). Código (modelos, variables) en inglés.
@@ -128,6 +128,14 @@
 - Creado **`docs/CONTEXTO_Sistema.md`** (referencia rápida del sistema).
 - **Fix foto en BD:** la foto se guarda en `User.photo_data` (BinaryField) y se sirve en `/cuenta/foto/<id>/`, porque el FS de Vercel es de solo lectura (resuelto el 500 al subir foto/guardar contraseña).
 - **Docs reorganizados:** índice `docs/README.md`; deduplicación de deploy (CONTEXTO apunta a `Deploy_Vercel.md`).
+
+### 2026-06-12
+- **BD limpiada:** eliminados proyectos, membresías y evaluaciones existentes; conservados usuarios, periodos, catálogos y cuestionarios.
+- **Modelo `Project` ampliado** (`0002_historicalproject_kickoff_and_more`): añadidos `responsable` (FK User, PROTECT, null/blank), `kickoff` (DateField), `target_close` (DateField), `status` (ON_TRACK/DELAYED). Migración aplicada a Neon. Editables en la pantalla de edición de proyecto; `ProjectForm` y template actualizados. Tests: `test_project_extra_fields.py` (3 pruebas).
+- **Comandos `import_projects` + `import_memberships`** (`apps/core/management/commands/`): leen `docs/Modelos/Quien evalua a quien Analítica 1er S 2026.xlsx` (openpyxl). Idempotentes, soportan `--dry-run`. Servicio `apps/core/services/imports.py` con `normalize_name`, `build_user_index`, `resolve_user`, `resolve_or_create_user`, `to_date`. Tests: `test_imports_helpers.py` (11 pruebas), `test_import_commands.py` (7 pruebas).
+- **Importación real a Neon:** 3 usuarios nuevos creados (cpalacio@, crodriguez@, arturo.carranza@); **17 proyectos** y **71 membresías** importados. Corrección post-import: 3 proyectos sin responsable resueltos manualmente (Oscar Nafarrate — nombre corto en el xlsx no empató).
+- **Corrección de membresías (`import_memberships` v2):** el comando inicial leía la hoja `Proyectos` con fill-down, lo que atribuía evaluadores y leads como integrantes del equipo. Reescrito para leer la hoja **`HC Total`**: cada fila es una persona, las columnas `Proyecto N` determinan el equipo (columnas `Evaluador N` se ignoran). Agrega **sincronización bidireccional**: crea faltantes y elimina membresías en BD que ya no están en el xlsx. Matching por correo (strip para tolerar `\xa0`/espacios). Aplicado a Neon: **29 membresías incorrectas eliminadas**; quedaron 71 correctas.
+- **Suite de pruebas:** 66 en verde.
 
 ### 2026-06-11 (durante pruebas con Talento)
 - **Reapertura de Ownership (RN-06):** botón **"Reabrir"** (con modal) en la evaluación cerrada, visible solo para Talento/admin → `ENVIADA→BORRADOR` y **recálculo de la final**. Vistas `ownership_reopen` + URL `ownership/<pk>/reabrir/`; el servicio `reopen_ownership_evaluation` ahora recalcula. Antes el texto de ayuda prometía algo sin botón.
