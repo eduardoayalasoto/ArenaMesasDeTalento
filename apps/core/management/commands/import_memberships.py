@@ -1,8 +1,9 @@
-"""Importa membresías (equipo por proyecto) desde la hoja 'Proyectos' del xlsx.
+"""Importa y sincroniza membresías desde la hoja 'HC Total' del xlsx.
 
-Idempotente por (proyecto, usuario). Empareja Employee → usuario con el índice
-de nombres (alias por correo del HC Total). Aplica relleno hacia abajo del
-Employee en blanco. Reporta filas sin proyecto o sin usuario.
+Cada fila es una persona. Las columnas 'Proyecto N' enumeran los proyectos a
+los que pertenece. Las columnas 'Evaluador N' se ignoran. Para cada proyecto
+del catálogo, crea membresías faltantes y elimina las que ya no están en el
+xlsx. Idempotente. Soporta --dry-run.
 
 Uso:
   manage.py import_memberships --dry-run
@@ -17,26 +18,18 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from apps.catalog.models import Project, ProjectMembership
-from apps.core.services import imports
-from apps.core.text import normalize_name
 
 User = get_user_model()
 
 DEFAULT_XLSX = "Quien evalua a quien Analítica 1er S 2026.xlsx"
 HC_SHEET = "HC Total Nov 2024-2026"
-MEMB_SHEET = "Proyectos"
-
-
-def _header_index(row):
-    return {str(v).strip().lower(): i for i, v in enumerate(row) if v is not None}
 
 
 class Command(BaseCommand):
-    help = "Importa membresías desde la hoja 'Proyectos' del xlsx de Talento."
+    help = "Importa/sincroniza membresías desde la hoja 'HC Total' del xlsx de Talento."
 
     def add_arguments(self, parser):
         parser.add_argument("--path", default=None)
-        parser.add_argument("--password", default="Arena2026!")
         parser.add_argument("--dry-run", action="store_true")
 
     def handle(self, *args, **options):
@@ -49,90 +42,90 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR(f"No se encontró {path}"))
             return
 
-        wb = openpyxl.load_workbook(path, data_only=True)
-        alias_pairs = self._alias_pairs(wb)
         dry = options["dry_run"]
-        password = options["password"]
+        wb = openpyxl.load_workbook(path, data_only=True)
+        ws = wb[HC_SHEET]
 
-        rows = list(wb[MEMB_SHEET].iter_rows(values_only=True))
-        header = _header_index(rows[0])
-        i_emp = header.get("employee")
-        i_proj = header.get("project")
-        i_start = header.get("min of start")
-        i_end = header.get("max of end")
+        headers = [c.value for c in ws[1]]
+        proj_col_indices = [
+            i for i, h in enumerate(headers)
+            if h and str(h).startswith("Proyecto")
+        ]
+        email_col = next(
+            (i for i, h in enumerate(headers) if h and "correo" in str(h).lower()),
+            None,
+        )
+        if email_col is None:
+            self.stderr.write(self.style.ERROR("No se encontró columna 'Correo' en HC Total"))
+            return
 
-        projects = {normalize_name(p.name): p for p in Project.objects.all()}
+        db_projects = {p.name: p for p in Project.objects.all()}
 
-        created = skipped = 0
-        unmatched = []
-        last_emp = None
+        # desired: project_name -> {user_pk, ...}
+        desired: dict[str, set] = {}
+        unresolved_users: list[str] = []
+        unresolved_projects: list[str] = []
+
+        for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+            if not row[1]:
+                continue
+            raw_email = row[email_col] if email_col < len(row) else None
+            if not raw_email:
+                continue
+            email = str(raw_email).strip()
+
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                unresolved_users.append(f"r{i}: {row[1]} ({email!r})")
+                continue
+
+            for ci in proj_col_indices:
+                if ci >= len(row) or not row[ci]:
+                    continue
+                proj_name = str(row[ci]).strip()
+                if proj_name not in db_projects:
+                    if proj_name not in unresolved_projects:
+                        unresolved_projects.append(proj_name)
+                    continue
+                desired.setdefault(proj_name, set()).add(user.pk)
+
+        created = deleted = kept = 0
 
         with transaction.atomic():
-            index = imports.build_user_index(User.objects.all(), alias_pairs)
-            for raw in rows[1:]:
-                emp = raw[i_emp] if i_emp is not None and i_emp < len(raw) else None
-                emp = str(emp).strip() if emp else None
-                if emp:
-                    last_emp = emp           # relleno hacia abajo
-                emp = emp or last_emp
+            for proj_name, user_pks in desired.items():
+                project = db_projects[proj_name]
 
-                proj_name = raw[i_proj] if i_proj is not None and i_proj < len(raw) else None
-                if not emp or not proj_name:
-                    continue
+                for pk in user_pks:
+                    user = User.objects.get(pk=pk)
+                    _, is_new = ProjectMembership.objects.get_or_create(
+                        project=project, user=user,
+                    )
+                    if is_new:
+                        created += 1
+                        self.stdout.write(f"  + {proj_name}: {user.full_name}")
+                    else:
+                        kept += 1
 
-                project = projects.get(normalize_name(str(proj_name)))
-                if project is None:
-                    unmatched.append(f"Proyecto no encontrado: {proj_name!r}")
-                    continue
-                user, action = imports.resolve_or_create_user(
-                    emp, index, password=password, dry=dry
+                extra = project.memberships.select_related("user").exclude(
+                    user__pk__in=user_pks
                 )
-                if action in ("would_create", "created"):
-                    self.stdout.write(f"[{'dry' if dry else 'ok'}] usuario miembro: {emp}")
-                if user is None:
-                    unmatched.append(f"Usuario no encontrado: {emp!r} ({proj_name})")
-                    continue
-
-                start = imports.to_date(raw[i_start]) if i_start is not None else None
-                end = imports.to_date(raw[i_end]) if i_end is not None else None
-
-                if dry:
-                    self.stdout.write(f"[dry] {user.full_name} ∈ {project.name} ({start}–{end})")
-                    continue
-
-                m, is_new = ProjectMembership.objects.get_or_create(
-                    project=project, user=user,
-                )
-                m.start = start
-                m.end = end
-                m.save()
-                created += int(is_new)
-                skipped += int(not is_new)
+                for m in extra:
+                    self.stdout.write(f"  - {proj_name}: {m.user.full_name}")
+                    deleted += 1
+                    if not dry:
+                        m.delete()
 
             if dry:
                 transaction.set_rollback(True)
 
-        for msg in unmatched:
-            self.stdout.write(self.style.WARNING(msg))
-        self.stdout.write(self.style.SUCCESS(
-            f"Membresías — nuevas: {created} · ya existían: {skipped} · sin resolver: {len(unmatched)}"
-        ))
+        for msg in unresolved_users:
+            self.stdout.write(self.style.WARNING(f"Usuario sin match: {msg}"))
+        for proj in unresolved_projects:
+            self.stdout.write(self.style.WARNING(f"Proyecto sin match en BD: {proj!r}"))
 
-    def _alias_pairs(self, wb):
-        if HC_SHEET not in wb.sheetnames:
-            return []
-        rows = list(wb[HC_SHEET].iter_rows(values_only=True))
-        if not rows:
-            return []
-        header = _header_index(rows[0])
-        i_short = header.get("nombre corto")
-        i_email = header.get("correo")
-        if i_short is None or i_email is None:
-            return []
-        pairs = []
-        for raw in rows[1:]:
-            short = raw[i_short] if i_short < len(raw) else None
-            email = raw[i_email] if i_email < len(raw) else None
-            if short and email:
-                pairs.append((str(short).strip(), str(email).strip()))
-        return pairs
+        verb = "[dry] " if dry else ""
+        self.stdout.write(self.style.SUCCESS(
+            f"{verb}Membresías — creadas: {created} · eliminadas: {deleted}"
+            f" · sin cambio: {kept} · sin resolver: {len(unresolved_users)}"
+        ))
