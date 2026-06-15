@@ -110,7 +110,7 @@ class ProfileInfoForm(forms.ModelForm):
             user.photo_data = square_jpeg_bytes(upload)
             user.photo_mime = "image/jpeg"
         if commit:
-            user.save()
+            user.save(update_fields=["full_name", "photo_data", "photo_mime"])
         return user
 
 
