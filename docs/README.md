@@ -15,6 +15,7 @@ Guía rápida de qué es cada documento y en qué orden leerlos.
 |---|---|
 | **`KB_Modelo_Desempeno_2026.md`** | Fuente única de las reglas (RN‑xx), escalas, fórmulas, permisos. Todo lo demás se deriva de aquí. |
 
+
 ## 🗃️ Insumos originales (históricos — base del KB y de los cuestionarios)
 | Carpeta / archivo | Notas |
 |---|---|
