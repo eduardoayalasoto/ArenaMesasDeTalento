@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.core.services import permissions as perm_service
+
 from .forms import PeriodForm, ProjectForm
 from .models import EvaluationPeriod, Project, ProjectMembership
 
@@ -16,16 +18,10 @@ def _require_admin(request):
     return request.user.is_admin
 
 
-def _can_manage_projects(request):
-    """Proyectos: Talento, Leads y Directores (crear/editar todos)."""
-    u = request.user
-    return u.is_admin or u.is_lead or u.is_director
-
-
 @login_required
 def project_admin(request):
     """Lista de proyectos (solo Talento/admin)."""
-    if not _can_manage_projects(request):
+    if not perm_service.can_edit_project(request.user):
         return render(request, "errors/403.html", {
             "titulo": "No tienes acceso a Proyectos",
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
@@ -44,7 +40,7 @@ def project_admin(request):
 @login_required
 def project_edit(request, pk=None):
     """Crea o edita un proyecto y gestiona su equipo (solo Talento/admin)."""
-    if not _can_manage_projects(request):
+    if not perm_service.can_edit_project(request.user):
         return render(request, "errors/403.html", {
             "titulo": "No tienes acceso a Proyectos",
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",

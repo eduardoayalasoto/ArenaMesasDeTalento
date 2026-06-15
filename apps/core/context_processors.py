@@ -66,7 +66,8 @@ def navigation(request):
         add("Validar Entrega de Valor", "evaluations:value_delivery_review", "shield")
 
     # Proyectos — Talento, Leads y Directores (crear/editar todos)
-    if user.is_admin or user.is_lead or user.is_director:
+    from apps.core.services.permissions import can_edit_project
+    if can_edit_project(user):
         add("Proyectos", "catalog:project_admin", "folder")
 
     # Talento — captura de Impacto Arena y administración

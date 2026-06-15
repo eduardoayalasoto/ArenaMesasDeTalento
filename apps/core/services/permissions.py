@@ -56,3 +56,8 @@ def can_capture_value_delivery(viewer, project) -> bool:
 def can_validate_value_delivery(viewer) -> bool:
     """Solo el Director (o superusuario) valida la Entrega de Valor."""
     return bool(viewer.is_superuser or getattr(viewer, "is_director", False))
+
+
+def can_edit_project(user) -> bool:
+    """Talento, Director o cualquier colaborador con nivel Lead pueden administrar proyectos."""
+    return _is_admin(user) or user.is_lead
