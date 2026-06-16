@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 from apps.catalog.models import Area, SeniorityLevel
 from apps.core.services import permissions
-from apps.evaluations.models import OwnershipEvaluation
+from apps.evaluations.models import OwnershipEvaluation, OwnershipEvaluator
 
 User = get_user_model()
 
@@ -45,10 +45,11 @@ def director(db):
 
 
 def _eval(user, project, period, template):
-    return OwnershipEvaluation.objects.create(
+    ev = OwnershipEvaluation.objects.create(
         user=user, project=project, period=period, template=template,
-        validator=project.lead,
     )
+    OwnershipEvaluator.objects.create(evaluation=ev, user=project.lead, is_primary=True)
+    return ev
 
 
 # --- visible_users ---------------------------------------------------------

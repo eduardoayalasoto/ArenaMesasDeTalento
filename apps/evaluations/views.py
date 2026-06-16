@@ -1,10 +1,9 @@
-"""Vistas del flujo de Ownership (colaborador) y validación (líder)."""
+"""Vistas del flujo de Ownership (colaborador) y validación (evaluadores)."""
 
 import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 from django.db.models import Prefetch, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -27,6 +26,7 @@ from .models import (
     ArenaImpactScore,
     OwnershipAnswer,
     OwnershipEvaluation,
+    OwnershipEvaluator,
     ValueDeliveryEvaluation,
 )
 
@@ -75,7 +75,7 @@ def ownership_list(request):
 
 @login_required
 def ownership_start(request, project_id):
-    """Antes de iniciar, el evaluado elige a su evaluador (cualquiera de Arena)."""
+    """Antes de iniciar, el evaluado elige su evaluador principal y opcionalmente secundarios."""
     from django.contrib.auth import get_user_model
     User = get_user_model()
 
@@ -87,7 +87,6 @@ def ownership_start(request, project_id):
         request.user.memberships.select_related("project"), project_id=project_id
     )
 
-    # Si ya existe, no se vuelve a elegir evaluador.
     existing = OwnershipEvaluation.objects.filter(
         user=request.user, project=membership.project, period=period
     ).first()
@@ -99,7 +98,7 @@ def ownership_start(request, project_id):
             pk=request.POST.get("evaluator"), is_active=True
         ).exclude(pk=request.user.pk).first()
         if not evaluator:
-            messages.error(request, "Elige un evaluador válido para continuar.")
+            messages.error(request, "Elige un evaluador principal válido para continuar.")
         else:
             evaluation, error = ownership_flow.get_or_create_ownership_evaluation(
                 request.user, membership.project, period, evaluator=evaluator
@@ -107,7 +106,16 @@ def ownership_start(request, project_id):
             if error:
                 messages.error(request, error)
                 return redirect("evaluations:ownership_list")
-            messages.success(request, f"Asignaste a {evaluator.full_name} como tu evaluador.")
+
+            secondary_ids = request.POST.getlist("secondary_evaluators")
+            for sid in secondary_ids:
+                secondary = User.objects.filter(
+                    pk=sid, is_active=True
+                ).exclude(pk=request.user.pk).exclude(pk=evaluator.pk).first()
+                if secondary:
+                    ownership_flow.add_evaluator(evaluation, secondary, is_primary=False)
+
+            messages.success(request, f"Asignaste a {evaluator.full_name} como evaluador principal.")
             return redirect("evaluations:ownership_edit", pk=evaluation.pk)
 
     evaluators = (
@@ -121,14 +129,14 @@ def ownership_start(request, project_id):
 
 
 def _can_edit_answers(user, evaluation):
-    """Respuestas: editables por el evaluado o por el líder/admin, mientras no esté cerrada."""
+    """Respuestas: editables por el evaluado o por cualquier evaluador/admin, mientras no esté cerrada."""
     if evaluation.is_submitted:
         return False
     return evaluation.user_id == user.pk or permissions.can_validate_ownership(user, evaluation)
 
 
 def _can_complement(user, evaluation):
-    """Fortalezas/Oportunidades/Comentarios y cierre: solo líder/admin, mientras no esté cerrada."""
+    """Fortalezas/Oportunidades/Comentarios y cierre: cualquier evaluador/admin, mientras no esté cerrada."""
     return not evaluation.is_submitted and permissions.can_validate_ownership(user, evaluation)
 
 
@@ -145,15 +153,21 @@ def _render_ownership(request, pk, *, editing):
     can_edit_answers = _can_edit_answers(request.user, evaluation)
     can_complement = _can_complement(request.user, evaluation)
     is_owner = evaluation.user_id == request.user.pk
-    can_change_evaluator = editing and is_owner and not evaluation.is_submitted
-    evaluators = None
-    if can_change_evaluator:
+    can_manage_evaluators = editing and is_owner and not evaluation.is_submitted
+
+    all_users = None
+    if can_manage_evaluators:
         from django.contrib.auth import get_user_model
-        evaluators = (
+        all_users = (
             get_user_model().objects.filter(is_active=True)
             .exclude(pk=request.user.pk).order_by("full_name")
         )
-    # En modo edición, los controles se habilitan según el permiso; en Ver, todo es lectura.
+
+    ev_records = (
+        evaluation.evaluators.select_related("user")
+        .order_by("-is_primary", "added_at")
+    )
+
     answers = {a.question_id: a for a in evaluation.answers.all()}
     sections = evaluation.template.sections.prefetch_related(
         Prefetch("questions", queryset=Question.objects.order_by("order"))
@@ -174,55 +188,94 @@ def _render_ownership(request, pk, *, editing):
         "editing": editing,
         "answers_editable": editing and can_edit_answers,
         "can_complement": editing and can_complement,
-        "can_change_evaluator": can_change_evaluator,
-        "evaluators": evaluators,
-        # El usuario puede alternar a edición si tiene algún permiso de edición.
+        "can_manage_evaluators": can_manage_evaluators,
+        "all_users": all_users,
+        "ev_records": ev_records,
         "can_edit_link": (can_edit_answers or can_complement),
-        # Solo Talento/admin puede reabrir una evaluación ya cerrada (RN-06).
         "can_reopen": evaluation.is_submitted and request.user.is_admin,
     })
 
 
 @login_required
 def ownership_view(request, pk):
-    """Vista de solo lectura de una evaluación."""
     return _render_ownership(request, pk, editing=False)
 
 
 @login_required
 def ownership_edit(request, pk):
-    """Vista de edición: respuestas (evaluado o líder) y complemento + cierre (líder)."""
     return _render_ownership(request, pk, editing=True)
 
 
 @login_required
 @require_POST
 def ownership_set_evaluator(request, pk):
-    """El evaluado cambia a su evaluador, solo mientras la evaluación esté abierta."""
+    """El evaluado cambia al evaluador principal, solo mientras la evaluación esté abierta."""
     from django.contrib.auth import get_user_model
     User = get_user_model()
 
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
     if evaluation.user_id != request.user.pk or evaluation.is_submitted:
-        messages.error(request, "Solo puedes cambiar al evaluador antes de que se cierre la evaluación.")
+        messages.error(request, "Solo puedes cambiar al evaluador principal antes de que se cierre la evaluación.")
         return redirect("evaluations:ownership_edit", pk=pk)
 
-    evaluator = User.objects.filter(
+    new_primary = User.objects.filter(
         pk=request.POST.get("evaluator"), is_active=True
     ).exclude(pk=request.user.pk).first()
-    if not evaluator:
-        messages.error(request, "Elige un evaluador válido.")
+    if not new_primary:
+        messages.error(request, "Elige un evaluador principal válido.")
     else:
-        evaluation.validator = evaluator
-        evaluation.save(update_fields=["validator", "updated_at"])
-        messages.success(request, f"Tu evaluador ahora es {evaluator.full_name}.")
+        ownership_flow.set_primary_evaluator(evaluation, new_primary)
+        messages.success(request, f"El evaluador principal ahora es {new_primary.full_name}.")
+    return redirect("evaluations:ownership_edit", pk=pk)
+
+
+@login_required
+@require_POST
+def ownership_add_evaluator(request, pk):
+    """El evaluado agrega un evaluador secundario mientras la evaluación esté abierta."""
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
+    if evaluation.user_id != request.user.pk or evaluation.is_submitted:
+        messages.error(request, "Solo puedes gestionar los evaluadores antes de que se cierre la evaluación.")
+        return redirect("evaluations:ownership_edit", pk=pk)
+
+    new_user = User.objects.filter(
+        pk=request.POST.get("evaluator"), is_active=True
+    ).exclude(pk=request.user.pk).first()
+    if not new_user:
+        messages.error(request, "Elige una persona válida.")
+    elif evaluation.evaluators.filter(user=new_user).exists():
+        messages.info(request, f"{new_user.full_name} ya es evaluador de esta evaluación.")
+    else:
+        ownership_flow.add_evaluator(evaluation, new_user, is_primary=False)
+        messages.success(request, f"Agregaste a {new_user.full_name} como evaluador secundario.")
+    return redirect("evaluations:ownership_edit", pk=pk)
+
+
+@login_required
+@require_POST
+def ownership_remove_evaluator(request, pk, user_pk):
+    """El evaluado elimina un evaluador secundario mientras la evaluación esté abierta."""
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
+    if evaluation.user_id != request.user.pk or evaluation.is_submitted:
+        messages.error(request, "Solo puedes gestionar los evaluadores antes de que se cierre la evaluación.")
+        return redirect("evaluations:ownership_edit", pk=pk)
+
+    target = get_object_or_404(User, pk=user_pk)
+    ownership_flow.remove_evaluator(evaluation, target)
+    messages.success(request, f"Quitaste a {target.full_name} como evaluador secundario.")
     return redirect("evaluations:ownership_edit", pk=pk)
 
 
 @login_required
 @require_POST
 def ownership_autosave(request, pk):
-    """Guarda una respuesta (JSON). Permitido al evaluado o al líder mientras esté abierta."""
+    """Guarda una respuesta (JSON). Permitido al evaluado o a cualquier evaluador mientras esté abierta."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
     if not _can_edit_answers(request.user, evaluation):
         return JsonResponse({"ok": False, "error": "No editable."}, status=403)
@@ -248,10 +301,10 @@ def ownership_autosave(request, pk):
 @login_required
 @require_POST
 def ownership_save(request, pk):
-    """Guardar (sigue abierta) o Guardar y cerrar (bloquea para todos). Solo líder/admin."""
+    """Guardar (sigue abierta) o Guardar y cerrar. Cualquier evaluador/admin."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
     if not _can_complement(request.user, evaluation):
-        messages.error(request, "Solo el líder o Talento pueden completar y cerrar esta evaluación.")
+        messages.error(request, "Solo los evaluadores o Talento pueden completar y cerrar esta evaluación.")
         return redirect("evaluations:ownership_view", pk=pk)
 
     evaluation.strengths = request.POST.get("strengths", "").strip()
@@ -265,7 +318,6 @@ def ownership_save(request, pk):
             for e in errors:
                 messages.error(request, e)
             return redirect("evaluations:ownership_edit", pk=pk)
-        _send_close_email(evaluation)
         messages.success(
             request,
             f"Cerraste la evaluación de {evaluation.user.full_name} "
@@ -298,40 +350,21 @@ def ownership_reopen(request, pk):
     return redirect("evaluations:ownership_edit", pk=pk)
 
 
-def _send_close_email(evaluation):
-    try:
-        send_mail(
-            subject=f"Evaluación de Ownership cerrada — {evaluation.project.name}",
-            message=(
-                f"Hola {evaluation.user.get_short_name()},\n\n"
-                f"Tu evaluación de Ownership del proyecto «{evaluation.project.name}» "
-                f"quedó cerrada con calificación {evaluation.score}.\n\n"
-                f"Ya no puede modificarse. Si necesitas un cambio, contacta a Talento y Cultura.\n\n"
-                f"— Evaluaciones Arena"
-            ),
-            from_email=None,
-            recipient_list=[evaluation.user.email],
-            fail_silently=True,
-        )
-    except Exception:  # noqa: BLE001
-        pass
-
-
-# --- Validación del líder --------------------------------------------------
+# --- Validación (evaluadores) --------------------------------------------------
 
 @login_required
 def ownership_validation(request):
-    """Cola de evaluaciones donde el usuario fue elegido como evaluador."""
+    """Evaluaciones donde el usuario es evaluador (primario o secundario)."""
     period = _open_period()
-    evals = (
-        OwnershipEvaluation.objects.filter(validator=request.user, period=period)
-        .select_related("user", "project")
-        .order_by("project__name", "user__full_name")
-        if period else OwnershipEvaluation.objects.none()
+    ev_records = (
+        OwnershipEvaluator.objects.filter(user=request.user, evaluation__period=period)
+        .select_related("evaluation__user", "evaluation__project")
+        .order_by("evaluation__project__name", "evaluation__user__full_name")
+        if period else OwnershipEvaluator.objects.none()
     )
     return render(request, "evaluations/ownership_validation.html", {
         "page_title": "Validación de Ownership",
-        "evaluations": evals,
+        "ev_records": ev_records,
     })
 
 

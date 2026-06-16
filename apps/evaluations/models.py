@@ -29,10 +29,6 @@ class OwnershipEvaluation(models.Model):
         "questionnaires.QuestionnaireTemplate", on_delete=models.PROTECT,
         related_name="ownership_evaluations", verbose_name="cuestionario (versión)",
     )
-    validator = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
-        related_name="ownership_validations", verbose_name="líder validador",
-    )
     status = models.CharField(
         "estado", max_length=10, choices=Status.choices, default=Status.BORRADOR
     )
@@ -64,6 +60,36 @@ class OwnershipEvaluation(models.Model):
     @property
     def is_submitted(self):
         return self.status == self.Status.ENVIADA
+
+    def primary_evaluator(self):
+        rec = self.evaluators.filter(is_primary=True).select_related("user").first()
+        return rec.user if rec else None
+
+
+class OwnershipEvaluator(models.Model):
+    """Evaluador asignado a una evaluación de Ownership (primario o secundario)."""
+
+    evaluation = models.ForeignKey(
+        OwnershipEvaluation, on_delete=models.CASCADE,
+        related_name="evaluators", verbose_name="evaluación",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+        related_name="ownership_evaluator_records", verbose_name="evaluador",
+    )
+    is_primary = models.BooleanField("es primario", default=False)
+    added_at = models.DateTimeField("agregado el", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "evaluador de Ownership"
+        verbose_name_plural = "evaluadores de Ownership"
+        constraints = [
+            models.UniqueConstraint(fields=["evaluation", "user"], name="unique_ownership_evaluator"),
+        ]
+
+    def __str__(self):
+        role = "Primario" if self.is_primary else "Secundario"
+        return f"{self.user} ({role}) — {self.evaluation}"
 
 
 class OwnershipAnswer(models.Model):

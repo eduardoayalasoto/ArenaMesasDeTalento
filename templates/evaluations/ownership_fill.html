@@ -15,22 +15,62 @@
     <div>
       <h2 class="text-xl font-semibold text-slate-900">{{ evaluation.project.name }}</h2>
       <p class="text-slate-600">Checklist de Ownership · {{ evaluation.template.area.name }} · {{ evaluation.template.level.name }} · <span class="text-slate-500">{{ evaluation.user.full_name }}</span></p>
-      <div class="mt-2" {% if can_change_evaluator %}x-data="{ editing: false }"{% endif %}>
-        <p class="text-sm text-slate-500 flex items-center gap-1.5">
-          {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
-          Evaluador: <span class="font-medium text-slate-700">{{ evaluation.validator.full_name|default:"sin asignar" }}</span>
-          {% if can_change_evaluator %}<button type="button" class="text-arena-600 hover:text-arena-700 font-medium ml-1" @click="editing = !editing">cambiar</button>{% endif %}
-        </p>
-        {% if can_change_evaluator %}
-        <form method="post" action="{% url 'evaluations:ownership_set_evaluator' pk=evaluation.pk %}" x-show="editing" x-cloak class="mt-2 flex flex-wrap gap-2">
-          {% csrf_token %}
-          <select name="evaluator" class="input max-w-xs py-1.5" required>
-            <option value="">— Elegir evaluador —</option>
-            {% for e in evaluators %}<option value="{{ e.id }}" {% if evaluation.validator_id == e.id %}selected{% endif %}>{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
-          </select>
-          <button type="submit" class="btn-secondary py-1.5">Guardar</button>
-        </form>
-        <p class="text-xs text-slate-400 mt-1">Puedes cambiarlo solo mientras la evaluación esté abierta.</p>
+      <div class="mt-2" {% if can_manage_evaluators %}x-data="{ editingPrimary: false, addingSecondary: false }"{% endif %}>
+        {% for rec in ev_records %}
+          <p class="text-sm text-slate-500 flex items-center gap-1.5 mb-1">
+            {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
+            <span class="font-medium text-slate-700">{{ rec.user.full_name }}</span>
+            {% if rec.is_primary %}
+              <span class="badge bg-arena-50 text-arena-700 text-xs">Principal</span>
+              {% if can_manage_evaluators %}
+                <button type="button" class="text-arena-600 hover:text-arena-700 text-xs ml-1" @click="editingPrimary = !editingPrimary">cambiar</button>
+              {% endif %}
+            {% else %}
+              <span class="badge bg-slate-100 text-slate-500 text-xs">Secundario</span>
+              {% if can_manage_evaluators %}
+                <form method="post" action="{% url 'evaluations:ownership_remove_evaluator' pk=evaluation.pk user_pk=rec.user.pk %}" class="inline">
+                  {% csrf_token %}
+                  <button type="submit" class="text-rose-500 hover:text-rose-700 text-xs ml-1" title="Quitar evaluador">quitar</button>
+                </form>
+              {% endif %}
+            {% endif %}
+          </p>
+        {% empty %}
+          <p class="text-sm text-slate-400 italic">Sin evaluadores asignados.</p>
+        {% endfor %}
+
+        {% if can_manage_evaluators %}
+          <!-- Cambiar evaluador principal -->
+          <form method="post" action="{% url 'evaluations:ownership_set_evaluator' pk=evaluation.pk %}"
+                x-show="editingPrimary" x-cloak class="mt-2 flex flex-wrap gap-2">
+            {% csrf_token %}
+            <select name="evaluator" class="input max-w-xs py-1.5" required>
+              <option value="">— Nuevo evaluador principal —</option>
+              {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
+            </select>
+            <button type="submit" class="btn-secondary py-1.5">Guardar</button>
+            <button type="button" class="btn-soft py-1.5" @click="editingPrimary = false">Cancelar</button>
+          </form>
+
+          <!-- Agregar evaluador secundario -->
+          <div class="mt-2">
+            <button type="button" class="text-xs text-arena-600 hover:text-arena-700 flex items-center gap-1"
+                    @click="addingSecondary = !addingSecondary">
+              {% include "partials/icon.html" with name="user-plus" cls="w-3.5 h-3.5" %}
+              Agregar evaluador secundario
+            </button>
+            <form method="post" action="{% url 'evaluations:ownership_add_evaluator' pk=evaluation.pk %}"
+                  x-show="addingSecondary" x-cloak class="mt-2 flex flex-wrap gap-2">
+              {% csrf_token %}
+              <select name="evaluator" class="input max-w-xs py-1.5" required>
+                <option value="">— Elegir persona —</option>
+                {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
+              </select>
+              <button type="submit" class="btn-secondary py-1.5">Agregar</button>
+              <button type="button" class="btn-soft py-1.5" @click="addingSecondary = false">Cancelar</button>
+            </form>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Solo puedes cambiarlos mientras la evaluación esté abierta.</p>
         {% endif %}
       </div>
     </div>

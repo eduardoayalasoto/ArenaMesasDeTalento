@@ -26,11 +26,11 @@ def resolve_ownership_template(user):
 def get_or_create_ownership_evaluation(user, project, period, evaluator=None):
     """Obtiene o crea la evaluación (user × project × period) con la plantilla vigente.
 
-    `evaluator` es la persona que validará (la elige el evaluado; cualquiera de Arena).
+    `evaluator` es el evaluador principal (lo elige el evaluado; cualquiera de Arena).
     Devuelve (evaluation, error). error es None si todo bien, o un mensaje si no se
     pudo resolver la plantilla (área/nivel sin asignar o cuestionario no publicado).
     """
-    from apps.evaluations.models import OwnershipEvaluation
+    from apps.evaluations.models import OwnershipEvaluation, OwnershipEvaluator
 
     existing = OwnershipEvaluation.objects.filter(
         user=user, project=project, period=period
@@ -46,16 +46,66 @@ def get_or_create_ownership_evaluation(user, project, period, evaluator=None):
         )
 
     evaluation = OwnershipEvaluation.objects.create(
-        user=user, project=project, period=period,
-        template=template, validator=evaluator,
+        user=user, project=project, period=period, template=template,
     )
+    if evaluator:
+        OwnershipEvaluator.objects.create(
+            evaluation=evaluation, user=evaluator, is_primary=True,
+        )
     return evaluation, None
 
 
-def close_ownership_evaluation(evaluation) -> list[str]:
-    """Cierre por el líder (Guardar y cerrar): valida, calcula score y bloquea para todos.
+def add_evaluator(evaluation, user, is_primary=False):
+    """Agrega un evaluador (primario o secundario) a la evaluación.
 
-    Las Fortalezas y Oportunidades (que complementa el líder) son obligatorias para cerrar.
+    Si el usuario ya está asignado, no hace nada (idempotente).
+    Si is_primary=True, baja al primario actual antes de crear el nuevo.
+    """
+    from apps.evaluations.models import OwnershipEvaluator
+
+    if is_primary:
+        OwnershipEvaluator.objects.filter(evaluation=evaluation, is_primary=True).update(is_primary=False)
+
+    OwnershipEvaluator.objects.get_or_create(
+        evaluation=evaluation,
+        user=user,
+        defaults={"is_primary": is_primary},
+    )
+
+
+def set_primary_evaluator(evaluation, new_primary_user):
+    """Cambia el evaluador principal de la evaluación.
+
+    Si el nuevo primario ya era secundario, lo promueve.
+    Si es nuevo, lo crea como primario. El primario anterior pasa a secundario.
+    """
+    from apps.evaluations.models import OwnershipEvaluator
+
+    OwnershipEvaluator.objects.filter(evaluation=evaluation, is_primary=True).update(is_primary=False)
+    evaluator, created = OwnershipEvaluator.objects.get_or_create(
+        evaluation=evaluation,
+        user=new_primary_user,
+        defaults={"is_primary": True},
+    )
+    if not created and not evaluator.is_primary:
+        evaluator.is_primary = True
+        evaluator.save(update_fields=["is_primary"])
+
+
+def remove_evaluator(evaluation, user):
+    """Elimina un evaluador secundario de la evaluación.
+
+    No permite eliminar al evaluador primario (debe usarse set_primary_evaluator para reemplazarlo).
+    """
+    from apps.evaluations.models import OwnershipEvaluator
+
+    OwnershipEvaluator.objects.filter(evaluation=evaluation, user=user, is_primary=False).delete()
+
+
+def close_ownership_evaluation(evaluation) -> list[str]:
+    """Cierre por cualquier evaluador: valida, calcula score y bloquea para todos.
+
+    Las Fortalezas y Oportunidades son obligatorias para cerrar.
     Devuelve una lista de mensajes de error (en español); vacía = cerrada con éxito.
     """
     from apps.core.services import final_flow

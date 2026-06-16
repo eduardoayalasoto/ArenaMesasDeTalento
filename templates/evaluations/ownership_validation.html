@@ -2,21 +2,27 @@
 {% block content %}
   <div class="mb-4">
     <h2 class="text-xl font-semibold text-slate-900">Validación de Ownership</h2>
-    <p class="text-slate-600">Evaluaciones de las personas de los proyectos que lideras.</p>
+    <p class="text-slate-600">Evaluaciones en las que participas como evaluador.</p>
   </div>
-  {% include "partials/info_panel.html" with title="Cómo validar" text="<p>1. Revisa con cada persona su autoevaluación en una sesión 1:1, ajustando lo que sea necesario.</p><p>2. La persona envía su evaluación desde su pantalla solo cuando ya la revisaron juntos.</p><p>3. Una vez enviada, queda inmutable; si hubo un error, Talento puede reabrirla.</p>" %}
+  {% include "partials/info_panel.html" with title="Cómo validar" text="<p>1. Revisa con cada persona su autoevaluación en una sesión conjunta, ajustando lo que sea necesario.</p><p>2. Cualquier evaluador puede complementar Fortalezas, Oportunidades y Comentarios, y cerrar la evaluación.</p><p>3. Una vez cerrada, queda inmutable; si hubo un error, Talento puede reabrirla.</p>" %}
 
-  {% if not evaluations %}
-    {% include "partials/empty_state.html" with icon="check" title="No hay evaluaciones por revisar" message="Cuando las personas de tus proyectos comiencen su autoevaluación, aparecerán aquí para que las revisen juntos antes del envío." %}
+  {% if not ev_records %}
+    {% include "partials/empty_state.html" with icon="check" title="No hay evaluaciones por revisar" message="Cuando alguien te asigne como evaluador, aparecerá aquí para que la revisen juntos." %}
   {% else %}
     <div class="card divide-y divide-slate-100">
-      {% for ev in evaluations %}
+      {% for rec in ev_records %}
+        {% with ev=rec.evaluation %}
         <div class="flex items-center justify-between gap-4 p-4">
           <div class="min-w-0">
             <p class="font-medium text-slate-900 truncate">{{ ev.user.full_name }}</p>
             <p class="text-sm text-slate-500 truncate">{{ ev.project.name }}</p>
           </div>
           <div class="flex items-center gap-3 shrink-0">
+            {% if rec.is_primary %}
+              <span class="badge bg-arena-50 text-arena-700">Principal</span>
+            {% else %}
+              <span class="badge bg-slate-100 text-slate-500">Secundario</span>
+            {% endif %}
             {% if ev.score %}<span class="font-semibold text-slate-900 tabular-nums">{{ ev.score }}</span>{% endif %}
             {% if ev.is_submitted %}
               <span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
@@ -27,6 +33,7 @@
             {% endif %}
           </div>
         </div>
+        {% endwith %}
       {% endfor %}
     </div>
   {% endif %}

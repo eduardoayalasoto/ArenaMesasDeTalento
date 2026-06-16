@@ -48,9 +48,9 @@ def navigation(request):
     if user.is_lead or user.is_admin or user.is_director:
         add("Mi área", "dashboards:my_area", "users")
 
-    # Evaluador de Ownership — solo si tiene al menos una validación asignada
-    from apps.evaluations.models import OwnershipEvaluation
-    if OwnershipEvaluation.objects.filter(validator=user).exists():
+    # Evaluador de Ownership — solo si tiene al menos una evaluación asignada (primaria o secundaria)
+    from apps.evaluations.models import OwnershipEvaluator
+    if OwnershipEvaluator.objects.filter(user=user).exists():
         add("Validación de Ownership", "evaluations:ownership_validation", "check")
 
     # Líder de proyecto — captura de Entrega de Valor

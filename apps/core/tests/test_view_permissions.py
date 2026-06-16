@@ -433,12 +433,13 @@ def ownership_eval(db, colab, existing_project, period_v, level_jr_v):
         area=colab.area, level=level_jr_v,
         version=1, status=QuestionnaireTemplate.Status.PUBLICADO,
     )
-    from apps.evaluations.models import OwnershipEvaluation
-    return OwnershipEvaluation.objects.create(
+    from apps.evaluations.models import OwnershipEvaluation, OwnershipEvaluator
+    ev = OwnershipEvaluation.objects.create(
         user=colab, project=existing_project, period=period_v,
-        template=tpl, validator=colab_lead if False else colab,
-        status=OwnershipEvaluation.Status.ENVIADA,
+        template=tpl, status=OwnershipEvaluation.Status.ENVIADA,
     )
+    OwnershipEvaluator.objects.create(evaluation=ev, user=colab, is_primary=True)
+    return ev
 
 
 @pytest.mark.django_db

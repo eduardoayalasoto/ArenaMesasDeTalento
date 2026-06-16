@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 
 from apps.core.services import ownership_flow
-from apps.evaluations.models import OwnershipAnswer, OwnershipEvaluation
+from apps.evaluations.models import OwnershipAnswer, OwnershipEvaluation, OwnershipEvaluator
 from apps.questionnaires.models import Question, QuestionnaireTemplate
 
 
@@ -24,8 +24,9 @@ def test_resolve_template_ignores_archived(collaborator, ownership_template):
 def _draft(collaborator, project_finite, period, ownership_template):
     ev = OwnershipEvaluation.objects.create(
         user=collaborator, project=project_finite, period=period,
-        template=ownership_template, validator=project_finite.lead,
+        template=ownership_template,
     )
+    OwnershipEvaluator.objects.create(evaluation=ev, user=project_finite.lead, is_primary=True)
     qs = Question.objects.filter(section__template=ownership_template).order_by("order")
     for q in qs:
         OwnershipAnswer.objects.create(evaluation=ev, question=q, value=3)

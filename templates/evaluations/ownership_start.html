@@ -6,19 +6,38 @@
     <h2 class="text-xl font-semibold text-slate-900 mb-1">Iniciar evaluación de Ownership</h2>
     <p class="text-slate-600 mb-5">Proyecto: <span class="font-medium text-slate-900">{{ project.name }}</span></p>
 
-    {% include "partials/info_panel.html" with title="Elige a tu evaluador" text="<p>Selecciona a la persona de Arena que revisará y validará tu evaluación; suele ser quien más cerca trabajó contigo en el proyecto (no necesariamente tu Lead).</p><p>Esa persona recibirá tu evaluación en su sección <strong>Validación de Ownership</strong> para completarla y cerrarla contigo.</p>" %}
+    {% include "partials/info_panel.html" with title="Elige a tus evaluadores" text="<p><strong>Evaluador principal:</strong> quien lidera la sesión de retroalimentación contigo y puede cerrar la evaluación. Suele ser quien más cerca trabajó contigo en el proyecto.</p><p><strong>Evaluadores secundarios (opcional):</strong> personas adicionales que participarán en la sesión con los mismos permisos que el principal para revisar y cerrar. Puedes agregar o quitar evaluadores más adelante.</p>" %}
 
-    <form method="post" class="card p-6">
+    <form method="post" class="card p-6" x-data="{ primaryId: '', secondaries: [] }">
       {% csrf_token %}
-      <label class="label" for="evaluator">Evaluador</label>
-      <select name="evaluator" id="evaluator" class="input" required>
-        <option value="">— Selecciona una persona —</option>
-        {% for e in evaluators %}
-          <option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>
-        {% endfor %}
-      </select>
-      <p class="mt-2 text-xs text-slate-500">Podrás capturar tus respuestas enseguida; tu evaluador complementará Fortalezas y Oportunidades.</p>
-      <button type="submit" class="btn-primary mt-5 w-full">Comenzar evaluación</button>
+
+      <div class="mb-5">
+        <label class="label" for="evaluator">Evaluador principal <span class="text-rose-500">*</span></label>
+        <select name="evaluator" id="evaluator" class="input" required x-model="primaryId">
+          <option value="">— Selecciona una persona —</option>
+          {% for e in evaluators %}
+            <option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-5">
+        <label class="label">Evaluadores secundarios <span class="text-slate-400 font-normal">(opcional)</span></label>
+        <div class="space-y-1 max-h-48 overflow-y-auto border border-slate-200 rounded-lg p-2 bg-white">
+          {% for e in evaluators %}
+            <label class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-slate-50 cursor-pointer"
+                   x-show="primaryId != '{{ e.id }}'">
+              <input type="checkbox" name="secondary_evaluators" value="{{ e.id }}"
+                     class="rounded border-slate-300 text-arena-600"
+                     @change="secondaries = $el.checked ? [...secondaries, '{{ e.id }}'] : secondaries.filter(x => x !== '{{ e.id }}')">
+              <span class="text-sm text-slate-700">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</span>
+            </label>
+          {% endfor %}
+        </div>
+        <p class="mt-1 text-xs text-slate-400">Las personas marcadas tendrán acceso completo a la evaluación.</p>
+      </div>
+
+      <button type="submit" class="btn-primary w-full">Comenzar evaluación</button>
     </form>
   </div>
 {% endblock %}

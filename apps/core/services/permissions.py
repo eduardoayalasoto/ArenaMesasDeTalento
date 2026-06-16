@@ -31,7 +31,7 @@ def can_view_evaluation(viewer, evaluation) -> bool:
         return True
     if evaluation.user_id == viewer.pk:
         return True
-    if evaluation.validator_id == viewer.pk:
+    if evaluation.evaluators.filter(user_id=viewer.pk).exists():
         return True
     if viewer.is_lead and viewer.area_id and evaluation.user.area_id == viewer.area_id:
         return True
@@ -44,8 +44,8 @@ def projects_led_by(viewer) -> QuerySet:
 
 
 def can_validate_ownership(viewer, evaluation) -> bool:
-    """Solo el validador designado (líder del proyecto) o un administrador."""
-    return _is_admin(viewer) or evaluation.validator_id == viewer.pk
+    """Cualquier evaluador asignado (primario o secundario) o un administrador."""
+    return _is_admin(viewer) or evaluation.evaluators.filter(user_id=viewer.pk).exists()
 
 
 def can_capture_value_delivery(viewer, project) -> bool:

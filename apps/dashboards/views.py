@@ -182,15 +182,16 @@ def talent_table(request):
 
     evaluators_by_user = {}
     if period:
-        for ev in (
-            OwnershipEvaluation.objects.filter(
-                period=period, user__in=page.object_list, validator__isnull=False
-            ).select_related("validator")
+        from apps.evaluations.models import OwnershipEvaluator
+        for rec in (
+            OwnershipEvaluator.objects.filter(
+                evaluation__period=period, evaluation__user__in=page.object_list,
+            ).select_related("user", "evaluation")
         ):
-            evaluators_by_user.setdefault(ev.user_id, [])
-            name = ev.validator.full_name
-            if name not in evaluators_by_user[ev.user_id]:
-                evaluators_by_user[ev.user_id].append(name)
+            evaluators_by_user.setdefault(rec.evaluation.user_id, [])
+            name = rec.user.full_name
+            if name not in evaluators_by_user[rec.evaluation.user_id]:
+                evaluators_by_user[rec.evaluation.user_id].append(name)
 
     rows = [
         {"user": u, "final": finals_all.get(u.id), "evaluators": evaluators_by_user.get(u.id, [])}
