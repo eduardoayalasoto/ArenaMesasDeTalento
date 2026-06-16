@@ -150,6 +150,14 @@ def _render_ownership(request, pk, *, editing):
             "mensaje": "Esta evaluación pertenece a otra persona o área.",
         }, status=403)
 
+    if ownership_flow.sync_evaluation_template(evaluation):
+        messages.info(
+            request,
+            "Tu área o nivel cambiaron; tu cuestionario se actualizó al correspondiente. "
+            "Las respuestas anteriores fueron eliminadas.",
+        )
+        return redirect(request.path)
+
     can_edit_answers = _can_edit_answers(request.user, evaluation)
     can_complement = _can_complement(request.user, evaluation)
     is_owner = evaluation.user_id == request.user.pk

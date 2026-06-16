@@ -102,6 +102,25 @@ def remove_evaluator(evaluation, user):
     OwnershipEvaluator.objects.filter(evaluation=evaluation, user=user, is_primary=False).delete()
 
 
+def sync_evaluation_template(evaluation) -> bool:
+    """Sincroniza el template de una evaluación abierta con el área/nivel actual del colaborador.
+
+    Si el template guardado ya no coincide (el colaborador cambió de área o nivel),
+    actualiza el template y borra las respuestas previas (pertenecían al template anterior).
+    Solo actúa sobre evaluaciones en estado BORRADOR.
+    Devuelve True si hubo cambio.
+    """
+    if evaluation.is_submitted:
+        return False
+    current_template = resolve_ownership_template(evaluation.user)
+    if current_template is None or evaluation.template_id == current_template.id:
+        return False
+    evaluation.answers.all().delete()
+    evaluation.template = current_template
+    evaluation.save(update_fields=["template", "updated_at"])
+    return True
+
+
 def close_ownership_evaluation(evaluation) -> list[str]:
     """Cierre por cualquier evaluador: valida, calcula score y bloquea para todos.
 
