@@ -118,6 +118,8 @@ def user_admin(request):
     if request.method == "POST":
         updated = 0
         for user in User.objects.filter(is_superuser=False):
+            if f"area-{user.id}" not in request.POST:
+                continue  # usuario no estaba visible en el form (filtro activo)
             area_code = request.POST.get(f"area-{user.id}", "")
             level_code = request.POST.get(f"level-{user.id}", "")
             role = request.POST.get(f"role-{user.id}", user.role)

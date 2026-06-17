@@ -69,6 +69,11 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--password", default=DEFAULT_PASSWORD)
         parser.add_argument("--dry-run", action="store_true")
+        parser.add_argument(
+            "--skip-password",
+            action="store_true",
+            help="Actualiza área/nivel/rol sin modificar contraseñas (útil para restaurar datos).",
+        )
 
     def handle(self, *args, **options):
         path = Path(settings.BASE_DIR) / "docs" / "Modelos" / "usuarios.csv"
@@ -80,6 +85,7 @@ class Command(BaseCommand):
         levels = {l.code: l for l in SeniorityLevel.objects.all()}
         password = options["password"]
         dry = options["dry_run"]
+        skip_password = options["skip_password"]
 
         created = updated = skipped = 0
         no_area = []
@@ -116,8 +122,9 @@ class Command(BaseCommand):
                 user.level = levels.get(level_code) if level_code else None
                 user.role = role
                 user.is_active = True
-                user.must_change_password = False
-                user.set_password(password)
+                if not skip_password or is_new:
+                    user.must_change_password = False
+                    user.set_password(password)
                 user.save()
                 created += int(is_new)
                 updated += int(not is_new)
