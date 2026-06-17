@@ -2,7 +2,7 @@
 
 > Documento vivo. Se actualiza conforme avanza la implementación del `Plan_Desarrollo_Webapp_Evaluaciones.md`.
 > Estado: ⬜ pendiente · 🟡 en curso · ✅ hecho · ⚠️ con nota
-> Última actualización: 2026-06-12 · **Desplegado en Vercel + Neon** · Ver `CONTEXTO_Sistema.md` para el panorama completo.
+> Última actualización: 2026-06-17 · **Desplegado en Vercel + Neon** · Ver `CONTEXTO_Sistema.md` para el panorama completo.
 
 ## Convenciones del proyecto (recordatorio permanente)
 - **Idioma:** sistema 100% en español (etiquetas, mensajes, correos, validaciones). Código (modelos, variables) en inglés.
@@ -33,7 +33,8 @@
 - ✅ Login / logout / reset de contraseña (vistas + plantillas en español)
 - ✅ `admin.py` de accounts y catalog (soporte del superusuario)
 - ✅ `seed_superuser` + `seed_catalogs` (4 áreas, 4 niveles, ponderaciones RN-19, periodo 2026-S1 ABIERTO) + `seed_users` (53 colaboradores) + `seed_all`
-- ✅ **Pantalla de Talento para asignar área/nivel/rol** (masiva, con búsqueda) — *criterio de salida cumplido*
+- ✅ **Pantalla de Talento para asignar área/nivel/rol** (masiva, con búsqueda) — selects mejorados (appearance-none + chevron Lucide); **bug crítico corregido**: el POST ahora omite usuarios no visibles para evitar borrar sus datos con filtro activo.
+- ✅ **Reset de contraseña individual** desde `/cuenta/usuarios/`: botón "Resetear" por fila, POST htmx, restablece a `Arena2026!` + activa `must_change_password`.
 - ✅ Cierre/apertura de periodos (pantalla propia de Talento)
 - ⬜ Pantallas propias para áreas/niveles/ponderaciones/proyectos (hoy vía Django admin)
 
@@ -49,8 +50,9 @@
 - ✅ Modelos `OwnershipEvaluation` / `OwnershipAnswer` (+ migraciones)
 - ✅ `ownership_evaluation_score` / `ownership_pillar_score` (RN-03/04/05) **con tests**
 - ✅ Pantalla de llenado (1 sola página, secciones, **autosave por ítem vía JSON**, progreso fijo, **promedio en vivo**) — patrón elegido según UX UI (no wizard de pasos)
-- ✅ Envío con candado RN-06 (confirmación + Fortalezas + Oportunidades), inmutabilidad post-envío (403), correo de confirmación, reapertura admin (servicio)
-- ✅ Cola de validación del líder
+- ✅ Envío con candado RN-06 (confirmación + Fortalezas + Oportunidades), inmutabilidad post-envío (403), reapertura admin (servicio)
+- ✅ Cola de validación — **evaluadores múltiples** (primario + secundarios): modelo `OwnershipEvaluator` (migración `0002`); el colaborador gestiona la lista mientras esté abierta; cualquier evaluador puede complementar y cerrar; badges Primario/Secundario en UI. Correos de confirmación eliminados.
+- ✅ **Sync de template al cambiar área/nivel:** al entrar a una evaluación BORRADOR, `sync_evaluation_template` detecta desajuste con el área/nivel actual, actualiza el template y borra respuestas previas (con aviso al usuario).
 - ⬜ Vista lado a lado / co-edición del líder (ajuste fino, mejora futura)
 
 ### Fase 4 — Entrega de Valor ✅ (funcional E2E)
@@ -66,8 +68,8 @@
 - ⬜ Recálculo por señal automática (hoy: al validar EV / guardar Arena / abrir resultados)
 
 ### Capa de servicios (`core/services/`) ✅
-- ✅ `scoring.py` (18 tests) · `permissions.py` (13 tests) · `ownership_flow.py` (6 tests) · `final_flow.py` (2 tests) · `value_delivery_flow.py`
-- ✅ **Suite total: 39 pruebas en verde**; `manage.py check` sin incidencias; smoke E2E de los 3 pilares OK
+- ✅ `scoring.py` (18 tests) · `permissions.py` (13 tests) · `ownership_flow.py` (add/remove/set_primary_evaluator + sync_evaluation_template) · `final_flow.py` (2 tests) · `value_delivery_flow.py`
+- ✅ **Suite total: 168 pruebas en verde** (11 nuevas de evaluadores múltiples); `manage.py check` sin incidencias; smoke E2E de los 3 pilares OK
 
 ### Pendiente (no construido aún)
 - Pantallas admin propias de Talento (áreas/niveles/usuarios/proyectos/periodos/ponderaciones) — hoy vía Django admin.
@@ -136,6 +138,15 @@
 - **Importación real a Neon:** 3 usuarios nuevos creados (cpalacio@, crodriguez@, arturo.carranza@); **17 proyectos** y **71 membresías** importados. Corrección post-import: 3 proyectos sin responsable resueltos manualmente (Oscar Nafarrate — nombre corto en el xlsx no empató).
 - **Corrección de membresías (`import_memberships` v2):** el comando inicial leía la hoja `Proyectos` con fill-down, lo que atribuía evaluadores y leads como integrantes del equipo. Reescrito para leer la hoja **`HC Total`**: cada fila es una persona, las columnas `Proyecto N` determinan el equipo (columnas `Evaluador N` se ignoran). Agrega **sincronización bidireccional**: crea faltantes y elimina membresías en BD que ya no están en el xlsx. Matching por correo (strip para tolerar `\xa0`/espacios). Aplicado a Neon: **29 membresías incorrectas eliminadas**; quedaron 71 correctas.
 - **Suite de pruebas:** 66 en verde.
+
+### 2026-06-16
+- **Ownership multi-evaluador:** reemplazado el campo `validator` (FK único) por el modelo `OwnershipEvaluator` (evaluation, user, is_primary, added_at). Migración `0002` con data migration de `validator` → `OwnershipEvaluator`. Servicios: `add_evaluator`, `remove_evaluator`, `set_primary_evaluator`. El colaborador gestiona la lista desde `ownership_fill` mientras la evaluación esté abierta. Cola de validación unificada para primario y secundario (mismos permisos). UI: badges Primario/Secundario, formularios add/remove inline. Correos de confirmación eliminados. 11 pruebas nuevas → **168 en verde**.
+- **Sync de template Ownership:** si el área/nivel del colaborador cambiaron después de crear la evaluación (BORRADOR), `sync_evaluation_template` detecta el desajuste al entrar a la vista, actualiza el template y borra respuestas previas (que pertenecían al template anterior). El usuario ve un aviso explicativo y el cuestionario correcto. Solo aplica a borradores.
+
+### 2026-06-17
+- **Bug crítico en user_admin corregido:** al guardar con un filtro activo (ej. buscar "alain"), el POST solo contenía los campos del usuario visible, pero el loop iteraba todos los usuarios y asignaba `area=None`/`level=None` a los demás. Fix: el loop ahora hace `continue` para usuarios cuyo campo `area-{id}` no está en el POST. Como consecuencia, también se restauraron los datos de 57 usuarios con `import_csv_users --skip-password` (nuevo flag que actualiza solo área/nivel/rol sin resetear contraseñas ni fotos).
+- **Reset de contraseña individual desde Usuarios:** endpoint `POST /cuenta/usuarios/<pk>/reset-password/` (solo Talento/admin) que restablece la contraseña a `Arena2026!` y activa `must_change_password=True`. Responde como fragment htmx: reemplaza el botón con un badge verde "Reseteada" sin recargar la página. Agrega confirmación (`hx-confirm`) antes de ejecutar.
+- **UX de `/cuenta/usuarios/`:** selects con `appearance-none` + ícono `chevron-down` de Lucide (elimina la flecha nativa del navegador); etiquetas vacías descriptivas ("— Sin área —"); hover en filas.
 
 ### 2026-06-11 (durante pruebas con Talento)
 - **Reapertura de Ownership (RN-06):** botón **"Reabrir"** (con modal) en la evaluación cerrada, visible solo para Talento/admin → `ENVIADA→BORRADOR` y **recálculo de la final**. Vistas `ownership_reopen` + URL `ownership/<pk>/reabrir/`; el servicio `reopen_ownership_evaluation` ahora recalcula. Antes el texto de ayuda prometía algo sin botón.

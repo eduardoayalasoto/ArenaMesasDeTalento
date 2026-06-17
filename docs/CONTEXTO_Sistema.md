@@ -1,7 +1,7 @@
 # Contexto del Sistema — Mesa de Talento (Arena Analytics)
 
 > Documento de referencia rápida para retomar el proyecto sin leer todo el código.
-> Última actualización: 2026-06-12.
+> Última actualización: 2026-06-17.
 
 ## 1. Qué es
 Webapp interna del **Modelo de Desempeño Analítica 2026**. Cada colaborador se evalúa por **3 pilares** (escala 1–4): **Ownership**, **Entrega de Valor** e **Impacto Arena**. La **calificación final** es el promedio **ponderado por nivel** de los 3 pilares. Reglas de negocio en `docs/KB_Modelo_Desempeno_2026.md` (RN-xx).
@@ -41,7 +41,8 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **catalog:** `Area` (ID/CD/PM/UXUI), `SeniorityLevel` (JR/MID/SNR/LEAD), `PillarWeight` (pesos por nivel, suman 1.00), `EvaluationPeriod` (PLANEADO/ABIERTO/CERRADO), `Project` (lead, responsable FK, kickoff, target_close, status ON_TRACK/DELAYED, duration_type FINITO/INDEFINIDO), `ProjectMembership`. Editables desde la pantalla de proyecto en Talento.
 - **questionnaires:** `QuestionnaireTemplate` (kind OWNERSHIP/VALUE_DELIVERY, area, level, version, status BORRADOR/PUBLICADO/ARCHIVADO; solo 1 PUBLICADO por kind/area/level) → `Section` → `Question` (SCALE/TEXT_LONG) → `ScaleOption`.
 - **evaluations:**
-  - `OwnershipEvaluation` (user×project×period, `template`, `validator`=evaluador elegido, `status` BORRADOR→ENVIADA(=cerrada), strengths/opportunities/comments, score) → `OwnershipAnswer` (value 1–4 o is_na).
+  - `OwnershipEvaluation` (user×project×period, `template`, `status` BORRADOR→ENVIADA(=cerrada), strengths/opportunities/comments, score) → `OwnershipAnswer` (value 1–4 o is_na). Los evaluadores ya **no** son un FK directo: se gestionan vía `OwnershipEvaluator` (ver abajo).
+  - `OwnershipEvaluator` (migración `0002`): relación N:N entre evaluación y usuarios evaluadores. Campos: `evaluation`, `user`, `is_primary` (bool), `added_at`. Cualquier evaluador —primario o secundario— tiene los mismos permisos: editar respuestas, complementar Fortalezas/Oportunidades y cerrar. El colaborador gestiona la lista mientras la evaluación esté abierta.
   - `ValueDeliveryEvaluation` (project×period, evaluator/validated_by, status BORRADOR→EN_VALIDACION→VALIDADA, criterios, score).
   - `ArenaImpactScore` (user×period, score, notes, captured_by).
   - `FinalScore` (materializado: pilares, final_score, band, is_complete).
@@ -60,7 +61,7 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Calificación final:** `FinalScore` materializado; se recalcula al validar EV / guardar Impacto / abrir resultados.
 
 ## 7. Capa de servicios (`apps/core/services/`)
-`scoring.py` (promedios, ponderación, bandas) · `permissions.py` (visibilidad/capacidades) · `ownership_flow.py` (crear/cerrar) · `value_delivery_flow.py` · `final_flow.py` (recálculo materializado) · `questionnaire_editor.py` (versionado). **Toda la lógica vive aquí, no en vistas/plantillas.** 40 pruebas en `apps/core/tests/`.
+`scoring.py` (promedios, ponderación, bandas) · `permissions.py` (visibilidad/capacidades) · `ownership_flow.py` (crear/cerrar; `add_evaluator`/`remove_evaluator`/`set_primary_evaluator`; `sync_evaluation_template` — detecta desajuste área/nivel y actualiza el template en evaluaciones BORRADOR) · `value_delivery_flow.py` · `final_flow.py` (recálculo materializado) · `questionnaire_editor.py` (versionado). **Toda la lógica vive aquí, no en vistas/plantillas.** 168 pruebas en `apps/core/tests/`.
 
 ## 8. Pantallas por rol (URLs)
 - **Todos:** `/` Mi tablero (= informe de resultados), `/cuenta/perfil/` (foto + contraseña, en tabs), `/ayuda/` (tabs por rol + “El modelo”). Campana = pendientes.
@@ -68,11 +69,11 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Evaluador:** `/evaluaciones/ownership/validacion/` (solo si tiene validaciones asignadas).
 - **Líder:** `/evaluaciones/entrega-valor/` (captura).
 - **Director:** `/evaluaciones/entrega-valor/validar/`, `/mesa-talento/`.
-- **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`, autoguardado), **reabrir** evaluaciones de Ownership cerradas (botón en la vista), Avance (`/avance-periodo/`), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar).
+- **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`, autoguardado), **reabrir** evaluaciones de Ownership cerradas (botón en la vista), Avance (`/avance-periodo/`), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación masiva con búsqueda; botón **”Resetear”** por fila para restablecer contraseña a `Arena2026!` vía htmx sin recargar, activa `must_change_password`; POST `/cuenta/usuarios/<pk>/reset-password/`; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar).
 
 ## 9. Seed y comandos (`manage.py`)
 - `seed_all` = `seed_superuser` + `seed_catalogs` + `seed_users` + `seed_questionnaires` (+ `seed_demo` con `--demo`).
-- `import_csv_users` — crea/actualiza usuarios desde `docs/Modelos/usuarios.csv` (deduce área/nivel del puesto, fija contraseña, `must_change_password=False`).
+- `import_csv_users [--skip-password]` — crea/actualiza usuarios desde `docs/Modelos/usuarios.csv` (deduce área/nivel del puesto, fija contraseña, `must_change_password=False`). Con `--skip-password`, actualiza solo área/nivel/rol sin tocar contraseñas ni fotos de usuarios existentes (útil para restaurar datos).
 - `import_projects [--path xlsx] [--dry-run]` — lee hoja **'Proyectos Dueños'** del xlsx de Talento; idempotente por nombre; crea/actualiza lead, responsable, kickoff, target_close, status, duration_type. Crea usuarios faltantes (3 predefinidos en `imports.py`).
 - `import_memberships [--path xlsx] [--dry-run]` — lee hoja **'HC Total'** del xlsx; **cada fila = una persona**, columnas `Proyecto N` = sus proyectos (columnas `Evaluador N` se ignoran). Sincroniza: crea membresías faltantes **y elimina** las que ya no están en el xlsx. Idempotente. La clave de matching es el correo (strip para tolerar espacios/`\xa0`).
 - `require_password_change --all [--temp-password X] [--clear]` — switch de cambio de contraseña forzado.
@@ -93,4 +94,8 @@ Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.
 ## 12. Estado actual
 - **Fases 0–7 funcionales y desplegadas** (Vercel + Neon). **65 usuarios reales** (todos `Arena2026!`, sin cambio forzado; 3 altas el 2026-06-12: cpalacio@, crodriguez@, arturo.carranza@), 2 directores (Héctor, Óscar), 17 cuestionarios/419 preguntas, periodo 2026-S1 ABIERTO. En **pruebas con Talento**.
 - **17 proyectos y 71 membresías** importados y sincronizados desde `docs/Modelos/Quien evalua a quien Analítica 1er S 2026.xlsx` (2026-06-12). Modelo `Project` ampliado con responsable, kickoff, target_close, status (editables en la pantalla de proyecto). Fuente canónica de membresías: hoja **'HC Total'** del xlsx (columnas `Proyecto N`).
+- **Ownership multi-evaluador (2026-06-16):** modelo `OwnershipEvaluator` (migración `0002`); el colaborador puede agregar evaluadores primario y secundarios. Correos eliminados. 168 pruebas en verde.
+- **Sync de template Ownership (2026-06-16):** si el colaborador cambió de área/nivel después de iniciar su evaluación en BORRADOR, al entrar se detecta el desajuste, se actualiza el template y se limpian respuestas previas (aviso visible). Solo aplica a borradores.
+- **Bug crítico corregido (2026-06-17):** la vista masiva de usuarios (`/cuenta/usuarios/`) borraba área y nivel de todos los usuarios si se guardaba con un filtro activo (porque el loop del POST cubría todos los usuarios, no solo los visibles). Fix: el loop ahora omite usuarios cuyo campo no llegó en el POST.
+- **Reset de contraseña desde Usuarios (2026-06-17):** botón "Resetear" por fila en `/cuenta/usuarios/`; restablece a `Arena2026!` y activa `must_change_password`; responde como fragment htmx (sin recarga).
 - **Pendiente/opcional:** compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).
