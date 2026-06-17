@@ -14,6 +14,7 @@ urlpatterns = [
     path("cambiar-contrasena/", views.password_change, name="password_change"),
     path("usuarios/", views.user_admin, name="user_admin"),
     path("usuarios/nuevo/", views.user_create, name="user_create"),
+    path("usuarios/<int:pk>/reset-password/", views.user_reset_password, name="user_reset_password"),
     path(
         "ingresar/",
         auth_views.LoginView.as_view(

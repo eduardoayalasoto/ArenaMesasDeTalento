@@ -3,8 +3,8 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
-from django.shortcuts import redirect, render
+from django.http import Http404, HttpResponse, HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.catalog.models import Area, SeniorityLevel
 
@@ -149,3 +149,26 @@ def user_admin(request):
         "roles": User.Role.choices,
         "q": q,
     })
+
+
+@login_required
+def user_reset_password(request, pk):
+    """Restablece la contraseña de un colaborador a Arena2026! (solo Talento/admin)."""
+    if not request.user.is_admin:
+        return render(request, "errors/403.html", {
+            "titulo": "Acción reservada a Talento",
+            "mensaje": "Solo Talento y Cultura puede resetear contraseñas.",
+        }, status=403)
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+    user = get_object_or_404(User, pk=pk, is_superuser=False)
+    user.set_password("Arena2026!")
+    user.must_change_password = True
+    user.save(update_fields=["password", "must_change_password"])
+    if request.headers.get("HX-Request"):
+        return HttpResponse(
+            '<span class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">'
+            '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i>Reseteada</span>'
+        )
+    messages.success(request, f"Contraseña de {user.full_name} restablecida a Arena2026!.")
+    return redirect("accounts:user_admin")
