@@ -66,14 +66,14 @@ def test_import_projects_crea_proyectos_y_usuario_faltante(xlsx, ana):
     call_command("import_projects", "--path", xlsx)
 
     weather = Project.objects.get(name="Weather")
-    assert weather.lead == ana
+    assert weather.owner == ana
     assert weather.responsable == ana
     assert weather.client == "Cliente X"
     assert weather.duration_type == Project.Duration.FINITO
     assert weather.status == Project.Status.ON_TRACK
 
     coppel = Project.objects.get(name__startswith="Coppel Portal")
-    assert coppel.lead.email == "cpalacio@arena-analytics.com"
+    assert coppel.owner.email == "cpalacio@arena-analytics.com"
     assert coppel.status == Project.Status.DELAYED
 
 

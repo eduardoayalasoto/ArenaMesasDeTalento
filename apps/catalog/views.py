@@ -27,7 +27,7 @@ def project_admin(request):
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
         }, status=403)
     projects = (
-        Project.objects.select_related("lead")
+        Project.objects.select_related("owner")
         .annotate(members=Count("memberships"))
         .order_by("name")
     )

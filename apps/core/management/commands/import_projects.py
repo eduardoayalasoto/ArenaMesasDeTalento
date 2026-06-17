@@ -69,12 +69,12 @@ class Command(BaseCommand):
                 owner_name = raw[col("owner")] if col("owner") is not None else None
                 resp_name = raw[col("responsable")] if col("responsable") is not None else None
 
-                lead, lead_action = imports.resolve_or_create_user(
+                owner, owner_action = imports.resolve_or_create_user(
                     owner_name, index, password=password, dry=dry
                 )
-                if lead_action in ("would_create", "created"):
+                if owner_action in ("would_create", "created"):
                     self.stdout.write(f"[{'dry' if dry else 'ok'}] usuario owner: {owner_name}")
-                if lead is None:
+                if owner is None:
                     unmatched.append(f"Owner no resuelto: {owner_name!r} ({name})")
                     continue
                 responsable, _ = imports.resolve_or_create_user(
@@ -90,16 +90,16 @@ class Command(BaseCommand):
 
                 if dry:
                     self.stdout.write(
-                        f"[dry] {name} | lead={lead} | resp={responsable} | "
+                        f"[dry] {name} | owner={owner} | resp={responsable} | "
                         f"{duration} | {status} | {kickoff}–{target}"
                     )
                     continue
 
                 project, is_new = Project.objects.get_or_create(
-                    name=name, defaults={"lead": lead},
+                    name=name, defaults={"owner": owner, "responsable": responsable or owner},
                 )
                 project.client = client
-                project.lead = lead
+                project.owner = owner
                 project.responsable = responsable
                 project.kickoff = kickoff
                 project.target_close = target

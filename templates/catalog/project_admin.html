@@ -3,7 +3,7 @@
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div>
       <h2 class="text-xl font-semibold text-slate-900">Proyectos</h2>
-      <p class="text-slate-600">Crea y edita proyectos, asigna al Lead y al equipo.</p>
+      <p class="text-slate-600">Crea y edita proyectos, asigna Owner, Responsable y equipo.</p>
     </div>
     <a href="{% url 'catalog:project_create' %}" class="btn-primary">Nuevo proyecto</a>
   </div>
@@ -19,7 +19,7 @@
           <thead class="bg-slate-50 text-slate-600 text-left">
             <tr>
               <th class="px-4 py-3 font-medium">Proyecto</th>
-              <th class="px-4 py-3 font-medium">Lead</th>
+              <th class="px-4 py-3 font-medium">Owner</th>
               <th class="px-4 py-3 font-medium">Duración</th>
               <th class="px-4 py-3 font-medium text-center">Equipo</th>
               <th class="px-4 py-3 font-medium">Estado</th>
@@ -33,7 +33,7 @@
                   <p class="font-medium text-slate-900">{{ p.name }}</p>
                   {% if p.client %}<p class="text-xs text-slate-500">{{ p.client }}</p>{% endif %}
                 </td>
-                <td class="px-4 py-3 text-slate-600">{{ p.lead.full_name }}</td>
+                <td class="px-4 py-3 text-slate-600">{{ p.owner.full_name }}</td>
                 <td class="px-4 py-3 text-slate-600">{{ p.get_duration_type_display }}</td>
                 <td class="px-4 py-3 text-center tabular-nums">{{ p.members }}</td>
                 <td class="px-4 py-3">

@@ -43,8 +43,8 @@ class ProjectMembershipInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ["name", "client", "lead", "duration_type", "is_active"]
+    list_display = ["name", "client", "owner", "duration_type", "is_active"]
     list_filter = ["is_active", "duration_type"]
     search_fields = ["name", "client"]
-    autocomplete_fields = ["lead"]
+    autocomplete_fields = ["owner"]
     inlines = [ProjectMembershipInline]

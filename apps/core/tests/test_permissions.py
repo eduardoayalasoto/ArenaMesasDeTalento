@@ -48,7 +48,7 @@ def _eval(user, project, period, template):
     ev = OwnershipEvaluation.objects.create(
         user=user, project=project, period=period, template=template,
     )
-    OwnershipEvaluator.objects.create(evaluation=ev, user=project.lead, is_primary=True)
+    OwnershipEvaluator.objects.create(evaluation=ev, user=project.responsable, is_primary=True)
     return ev
 
 

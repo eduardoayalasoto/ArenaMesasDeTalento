@@ -58,7 +58,7 @@
                 <p class="font-medium text-slate-900">{{ row.project.name }}</p>
                 {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
               </td>
-              <td class="px-5 py-3 text-slate-600">{{ row.project.lead.full_name }}</td>
+              <td class="px-5 py-3 text-slate-600">{{ row.project.owner.full_name }}</td>
               <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
               <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
               <td class="px-5 py-3">
@@ -81,7 +81,7 @@
   <div class="mb-6">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
       <h3 class="font-semibold text-slate-900">Retroalimentación · {{ ev.project.name }}</h3>
-      {% with author=ev.primary_evaluator|default:ev.project.lead %}
+      {% with author=ev.primary_evaluator|default:ev.project.responsable %}
         <span class="inline-flex items-center gap-1.5 text-sm text-slate-500">
           {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
           Por {{ author.full_name }}

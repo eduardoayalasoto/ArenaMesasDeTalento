@@ -26,7 +26,7 @@ def _draft(collaborator, project_finite, period, ownership_template):
         user=collaborator, project=project_finite, period=period,
         template=ownership_template,
     )
-    OwnershipEvaluator.objects.create(evaluation=ev, user=project_finite.lead, is_primary=True)
+    OwnershipEvaluator.objects.create(evaluation=ev, user=project_finite.responsable, is_primary=True)
     qs = Question.objects.filter(section__template=ownership_template).order_by("order")
     for q in qs:
         OwnershipAnswer.objects.create(evaluation=ev, question=q, value=3)

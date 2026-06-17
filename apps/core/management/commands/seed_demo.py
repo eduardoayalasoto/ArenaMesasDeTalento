@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 continue
             project, _ = Project.objects.update_or_create(
                 name=name,
-                defaults={"client": client, "lead": lead, "duration_type": duration},
+                defaults={"client": client, "owner": lead, "responsable": lead, "duration_type": duration},
             )
             for member_email in members:
                 member = User.objects.filter(email=member_email).first()

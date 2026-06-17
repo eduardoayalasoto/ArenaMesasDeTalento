@@ -39,8 +39,8 @@ def can_view_evaluation(viewer, evaluation) -> bool:
 
 
 def projects_led_by(viewer) -> QuerySet:
-    """Proyectos activos liderados por el usuario."""
-    return viewer.led_projects.all()
+    """Proyectos activos donde el usuario es responsable (captura Entrega de Valor)."""
+    return viewer.responsible_projects.all()
 
 
 def can_validate_ownership(viewer, evaluation) -> bool:
@@ -49,8 +49,8 @@ def can_validate_ownership(viewer, evaluation) -> bool:
 
 
 def can_capture_value_delivery(viewer, project) -> bool:
-    """Solo el líder del proyecto o un administrador captura la Entrega de Valor."""
-    return _is_admin(viewer) or project.lead_id == viewer.pk
+    """Solo el responsable del proyecto o un administrador captura la Entrega de Valor."""
+    return _is_admin(viewer) or project.responsable_id == viewer.pk
 
 
 def can_validate_value_delivery(viewer) -> bool:

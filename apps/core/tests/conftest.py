@@ -60,14 +60,14 @@ def collaborator(db, area, level_jr):
 @pytest.fixture
 def project_finite(db, lead):
     return Project.objects.create(
-        name="Proyecto Finito", lead=lead, duration_type=Project.Duration.FINITO,
+        name="Proyecto Finito", owner=lead, responsable=lead, duration_type=Project.Duration.FINITO,
     )
 
 
 @pytest.fixture
 def project_indefinite(db, lead):
     return Project.objects.create(
-        name="Servicio Continuo", lead=lead, duration_type=Project.Duration.INDEFINIDO,
+        name="Servicio Continuo", owner=lead, responsable=lead, duration_type=Project.Duration.INDEFINIDO,
     )
 
 

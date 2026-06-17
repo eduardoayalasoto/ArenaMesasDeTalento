@@ -23,7 +23,7 @@ def test_project_acepta_responsable_fechas_status(lead):
         email="resp@arena-analytics.com", password="x", full_name="Responsable Uno",
     )
     p = Project.objects.create(
-        name="Demo", lead=lead, responsable=resp,
+        name="Demo", owner=lead, responsable=resp,
         kickoff=date(2026, 1, 1), target_close=date(2026, 6, 30),
         status=Project.Status.DELAYED,
     )
@@ -36,9 +36,9 @@ def test_project_acepta_responsable_fechas_status(lead):
 
 @pytest.mark.django_db
 def test_project_status_default_on_track(lead):
-    p = Project.objects.create(name="Demo2", lead=lead)
+    p = Project.objects.create(name="Demo2", owner=lead, responsable=lead)
     assert p.status == Project.Status.ON_TRACK
-    assert p.responsable is None
+    assert p.responsable == lead
     assert p.kickoff is None
 
 
@@ -53,7 +53,7 @@ def test_projectform_guarda_campos_nuevos(lead):
         email="resp2@arena-analytics.com", password="x", full_name="Responsable Dos",
     )
     form = ProjectForm(data={
-        "name": "Con Form", "client": "C", "lead": lead.pk, "responsable": resp.pk,
+        "name": "Con Form", "client": "C", "owner": lead.pk, "responsable": resp.pk,
         "duration_type": Project.Duration.FINITO, "is_active": "on",
         "kickoff": "2026-01-01", "target_close": "2026-06-30", "status": "DELAYED",
     })

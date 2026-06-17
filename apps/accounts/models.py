@@ -125,8 +125,8 @@ class User(AbstractUser):
 
     @property
     def leads_projects(self) -> bool:
-        """Es líder de al menos un proyecto activo."""
-        return self.led_projects.filter(is_active=True).exists()
+        """Es responsable de al menos un proyecto activo (acceso a Entrega de Valor)."""
+        return self.responsible_projects.filter(is_active=True).exists()
 
     @property
     def has_photo(self) -> bool:

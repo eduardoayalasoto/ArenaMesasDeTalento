@@ -125,11 +125,11 @@ class Project(models.Model):
 
     name = models.CharField("nombre", max_length=160)
     client = models.CharField("cliente", max_length=160, blank=True)
-    lead = models.ForeignKey(
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="led_projects",
-        verbose_name="líder de proyecto",
+        related_name="owned_projects",
+        verbose_name="owner",
     )
     duration_type = models.CharField(
         "tipo de duración", max_length=12, choices=Duration.choices,
@@ -139,7 +139,6 @@ class Project(models.Model):
     responsable = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        null=True, blank=True,
         related_name="responsible_projects",
         verbose_name="responsable",
     )

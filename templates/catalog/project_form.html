@@ -19,9 +19,9 @@
         {{ form.client }}
       </div>
       <div>
-        <label class="label" for="{{ form.lead.id_for_label }}">{{ form.lead.label }}</label>
-        {{ form.lead }}
-        {% for e in form.lead.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+        <label class="label" for="{{ form.owner.id_for_label }}">{{ form.owner.label }}</label>
+        {{ form.owner }}
+        {% for e in form.owner.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
       </div>
       <div>
         <label class="label" for="{{ form.responsable.id_for_label }}">{{ form.responsable.label }}</label>

@@ -35,14 +35,14 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = [
-            "name", "client", "lead", "responsable",
+            "name", "client", "owner", "responsable",
             "duration_type", "status", "kickoff", "target_close", "is_active",
         ]
         labels = {
             "name": "Nombre del proyecto",
             "client": "Cliente",
-            "lead": "Lead (Owner)",
-            "responsable": "Responsable",
+            "owner": "Owner",
+            "responsable": "Responsable (evaluará la Entrega de Valor)",
             "duration_type": "Tipo de duración",
             "status": "Estatus",
             "kickoff": "Kick-off",
@@ -52,7 +52,7 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Tablero Comercial"}),
             "client": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Cliente Retail (opcional)"}),
-            "lead": forms.Select(attrs={"class": _INPUT}),
+            "owner": forms.Select(attrs={"class": _INPUT}),
             "responsable": forms.Select(attrs={"class": _INPUT}),
             "duration_type": forms.RadioSelect(),
             "status": forms.Select(attrs={"class": _INPUT}),
@@ -62,9 +62,8 @@ class ProjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        active = self.fields["lead"].queryset.filter(is_active=True)
-        self.fields["lead"].queryset = active
-        self.fields["lead"].empty_label = "— Selecciona un Lead —"
+        active = self.fields["owner"].queryset.filter(is_active=True)
+        self.fields["owner"].queryset = active
+        self.fields["owner"].empty_label = "— Selecciona un Owner —"
         self.fields["responsable"].queryset = active
-        self.fields["responsable"].empty_label = "— Sin responsable —"
-        self.fields["responsable"].required = False
+        self.fields["responsable"].empty_label = "— Selecciona un Responsable —"
