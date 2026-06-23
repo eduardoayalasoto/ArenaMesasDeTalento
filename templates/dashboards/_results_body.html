@@ -47,7 +47,7 @@
             <tr>
               <th class="px-4 py-2.5 font-medium">Proyecto</th>
               <th class="px-4 py-2.5 font-medium">Owner del proyecto</th>
-              <th class="px-4 py-2.5 font-medium">Autor EV</th>
+              <th class="px-4 py-2.5 font-medium">Responsable del proyecto</th>
               <th class="px-4 py-2.5 font-medium text-right">Entrega de Valor</th>
             </tr>
           </thead>
@@ -98,7 +98,7 @@
           <thead class="bg-slate-50 text-slate-500 text-left text-xs uppercase tracking-wide">
             <tr>
               <th class="px-4 py-2.5 font-medium">Proyecto</th>
-              <th class="px-4 py-2.5 font-medium">Owner · Autor EV</th>
+              <th class="px-4 py-2.5 font-medium">Owner · Responsable del proyecto</th>
               <th class="px-4 py-2.5 font-medium text-center">Ownership</th>
               <th class="px-4 py-2.5 font-medium text-center">Entrega de Valor</th>
               <th class="px-4 py-2.5 font-medium">Estado</th>
@@ -115,7 +115,7 @@
                 <td class="px-4 py-2.5">
                   <p class="text-xs text-slate-600 leading-tight">{{ row.project.owner.full_name }}</p>
                   {% if row.vd_evaluator %}
-                    <p class="text-xs text-slate-400 mt-0.5">Autor EV: {{ row.vd_evaluator.full_name }}</p>
+                    <p class="text-xs text-slate-400 mt-0.5">Responsable del proyecto: {{ row.vd_evaluator.full_name }}</p>
                   {% endif %}
                 </td>
                 <td class="px-4 py-2.5 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
