@@ -20,6 +20,7 @@ class OwnershipEvaluation(models.Model):
     project = models.ForeignKey(
         "catalog.Project", on_delete=models.PROTECT,
         related_name="ownership_evaluations", verbose_name="proyecto",
+        null=True, blank=True,
     )
     period = models.ForeignKey(
         "catalog.EvaluationPeriod", on_delete=models.PROTECT,
@@ -50,8 +51,15 @@ class OwnershipEvaluation(models.Model):
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "project", "period"], name="unique_ownership_eval"
-            )
+                fields=["user", "project", "period"],
+                condition=models.Q(project__isnull=False),
+                name="unique_ownership_eval",
+            ),
+            models.UniqueConstraint(
+                fields=["user", "period"],
+                condition=models.Q(project__isnull=True),
+                name="unique_lead_ownership_eval",
+            ),
         ]
 
     def __str__(self):
