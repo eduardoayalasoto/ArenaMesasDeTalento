@@ -23,7 +23,7 @@
               <span class="badge bg-slate-100 text-slate-500">Sin iniciar</span>
             {% endif %}
             <a href="{% url 'evaluations:value_delivery_capture' project_id=row.project.pk %}" class="btn-soft">
-              {% if row.vd and row.vd.status == 'VALIDADA' %}Ver{% else %}Capturar{% endif %}
+              {% if row.vd and row.vd.status == 'VALIDADA' %}{% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver{% else %}{% include "partials/icon.html" with name="edit" cls="w-3.5 h-3.5" %} Capturar{% endif %}
             </a>
           </div>
         </div>
