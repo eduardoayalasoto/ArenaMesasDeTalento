@@ -74,9 +74,8 @@
 
               <td class="px-4 py-2.5">
                 <div class="flex items-center gap-1">
-                  <span id="reset-pwd-{{ u.id }}">
+                  <span id="reset-pwd-{{ u.id }}" class="relative group/tip">
                     <button type="button"
-                      title="Resetear contraseña a Arena2026!"
                       hx-post="{% url 'accounts:user_reset_password' u.id %}"
                       hx-target="#reset-pwd-{{ u.id }}"
                       hx-swap="innerHTML"
@@ -84,10 +83,10 @@
                       class="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-200 transition cursor-pointer">
                       <i data-lucide="key-round" class="w-4 h-4"></i>
                     </button>
+                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/tip:opacity-100 z-20">Resetear contraseña</span>
                   </span>
-                  <span id="reset-eval-{{ u.id }}">
+                  <span id="reset-eval-{{ u.id }}" class="relative group/tip2">
                     <button type="button"
-                      title="Reiniciar evaluación de Ownership"
                       hx-post="{% url 'evaluations:ownership_reset_user' u.id %}"
                       hx-target="#reset-eval-{{ u.id }}"
                       hx-swap="innerHTML"
@@ -95,6 +94,7 @@
                       class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition cursor-pointer">
                       <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                     </button>
+                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/tip2:opacity-100 z-20">Reiniciar evaluación</span>
                   </span>
                 </div>
               </td>
