@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView
 
-from apps.catalog.models import EvaluationPeriod, SeniorityLevel
+from apps.catalog.models import Area, EvaluationPeriod, ProjectMembership, SeniorityLevel
 from apps.core.services import final_flow, permissions
 from apps.evaluations.models import (
     FinalScore,
@@ -23,15 +23,60 @@ def _open_period():
 
 
 def build_results(subject, period):
-    """Arma el contexto del informe de resultados (estilo slide) de una persona."""
+    """Arma el contexto del informe de resultados (estilo slide) de una persona.
+
+    Para Leads: projects viene de membresías (ownership es transversal) y
+    lead_eval es la OwnershipEvaluation con project=None.
+    Para el resto: comportamiento original.
+    """
     final = final_flow.recompute_final_score(subject, period)
     weight = getattr(subject.level, "weight", None)
 
+    from apps.evaluations.models import ArenaImpactScore
+    impact = ArenaImpactScore.objects.filter(user=subject, period=period).first()
+    arena_notes = impact.notes if impact and impact.notes else ""
+
+    if subject.is_lead:
+        lead_eval = (
+            OwnershipEvaluation.objects.filter(
+                user=subject, project__isnull=True, period=period
+            ).first()
+        )
+        member_projects = list(
+            subject.memberships.select_related("project")
+            .filter(project__is_active=True).order_by("project__name")
+        )
+        vd_by_project = {
+            vd.project_id: vd.score
+            for vd in ValueDeliveryEvaluation.objects.filter(
+                period=period,
+                project__in=[m.project_id for m in member_projects],
+                status=ValueDeliveryEvaluation.Status.VALIDADA,
+            )
+        }
+        projects = [
+            {
+                "evaluation": None,
+                "project": m.project,
+                "ownership_score": None,
+                "vd_score": vd_by_project.get(m.project_id),
+                "closed": None,
+                "is_lead_project": True,
+            }
+            for m in member_projects
+        ]
+        feedback = [lead_eval] if lead_eval and lead_eval.is_submitted else []
+        return {
+            "final": final, "weight": weight, "projects": projects,
+            "feedback": feedback, "arena_notes": arena_notes,
+            "lead_eval": lead_eval,
+        }
+
+    # Colaborador normal
     evals = list(
         OwnershipEvaluation.objects.filter(user=subject, period=period)
         .select_related("project").order_by("project__name")
     )
-    # Calificación de Entrega de Valor por proyecto (validada) para mostrar junto al de Ownership.
     vd_by_project = {
         vd.project_id: vd.score
         for vd in ValueDeliveryEvaluation.objects.filter(
@@ -46,18 +91,15 @@ def build_results(subject, period):
             "ownership_score": e.score,
             "vd_score": vd_by_project.get(e.project_id),
             "closed": e.is_submitted,
+            "is_lead_project": False,
         }
         for e in evals
     ]
     feedback = [e for e in evals if e.is_submitted]
-
-    from apps.evaluations.models import ArenaImpactScore
-    impact = ArenaImpactScore.objects.filter(user=subject, period=period).first()
-    arena_notes = impact.notes if impact and impact.notes else ""
-
     return {
         "final": final, "weight": weight, "projects": projects,
         "feedback": feedback, "arena_notes": arena_notes,
+        "lead_eval": None,
     }
 
 
@@ -193,8 +235,22 @@ def talent_table(request):
             if name not in evaluators_by_user[rec.evaluation.user_id]:
                 evaluators_by_user[rec.evaluation.user_id].append(name)
 
+    lead_projects_by_user = {}
+    for u in page.object_list:
+        if u.is_lead:
+            lead_projects_by_user[u.id] = list(
+                ProjectMembership.objects.filter(user=u, project__is_active=True)
+                .order_by("project__name")
+                .values_list("project__name", flat=True)
+            )
+
     rows = [
-        {"user": u, "final": finals_all.get(u.id), "evaluators": evaluators_by_user.get(u.id, [])}
+        {
+            "user": u,
+            "final": finals_all.get(u.id),
+            "evaluators": evaluators_by_user.get(u.id, []),
+            "lead_projects": lead_projects_by_user.get(u.id),
+        }
         for u in page.object_list
     ]
 
@@ -203,7 +259,6 @@ def talent_table(request):
     params.pop("page", None)
     base_qs = params.urlencode()
 
-    from apps.catalog.models import Area, SeniorityLevel
     return render(request, "dashboards/talent_table.html", {
         "page_title": "Mesa de Talento",
         "rows": rows,

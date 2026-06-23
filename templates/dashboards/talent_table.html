@@ -53,7 +53,21 @@
                   </div>
                 </div>
               </td>
-              <td class="px-3 py-3 text-center tabular-nums hidden sm:table-cell">{{ row.user.num_projects }}</td>
+              <td class="px-3 py-3 text-center tabular-nums hidden sm:table-cell">
+                {% if row.lead_projects %}
+                  <span x-data="{ open: false }" class="relative inline-block">
+                    <button @mouseenter="open=true" @mouseleave="open=false" class="underline decoration-dotted text-arena-600 tabular-nums focus:outline-none" type="button">{{ row.user.num_projects }}</button>
+                    <div x-show="open" x-cloak
+                         class="absolute z-10 left-1/2 -translate-x-1/2 bottom-full mb-1 w-48 rounded-lg shadow-lg bg-white border border-slate-200 p-2 text-left text-xs text-slate-700 space-y-1">
+                      {% for name in row.lead_projects %}
+                        <p class="truncate">{{ name }}</p>
+                      {% endfor %}
+                    </div>
+                  </span>
+                {% else %}
+                  {{ row.user.num_projects }}
+                {% endif %}
+              </td>
               <td class="px-3 py-3 text-slate-600 hidden lg:table-cell">
                 {% for name in row.evaluators %}<span class="block truncate text-sm">{{ name }}</span>{% empty %}<span class="text-slate-400">—</span>{% endfor %}
               </td>

@@ -62,10 +62,11 @@
               <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
               <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
               <td class="px-5 py-3">
-                {% if row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
+                {% if row.is_lead_project %}<span class="text-slate-400">—</span>
+                {% elif row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
                 {% else %}<span class="badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
               </td>
-              {% if detail_links %}<td class="px-5 py-3 text-right"><a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a></td>{% endif %}
+              {% if detail_links %}<td class="px-5 py-3 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
             </tr>
           {% endfor %}
         </tbody>
@@ -80,7 +81,7 @@
 {% for ev in feedback %}
   <div class="mb-6">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-      <h3 class="font-semibold text-slate-900">Retroalimentación · {{ ev.project.name }}</h3>
+      <h3 class="font-semibold text-slate-900">Retroalimentación{% if ev.project %} · {{ ev.project.name }}{% endif %}</h3>
       {% with author=ev.primary_evaluator|default:ev.project.responsable %}
         <span class="inline-flex items-center gap-1.5 text-sm text-slate-500">
           {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
