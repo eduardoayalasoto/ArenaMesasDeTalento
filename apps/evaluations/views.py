@@ -48,8 +48,33 @@ def _progress(evaluation):
 
 @login_required
 def ownership_list(request):
-    """Mis evaluaciones de Ownership: una tarjeta por proyecto del periodo abierto."""
+    """Para Leads: una tarjeta transversal. Para el resto: una tarjeta por proyecto."""
     period = _open_period()
+
+    if request.user.is_lead:
+        lead_eval = None
+        answered = total = 0
+        lead_projects = []
+        if period:
+            lead_eval = OwnershipEvaluation.objects.filter(
+                user=request.user, project__isnull=True, period=period
+            ).first()
+            if lead_eval:
+                answered, total, _ = _progress(lead_eval)
+            lead_projects = list(
+                request.user.memberships.select_related("project")
+                .filter(project__is_active=True).order_by("project__name")
+            )
+        return render(request, "evaluations/ownership_list.html", {
+            "page_title": "Mis evaluaciones",
+            "period": period,
+            "is_lead": True,
+            "lead_eval": lead_eval,
+            "lead_projects": lead_projects,
+            "answered": answered,
+            "total": total,
+        })
+
     cards = []
     if period:
         memberships = request.user.memberships.select_related("project").filter(
@@ -69,6 +94,7 @@ def ownership_list(request):
     return render(request, "evaluations/ownership_list.html", {
         "page_title": "Mis evaluaciones",
         "period": period,
+        "is_lead": False,
         "cards": cards,
     })
 
@@ -128,6 +154,62 @@ def ownership_start(request, project_id):
     })
 
 
+@login_required
+def ownership_lead_start(request):
+    """Lead elige su evaluador para la evaluación unificada (sin proyecto específico)."""
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    if not request.user.is_lead:
+        messages.error(request, "Esta pantalla es solo para colaboradores con nivel Lead.")
+        return redirect("evaluations:ownership_list")
+
+    period = _open_period()
+    if not period:
+        messages.error(request, "No hay un periodo abierto en este momento.")
+        return redirect("evaluations:ownership_list")
+
+    existing = OwnershipEvaluation.objects.filter(
+        user=request.user, project__isnull=True, period=period
+    ).first()
+    if existing:
+        return redirect("evaluations:ownership_edit", pk=existing.pk)
+
+    if request.method == "POST":
+        evaluator = User.objects.filter(
+            pk=request.POST.get("evaluator"), is_active=True
+        ).exclude(pk=request.user.pk).first()
+        if not evaluator:
+            messages.error(request, "Elige un evaluador principal válido para continuar.")
+        else:
+            evaluation, error = ownership_flow.get_or_create_ownership_evaluation(
+                request.user, period, project=None, evaluator=evaluator
+            )
+            if error:
+                messages.error(request, error)
+                return redirect("evaluations:ownership_list")
+
+            secondary_ids = request.POST.getlist("secondary_evaluators")
+            for sid in secondary_ids:
+                secondary = User.objects.filter(
+                    pk=sid, is_active=True
+                ).exclude(pk=request.user.pk).exclude(pk=evaluator.pk).first()
+                if secondary:
+                    ownership_flow.add_evaluator(evaluation, secondary, is_primary=False)
+
+            messages.success(request, f"Asignaste a {evaluator.full_name} como evaluador principal.")
+            return redirect("evaluations:ownership_edit", pk=evaluation.pk)
+
+    evaluators = (
+        User.objects.filter(is_active=True).exclude(pk=request.user.pk).order_by("full_name")
+    )
+    return render(request, "evaluations/ownership_start.html", {
+        "page_title": "Elegir evaluador",
+        "project": None,
+        "evaluators": evaluators,
+    })
+
+
 def _can_edit_answers(user, evaluation):
     """Respuestas: editables por el evaluado o por cualquier evaluador/admin, mientras no esté cerrada."""
     if evaluation.is_submitted:
@@ -183,8 +265,17 @@ def _render_ownership(request, pk, *, editing):
     scale = list(evaluation.template.scale_options.order_by("order"))
     answered, total, average = _progress(evaluation)
 
+    lead_projects = None
+    if evaluation.project is None:
+        lead_projects = list(
+            evaluation.user.memberships.select_related("project")
+            .filter(project__is_active=True).order_by("project__name")
+        )
+
+    page_title = evaluation.project.name if evaluation.project else "Todos mis proyectos"
+
     return render(request, "evaluations/ownership_fill.html", {
-        "page_title": evaluation.project.name,
+        "page_title": page_title,
         "evaluation": evaluation,
         "sections": sections,
         "answers": answers,
@@ -201,6 +292,7 @@ def _render_ownership(request, pk, *, editing):
         "ev_records": ev_records,
         "can_edit_link": (can_edit_answers or can_complement),
         "can_reopen": evaluation.is_submitted and request.user.is_admin,
+        "lead_projects": lead_projects,
     })
 
 
@@ -326,10 +418,11 @@ def ownership_save(request, pk):
             for e in errors:
                 messages.error(request, e)
             return redirect("evaluations:ownership_edit", pk=pk)
+        project_label = evaluation.project.name if evaluation.project else "todos sus proyectos"
         messages.success(
             request,
             f"Cerraste la evaluación de {evaluation.user.full_name} "
-            f"({evaluation.project.name}). Calificación: {evaluation.score}.",
+            f"({project_label}). Calificación: {evaluation.score}.",
         )
         return redirect("evaluations:ownership_validation")
 
@@ -350,10 +443,11 @@ def ownership_reopen(request, pk):
         return redirect("evaluations:ownership_edit", pk=pk)
 
     ownership_flow.reopen_ownership_evaluation(evaluation)
+    project_label = evaluation.project.name if evaluation.project else "todos sus proyectos"
     messages.success(
         request,
         f"Reabriste la evaluación de {evaluation.user.full_name} "
-        f"({evaluation.project.name}). Ahora puede editarse de nuevo.",
+        f"({project_label}). Ahora puede editarse de nuevo.",
     )
     return redirect("evaluations:ownership_edit", pk=pk)
 
@@ -367,7 +461,7 @@ def ownership_validation(request):
     ev_records = (
         OwnershipEvaluator.objects.filter(user=request.user, evaluation__period=period)
         .select_related("evaluation__user", "evaluation__project")
-        .order_by("evaluation__project__name", "evaluation__user__full_name")
+        .order_by("evaluation__user__full_name")
         if period else OwnershipEvaluator.objects.none()
     )
     return render(request, "evaluations/ownership_validation.html", {

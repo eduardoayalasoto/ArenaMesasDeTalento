@@ -10,6 +10,7 @@ urlpatterns = [
     # Ownership
     path("ownership/", views.ownership_list, name="ownership_list"),
     path("ownership/iniciar/<int:project_id>/", views.ownership_start, name="ownership_start"),
+    path("ownership/lead/iniciar/", views.ownership_lead_start, name="ownership_lead_start"),
     path("ownership/<int:pk>/", views.ownership_view, name="ownership_view"),
     path("ownership/<int:pk>/editar/", views.ownership_edit, name="ownership_edit"),
     path("ownership/<int:pk>/evaluador/", views.ownership_set_evaluator, name="ownership_set_evaluator"),
