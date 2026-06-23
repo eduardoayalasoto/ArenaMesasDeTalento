@@ -292,6 +292,7 @@ def _render_ownership(request, pk, *, editing):
         "ev_records": ev_records,
         "can_edit_link": (can_edit_answers or can_complement),
         "can_reopen": evaluation.is_submitted and request.user.is_admin,
+        "can_reset": request.user.is_admin,
         "lead_projects": lead_projects,
     })
 
@@ -450,6 +451,26 @@ def ownership_reopen(request, pk):
         f"({project_label}). Ahora puede editarse de nuevo.",
     )
     return redirect("evaluations:ownership_edit", pk=pk)
+
+
+@login_required
+@require_POST
+def ownership_reset(request, pk):
+    """Reinicio completo de una evaluación (cualquier estado → eliminada). Solo Talento/admin."""
+    evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
+    if not request.user.is_admin:
+        messages.error(request, "Solo Talento y Cultura puede reiniciar una evaluación.")
+        return redirect("evaluations:ownership_view", pk=pk)
+
+    user_name = evaluation.user.full_name
+    project_label = evaluation.project.name if evaluation.project else "todos sus proyectos"
+    ownership_flow.reset_ownership_evaluation(evaluation)
+    messages.success(
+        request,
+        f"Reiniciaste la evaluación de {user_name} ({project_label}). "
+        "Ahora puede volver a elegir evaluador y comenzar desde cero.",
+    )
+    return redirect("evaluations:ownership_list")
 
 
 # --- Validación (evaluadores) --------------------------------------------------

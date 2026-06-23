@@ -172,3 +172,17 @@ def reopen_ownership_evaluation(evaluation):
     evaluation.submitted_at = None
     evaluation.save(update_fields=["status", "submitted_at", "updated_at"])
     final_flow.recompute_final_score(evaluation.user, evaluation.period)
+
+
+def reset_ownership_evaluation(evaluation):
+    """Reinicio completo por Talento: elimina la evaluación para que el colaborador empiece desde cero.
+
+    Borra respuestas y evaluadores asignados (CASCADE) y recalcula la calificación
+    final (Ownership quedará sin datos hasta que el colaborador reenvíe).
+    """
+    from apps.core.services import final_flow
+
+    user = evaluation.user
+    period = evaluation.period
+    evaluation.delete()
+    final_flow.recompute_final_score(user, period)

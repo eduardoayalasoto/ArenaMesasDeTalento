@@ -19,6 +19,7 @@ urlpatterns = [
     path("ownership/<int:pk>/autosave/", views.ownership_autosave, name="ownership_autosave"),
     path("ownership/<int:pk>/guardar/", views.ownership_save, name="ownership_save"),
     path("ownership/<int:pk>/reabrir/", views.ownership_reopen, name="ownership_reopen"),
+    path("ownership/<int:pk>/reiniciar/", views.ownership_reset, name="ownership_reset"),
     # Validación (líder)
     path("ownership/validacion/", views.ownership_validation, name="ownership_validation"),
     # Entrega de Valor
