@@ -84,5 +84,36 @@ def ownership_template(db, area, level_jr):
     return tpl
 
 
+@pytest.fixture
+def level_lead(db):
+    lvl = SeniorityLevel.objects.create(code="LEAD", name="Lead", order=5)
+    PillarWeight.objects.create(
+        level=lvl, w_ownership=Decimal("0.60"),
+        w_value_delivery=Decimal("0.20"), w_arena_impact=Decimal("0.20"),
+    )
+    return lvl
+
+
+@pytest.fixture
+def lead_collab(db, area, level_lead):
+    return User.objects.create_user(
+        email="lead_collab@arena-analytics.com", password="x", full_name="Lead Transversal",
+        area=area, level=level_lead,
+    )
+
+
+@pytest.fixture
+def ownership_template_lead(db, area, level_lead):
+    """Plantilla de Ownership publicada para nivel Lead."""
+    tpl = QuestionnaireTemplate.objects.create(
+        kind=QuestionnaireTemplate.Kind.OWNERSHIP, area=area, level=level_lead,
+        version=1, status=QuestionnaireTemplate.Status.PUBLICADO,
+    )
+    section = Section.objects.create(template=tpl, title="Checklist Lead", order=1)
+    for i in range(1, 11):
+        Question.objects.create(section=section, order=i, title=f"PL{i}", qtype="SCALE")
+    return tpl
+
+
 def make_membership(project, user, period=None):
     return ProjectMembership.objects.create(project=project, user=user)
