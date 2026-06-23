@@ -4,7 +4,10 @@
 
   <div class="max-w-xl">
     <h2 class="text-xl font-semibold text-slate-900 mb-1">Iniciar evaluación de Ownership</h2>
-    <p class="text-slate-600 mb-5">Proyecto: <span class="font-medium text-slate-900">{{ project.name }}</span></p>
+    <p class="text-slate-600 mb-5">
+      {% if project %}Proyecto: <span class="font-medium text-slate-900">{{ project.name }}</span>
+      {% else %}<span class="font-medium text-slate-900">Todos tus proyectos</span> · evaluación de liderazgo transversal{% endif %}
+    </p>
 
     {% include "partials/info_panel.html" with title="Elige a tus evaluadores" text="<p><strong>Evaluador principal:</strong> quien lidera la sesión de retroalimentación contigo y puede cerrar la evaluación. Suele ser quien más cerca trabajó contigo en el proyecto.</p><p><strong>Evaluadores secundarios (opcional):</strong> personas adicionales que participarán en la sesión con los mismos permisos que el principal para revisar y cerrar. Puedes agregar o quitar evaluadores más adelante.</p>" %}
 

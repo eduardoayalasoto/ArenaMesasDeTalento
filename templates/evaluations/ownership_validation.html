@@ -15,7 +15,9 @@
         <div class="flex items-center justify-between gap-4 p-4">
           <div class="min-w-0">
             <p class="font-medium text-slate-900 truncate">{{ ev.user.full_name }}</p>
-            <p class="text-sm text-slate-500 truncate">{{ ev.project.name }}</p>
+            <p class="text-sm text-slate-500 truncate">
+              {% if ev.project %}{{ ev.project.name }}{% else %}Todos sus proyectos{% endif %}
+            </p>
           </div>
           <div class="flex items-center gap-3 shrink-0">
             {% if rec.is_primary %}
