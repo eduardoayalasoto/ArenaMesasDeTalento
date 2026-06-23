@@ -145,26 +145,44 @@ def notifications(request):
         })
 
     if period:
-        memberships = user.memberships.select_related("project").filter(project__is_active=True)
-        evals = {
-            e.project_id: e
-            for e in OwnershipEvaluation.objects.filter(user=user, period=period)
-        }
         list_url = _safe_url("evaluations:ownership_list") or "#"
-        for m in memberships:
-            ev = evals.get(m.project_id)
-            if ev is None:
+        if user.is_lead:
+            # Lead: una sola evaluación transversal (project=None)
+            lead_eval = OwnershipEvaluation.objects.filter(
+                user=user, period=period, project__isnull=True
+            ).first()
+            if lead_eval is None:
                 items.append({
-                    "project": m.project.name,
+                    "project": "Todos tus proyectos",
                     "text": "Comienza tu evaluación de Ownership",
                     "url": list_url,
                 })
-            elif not ev.is_submitted:
+            elif not lead_eval.is_submitted:
                 items.append({
-                    "project": m.project.name,
+                    "project": "Todos tus proyectos",
                     "text": "Continúa tu evaluación de Ownership",
-                    "url": _safe_url_args("evaluations:ownership_edit", ev.pk) or list_url,
+                    "url": _safe_url_args("evaluations:ownership_edit", lead_eval.pk) or list_url,
                 })
+        else:
+            memberships = user.memberships.select_related("project").filter(project__is_active=True)
+            evals = {
+                e.project_id: e
+                for e in OwnershipEvaluation.objects.filter(user=user, period=period)
+            }
+            for m in memberships:
+                ev = evals.get(m.project_id)
+                if ev is None:
+                    items.append({
+                        "project": m.project.name,
+                        "text": "Comienza tu evaluación de Ownership",
+                        "url": list_url,
+                    })
+                elif not ev.is_submitted:
+                    items.append({
+                        "project": m.project.name,
+                        "text": "Continúa tu evaluación de Ownership",
+                        "url": _safe_url_args("evaluations:ownership_edit", ev.pk) or list_url,
+                    })
     return {"pending_items": items, "pending_count": len(items)}
 
 
