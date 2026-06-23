@@ -32,50 +32,99 @@
   {% include "dashboards/_pillar_card.html" with title="Impacto Arena" score=final.arena_impact_score weight=weight.w_arena_impact %}
 </div>
 
-<!-- Proyectos del periodo con su calificación -->
-<div class="card overflow-hidden mb-6">
-  <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
-    {% include "partials/icon.html" with name="folder" cls="w-4 h-4 text-arena-600" %}
-    <h3 class="font-semibold text-slate-900">Proyectos del periodo</h3>
-  </div>
-  {% if projects %}
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-slate-50 text-slate-600 text-left">
-          <tr>
-            <th class="px-5 py-2.5 font-medium">Proyecto</th>
-            <th class="px-5 py-2.5 font-medium">Lead</th>
-            <th class="px-5 py-2.5 font-medium text-center">Ownership</th>
-            <th class="px-5 py-2.5 font-medium text-center">Entrega de Valor</th>
-            <th class="px-5 py-2.5 font-medium">Estado</th>
-            {% if detail_links %}<th class="px-5 py-2.5 font-medium"></th>{% endif %}
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          {% for row in projects %}
-            <tr>
-              <td class="px-5 py-3">
-                <p class="font-medium text-slate-900">{{ row.project.name }}</p>
-                {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
-              </td>
-              <td class="px-5 py-3 text-slate-600">{{ row.project.owner.full_name }}</td>
-              <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
-              <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
-              <td class="px-5 py-3">
-                {% if row.is_lead_project %}<span class="text-slate-400">—</span>
-                {% elif row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
-                {% else %}<span class="badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
-              </td>
-              {% if detail_links %}<td class="px-5 py-3 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+{% if lead_eval %}
+  <!-- Lead: composición de Entrega de Valor por proyecto -->
+  <div class="card overflow-hidden mb-6">
+    <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
+      {% include "partials/icon.html" with name="trending-up" cls="w-4 h-4 text-arena-600" %}
+      <h3 class="font-semibold text-slate-900">Composición · Entrega de Valor</h3>
+      <span class="text-xs text-slate-400 ml-1">Promedio de los proyectos validados del periodo</span>
     </div>
-  {% else %}
-    <p class="px-5 py-6 text-sm text-slate-500">Sin proyectos en este periodo.</p>
-  {% endif %}
-</div>
+    {% if projects %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600 text-left">
+            <tr>
+              <th class="px-5 py-2.5 font-medium">Proyecto</th>
+              <th class="px-5 py-2.5 font-medium">Owner</th>
+              <th class="px-5 py-2.5 font-medium text-right">Entrega de Valor</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for row in projects %}
+              <tr>
+                <td class="px-5 py-3">
+                  <p class="font-medium text-slate-900">{{ row.project.name }}</p>
+                  {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
+                </td>
+                <td class="px-5 py-3 text-slate-600">{{ row.project.owner.full_name }}</td>
+                <td class="px-5 py-3 text-right font-semibold tabular-nums">
+                  {% if row.vd_score %}{{ row.vd_score }}{% else %}<span class="text-slate-400 font-normal">Pendiente</span>{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          {% if final.value_delivery_score %}
+            <tfoot>
+              <tr class="border-t-2 border-slate-200 bg-arena-50">
+                <td class="px-5 py-3 text-slate-500 text-xs" colspan="2">
+                  Promedio <span class="italic">(solo proyectos con Entrega de Valor validada)</span>
+                </td>
+                <td class="px-5 py-3 text-right font-bold text-arena-700 tabular-nums text-base">{{ final.value_delivery_score }}</td>
+              </tr>
+            </tfoot>
+          {% endif %}
+        </table>
+      </div>
+    {% else %}
+      <p class="px-5 py-6 text-sm text-slate-500">Sin proyectos en este periodo.</p>
+    {% endif %}
+  </div>
+{% else %}
+  <!-- Colaborador normal: tabla completa de proyectos -->
+  <div class="card overflow-hidden mb-6">
+    <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
+      {% include "partials/icon.html" with name="folder" cls="w-4 h-4 text-arena-600" %}
+      <h3 class="font-semibold text-slate-900">Proyectos del periodo</h3>
+    </div>
+    {% if projects %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600 text-left">
+            <tr>
+              <th class="px-5 py-2.5 font-medium">Proyecto</th>
+              <th class="px-5 py-2.5 font-medium">Lead</th>
+              <th class="px-5 py-2.5 font-medium text-center">Ownership</th>
+              <th class="px-5 py-2.5 font-medium text-center">Entrega de Valor</th>
+              <th class="px-5 py-2.5 font-medium">Estado</th>
+              {% if detail_links %}<th class="px-5 py-2.5 font-medium"></th>{% endif %}
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for row in projects %}
+              <tr>
+                <td class="px-5 py-3">
+                  <p class="font-medium text-slate-900">{{ row.project.name }}</p>
+                  {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
+                </td>
+                <td class="px-5 py-3 text-slate-600">{{ row.project.owner.full_name }}</td>
+                <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
+                <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
+                <td class="px-5 py-3">
+                  {% if row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
+                  {% else %}<span class="badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
+                </td>
+                {% if detail_links %}<td class="px-5 py-3 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="px-5 py-6 text-sm text-slate-500">Sin proyectos en este periodo.</p>
+    {% endif %}
+  </div>
+{% endif %}
 
 <!-- Retroalimentación por proyecto -->
 {% for ev in feedback %}
