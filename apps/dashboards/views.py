@@ -46,20 +46,21 @@ def build_results(subject, period):
             subject.memberships.select_related("project")
             .filter(project__is_active=True).order_by("project__name")
         )
-        vd_by_project = {
-            vd.project_id: vd.score
+        vd_evals = {
+            vd.project_id: vd
             for vd in ValueDeliveryEvaluation.objects.filter(
                 period=period,
                 project__in=[m.project_id for m in member_projects],
                 status=ValueDeliveryEvaluation.Status.VALIDADA,
-            )
+            ).select_related("evaluator")
         }
         projects = [
             {
                 "evaluation": None,
                 "project": m.project,
                 "ownership_score": None,
-                "vd_score": vd_by_project.get(m.project_id),
+                "vd_score": vd_evals[m.project_id].score if m.project_id in vd_evals else None,
+                "vd_evaluator": vd_evals[m.project_id].evaluator if m.project_id in vd_evals else None,
                 "closed": None,
                 "is_lead_project": True,
             }
@@ -77,19 +78,20 @@ def build_results(subject, period):
         OwnershipEvaluation.objects.filter(user=subject, period=period)
         .select_related("project").order_by("project__name")
     )
-    vd_by_project = {
-        vd.project_id: vd.score
+    vd_evals = {
+        vd.project_id: vd
         for vd in ValueDeliveryEvaluation.objects.filter(
             period=period, project__in=[e.project_id for e in evals],
             status=ValueDeliveryEvaluation.Status.VALIDADA,
-        )
+        ).select_related("evaluator")
     }
     projects = [
         {
             "evaluation": e,
             "project": e.project,
             "ownership_score": e.score,
-            "vd_score": vd_by_project.get(e.project_id),
+            "vd_score": vd_evals[e.project_id].score if e.project_id in vd_evals else None,
+            "vd_evaluator": vd_evals[e.project_id].evaluator if e.project_id in vd_evals else None,
             "closed": e.is_submitted,
             "is_lead_project": False,
         }

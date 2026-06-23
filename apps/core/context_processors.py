@@ -25,13 +25,26 @@ def navigation(request):
     current = request.path
     home_url = _safe_url("dashboards:home") or "/"
 
-    def add(label, url_name, icon=""):
+    # Resolver URL name actual para detección precisa (evita startswith ambiguo).
+    try:
+        _rm = request.resolver_match
+        current_resolved = (
+            f"{_rm.namespace}:{_rm.url_name}" if _rm and _rm.namespace
+            else (_rm.url_name if _rm else "")
+        )
+    except AttributeError:
+        current_resolved = ""
+
+    def add(label, url_name, icon="", also_active=()):
         url = _safe_url(url_name)
         if not url:
             return
         if url == home_url:
             active = current == url
+        elif current_resolved:
+            active = current_resolved == url_name or current_resolved in also_active
         else:
+            # Fallback (p.ej. página 404): comparación por ruta
             active = current == url or current.startswith(url)
         items.append(
             {"label": label, "url": url, "icon": icon, "name": url_name, "active": active}
@@ -42,7 +55,18 @@ def navigation(request):
 
     # Colaborador / Lead / Líder de proyecto: capturar Ownership
     if not user.is_talento and not user.is_director or user.is_superuser:
-        add("Mis evaluaciones", "evaluations:ownership_list", "clipboard")
+        add("Mis evaluaciones", "evaluations:ownership_list", "clipboard", also_active=(
+            "evaluations:ownership_start",
+            "evaluations:ownership_lead_start",
+            "evaluations:ownership_edit",
+            "evaluations:ownership_view",
+            "evaluations:ownership_set_evaluator",
+            "evaluations:ownership_add_evaluator",
+            "evaluations:ownership_remove_evaluator",
+            "evaluations:ownership_autosave",
+            "evaluations:ownership_save",
+            "evaluations:ownership_reopen",
+        ))
 
     # Lead de área
     if user.is_lead or user.is_admin or user.is_director:
@@ -55,7 +79,9 @@ def navigation(request):
 
     # Líder de proyecto — captura de Entrega de Valor
     if user.leads_projects or user.is_superuser:
-        add("Entrega de Valor", "evaluations:value_delivery_list", "package")
+        add("Entrega de Valor", "evaluations:value_delivery_list", "package", also_active=(
+            "evaluations:value_delivery_capture",
+        ))
 
     # Comité de Talento y Dirección — Mesa de Talento
     if user.is_admin or user.is_director:

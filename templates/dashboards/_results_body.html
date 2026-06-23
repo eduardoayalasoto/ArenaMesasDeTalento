@@ -43,23 +43,28 @@
     {% if projects %}
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-slate-50 text-slate-600 text-left">
+          <thead class="bg-slate-50 text-slate-500 text-left text-xs uppercase tracking-wide">
             <tr>
-              <th class="px-5 py-2.5 font-medium">Proyecto</th>
-              <th class="px-5 py-2.5 font-medium">Owner</th>
-              <th class="px-5 py-2.5 font-medium text-right">Entrega de Valor</th>
+              <th class="px-4 py-2.5 font-medium">Proyecto</th>
+              <th class="px-4 py-2.5 font-medium">Owner del proyecto</th>
+              <th class="px-4 py-2.5 font-medium">Autor EV</th>
+              <th class="px-4 py-2.5 font-medium text-right">Entrega de Valor</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-slate-100 text-sm">
             {% for row in projects %}
-              <tr>
-                <td class="px-5 py-3">
-                  <p class="font-medium text-slate-900">{{ row.project.name }}</p>
-                  {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
+              <tr class="hover:bg-slate-50/60">
+                <td class="px-4 py-2.5">
+                  <p class="font-medium text-slate-800 leading-tight">{{ row.project.name }}</p>
+                  {% if row.project.client %}<p class="text-xs text-slate-400 mt-0.5">{{ row.project.client }}</p>{% endif %}
                 </td>
-                <td class="px-5 py-3 text-slate-600">{{ row.project.owner.full_name }}</td>
-                <td class="px-5 py-3 text-right font-semibold tabular-nums">
-                  {% if row.vd_score %}{{ row.vd_score }}{% else %}<span class="text-slate-400 font-normal">Pendiente</span>{% endif %}
+                <td class="px-4 py-2.5 text-xs text-slate-600 leading-tight">{{ row.project.owner.full_name }}</td>
+                <td class="px-4 py-2.5 text-xs leading-tight">
+                  {% if row.vd_evaluator %}<span class="text-slate-600">{{ row.vd_evaluator.full_name }}</span>
+                  {% else %}<span class="text-slate-400">—</span>{% endif %}
+                </td>
+                <td class="px-4 py-2.5 text-right font-semibold tabular-nums">
+                  {% if row.vd_score %}{{ row.vd_score }}{% else %}<span class="text-slate-400 font-normal text-xs">Pendiente</span>{% endif %}
                 </td>
               </tr>
             {% endfor %}
@@ -67,10 +72,10 @@
           {% if final.value_delivery_score %}
             <tfoot>
               <tr class="border-t-2 border-slate-200 bg-arena-50">
-                <td class="px-5 py-3 text-slate-500 text-xs" colspan="2">
-                  Promedio <span class="italic">(solo proyectos con Entrega de Valor validada)</span>
+                <td class="px-4 py-2.5 text-xs text-slate-500 italic" colspan="3">
+                  Promedio de proyectos con Entrega de Valor validada
                 </td>
-                <td class="px-5 py-3 text-right font-bold text-arena-700 tabular-nums text-base">{{ final.value_delivery_score }}</td>
+                <td class="px-4 py-2.5 text-right font-bold text-arena-700 tabular-nums text-base">{{ final.value_delivery_score }}</td>
               </tr>
             </tfoot>
           {% endif %}
@@ -90,31 +95,36 @@
     {% if projects %}
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
-          <thead class="bg-slate-50 text-slate-600 text-left">
+          <thead class="bg-slate-50 text-slate-500 text-left text-xs uppercase tracking-wide">
             <tr>
-              <th class="px-5 py-2.5 font-medium">Proyecto</th>
-              <th class="px-5 py-2.5 font-medium">Lead</th>
-              <th class="px-5 py-2.5 font-medium text-center">Ownership</th>
-              <th class="px-5 py-2.5 font-medium text-center">Entrega de Valor</th>
-              <th class="px-5 py-2.5 font-medium">Estado</th>
-              {% if detail_links %}<th class="px-5 py-2.5 font-medium"></th>{% endif %}
+              <th class="px-4 py-2.5 font-medium">Proyecto</th>
+              <th class="px-4 py-2.5 font-medium">Owner · Autor EV</th>
+              <th class="px-4 py-2.5 font-medium text-center">Ownership</th>
+              <th class="px-4 py-2.5 font-medium text-center">Entrega de Valor</th>
+              <th class="px-4 py-2.5 font-medium">Estado</th>
+              {% if detail_links %}<th class="px-4 py-2.5 font-medium"></th>{% endif %}
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-slate-100 text-sm">
             {% for row in projects %}
-              <tr>
-                <td class="px-5 py-3">
-                  <p class="font-medium text-slate-900">{{ row.project.name }}</p>
-                  {% if row.project.client %}<p class="text-xs text-slate-500">{{ row.project.client }}</p>{% endif %}
+              <tr class="hover:bg-slate-50/60">
+                <td class="px-4 py-2.5">
+                  <p class="font-medium text-slate-800 leading-tight">{{ row.project.name }}</p>
+                  {% if row.project.client %}<p class="text-xs text-slate-400 mt-0.5">{{ row.project.client }}</p>{% endif %}
                 </td>
-                <td class="px-5 py-3 text-slate-600">{{ row.project.owner.full_name }}</td>
-                <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
-                <td class="px-5 py-3 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
-                <td class="px-5 py-3">
+                <td class="px-4 py-2.5">
+                  <p class="text-xs text-slate-600 leading-tight">{{ row.project.owner.full_name }}</p>
+                  {% if row.vd_evaluator %}
+                    <p class="text-xs text-slate-400 mt-0.5">Autor EV: {{ row.vd_evaluator.full_name }}</p>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-2.5 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
+                <td class="px-4 py-2.5 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
+                <td class="px-4 py-2.5">
                   {% if row.closed %}<span class="badge bg-emerald-50 text-emerald-700">Cerrada</span>
                   {% else %}<span class="badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
                 </td>
-                {% if detail_links %}<td class="px-5 py-3 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
+                {% if detail_links %}<td class="px-4 py-2.5 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
               </tr>
             {% endfor %}
           </tbody>
