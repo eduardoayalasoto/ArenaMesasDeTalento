@@ -82,12 +82,17 @@
   <div class="mb-6">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
       <h3 class="font-semibold text-slate-900">Retroalimentación{% if ev.project %} · {{ ev.project.name }}{% endif %}</h3>
-      {% with author=ev.primary_evaluator|default:ev.project.responsable %}
+      {% if ev.primary_evaluator %}
         <span class="inline-flex items-center gap-1.5 text-sm text-slate-500">
           {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
-          Por {{ author.full_name }}
+          Por {{ ev.primary_evaluator.full_name }}
         </span>
-      {% endwith %}
+      {% elif ev.project and ev.project.responsable %}
+        <span class="inline-flex items-center gap-1.5 text-sm text-slate-500">
+          {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
+          Por {{ ev.project.responsable.full_name }}
+        </span>
+      {% endif %}
     </div>
     <div class="grid gap-5 sm:grid-cols-2">
       {% include "evaluations/_feedback_card.html" with title="Fortalezas" value=ev.strengths empty="Sin información." %}
