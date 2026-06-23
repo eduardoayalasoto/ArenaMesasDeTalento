@@ -455,6 +455,37 @@ def ownership_reopen(request, pk):
 
 @login_required
 @require_POST
+def ownership_reset_user(request, user_pk):
+    """Reinicia TODAS las evaluaciones de Ownership de un usuario en el periodo abierto. Solo Talento/admin."""
+    from django.contrib.auth import get_user_model
+    from django.http import HttpResponse
+    User = get_user_model()
+
+    if not request.user.is_admin:
+        return HttpResponse("No autorizado.", status=403)
+
+    target = get_object_or_404(User, pk=user_pk)
+    period = _open_period()
+    if not period:
+        return HttpResponse("No hay periodo abierto.", status=400)
+
+    evals = list(OwnershipEvaluation.objects.filter(user=target, period=period))
+    for ev in evals:
+        ownership_flow.reset_ownership_evaluation(ev)
+
+    if request.headers.get("HX-Request"):
+        label = f"{len(evals)} reiniciada{'s' if len(evals) != 1 else ''}" if evals else "sin evaluaciones"
+        return HttpResponse(
+            f'<span class="text-emerald-600 text-xs font-medium flex items-center gap-1">'
+            f'<i data-lucide="check" class="w-3.5 h-3.5"></i>{label}</span>'
+        )
+
+    messages.success(request, f"Reiniciaste las evaluaciones de {target.full_name}. Puede empezar desde cero.")
+    return redirect("accounts:user_admin")
+
+
+@login_required
+@require_POST
 def ownership_reset(request, pk):
     """Reinicio completo de una evaluación (cualquier estado → eliminada). Solo Talento/admin."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
