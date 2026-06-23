@@ -101,7 +101,7 @@ def ownership_start(request, project_id):
             messages.error(request, "Elige un evaluador principal válido para continuar.")
         else:
             evaluation, error = ownership_flow.get_or_create_ownership_evaluation(
-                request.user, membership.project, period, evaluator=evaluator
+                request.user, period, project=membership.project, evaluator=evaluator
             )
             if error:
                 messages.error(request, error)

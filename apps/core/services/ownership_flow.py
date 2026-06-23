@@ -23,18 +23,24 @@ def resolve_ownership_template(user):
     )
 
 
-def get_or_create_ownership_evaluation(user, project, period, evaluator=None):
-    """Obtiene o crea la evaluación (user × project × period) con la plantilla vigente.
+def get_or_create_ownership_evaluation(user, period, project=None, evaluator=None):
+    """Obtiene o crea la evaluación para el usuario y periodo dados.
 
-    `evaluator` es el evaluador principal (lo elige el evaluado; cualquiera de Arena).
+    Para Leads: project=None crea una evaluación transversal (sin proyecto específico).
+    Para colaboradores normales: project es el proyecto concreto.
     Devuelve (evaluation, error). error es None si todo bien, o un mensaje si no se
     pudo resolver la plantilla (área/nivel sin asignar o cuestionario no publicado).
     """
     from apps.evaluations.models import OwnershipEvaluation, OwnershipEvaluator
 
-    existing = OwnershipEvaluation.objects.filter(
-        user=user, project=project, period=period
-    ).first()
+    if project is None:
+        existing = OwnershipEvaluation.objects.filter(
+            user=user, project__isnull=True, period=period
+        ).first()
+    else:
+        existing = OwnershipEvaluation.objects.filter(
+            user=user, project=project, period=period
+        ).first()
     if existing:
         return existing, None
 
