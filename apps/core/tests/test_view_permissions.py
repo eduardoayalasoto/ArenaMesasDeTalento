@@ -238,7 +238,7 @@ def test_project_create_director_allowed(director, client_obj):
 
 @pytest.fixture
 def existing_project(db, colab_lead):
-    return Project.objects.create(name="Proyecto Test VP", lead=colab_lead)
+    return Project.objects.create(name="Proyecto Test VP", owner=colab_lead, responsable=colab_lead)
 
 
 @pytest.mark.django_db
