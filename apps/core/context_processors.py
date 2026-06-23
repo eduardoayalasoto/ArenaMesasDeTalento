@@ -66,6 +66,7 @@ def navigation(request):
             "evaluations:ownership_autosave",
             "evaluations:ownership_save",
             "evaluations:ownership_reopen",
+            "evaluations:ownership_reset",
         ))
 
     # Lead de área
