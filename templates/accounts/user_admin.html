@@ -31,7 +31,7 @@
         </thead>
         <tbody class="divide-y divide-slate-100">
           {% for u in users %}
-            <tr class="hover:bg-slate-50 transition-colors">
+            <tr id="user-row-{{ u.id }}" class="hover:bg-slate-50 transition-colors">
               <td class="px-4 py-2.5">
                 <p class="font-medium text-slate-900">{{ u.full_name }}</p>
                 <p class="text-xs text-slate-400">{{ u.email }}</p>
@@ -96,6 +96,19 @@
                     </button>
                     <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/tip2:opacity-100 z-20">Reiniciar evaluación</span>
                   </span>
+                  {% if request.user.is_admin %}
+                  <span class="relative group/tip3">
+                    <button type="button"
+                      hx-post="{% url 'accounts:user_delete' u.id %}"
+                      hx-target="#user-row-{{ u.id }}"
+                      hx-swap="outerHTML"
+                      hx-confirm="¿Eliminar a {{ u.full_name }}? Esta acción no se puede deshacer."
+                      class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/tip3:opacity-100 z-20">Eliminar usuario</span>
+                  </span>
+                  {% endif %}
                 </div>
               </td>
             </tr>
