@@ -1,7 +1,7 @@
 {% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period.{% endcomment %}
 
 <!-- Hero: identidad + calificación final -->
-<div class="card overflow-hidden mb-5">
+<div class="card overflow-hidden mb-5{% if sticky_hero %} sticky top-0 z-20 shadow-md{% endif %}">
   <div class="grid md:grid-cols-3">
     <div class="md:col-span-2 p-6 flex items-center gap-5">
       {% include "partials/avatar.html" with subject=subject size="w-24 h-24 sm:w-28 sm:h-28" icon="w-12 h-12" %}

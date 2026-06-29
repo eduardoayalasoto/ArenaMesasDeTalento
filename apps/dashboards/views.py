@@ -331,6 +331,16 @@ def talent_person(request, pk):
     }
     if period:
         ctx.update(build_results(target, period))
+
+        # En Mesa de Talento se muestran TODAS las evaluaciones del periodo,
+        # no solo las cerradas (Talento necesita ver los comentarios en vivo).
+        from apps.evaluations.models import OwnershipEvaluation
+        ctx["feedback"] = list(
+            OwnershipEvaluation.objects.filter(user=target, period=period)
+            .select_related("project", "primary_evaluator")
+            .order_by("project__name")
+        )
+
         note, _ = TalentSessionNote.objects.get_or_create(
             user=target, period=period,
             defaults={"created_by": request.user},

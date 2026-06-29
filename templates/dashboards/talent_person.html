@@ -1,38 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-{# Sticky header compact #}
-<div class="sticky top-0 z-30 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 bg-white border-b border-slate-200 shadow-sm mb-6">
-  <div class="max-w-6xl mx-auto flex items-center gap-3">
-    <a href="{% url 'dashboards:talent_table' %}" class="text-slate-400 hover:text-slate-600 shrink-0">
-      <i data-lucide="arrow-left" class="w-4 h-4"></i>
-    </a>
-    {% include "partials/avatar.html" with subject=target size="w-9 h-9" icon="w-4 h-4" %}
-    <div class="min-w-0 flex-1">
-      <p class="font-semibold text-slate-900 truncate leading-tight">{{ target.full_name }}</p>
-      <p class="text-xs text-slate-500 truncate">{{ target.area.name|default:"Sin área" }} · {{ target.level.name|default:"Sin nivel" }}</p>
-    </div>
-    {% if period %}
-      {% if final.is_complete %}
-        <div class="shrink-0 flex items-center gap-2">
-          <span class="tabular-nums font-bold text-slate-900 text-lg">{{ final.final_score }}</span>
-          <span class="badge
-            {% if final.band == 'Excede' %}bg-emerald-50 text-emerald-700
-            {% elif final.band == 'Cumple' %}bg-arena-50 text-arena-700
-            {% elif final.band == 'Cumple parcial' %}bg-amber-50 text-amber-700
-            {% else %}bg-rose-50 text-rose-700{% endif %}">{{ final.band }}</span>
-        </div>
-      {% else %}
-        <span class="badge bg-slate-100 text-slate-500 shrink-0">En proceso</span>
-      {% endif %}
-    {% endif %}
-    <span class="text-xs text-slate-400 shrink-0 hidden sm:inline">{{ period.name|default:"Sin periodo abierto" }}</span>
-  </div>
+<div class="mb-4">
+  <a href="{% url 'dashboards:talent_table' %}" class="inline-flex items-center gap-1.5 text-sm text-arena-600 hover:text-arena-700">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i> Mesa de Talento
+  </a>
 </div>
 
-{# Resultados (reutiliza el partial existente) #}
+{# Resultados con hero card sticky #}
 {% if period %}
-  {% include "dashboards/_results_body.html" with subject=target detail_links=request.user.is_admin %}
+  {% include "dashboards/_results_body.html" with subject=target detail_links=request.user.is_admin sticky_hero=True %}
 {% else %}
   <div class="card p-8 text-center text-slate-400">No hay periodo abierto.</div>
 {% endif %}
