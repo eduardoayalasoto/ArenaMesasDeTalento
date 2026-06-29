@@ -3,82 +3,54 @@
   <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
       <h2 class="text-xl font-semibold text-slate-900">Escenarios</h2>
-      <p class="text-slate-600">Opciones de escenario para la Mesa de Talento.</p>
+      <p class="text-slate-600">Opciones de escenario que Talento selecciona en la sesión de Mesa de Talento.</p>
     </div>
+    <a href="{% url 'catalog:scenario_create' %}" class="btn-primary">
+      {% include "partials/icon.html" with name="plus" cls="w-4 h-4" %} Nuevo escenario
+    </a>
   </div>
 
-  <div class="card overflow-hidden mb-6">
-    <div class="px-5 py-4 border-b border-slate-100">
-      <h3 class="font-semibold text-slate-900 text-sm">Agregar escenario</h3>
-    </div>
-    <form method="post" class="p-4 flex flex-wrap gap-3 items-end">
-      {% csrf_token %}
-      <input type="hidden" name="action" value="create">
-      <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">Nombre</label>
-        <input type="text" name="name" maxlength="120" class="input w-72" placeholder="Empujar a Lead" required>
+  <div class="card divide-y divide-slate-100">
+    {% for opt in options %}
+      <div class="flex items-center justify-between gap-4 p-4">
+        <div class="min-w-0">
+          <p class="font-medium text-slate-900">{{ opt.name }}</p>
+          {% if opt.description %}
+            <p class="text-sm text-slate-500 mt-0.5">{{ opt.description }}</p>
+          {% endif %}
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          {% if opt.is_active %}
+            <span class="badge bg-emerald-50 text-emerald-700">Activa</span>
+          {% else %}
+            <span class="badge bg-slate-100 text-slate-500">Inactiva</span>
+          {% endif %}
+          <form method="post" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="toggle">
+            <input type="hidden" name="pk" value="{{ opt.pk }}">
+            <button type="submit" class="btn-soft">
+              {% if opt.is_active %}Desactivar{% else %}Activar{% endif %}
+            </button>
+          </form>
+          <a href="{% url 'catalog:scenario_edit' pk=opt.pk %}" class="btn-soft">Editar</a>
+          <span class="relative group/dtip">
+            <form method="post" class="inline">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="pk" value="{{ opt.pk }}">
+              <button type="submit"
+                class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
+                onclick="return confirm('¿Eliminar «{{ opt.name }}»?')">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </form>
+            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar escenario</span>
+          </span>
+        </div>
       </div>
-      <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">Orden</label>
-        <input type="number" name="order" min="1" value="1" class="input w-20">
-      </div>
-      <button type="submit" class="btn-primary">Agregar</button>
-    </form>
-  </div>
-
-  <div class="card overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-slate-50 text-slate-600 text-left">
-          <tr>
-            <th class="px-4 py-3 font-medium">Nombre</th>
-            <th class="px-4 py-3 font-medium w-16">Orden</th>
-            <th class="px-4 py-3 font-medium w-24">Estado</th>
-            <th class="px-4 py-3 font-medium w-36"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          {% for opt in options %}
-            <tr class="hover:bg-slate-50">
-              <td class="px-4 py-2.5 font-medium text-slate-900">{{ opt.name }}</td>
-              <td class="px-4 py-2.5 text-center">{{ opt.order }}</td>
-              <td class="px-4 py-2.5">
-                {% if opt.is_active %}
-                  <span class="badge bg-emerald-50 text-emerald-700">Activa</span>
-                {% else %}
-                  <span class="badge bg-slate-100 text-slate-500">Inactiva</span>
-                {% endif %}
-              </td>
-              <td class="px-4 py-2.5 text-right">
-                <div class="flex items-center justify-end gap-1">
-                  <form method="post" class="inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="toggle">
-                    <input type="hidden" name="pk" value="{{ opt.pk }}">
-                    <button type="submit" class="btn-soft py-1 px-2 text-xs">
-                      {% if opt.is_active %}Desactivar{% else %}Activar{% endif %}
-                    </button>
-                  </form>
-                  <form method="post" class="inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="pk" value="{{ opt.pk }}">
-                    <button type="submit"
-                      class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
-                      onclick="return confirm('¿Eliminar «{{ opt.name }}»?')">
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="4" class="px-5 py-8 text-center text-slate-400">Sin opciones. Agrega la primera.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+    {% empty %}
+      <div class="p-6 text-center text-slate-400">Sin escenarios. Agrega el primero.</div>
+    {% endfor %}
   </div>
 {% endblock %}

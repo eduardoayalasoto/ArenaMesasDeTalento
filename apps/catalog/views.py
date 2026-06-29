@@ -279,7 +279,7 @@ def project_reactivate(request, pk):
 
 @login_required
 def scenario_admin(request):
-    """Lista y CRUD de opciones de escenario para Mesa de Talento (solo Talento/admin)."""
+    """Lista de escenarios con toggle/delete (solo Talento/admin)."""
     if not request.user.is_admin:
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
@@ -290,13 +290,7 @@ def scenario_admin(request):
 
     if request.method == "POST":
         action = request.POST.get("action")
-        if action == "create":
-            name = request.POST.get("name", "").strip()
-            order = request.POST.get("order", 1)
-            if name:
-                ScenarioOption.objects.create(name=name, order=order)
-                messages.success(request, f"Escenario «{name}» creado.")
-        elif action == "toggle":
+        if action == "toggle":
             opt = get_object_or_404(ScenarioOption, pk=request.POST.get("pk"))
             opt.is_active = not opt.is_active
             opt.save(update_fields=["is_active"])
@@ -314,4 +308,60 @@ def scenario_admin(request):
     return render(request, "catalog/scenario_admin.html", {
         "page_title": "Escenarios",
         "options": ScenarioOption.objects.all(),
+    })
+
+
+@login_required
+def scenario_create(request):
+    """Alta de un escenario nuevo (solo Talento/admin)."""
+    if not request.user.is_admin:
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento administra el catálogo de escenarios.",
+        }, status=403)
+
+    from apps.catalog.models import ScenarioOption
+
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        description = request.POST.get("description", "").strip()
+        order = request.POST.get("order", 1)
+        if name:
+            ScenarioOption.objects.create(name=name, description=description, order=order)
+            messages.success(request, f"Escenario «{name}» creado.")
+            return redirect("catalog:scenario_admin")
+
+    return render(request, "catalog/scenario_form.html", {
+        "page_title": "Nuevo escenario",
+    })
+
+
+@login_required
+def scenario_edit(request, pk):
+    """Edita un escenario existente (solo Talento/admin)."""
+    if not request.user.is_admin:
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento administra el catálogo de escenarios.",
+        }, status=403)
+
+    from apps.catalog.models import ScenarioOption
+
+    opt = get_object_or_404(ScenarioOption, pk=pk)
+
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        description = request.POST.get("description", "").strip()
+        order = request.POST.get("order", opt.order)
+        if name:
+            opt.name = name
+            opt.description = description
+            opt.order = order
+            opt.save(update_fields=["name", "description", "order"])
+            messages.success(request, f"Escenario «{opt.name}» actualizado.")
+            return redirect("catalog:scenario_admin")
+
+    return render(request, "catalog/scenario_form.html", {
+        "page_title": f"Editar {opt.name}",
+        "option": opt,
     })

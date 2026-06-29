@@ -17,5 +17,7 @@ urlpatterns = [
     path("periodos/<int:pk>/editar/", views.period_edit, name="period_edit"),
     path("periodos/<int:pk>/eliminar/", views.period_delete, name="period_delete"),
     path("escenarios/", views.scenario_admin, name="scenario_admin"),
+    path("escenarios/nuevo/", views.scenario_create, name="scenario_create"),
+    path("escenarios/<int:pk>/editar/", views.scenario_edit, name="scenario_edit"),
     # Pendiente: weight_admin, area/level admin (hoy vía Django admin)
 ]
