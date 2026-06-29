@@ -28,7 +28,7 @@
           </thead>
           <tbody class="divide-y divide-slate-100">
             {% for p in projects %}
-              <tr>
+              <tr id="project-row-{{ p.pk }}">
                 <td class="px-4 py-3">
                   <p class="font-medium text-slate-900">{{ p.name }}</p>
                   {% if p.client %}<p class="text-xs text-slate-500">{{ p.client }}</p>{% endif %}
@@ -40,7 +40,35 @@
                   {% if p.is_active %}<span class="badge bg-emerald-50 text-emerald-700">Activo</span>
                   {% else %}<span class="badge bg-slate-100 text-slate-500">Inactivo</span>{% endif %}
                 </td>
-                <td class="px-4 py-3 text-right"><a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn-soft">Editar</a></td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn-soft">Editar</a>
+                    {% if request.user.is_admin %}
+                      {% if not p.is_active %}
+                        <button type="button"
+                          hx-post="{% url 'catalog:project_reactivate' pk=p.pk %}"
+                          hx-target="#project-row-{{ p.pk }}"
+                          hx-swap="outerHTML"
+                          hx-confirm="¿Reactivar «{{ p.name }}»?"
+                          class="btn-soft">
+                          {% include "partials/icon.html" with name="rotate-ccw" cls="w-3.5 h-3.5" %} Reactivar
+                        </button>
+                      {% else %}
+                        <span class="relative group/ptip">
+                          <button type="button"
+                            hx-post="{% url 'catalog:project_delete' pk=p.pk %}"
+                            hx-target="#project-row-{{ p.pk }}"
+                            hx-swap="outerHTML"
+                            hx-confirm="¿Eliminar «{{ p.name }}»? Esta acción no se puede deshacer."
+                            class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                          </button>
+                          <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/ptip:opacity-100 z-20">Eliminar proyecto</span>
+                        </span>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
