@@ -346,9 +346,11 @@ def talent_person(request, pk):
             defaults={"created_by": request.user},
         )
         scenario_options = ScenarioOption.objects.filter(is_active=True)
-        responsables = note.responsables.select_related("user").order_by("-is_primary", "user__full_name")
+        responsables = list(note.responsables.select_related("user__area").order_by("-is_primary", "user__full_name"))
+        primary = next((r for r in responsables if r.is_primary), None)
+        secondaries = [r for r in responsables if not r.is_primary]
         all_users = User.objects.filter(is_active=True, is_superuser=False).exclude(
-            pk__in=responsables.values_list("user_id", flat=True)
+            pk__in=[r.user_id for r in responsables]
         ).order_by("full_name")
         ctx.update({
             "note": note,
@@ -358,7 +360,8 @@ def talent_person(request, pk):
                 ("s1", "Escenario S+1", set(note.scenario_s1.values_list("pk", flat=True))),
                 ("s2", "Escenario S+2", set(note.scenario_s2.values_list("pk", flat=True))),
             ],
-            "responsables": responsables,
+            "primary": primary,
+            "secondaries": secondaries,
             "all_users": all_users,
         })
     return render(request, "dashboards/talent_person.html", ctx)
@@ -488,14 +491,17 @@ def _responsables_fragment(request, note, target):
     from django.template.loader import render_to_string
 
     User = get_user_model()
-    responsables = note.responsables.select_related("user").order_by("-is_primary", "user__full_name")
+    responsables = list(note.responsables.select_related("user__area").order_by("-is_primary", "user__full_name"))
+    primary = next((r for r in responsables if r.is_primary), None)
+    secondaries = [r for r in responsables if not r.is_primary]
     all_users = User.objects.filter(is_active=True, is_superuser=False).exclude(
-        pk__in=responsables.values_list("user_id", flat=True)
+        pk__in=[r.user_id for r in responsables]
     ).order_by("full_name")
     html = render_to_string("dashboards/_responsables_widget.html", {
         "note": note,
         "target": target,
-        "responsables": responsables,
+        "primary": primary,
+        "secondaries": secondaries,
         "all_users": all_users,
         "request": request,
     })
