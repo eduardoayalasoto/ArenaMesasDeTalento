@@ -228,3 +228,44 @@ def project_reactivate(request, pk):
         )
     messages.success(request, f"Proyecto «{project.name}» reactivado.")
     return redirect("catalog:project_admin")
+
+
+@login_required
+def scenario_admin(request):
+    """Lista y CRUD de opciones de escenario para Mesa de Talento (solo Talento/admin)."""
+    if not request.user.is_admin:
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento administra el catálogo de escenarios.",
+        }, status=403)
+
+    from apps.catalog.models import ScenarioOption
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "create":
+            name = request.POST.get("name", "").strip()
+            code = request.POST.get("code", "").strip().upper()
+            order = request.POST.get("order", 1)
+            if name and code:
+                ScenarioOption.objects.create(name=name, code=code, order=order)
+                messages.success(request, f"Escenario «{name}» creado.")
+        elif action == "toggle":
+            opt = get_object_or_404(ScenarioOption, pk=request.POST.get("pk"))
+            opt.is_active = not opt.is_active
+            opt.save(update_fields=["is_active"])
+            messages.success(request, f"«{opt.name}» {'activado' if opt.is_active else 'desactivado'}.")
+        elif action == "delete":
+            opt = get_object_or_404(ScenarioOption, pk=request.POST.get("pk"))
+            try:
+                nombre = opt.name
+                opt.delete()
+                messages.success(request, f"«{nombre}» eliminado.")
+            except ProtectedError:
+                messages.error(request, "No se puede eliminar: hay notas que lo usan.")
+        return redirect("catalog:scenario_admin")
+
+    return render(request, "catalog/scenario_admin.html", {
+        "page_title": "Escenarios",
+        "options": ScenarioOption.objects.all(),
+    })

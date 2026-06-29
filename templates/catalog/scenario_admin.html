@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Escenarios</h2>
+      <p class="text-slate-600">Opciones de escenario para la Mesa de Talento.</p>
+    </div>
+  </div>
+
+  <div class="card overflow-hidden mb-6">
+    <div class="px-5 py-4 border-b border-slate-100">
+      <h3 class="font-semibold text-slate-900 text-sm">Agregar escenario</h3>
+    </div>
+    <form method="post" class="p-4 flex flex-wrap gap-3 items-end">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="create">
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Clave</label>
+        <input type="text" name="code" maxlength="8" class="input w-24" placeholder="LEAD" required>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Nombre</label>
+        <input type="text" name="name" maxlength="120" class="input w-64" placeholder="Empujar a Lead" required>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">Orden</label>
+        <input type="number" name="order" min="1" value="1" class="input w-20">
+      </div>
+      <button type="submit" class="btn-primary">Agregar</button>
+    </form>
+  </div>
+
+  <div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-600 text-left">
+          <tr>
+            <th class="px-4 py-3 font-medium">Clave</th>
+            <th class="px-4 py-3 font-medium">Nombre</th>
+            <th class="px-4 py-3 font-medium w-16">Orden</th>
+            <th class="px-4 py-3 font-medium w-24">Estado</th>
+            <th class="px-4 py-3 font-medium w-36"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for opt in options %}
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-2.5 font-mono text-slate-600">{{ opt.code }}</td>
+              <td class="px-4 py-2.5 font-medium text-slate-900">{{ opt.name }}</td>
+              <td class="px-4 py-2.5 text-center">{{ opt.order }}</td>
+              <td class="px-4 py-2.5">
+                {% if opt.is_active %}
+                  <span class="badge bg-emerald-50 text-emerald-700">Activa</span>
+                {% else %}
+                  <span class="badge bg-slate-100 text-slate-500">Inactiva</span>
+                {% endif %}
+              </td>
+              <td class="px-4 py-2.5 text-right">
+                <div class="flex items-center justify-end gap-1">
+                  <form method="post" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle">
+                    <input type="hidden" name="pk" value="{{ opt.pk }}">
+                    <button type="submit" class="btn-soft py-1 px-2 text-xs">
+                      {% if opt.is_active %}Desactivar{% else %}Activar{% endif %}
+                    </button>
+                  </form>
+                  <form method="post" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="pk" value="{{ opt.pk }}">
+                    <button type="submit"
+                      class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
+                      onclick="return confirm('¿Eliminar «{{ opt.name }}»?')">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="px-5 py-8 text-center text-slate-400">Sin opciones. Agrega la primera.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

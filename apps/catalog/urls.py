@@ -14,5 +14,6 @@ urlpatterns = [
     path("proyectos/<int:pk>/reactivar/", views.project_reactivate, name="project_reactivate"),
     path("periodos/", views.period_admin, name="period_admin"),
     path("periodos/nuevo/", views.period_create, name="period_create"),
+    path("escenarios/", views.scenario_admin, name="scenario_admin"),
     # Pendiente: weight_admin, area/level admin (hoy vía Django admin)
 ]

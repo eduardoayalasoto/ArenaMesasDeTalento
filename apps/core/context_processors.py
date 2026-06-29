@@ -103,6 +103,7 @@ def navigation(request):
         add("Avance del periodo", "dashboards:period_progress", "chart")
         add("Cuestionarios", "questionnaires:admin_list", "list")
         add("Usuarios", "accounts:user_admin", "id")
+        add("Escenarios", "catalog:scenario_admin", "layers")
         add("Periodos", "catalog:period_admin", "calendar")
         add("Ponderaciones", "catalog:weight_admin", "scale")
 
