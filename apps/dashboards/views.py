@@ -1,12 +1,14 @@
 """Tableros, vista de área, avance del periodo y exportes."""
 
 import csv
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
 from apps.catalog.models import Area, EvaluationPeriod, ProjectMembership, SeniorityLevel
@@ -303,6 +305,191 @@ def period_progress(request):
             "finals_total": finals.count(),
         })
     return render(request, "dashboards/period_progress.html", ctx)
+
+
+@login_required
+def talent_person(request, pk):
+    """Vista de sesión de Mesa de Talento para una persona (Talento y Directores)."""
+    if not request.user.is_admin and not request.user.is_director:
+        return render(request, "errors/403.html", {
+            "titulo": "Panel reservado al comité de Talento",
+            "mensaje": "La Mesa de Talento es para Talento y Cultura y la Dirección.",
+        }, status=403)
+
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import TalentSessionNote
+    from apps.catalog.models import ScenarioOption
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True, is_superuser=False)
+    period = _open_period()
+
+    ctx = {
+        "page_title": f"Mesa de Talento · {target.full_name}",
+        "target": target,
+        "period": period,
+    }
+    if period:
+        ctx.update(build_results(target, period))
+        note, _ = TalentSessionNote.objects.get_or_create(
+            user=target, period=period,
+            defaults={"created_by": request.user},
+        )
+        scenario_options = ScenarioOption.objects.filter(is_active=True)
+        responsables = note.responsables.select_related("user").order_by("-is_primary", "user__full_name")
+        all_users = User.objects.filter(is_active=True, is_superuser=False).exclude(
+            pk__in=responsables.values_list("user_id", flat=True)
+        ).order_by("full_name")
+        ctx.update({
+            "note": note,
+            "scenario_options": scenario_options,
+            "escenarios_ctx": [
+                ("actual", "Escenario Actual", set(note.scenario_actual.values_list("pk", flat=True))),
+                ("s1", "Escenario S+1", set(note.scenario_s1.values_list("pk", flat=True))),
+                ("s2", "Escenario S+2", set(note.scenario_s2.values_list("pk", flat=True))),
+            ],
+            "responsables": responsables,
+            "all_users": all_users,
+        })
+    return render(request, "dashboards/talent_person.html", ctx)
+
+
+@login_required
+@require_POST
+def talent_note_autosave(request, pk):
+    """Guarda fortalezas/oportunidades de la nota de Mesa de Talento (JSON). Solo Talento."""
+    if not request.user.is_admin:
+        return JsonResponse({"ok": False, "error": "No autorizado."}, status=403)
+
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import TalentSessionNote
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True)
+    period = _open_period()
+    if not period:
+        return JsonResponse({"ok": False, "error": "No hay periodo abierto."}, status=400)
+
+    payload = json.loads(request.body or "{}")
+    note, _ = TalentSessionNote.objects.get_or_create(
+        user=target, period=period,
+        defaults={"created_by": request.user},
+    )
+    field = payload.get("field")
+    value = (payload.get("value") or "").strip()
+    if field == "fortalezas":
+        note.fortalezas = value
+        note.save(update_fields=["fortalezas", "updated_at"])
+    elif field == "oportunidades":
+        note.oportunidades = value
+        note.save(update_fields=["oportunidades", "updated_at"])
+    else:
+        return JsonResponse({"ok": False, "error": "Campo inválido."}, status=400)
+    return JsonResponse({"ok": True})
+
+
+@login_required
+@require_POST
+def talent_scenario_toggle(request, pk, tipo):
+    """Activa/desactiva una opción de escenario en la nota (HTMX). Solo Talento."""
+    if not request.user.is_admin:
+        return HttpResponse(status=403)
+
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import TalentSessionNote
+    from apps.catalog.models import ScenarioOption
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True)
+    period = _open_period()
+    if not period:
+        return HttpResponse(status=400)
+
+    option = get_object_or_404(ScenarioOption, pk=request.POST.get("option_pk"))
+    note, _ = TalentSessionNote.objects.get_or_create(
+        user=target, period=period,
+        defaults={"created_by": request.user},
+    )
+
+    scenario_map = {"actual": note.scenario_actual, "s1": note.scenario_s1, "s2": note.scenario_s2}
+    m2m = scenario_map.get(tipo)
+    if m2m is None:
+        return HttpResponse(status=400)
+
+    if m2m.filter(pk=option.pk).exists():
+        m2m.remove(option)
+    else:
+        m2m.add(option)
+    return HttpResponse(status=200)
+
+
+@login_required
+@require_POST
+def talent_responsable_add(request, pk):
+    """Agrega un responsable de retroalimentación (HTMX). Solo Talento."""
+    if not request.user.is_admin:
+        return HttpResponse(status=403)
+
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import TalentSessionNote, FeedbackResponsible
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True)
+    period = _open_period()
+    if not period:
+        return HttpResponse(status=400)
+
+    note, _ = TalentSessionNote.objects.get_or_create(
+        user=target, period=period,
+        defaults={"created_by": request.user},
+    )
+    is_primary = request.POST.get("is_primary") == "1"
+    new_user = get_object_or_404(User, pk=request.POST.get("user_id"), is_active=True)
+
+    if not note.responsables.filter(user=new_user).exists():
+        if is_primary:
+            note.responsables.filter(is_primary=True).update(is_primary=False)
+        FeedbackResponsible.objects.create(note=note, user=new_user, is_primary=is_primary)
+
+    return _responsables_fragment(request, note, target)
+
+
+@login_required
+@require_POST
+def talent_responsable_remove(request, pk, rid):
+    """Quita un responsable de retroalimentación (HTMX). Solo Talento."""
+    if not request.user.is_admin:
+        return HttpResponse(status=403)
+
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import TalentSessionNote, FeedbackResponsible
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True)
+    period = _open_period()
+    note = get_object_or_404(TalentSessionNote, user=target, period=period)
+    FeedbackResponsible.objects.filter(pk=rid, note=note).delete()
+    return _responsables_fragment(request, note, target)
+
+
+def _responsables_fragment(request, note, target):
+    """Renderiza el fragmento HTMX de la lista de responsables."""
+    from django.contrib.auth import get_user_model
+    from django.template.loader import render_to_string
+
+    User = get_user_model()
+    responsables = note.responsables.select_related("user").order_by("-is_primary", "user__full_name")
+    all_users = User.objects.filter(is_active=True, is_superuser=False).exclude(
+        pk__in=responsables.values_list("user_id", flat=True)
+    ).order_by("full_name")
+    html = render_to_string("dashboards/_responsables_widget.html", {
+        "note": note,
+        "target": target,
+        "responsables": responsables,
+        "all_users": all_users,
+        "request": request,
+    })
+    return HttpResponse(html)
 
 
 @login_required

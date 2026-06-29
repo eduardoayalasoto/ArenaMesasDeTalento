@@ -89,7 +89,7 @@
                 {% endif %}
               </td>
               <td class="px-3 py-3 text-right">
-                <a href="{% url 'dashboards:user_results' pk=row.user.pk %}" class="btn-soft" aria-label="Ver informe de {{ row.user.full_name }}">
+                <a href="{% url 'dashboards:talent_person' pk=row.user.pk %}" class="btn-soft" aria-label="Ver informe de {{ row.user.full_name }}">
                   Ver {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}
                 </a>
               </td>

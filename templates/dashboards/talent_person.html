@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block content %}
+
+{# Sticky header compact #}
+<div class="sticky top-0 z-30 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 bg-white border-b border-slate-200 shadow-sm mb-6">
+  <div class="max-w-6xl mx-auto flex items-center gap-3">
+    <a href="{% url 'dashboards:talent_table' %}" class="text-slate-400 hover:text-slate-600 shrink-0">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    </a>
+    {% include "partials/avatar.html" with subject=target size="w-9 h-9" icon="w-4 h-4" %}
+    <div class="min-w-0 flex-1">
+      <p class="font-semibold text-slate-900 truncate leading-tight">{{ target.full_name }}</p>
+      <p class="text-xs text-slate-500 truncate">{{ target.area.name|default:"Sin área" }} · {{ target.level.name|default:"Sin nivel" }}</p>
+    </div>
+    {% if period %}
+      {% if final.is_complete %}
+        <div class="shrink-0 flex items-center gap-2">
+          <span class="tabular-nums font-bold text-slate-900 text-lg">{{ final.final_score }}</span>
+          <span class="badge
+            {% if final.band == 'Excede' %}bg-emerald-50 text-emerald-700
+            {% elif final.band == 'Cumple' %}bg-arena-50 text-arena-700
+            {% elif final.band == 'Cumple parcial' %}bg-amber-50 text-amber-700
+            {% else %}bg-rose-50 text-rose-700{% endif %}">{{ final.band }}</span>
+        </div>
+      {% else %}
+        <span class="badge bg-slate-100 text-slate-500 shrink-0">En proceso</span>
+      {% endif %}
+    {% endif %}
+    <span class="text-xs text-slate-400 shrink-0 hidden sm:inline">{{ period.name|default:"Sin periodo abierto" }}</span>
+  </div>
+</div>
+
+{# Resultados (reutiliza el partial existente) #}
+{% if period %}
+  {% include "dashboards/_results_body.html" with subject=target detail_links=request.user.is_admin %}
+{% else %}
+  <div class="card p-8 text-center text-slate-400">No hay periodo abierto.</div>
+{% endif %}
+
+{# ===== SECCIÓN MESA DE TALENTO ===== #}
+{% if period and note %}
+<div class="mt-8">
+  <div class="flex items-center gap-2 mb-4">
+    <i data-lucide="table" class="w-5 h-5 text-arena-600"></i>
+    <h2 class="text-lg font-semibold text-slate-900">Mesa de Talento</h2>
+    {% if not request.user.is_admin %}
+      <span class="badge bg-slate-100 text-slate-500 text-xs">Solo lectura</span>
+    {% endif %}
+  </div>
+
+  {% if request.user.is_admin %}
+  {# Editable para Talento #}
+  <div x-data="talentNote({
+    url: '{% url 'dashboards:talent_note_autosave' pk=target.pk %}',
+    csrf: '{{ csrf_token }}'
+  })" class="space-y-5">
+
+    {# Fortalezas #}
+    <div class="card p-5">
+      <label class="block text-sm font-semibold text-slate-700 mb-2">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="thumbs-up" class="w-4 h-4 text-emerald-600"></i>
+          Mesa de Talento — Fortalezas
+          <span x-show="state.fortalezas === 'saving'" class="text-xs text-slate-400 font-normal ml-2">Guardando…</span>
+          <span x-show="state.fortalezas === 'saved'" x-cloak class="text-xs text-emerald-600 font-normal ml-2 flex items-center gap-1">
+            <i data-lucide="check" class="w-3 h-3"></i> Guardado
+          </span>
+        </span>
+      </label>
+      <textarea name="fortalezas" rows="4"
+        class="input w-full resize-y"
+        placeholder="Fortalezas observadas en la sesión de Mesa de Talento…"
+        @input.debounce.800ms="save('fortalezas', $el.value)">{{ note.fortalezas }}</textarea>
+    </div>
+
+    {# Oportunidades #}
+    <div class="card p-5">
+      <label class="block text-sm font-semibold text-slate-700 mb-2">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i>
+          Mesa de Talento — Oportunidades
+          <span x-show="state.oportunidades === 'saving'" class="text-xs text-slate-400 font-normal ml-2">Guardando…</span>
+          <span x-show="state.oportunidades === 'saved'" x-cloak class="text-xs text-emerald-600 font-normal ml-2 flex items-center gap-1">
+            <i data-lucide="check" class="w-3 h-3"></i> Guardado
+          </span>
+        </span>
+      </label>
+      <textarea name="oportunidades" rows="4"
+        class="input w-full resize-y"
+        placeholder="Oportunidades de desarrollo identificadas…"
+        @input.debounce.800ms="save('oportunidades', $el.value)">{{ note.oportunidades }}</textarea>
+    </div>
+
+    {# Escenarios #}
+    <div class="card p-5">
+      <h3 class="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-1.5">
+        <i data-lucide="map" class="w-4 h-4 text-arena-600"></i>
+        Escenarios
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {% for tipo, label, selected in escenarios_ctx %}
+        <div>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ label }}</p>
+          <div class="space-y-2">
+            {% for opt in scenario_options %}
+            <label class="flex items-center gap-2 cursor-pointer group">
+              <input type="checkbox"
+                class="rounded border-slate-300 text-arena-600 focus:ring-arena-500"
+                {% if opt.pk in selected %}checked{% endif %}
+                hx-post="{% url 'dashboards:talent_scenario_toggle' pk=target.pk tipo=tipo %}"
+                hx-vals='{"option_pk": "{{ opt.pk }}"}'
+                hx-trigger="change"
+                hx-swap="none">
+              <span class="text-sm text-slate-700 group-hover:text-slate-900">{{ opt.name }}</span>
+            </label>
+            {% empty %}
+            <p class="text-xs text-slate-400 italic">Sin opciones. Configura el catálogo de Escenarios.</p>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Responsables de retroalimentación #}
+    <div class="card p-5">
+      <h3 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-1.5">
+        <i data-lucide="user-check" class="w-4 h-4 text-arena-600"></i>
+        Responsables de retroalimentación
+      </h3>
+      {% include "dashboards/_responsables_widget.html" with note=note target=target responsables=responsables all_users=all_users %}
+    </div>
+
+  </div>
+
+  <script>
+    function talentNote(cfg) {
+      return {
+        url: cfg.url, csrf: cfg.csrf,
+        state: { fortalezas: null, oportunidades: null },
+        async save(field, value) {
+          this.state[field] = 'saving';
+          try {
+            const r = await fetch(this.url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-CSRFToken': this.csrf },
+              body: JSON.stringify({ field, value }),
+            });
+            const data = await r.json();
+            this.state[field] = data.ok ? 'saved' : 'error';
+            if (!data.ok) Alpine.store('ui').notify(data.error || 'No se pudo guardar.', 'error');
+          } catch (e) {
+            this.state[field] = 'error';
+            Alpine.store('ui').notify('Sin conexión. Reintenta.', 'warning');
+          }
+        },
+      };
+    }
+  </script>
+
+  {% else %}
+  {# Solo lectura para Directores #}
+  <div class="space-y-5">
+    <div class="card p-5">
+      <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+        <i data-lucide="thumbs-up" class="w-4 h-4 text-emerald-600"></i> Mesa de Talento — Fortalezas
+      </h4>
+      <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ note.fortalezas|default:"Sin información." }}</p>
+    </div>
+    <div class="card p-5">
+      <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+        <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i> Mesa de Talento — Oportunidades
+      </h4>
+      <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ note.oportunidades|default:"Sin información." }}</p>
+    </div>
+    <div class="card p-5">
+      <h3 class="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-1.5">
+        <i data-lucide="map" class="w-4 h-4 text-arena-600"></i> Escenarios
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {% for tipo, label, selected in escenarios_ctx %}
+        <div>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ label }}</p>
+          {% for opt in scenario_options %}
+            {% if opt.pk in selected %}
+              <p class="text-sm text-slate-700">• {{ opt.name }}</p>
+            {% endif %}
+          {% empty %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card p-5">
+      <h3 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-1.5">
+        <i data-lucide="user-check" class="w-4 h-4 text-arena-600"></i> Responsables de retroalimentación
+      </h3>
+      {% for r in responsables %}
+        <p class="text-sm text-slate-700 mb-1">
+          {{ r.user.full_name }}
+          <span class="text-xs text-slate-400">({% if r.is_primary %}Principal{% else %}Secundario{% endif %})</span>
+        </p>
+      {% empty %}
+        <p class="text-sm text-slate-400 italic">Sin responsables asignados.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

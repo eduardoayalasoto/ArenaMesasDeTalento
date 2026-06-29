@@ -1,0 +1,77 @@
+<div id="responsables-widget">
+  {% for r in responsables %}
+    <div class="flex items-center gap-2 mb-1.5">
+      <span class="text-sm text-slate-700 font-medium">{{ r.user.full_name }}</span>
+      {% if r.is_primary %}
+        <span class="badge bg-arena-50 text-arena-700 text-xs">Principal</span>
+      {% else %}
+        <span class="badge bg-slate-100 text-slate-500 text-xs">Secundario</span>
+      {% endif %}
+      {% if request.user.is_admin %}
+        <form method="post"
+              action="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=r.pk %}"
+              class="inline"
+              hx-post="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=r.pk %}"
+              hx-target="#responsables-widget"
+              hx-swap="outerHTML">
+          {% csrf_token %}
+          <button type="submit" class="text-rose-500 hover:text-rose-700 text-xs ml-1">quitar</button>
+        </form>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p class="text-sm text-slate-400 italic mb-2">Sin responsables asignados.</p>
+  {% endfor %}
+
+  {% if request.user.is_admin %}
+    <div x-data="{ addingPrimary: false, addingSecondary: false }" class="mt-2 space-y-2">
+      <div>
+        <button type="button" @click="addingPrimary = !addingPrimary"
+                class="text-xs text-arena-600 hover:text-arena-700 flex items-center gap-1">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+          {% if responsables %}Cambiar principal{% else %}Agregar responsable principal{% endif %}
+        </button>
+        <form x-show="addingPrimary" x-cloak method="post"
+              action="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
+              hx-post="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
+              hx-target="#responsables-widget"
+              hx-swap="outerHTML"
+              class="mt-2 flex flex-wrap gap-2">
+          {% csrf_token %}
+          <input type="hidden" name="is_primary" value="1">
+          <select name="user_id" class="input max-w-xs py-1.5" required>
+            <option value="">— Responsable principal —</option>
+            {% for u in all_users %}
+              <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn-secondary py-1.5">Guardar</button>
+          <button type="button" class="btn-soft py-1.5" @click="addingPrimary = false">Cancelar</button>
+        </form>
+      </div>
+      <div>
+        <button type="button" @click="addingSecondary = !addingSecondary"
+                class="text-xs text-arena-600 hover:text-arena-700 flex items-center gap-1">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Agregar responsable secundario
+        </button>
+        <form x-show="addingSecondary" x-cloak method="post"
+              action="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
+              hx-post="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
+              hx-target="#responsables-widget"
+              hx-swap="outerHTML"
+              class="mt-2 flex flex-wrap gap-2">
+          {% csrf_token %}
+          <input type="hidden" name="is_primary" value="0">
+          <select name="user_id" class="input max-w-xs py-1.5" required>
+            <option value="">— Elegir persona —</option>
+            {% for u in all_users %}
+              <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn-secondary py-1.5">Agregar</button>
+          <button type="button" class="btn-soft py-1.5" @click="addingSecondary = false">Cancelar</button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>
