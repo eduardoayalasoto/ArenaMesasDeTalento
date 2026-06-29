@@ -15,12 +15,8 @@
       {% csrf_token %}
       <input type="hidden" name="action" value="create">
       <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">Clave</label>
-        <input type="text" name="code" maxlength="8" class="input w-24" placeholder="LEAD" required>
-      </div>
-      <div>
         <label class="block text-xs font-medium text-slate-600 mb-1">Nombre</label>
-        <input type="text" name="name" maxlength="120" class="input w-64" placeholder="Empujar a Lead" required>
+        <input type="text" name="name" maxlength="120" class="input w-72" placeholder="Empujar a Lead" required>
       </div>
       <div>
         <label class="block text-xs font-medium text-slate-600 mb-1">Orden</label>
@@ -35,7 +31,6 @@
       <table class="w-full text-sm">
         <thead class="bg-slate-50 text-slate-600 text-left">
           <tr>
-            <th class="px-4 py-3 font-medium">Clave</th>
             <th class="px-4 py-3 font-medium">Nombre</th>
             <th class="px-4 py-3 font-medium w-16">Orden</th>
             <th class="px-4 py-3 font-medium w-24">Estado</th>
@@ -45,7 +40,6 @@
         <tbody class="divide-y divide-slate-100">
           {% for opt in options %}
             <tr class="hover:bg-slate-50">
-              <td class="px-4 py-2.5 font-mono text-slate-600">{{ opt.code }}</td>
               <td class="px-4 py-2.5 font-medium text-slate-900">{{ opt.name }}</td>
               <td class="px-4 py-2.5 text-center">{{ opt.order }}</td>
               <td class="px-4 py-2.5">
@@ -80,7 +74,7 @@
             </tr>
           {% empty %}
             <tr>
-              <td colspan="5" class="px-5 py-8 text-center text-slate-400">Sin opciones. Agrega la primera.</td>
+              <td colspan="4" class="px-5 py-8 text-center text-slate-400">Sin opciones. Agrega la primera.</td>
             </tr>
           {% endfor %}
         </tbody>

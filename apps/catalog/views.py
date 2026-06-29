@@ -245,10 +245,9 @@ def scenario_admin(request):
         action = request.POST.get("action")
         if action == "create":
             name = request.POST.get("name", "").strip()
-            code = request.POST.get("code", "").strip().upper()
             order = request.POST.get("order", 1)
-            if name and code:
-                ScenarioOption.objects.create(name=name, code=code, order=order)
+            if name:
+                ScenarioOption.objects.create(name=name, order=order)
                 messages.success(request, f"Escenario «{name}» creado.")
         elif action == "toggle":
             opt = get_object_or_404(ScenarioOption, pk=request.POST.get("pk"))

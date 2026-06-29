@@ -189,7 +189,6 @@ class ProjectMembership(models.Model):
 class ScenarioOption(models.Model):
     """Opción de escenario para la Mesa de Talento (catálogo administrado por Talento)."""
 
-    code = models.CharField("clave", max_length=8, unique=True)
     name = models.CharField("nombre", max_length=120)
     order = models.PositiveSmallIntegerField("orden", default=1)
     is_active = models.BooleanField("activa", default=True)
