@@ -83,6 +83,7 @@ class User(AbstractUser):
         "debe cambiar contraseña", default=False,
         help_text="Si está activo, se obliga a crear una nueva contraseña al ingresar.",
     )
+    deleted_at = models.DateTimeField("eliminado el", null=True, blank=True)
     date_joined = models.DateTimeField("fecha de alta", default=timezone.now)
 
     USERNAME_FIELD = "email"
