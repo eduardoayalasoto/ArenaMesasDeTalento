@@ -111,6 +111,53 @@ def period_create(request):
 
 
 @login_required
+def period_edit(request, pk):
+    """Edita un periodo existente (solo Talento/admin)."""
+    if not _require_admin(request):
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento administra los periodos.",
+        }, status=403)
+    period = get_object_or_404(EvaluationPeriod, pk=pk)
+    form = PeriodForm(instance=period)
+    if request.method == "POST":
+        form = PeriodForm(request.POST, instance=period)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Periodo «{period.name}» actualizado.")
+            return redirect("catalog:period_admin")
+    return render(request, "catalog/period_form.html", {
+        "page_title": f"Editar {period.name}",
+        "form": form,
+        "period": period,
+    })
+
+
+@login_required
+def period_delete(request, pk):
+    """Borra un periodo si no tiene datos vinculados (solo Talento/admin)."""
+    if not _require_admin(request):
+        return render(request, "errors/403.html", {
+            "titulo": "Administración reservada a Talento",
+            "mensaje": "Solo Talento administra los periodos.",
+        }, status=403)
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    period = get_object_or_404(EvaluationPeriod, pk=pk)
+    nombre = period.name
+    try:
+        period.delete()
+        messages.success(request, f"Periodo «{nombre}» eliminado.")
+    except ProtectedError:
+        messages.error(
+            request,
+            f"No se puede eliminar «{nombre}»: tiene evaluaciones o notas vinculadas.",
+        )
+    return redirect("catalog:period_admin")
+
+
+@login_required
 def period_admin(request):
     """Lista de periodos con apertura/cierre (solo Talento/admin) — RN-13."""
     if not request.user.is_admin:

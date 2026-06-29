@@ -15,7 +15,7 @@
           <p class="font-medium text-slate-900">{{ p.name }}</p>
           <p class="text-sm text-slate-500">{{ p.start_date|date:"d/m/Y" }} – {{ p.end_date|date:"d/m/Y" }} · {{ p.get_kind_display }}</p>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
           {% include "partials/status_badge.html" with status=p.status label=p.get_status_display %}
           <form method="post">
             {% csrf_token %}
@@ -28,6 +28,18 @@
               <button type="submit" class="btn-soft">Abrir</button>
             {% endif %}
           </form>
+          <a href="{% url 'catalog:period_edit' pk=p.pk %}" class="btn-soft">Editar</a>
+          <span class="relative group/dtip">
+            <form method="post" action="{% url 'catalog:period_delete' pk=p.pk %}" class="inline">
+              {% csrf_token %}
+              <button type="submit"
+                class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
+                onclick="return confirm('¿Eliminar el periodo «{{ p.name }}»? Si tiene evaluaciones no se podrá borrar.')">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </form>
+            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar periodo</span>
+          </span>
         </div>
       </div>
     {% empty %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-3"><a href="{% url 'catalog:period_admin' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Periodos</a></div>
-  <h2 class="text-xl font-semibold text-slate-900 mb-6">Nuevo periodo</h2>
+  <h2 class="text-xl font-semibold text-slate-900 mb-6">{{ page_title }}</h2>
 
   <form method="post" class="card p-6 max-w-xl space-y-4">
     {% csrf_token %}
@@ -31,6 +31,8 @@
         <p class="mt-1 text-xs text-slate-500">Marca <b>Abierto</b> para que se puedan capturar evaluaciones.</p>
       </div>
     </div>
-    <div class="pt-2"><button type="submit" class="btn-primary">Crear periodo</button></div>
+    <div class="pt-2">
+      <button type="submit" class="btn-primary">{% if period %}Guardar cambios{% else %}Crear periodo{% endif %}</button>
+    </div>
   </form>
 {% endblock %}
