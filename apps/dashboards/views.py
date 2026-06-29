@@ -337,7 +337,7 @@ def talent_person(request, pk):
         from apps.evaluations.models import OwnershipEvaluation
         ctx["feedback"] = list(
             OwnershipEvaluation.objects.filter(user=target, period=period)
-            .select_related("project", "primary_evaluator")
+            .select_related("project")
             .order_by("project__name")
         )
 
