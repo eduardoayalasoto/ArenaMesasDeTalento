@@ -3,8 +3,10 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.db import ProtectedError
 from django.http import Http404, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from apps.catalog.models import Area, SeniorityLevel
 
@@ -117,7 +119,7 @@ def user_admin(request):
 
     if request.method == "POST":
         updated = 0
-        for user in User.objects.filter(is_superuser=False):
+        for user in User.objects.filter(is_superuser=False, deleted_at__isnull=True):
             if f"area-{user.id}" not in request.POST:
                 continue  # usuario no estaba visible en el form (filtro activo)
             area_code = request.POST.get(f"area-{user.id}", "")
@@ -137,7 +139,7 @@ def user_admin(request):
         return redirect("accounts:user_admin")
 
     q = request.GET.get("q", "").strip()
-    users = User.objects.filter(is_superuser=False).select_related("area", "level")
+    users = User.objects.filter(is_superuser=False, deleted_at__isnull=True).select_related("area", "level")
     if q:
         users = users.filter(full_name__icontains=q)
 
@@ -171,4 +173,62 @@ def user_reset_password(request, pk):
             '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i>Reseteada</span>'
         )
     messages.success(request, f"Contraseña de {user.full_name} restablecida a Arena2026!.")
+    return redirect("accounts:user_admin")
+
+
+@login_required
+def user_delete(request, pk):
+    """Elimina o desactiva un usuario (solo Talento/admin). Soft delete si tiene historial."""
+    if not request.user.is_admin:
+        return render(request, "errors/403.html", {
+            "titulo": "Acción reservada a Talento",
+            "mensaje": "Solo Talento y Cultura puede eliminar usuarios.",
+        }, status=403)
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    user = get_object_or_404(User, pk=pk, is_superuser=False)
+
+    if user.pk == request.user.pk:
+        error_msg = "No puedes eliminarte a ti mismo."
+        if request.headers.get("HX-Request"):
+            return HttpResponse(
+                f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-sm text-rose-600">'
+                f'{error_msg}</td></tr>'
+            )
+        messages.error(request, error_msg)
+        return redirect("accounts:user_admin")
+
+    from apps.evaluations.models import ArenaImpactScore, FinalScore, OwnershipEvaluation
+    has_history = (
+        OwnershipEvaluation.objects.filter(user=user).exists()
+        or ArenaImpactScore.objects.filter(user=user).exists()
+        or FinalScore.objects.filter(user=user).exists()
+    )
+
+    if has_history:
+        user.is_active = False
+        user.deleted_at = timezone.now()
+        user.save(update_fields=["is_active", "deleted_at"])
+        msg = f"{user.full_name} eliminado/a. Sus evaluaciones históricas se conservan."
+    else:
+        try:
+            nombre = user.full_name
+            user.delete()
+            msg = f"{nombre} eliminado/a permanentemente."
+        except ProtectedError as e:
+            protected = list(e.protected_objects)[:3]
+            detalle = ", ".join(str(o) for o in protected)
+            error_msg = f"No se puede eliminar: hay registros vinculados ({detalle}…). Reasigna primero."
+            if request.headers.get("HX-Request"):
+                return HttpResponse(
+                    f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-sm text-rose-600">'
+                    f'{error_msg}</td></tr>'
+                )
+            messages.error(request, error_msg)
+            return redirect("accounts:user_admin")
+
+    if request.headers.get("HX-Request"):
+        return HttpResponse("")
+    messages.success(request, msg)
     return redirect("accounts:user_admin")
