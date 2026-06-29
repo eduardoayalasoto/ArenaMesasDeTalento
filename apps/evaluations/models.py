@@ -243,3 +243,71 @@ class FinalScore(models.Model):
 
     def __str__(self):
         return f"Final de {self.user} ({self.period}): {self.final_score}"
+
+
+class TalentSessionNote(models.Model):
+    """Nota de Mesa de Talento por colaborador-periodo (fortalezas, oportunidades, escenarios)."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name="talent_notes", verbose_name="colaborador",
+    )
+    period = models.ForeignKey(
+        "catalog.EvaluationPeriod", on_delete=models.PROTECT,
+        related_name="talent_notes", verbose_name="periodo",
+    )
+    fortalezas = models.TextField("fortalezas Mesa de Talento", blank=True)
+    oportunidades = models.TextField("oportunidades Mesa de Talento", blank=True)
+    scenario_actual = models.ManyToManyField(
+        "catalog.ScenarioOption", related_name="notes_actual",
+        blank=True, verbose_name="escenario actual",
+    )
+    scenario_s1 = models.ManyToManyField(
+        "catalog.ScenarioOption", related_name="notes_s1",
+        blank=True, verbose_name="escenario S+1",
+    )
+    scenario_s2 = models.ManyToManyField(
+        "catalog.ScenarioOption", related_name="notes_s2",
+        blank=True, verbose_name="escenario S+2",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+        null=True, blank=True, related_name="created_talent_notes", verbose_name="creado por",
+    )
+    updated_at = models.DateTimeField("actualizado el", auto_now=True)
+    created_at = models.DateTimeField("creado el", auto_now_add=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "nota de Mesa de Talento"
+        verbose_name_plural = "notas de Mesa de Talento"
+        constraints = [
+            models.UniqueConstraint(fields=["user", "period"], name="unique_talent_note")
+        ]
+
+    def __str__(self):
+        return f"Nota Mesa de Talento · {self.user} ({self.period})"
+
+
+class FeedbackResponsible(models.Model):
+    """Responsable de retroalimentación ligado a una nota de Mesa de Talento."""
+
+    note = models.ForeignKey(
+        TalentSessionNote, on_delete=models.CASCADE,
+        related_name="responsables", verbose_name="nota",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+        related_name="feedback_responsable_records", verbose_name="responsable",
+    )
+    is_primary = models.BooleanField("es principal", default=False)
+
+    class Meta:
+        verbose_name = "responsable de retroalimentación"
+        verbose_name_plural = "responsables de retroalimentación"
+        constraints = [
+            models.UniqueConstraint(fields=["note", "user"], name="unique_feedback_responsible")
+        ]
+
+    def __str__(self):
+        return f"{'Principal' if self.is_primary else 'Secundario'}: {self.user} — {self.note}"

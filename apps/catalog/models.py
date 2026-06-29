@@ -184,3 +184,20 @@ class ProjectMembership(models.Model):
 
     def __str__(self):
         return f"{self.user} en {self.project}"
+
+
+class ScenarioOption(models.Model):
+    """Opción de escenario para la Mesa de Talento (catálogo administrado por Talento)."""
+
+    code = models.CharField("clave", max_length=8, unique=True)
+    name = models.CharField("nombre", max_length=120)
+    order = models.PositiveSmallIntegerField("orden", default=1)
+    is_active = models.BooleanField("activa", default=True)
+
+    class Meta:
+        verbose_name = "opción de escenario"
+        verbose_name_plural = "opciones de escenario"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.name
