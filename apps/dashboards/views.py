@@ -3,11 +3,12 @@
 import csv
 import json
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
@@ -34,9 +35,12 @@ def build_results(subject, period):
     final = final_flow.recompute_final_score(subject, period)
     weight = getattr(subject.level, "weight", None)
 
-    from apps.evaluations.models import ArenaImpactScore
+    from apps.evaluations.models import ArenaImpactScore, TalentSessionNote
     impact = ArenaImpactScore.objects.filter(user=subject, period=period).first()
     arena_notes = impact.notes if impact and impact.notes else ""
+
+    talent_note = TalentSessionNote.objects.filter(user=subject, period=period).first()
+    feedback_session = talent_note if talent_note and talent_note.has_feedback_session else None
 
     if subject.is_lead:
         lead_eval = (
@@ -75,6 +79,7 @@ def build_results(subject, period):
             "final": final, "weight": weight, "projects": projects,
             "feedback": feedback, "arena_notes": arena_notes,
             "lead_eval": lead_eval, "vd_comment_rows": vd_comment_rows,
+            "feedback_session": feedback_session,
         }
 
     # Colaborador normal
@@ -108,6 +113,7 @@ def build_results(subject, period):
         "final": final, "weight": weight, "projects": projects,
         "feedback": feedback, "arena_notes": arena_notes,
         "lead_eval": None, "vd_comment_rows": vd_comment_rows,
+        "feedback_session": feedback_session,
     }
 
 
@@ -487,6 +493,116 @@ def talent_responsable_remove(request, pk, rid):
     note = get_object_or_404(TalentSessionNote, user=target, period=period)
     FeedbackResponsible.objects.filter(pk=rid, note=note).delete()
     return _responsables_fragment(request, note, target)
+
+
+# --- Retroalimentación (responsables de retroalimentación) -----------------
+
+@login_required
+def feedback_session_list(request):
+    """Índice de personas a las que el usuario debe dar retroalimentación en el periodo abierto."""
+    from apps.evaluations.models import TalentSessionNote
+
+    period = _open_period()
+    rows = []
+    if period:
+        notes = (
+            TalentSessionNote.objects.filter(period=period, responsables__user=request.user)
+            .select_related("user__area", "user__level")
+            .prefetch_related("responsables__user")
+            .distinct()
+            .order_by("user__full_name")
+        )
+        for note in notes:
+            secondaries = [
+                r.user for r in note.responsables.all()
+                if not r.is_primary and r.user_id != request.user.pk
+            ]
+            rows.append({"note": note, "target": note.user, "secondaries": secondaries})
+
+    return render(request, "dashboards/feedback_session_list.html", {
+        "page_title": "Retroalimentación",
+        "rows": rows,
+        "period": period,
+    })
+
+
+@login_required
+def feedback_session_detail(request, pk):
+    """Pantalla de Retroalimentación de Mesa de Talento: la llena el responsable asignado."""
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import OwnershipEvaluator, TalentSessionNote
+
+    User = get_user_model()
+    period = _open_period()
+    if not period:
+        messages.error(request, "No hay un periodo abierto en este momento.")
+        return redirect("dashboards:feedback_session_list")
+
+    target = get_object_or_404(User, pk=pk, is_active=True)
+    note = get_object_or_404(
+        TalentSessionNote.objects.select_related("user"), user=target, period=period
+    )
+    if not permissions.can_edit_feedback_session(request.user, note):
+        return render(request, "errors/403.html", {
+            "titulo": "No puedes dar retroalimentación a esta persona",
+            "mensaje": "Esta pantalla es solo para quien esté asignado como responsable "
+            "de retroalimentación de esta persona en Mesa de Talento.",
+        }, status=403)
+
+    if request.method == "POST":
+        action = request.POST.get("action", "save")
+
+        if action == "reopen":
+            if not request.user.is_admin:
+                messages.error(request, "Solo Talento y Cultura puede reabrir una retroalimentación acordada.")
+            else:
+                note.feedback_agreed = False
+                note.feedback_agreed_at = None
+                note.feedback_agreed_by = None
+                note.save(update_fields=["feedback_agreed", "feedback_agreed_at", "feedback_agreed_by", "updated_at"])
+                messages.success(request, f"Reabriste la retroalimentación de {target.full_name}.")
+            return redirect("dashboards:feedback_session_detail", pk=target.pk)
+
+        if note.feedback_agreed:
+            messages.error(request, "Esta retroalimentación ya está acordada y cerrada; no puede editarse.")
+            return redirect("dashboards:feedback_session_detail", pk=target.pk)
+
+        if action == "agree":
+            from django.utils import timezone
+            note.feedback_agreed = True
+            note.feedback_agreed_at = timezone.now()
+            note.feedback_agreed_by = request.user
+            note.save(update_fields=["feedback_agreed", "feedback_agreed_at", "feedback_agreed_by", "updated_at"])
+            messages.success(request, f"Marcaste como acordada la retroalimentación de {target.full_name}. Queda cerrada.")
+            return redirect("dashboards:feedback_session_detail", pk=target.pk)
+
+        fields = [
+            "objetivo_desarrollo_1", "objetivo_desarrollo_2", "objetivo_desarrollo_3",
+            "expectativas_profesionales", "expectativas_personales", "comentarios_adicionales",
+        ]
+        for field in fields:
+            setattr(note, field, request.POST.get(field, "").strip())
+        note.save(update_fields=fields + ["updated_at"])
+        messages.success(request, f"Guardaste la retroalimentación de {target.full_name}.")
+        return redirect("dashboards:feedback_session_detail", pk=target.pk)
+
+    results = build_results(target, period)
+    evaluators = list(
+        OwnershipEvaluator.objects.filter(evaluation__user=target, evaluation__period=period)
+        .select_related("user").order_by("-is_primary", "user__full_name")
+    )
+
+    return render(request, "dashboards/feedback_session_detail.html", {
+        "page_title": f"Retroalimentación · {target.full_name}",
+        "target": target,
+        "note": note,
+        "period": period,
+        "final": results["final"],
+        "weight": results["weight"],
+        "evaluators": evaluators,
+        "scenario_actual": note.scenario_actual.all(),
+        "can_reopen": note.feedback_agreed and request.user.is_admin,
+    })
 
 
 def _responsables_fragment(request, note, target):

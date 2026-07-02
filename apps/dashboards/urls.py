@@ -17,6 +17,8 @@ urlpatterns = [
     path("mesa-talento/persona/<int:pk>/responsable/agregar/", views.talent_responsable_add, name="talent_responsable_add"),
     path("mesa-talento/persona/<int:pk>/responsable/<int:rid>/quitar/", views.talent_responsable_remove, name="talent_responsable_remove"),
     path("persona/<int:pk>/", views.user_results, name="user_results"),
+    path("retroalimentacion/", views.feedback_session_list, name="feedback_session_list"),
+    path("retroalimentacion/<int:pk>/", views.feedback_session_detail, name="feedback_session_detail"),
     path("avance-periodo/", views.period_progress, name="period_progress"),
     path("exportar/calificaciones.csv", views.export_scores_csv, name="export_scores_csv"),
 ]

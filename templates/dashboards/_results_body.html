@@ -1,4 +1,4 @@
-{% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period, vd_comment_rows.{% endcomment %}
+{% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period, vd_comment_rows, feedback_session.{% endcomment %}
 
 <!-- Hero: identidad + calificación final -->
 <div class="card overflow-hidden mb-5{% if sticky_hero %} sticky top-16 z-20 shadow-md{% endif %}">
@@ -165,6 +165,28 @@
           {% if row.vd_evaluator %}<p class="mt-2 text-xs text-slate-400">Por {{ row.vd_evaluator.full_name }} (Responsable)</p>{% endif %}
         </div>
       {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+<!-- Retroalimentación de Mesa de Talento (sesión con el/los responsables asignados) -->
+{% if feedback_session %}
+  <div class="mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+      <h3 class="font-semibold text-slate-900">Retroalimentación · Mesa de Talento ({{ period.name }})</h3>
+      {% if feedback_session.feedback_agreed %}
+        <span class="badge bg-emerald-50 text-emerald-700 text-xs">Acordada el {{ feedback_session.feedback_agreed_at|date:"d/m/Y" }}</span>
+      {% else %}
+        <span class="badge bg-amber-50 text-amber-700 text-xs">Pendiente de cerrar</span>
+      {% endif %}
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      {% include "evaluations/_feedback_card.html" with title="Objetivo de desarrollo 1" value=feedback_session.objetivo_desarrollo_1 empty="Sin información." %}
+      {% include "evaluations/_feedback_card.html" with title="Objetivo de desarrollo 2" value=feedback_session.objetivo_desarrollo_2 empty="Sin información." %}
+      {% include "evaluations/_feedback_card.html" with title="Objetivo de desarrollo 3" value=feedback_session.objetivo_desarrollo_3 empty="Sin información." %}
+      {% include "evaluations/_feedback_card.html" with title="Expectativas profesionales" value=feedback_session.expectativas_profesionales empty="Sin información." %}
+      {% include "evaluations/_feedback_card.html" with title="Expectativas personales" value=feedback_session.expectativas_personales empty="Sin información." %}
+      {% include "evaluations/_feedback_card.html" with title="Comentarios adicionales" value=feedback_session.comentarios_adicionales empty="Sin información." %}
     </div>
   </div>
 {% endif %}

@@ -78,6 +78,11 @@ def navigation(request):
     if OwnershipEvaluator.objects.filter(user=user).exists():
         add("Validación de Ownership", "evaluations:ownership_validation", "check")
 
+    # Responsable de retroalimentación — solo si tiene al menos una sesión asignada, o es Talento
+    from apps.evaluations.models import FeedbackResponsible
+    if user.is_admin or FeedbackResponsible.objects.filter(user=user).exists():
+        add("Retroalimentación", "dashboards:feedback_session_list", "message-circle")
+
     # Líder de proyecto — captura de Entrega de Valor
     if user.leads_projects or user.is_superuser:
         add("Entrega de Valor", "evaluations:value_delivery_list", "package", also_active=(

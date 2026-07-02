@@ -72,6 +72,16 @@ def has_value_delivery_validations(viewer) -> bool:
     return bool(viewer.is_admin) or getattr(viewer, "validates_projects", False)
 
 
+def can_edit_feedback_session(viewer, note) -> bool:
+    """Solo un responsable de retroalimentación asignado (primario o secundario) a esa nota, o Talento/superusuario."""
+    return bool(viewer.is_admin) or note.responsables.filter(user_id=viewer.pk).exists()
+
+
+def has_feedback_sessions(viewer) -> bool:
+    """Tiene al menos una asignación como responsable de retroalimentación."""
+    return viewer.feedback_responsable_records.exists()
+
+
 def can_edit_project(user) -> bool:
     """Talento, Director o cualquier colaborador con nivel Lead pueden administrar proyectos."""
     return _is_admin(user) or user.is_lead

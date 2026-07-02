@@ -276,6 +276,21 @@ class TalentSessionNote(models.Model):
         "catalog.ScenarioOption", related_name="notes_s2",
         blank=True, verbose_name="escenario S+2",
     )
+    # Sesión de retroalimentación: la captura quien esté asignado como responsable
+    # (primario o secundario) en `responsables`; se vuelve visible al colaborador
+    # en cuanto tiene contenido (ver `has_feedback_session` abajo).
+    objetivo_desarrollo_1 = models.TextField("objetivo de desarrollo 1", blank=True)
+    objetivo_desarrollo_2 = models.TextField("objetivo de desarrollo 2", blank=True)
+    objetivo_desarrollo_3 = models.TextField("objetivo de desarrollo 3", blank=True)
+    expectativas_profesionales = models.TextField("expectativas profesionales", blank=True)
+    expectativas_personales = models.TextField("expectativas personales", blank=True)
+    comentarios_adicionales = models.TextField("comentarios adicionales de retroalimentación", blank=True)
+    feedback_agreed = models.BooleanField("acordado con el colaborador", default=False)
+    feedback_agreed_at = models.DateTimeField("acordado el", null=True, blank=True)
+    feedback_agreed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
+        related_name="feedback_sessions_agreed", verbose_name="acordado por",
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
         null=True, blank=True, related_name="created_talent_notes", verbose_name="creado por",
@@ -293,6 +308,17 @@ class TalentSessionNote(models.Model):
 
     def __str__(self):
         return f"Nota Mesa de Talento · {self.user} ({self.period})"
+
+    @property
+    def has_feedback_session(self) -> bool:
+        """True si la sesión de retroalimentación tiene algún contenido capturado."""
+        return any(
+            getattr(self, field).strip()
+            for field in (
+                "objetivo_desarrollo_1", "objetivo_desarrollo_2", "objetivo_desarrollo_3",
+                "expectativas_profesionales", "expectativas_personales", "comentarios_adicionales",
+            )
+        )
 
 
 class FeedbackResponsible(models.Model):
