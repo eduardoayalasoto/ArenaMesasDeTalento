@@ -142,6 +142,13 @@ class Project(models.Model):
         related_name="responsible_projects",
         verbose_name="responsable",
     )
+    validador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="validated_projects",
+        verbose_name="Validador de Entrega de Valor",
+        null=True, blank=True,
+    )
     kickoff = models.DateField("kick-off", null=True, blank=True)
     target_close = models.DateField("cierre objetivo", null=True, blank=True)
     status = models.CharField(

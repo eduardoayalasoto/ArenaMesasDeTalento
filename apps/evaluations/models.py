@@ -149,7 +149,7 @@ class ValueDeliveryEvaluation(models.Model):
     )
     validated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
-        related_name="vd_validations", verbose_name="validado por (director)",
+        related_name="vd_validations", verbose_name="validado por",
     )
     status = models.CharField(
         "estado", max_length=14, choices=Status.choices, default=Status.BORRADOR
@@ -159,6 +159,12 @@ class ValueDeliveryEvaluation(models.Model):
     time_finite = models.PositiveSmallIntegerField("tiempo (finito)", null=True, blank=True)
     time_indefinite = models.PositiveSmallIntegerField("tiempo (indefinido)", null=True, blank=True)
     rejection_comment = models.TextField("comentario de rechazo", blank=True)
+    comments = models.TextField(
+        "comentarios",
+        blank=True,
+        help_text="Notas de contexto sobre la Entrega de Valor. Las captura el responsable "
+        "y puede complementarlas el Validador; se muestran también en la Mesa de Talento.",
+    )
     score = models.DecimalField("calificación", max_digits=3, decimal_places=2, null=True, blank=True)
     validated_at = models.DateTimeField("validada el", null=True, blank=True)
     created_at = models.DateTimeField("creada el", auto_now_add=True)

@@ -35,7 +35,7 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = [
-            "name", "client", "owner", "responsable",
+            "name", "client", "owner", "responsable", "validador",
             "duration_type", "status", "kickoff", "target_close", "is_active",
         ]
         labels = {
@@ -43,6 +43,7 @@ class ProjectForm(forms.ModelForm):
             "client": "Cliente",
             "owner": "Owner",
             "responsable": "Responsable (evaluará la Entrega de Valor)",
+            "validador": "Validador de Entrega de Valor",
             "duration_type": "Tipo de duración",
             "status": "Estatus",
             "kickoff": "Kick-off",
@@ -54,6 +55,7 @@ class ProjectForm(forms.ModelForm):
             "client": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Cliente Retail (opcional)"}),
             "owner": forms.Select(attrs={"class": _INPUT}),
             "responsable": forms.Select(attrs={"class": _INPUT}),
+            "validador": forms.Select(attrs={"class": _INPUT}),
             "duration_type": forms.RadioSelect(),
             "status": forms.Select(attrs={"class": _INPUT}),
             "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
@@ -67,3 +69,6 @@ class ProjectForm(forms.ModelForm):
         self.fields["owner"].empty_label = "— Selecciona un Owner —"
         self.fields["responsable"].queryset = active
         self.fields["responsable"].empty_label = "— Selecciona un Responsable —"
+        self.fields["validador"].queryset = active
+        self.fields["validador"].required = False
+        self.fields["validador"].empty_label = "— Selecciona un Validador —"

@@ -27,6 +27,13 @@
         <label class="label" for="{{ form.responsable.id_for_label }}">{{ form.responsable.label }}</label>
         {{ form.responsable }}
         {% for e in form.responsable.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+        <p class="mt-1 text-xs text-slate-500">Captura los 3 criterios de la Entrega de Valor del proyecto y la envía a validación.</p>
+      </div>
+      <div>
+        <label class="label" for="{{ form.validador.id_for_label }}">{{ form.validador.label }}</label>
+        {{ form.validador }}
+        {% for e in form.validador.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+        <p class="mt-1 text-xs text-slate-500">Revisa y valida (o regresa) la Entrega de Valor capturada por el Responsable. Puede ser cualquier colaborador, sin importar su nivel o perfil; solo esa persona (además de Talento) podrá validar este proyecto.</p>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>

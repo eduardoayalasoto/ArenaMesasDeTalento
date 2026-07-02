@@ -1,3 +1,4 @@
+{% load dict_extras %}
 {% comment %}Un criterio de Entrega de Valor: radios 1–4. Params: name, label, help, current, values, disabled.{% endcomment %}
 <div>
   <p class="font-medium text-slate-900">{{ label }}</p>
@@ -7,7 +8,7 @@
       <label class="cursor-pointer">
         <input type="radio" name="{{ name }}" value="{{ v }}" class="peer sr-only"
                {% if disabled == 'VALIDADA' %}disabled{% endif %} {% if current == v %}checked{% endif %}>
-        <span class="badge border border-slate-300 text-slate-600 px-4 py-1.5 peer-checked:bg-arena-600 peer-checked:text-white peer-checked:border-arena-600 transition">{{ v }}</span>
+        <span class="badge border border-slate-300 text-slate-600 px-4 py-1.5 peer-checked:bg-arena-600 peer-checked:text-white peer-checked:border-arena-600 transition">{{ v }} · {{ v|scale_label }}</span>
       </label>
     {% endfor %}
   </div>

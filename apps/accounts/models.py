@@ -130,6 +130,11 @@ class User(AbstractUser):
         return self.responsible_projects.filter(is_active=True).exists()
 
     @property
+    def validates_projects(self) -> bool:
+        """Es Validador de Entrega de Valor de al menos un proyecto activo."""
+        return self.validated_projects.filter(is_active=True).exists()
+
+    @property
     def has_photo(self) -> bool:
         return bool(self.photo_data)
 

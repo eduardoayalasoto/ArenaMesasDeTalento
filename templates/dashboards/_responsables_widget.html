@@ -7,7 +7,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
   <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">Principal</p>
 
   {% if primary %}
-    <div class="flex items-center gap-2.5 mb-1">
+    <div class="flex items-center flex-wrap gap-2.5 mb-1">
       <i data-lucide="user" class="w-4 h-4 text-arena-500 shrink-0"></i>
       <span class="text-sm font-medium text-slate-800">{{ primary.user.full_name }}</span>
       {% if primary.user.area %}
@@ -15,7 +15,13 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
       {% endif %}
       {% if request.user.is_admin %}
         <button type="button" @click="editingPrimary = !editingPrimary"
-                class="text-xs text-arena-600 hover:text-arena-700 ml-1">cambiar</button>
+                class="text-xs text-arena-600 hover:text-arena-700">cambiar</button>
+        <form class="inline" method="post"
+              hx-post="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=primary.pk %}"
+              hx-target="#responsables-widget" hx-swap="outerHTML">
+          {% csrf_token %}
+          <button type="submit" class="text-xs text-rose-500 hover:text-rose-700">quitar</button>
+        </form>
       {% endif %}
     </div>
   {% else %}
@@ -24,13 +30,16 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
 
   {% if request.user.is_admin %}
     <form x-show="editingPrimary" x-cloak method="post"
-          action="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
-          hx-post="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
-          hx-target="#responsables-widget" hx-swap="outerHTML"
-          class="mt-2 flex flex-wrap gap-2 mb-1">
+          class="mt-2 flex flex-wrap items-center gap-2 mb-1">
       {% csrf_token %}
       <input type="hidden" name="is_primary" value="1">
-      <select name="user_id" class="input py-1.5" required>
+      <select name="user_id"
+        hx-post="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
+        hx-target="#responsables-widget"
+        hx-swap="outerHTML"
+        hx-trigger="change[this.value !== '']"
+        hx-include="closest form"
+        class="input py-1.5 w-auto max-w-[16rem]" required>
         <option value="">— Nuevo responsable principal —</option>
         {% for u in all_users %}
           <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
@@ -39,7 +48,6 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
           <option value="{{ primary.user.pk }}">{{ primary.user.full_name }} (actual)</option>
         {% endif %}
       </select>
-      <button type="submit" class="btn-secondary py-1.5">Guardar</button>
       <button type="button" class="btn-soft py-1.5" @click="editingPrimary = false">Cancelar</button>
     </form>
 
@@ -62,9 +70,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
         <span class="text-xs text-slate-400">· {{ r.user.area.name }}</span>
       {% endif %}
       {% if request.user.is_admin %}
-        <form method="post"
-              action="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=r.pk %}"
-              class="inline"
+        <form method="post" class="inline"
               hx-post="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=r.pk %}"
               hx-target="#responsables-widget" hx-swap="outerHTML">
           {% csrf_token %}
@@ -83,19 +89,21 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
         <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Agregar secundario
       </button>
       <form x-show="addingSecondary" x-cloak method="post"
-            action="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
-            hx-post="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
-            hx-target="#responsables-widget" hx-swap="outerHTML"
-            class="mt-2 flex flex-wrap gap-2">
+            class="mt-2 flex flex-wrap items-center gap-2">
         {% csrf_token %}
         <input type="hidden" name="is_primary" value="0">
-        <select name="user_id" class="input py-1.5" required>
+        <select name="user_id"
+          hx-post="{% url 'dashboards:talent_responsable_add' pk=target.pk %}"
+          hx-target="#responsables-widget"
+          hx-swap="outerHTML"
+          hx-trigger="change[this.value !== '']"
+          hx-include="closest form"
+          class="input py-1.5 w-auto max-w-[16rem]" required>
           <option value="">— Elegir persona —</option>
           {% for u in all_users %}
             <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
           {% endfor %}
         </select>
-        <button type="submit" class="btn-secondary py-1.5">Agregar</button>
         <button type="button" class="btn-soft py-1.5" @click="addingSecondary = false">Cancelar</button>
       </form>
     </div>

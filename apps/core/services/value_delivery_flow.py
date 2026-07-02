@@ -15,7 +15,7 @@ def get_or_create_vd(project, period, evaluator=None):
     return vd
 
 
-def save_vd_criteria(vd, *, client_satisfaction, deliverables, time_value):
+def save_vd_criteria(vd, *, client_satisfaction, deliverables, time_value, comments=None):
     """Guarda los criterios; el criterio de tiempo se ubica según el tipo de proyecto (RN-08)."""
     vd.client_satisfaction = client_satisfaction
     vd.deliverables = deliverables
@@ -25,9 +25,46 @@ def save_vd_criteria(vd, *, client_satisfaction, deliverables, time_value):
     else:
         vd.time_indefinite = time_value
         vd.time_finite = None
+    if comments is not None:
+        vd.comments = comments
     vd.score = scoring.value_delivery_project_score(vd)
     vd.save()
     return vd
+
+
+def save_vd_comment(vd, comment):
+    """Actualiza el comentario de la Entrega de Valor, sin tocar criterios ni estado.
+
+    Lo puede usar tanto el responsable (al capturar) como el Validador (al revisar).
+    """
+    vd.comments = comment
+    vd.save(update_fields=["comments", "updated_at"])
+    return vd
+
+
+def criteria_summary(vd) -> list[dict]:
+    """Describe los 3 criterios evaluados (etiqueta, ayuda y valor) para mostrarlos con contexto."""
+    if vd.project.is_finite:
+        time_label = "Tiempo — cumplimiento de la fecha de entrega"
+        time_help = "Aplica porque el proyecto tiene fecha de cierre definida."
+        time_value = vd.time_finite
+    else:
+        time_label = "Tiempo — consistencia del servicio"
+        time_help = "Aplica porque el proyecto es de tiempo indefinido."
+        time_value = vd.time_indefinite
+    return [
+        {
+            "label": "Satisfacción del cliente",
+            "help": "Nivel de satisfacción del cliente con el trabajo entregado.",
+            "value": vd.client_satisfaction,
+        },
+        {
+            "label": "Entregables",
+            "help": "Cumplimiento y calidad de los entregables comprometidos.",
+            "value": vd.deliverables,
+        },
+        {"label": time_label, "help": time_help, "value": time_value},
+    ]
 
 
 def submit_vd_for_validation(vd) -> list[str]:

@@ -35,6 +35,12 @@
       {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — consistencia del servicio" help="Aplica porque el proyecto es de tiempo indefinido." current=vd.time_indefinite values=scale_values disabled=vd.status %}
     {% endif %}
 
+    <div>
+      <label class="label" for="comments">Comentarios</label>
+      <p class="text-sm text-slate-600 mb-2">Contexto opcional sobre esta Entrega de Valor: hitos, riesgos o aclaraciones. Lo podrá leer —y complementar si lo desea— quien la valide, y se mostrará también en la Mesa de Talento de cada integrante del equipo.</p>
+      <textarea id="comments" name="comments" rows="3" class="input" {% if vd.status == 'VALIDADA' %}disabled{% endif %}>{{ vd.comments }}</textarea>
+    </div>
+
     {% if vd.status != 'VALIDADA' %}
       <button type="submit" class="btn-primary w-full">Enviar a validación del director</button>
     {% endif %}

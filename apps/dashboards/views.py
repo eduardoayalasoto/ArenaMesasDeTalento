@@ -63,16 +63,18 @@ def build_results(subject, period):
                 "ownership_score": None,
                 "vd_score": vd_evals[m.project_id].score if m.project_id in vd_evals else None,
                 "vd_evaluator": vd_evals[m.project_id].evaluator if m.project_id in vd_evals else None,
+                "vd_comments": vd_evals[m.project_id].comments if m.project_id in vd_evals else "",
                 "closed": None,
                 "is_lead_project": True,
             }
             for m in member_projects
         ]
         feedback = [lead_eval] if lead_eval and lead_eval.is_submitted else []
+        vd_comment_rows = [row for row in projects if row["vd_comments"]]
         return {
             "final": final, "weight": weight, "projects": projects,
             "feedback": feedback, "arena_notes": arena_notes,
-            "lead_eval": lead_eval,
+            "lead_eval": lead_eval, "vd_comment_rows": vd_comment_rows,
         }
 
     # Colaborador normal
@@ -94,16 +96,18 @@ def build_results(subject, period):
             "ownership_score": e.score,
             "vd_score": vd_evals[e.project_id].score if e.project_id in vd_evals else None,
             "vd_evaluator": vd_evals[e.project_id].evaluator if e.project_id in vd_evals else None,
+            "vd_comments": vd_evals[e.project_id].comments if e.project_id in vd_evals else "",
             "closed": e.is_submitted,
             "is_lead_project": False,
         }
         for e in evals
     ]
     feedback = [e for e in evals if e.is_submitted]
+    vd_comment_rows = [row for row in projects if row["vd_comments"]]
     return {
         "final": final, "weight": weight, "projects": projects,
         "feedback": feedback, "arena_notes": arena_notes,
-        "lead_eval": None,
+        "lead_eval": None, "vd_comment_rows": vd_comment_rows,
     }
 
 

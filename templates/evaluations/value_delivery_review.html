@@ -1,47 +1,80 @@
 {% extends "base.html" %}
+{% load dict_extras %}
 {% block content %}
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-slate-900">Validar Entrega de Valor</h2>
-    <p class="text-slate-600">Revisa y valida (o regresa) las evaluaciones enviadas por los líderes.</p>
+    <p class="text-slate-600">Aquí aparecen los proyectos donde eres el <strong>Validador de Entrega de Valor</strong> asignado. Revisa que los tres criterios y el comentario reflejen el desempeño real del equipo antes de validar; una vez validada, la calificación es definitiva y se aplica a la Entrega de Valor de todas las personas del equipo del proyecto.</p>
   </div>
 
   {% if not queue %}
-    {% include "partials/empty_state.html" with icon="shield" title="No hay nada por validar" message="Cuando un líder envíe una Entrega de Valor a validación, aparecerá aquí." %}
+    {% include "partials/empty_state.html" with icon="shield" title="No hay nada por validar" message="Cuando el Responsable de un proyecto que validas envíe su Entrega de Valor, aparecerá aquí." %}
   {% else %}
     <div class="space-y-4">
       {% for vd in queue %}
         <div class="card p-5" x-data="{ rejecting: false }">
-          <div class="flex items-start justify-between gap-3">
+          <div class="flex items-start justify-between gap-3 flex-wrap">
             <div>
               <h3 class="font-semibold text-slate-900">{{ vd.project.name }}</h3>
-              <p class="text-sm text-slate-500">Capturada por {{ vd.evaluator.full_name }}</p>
+              {% if vd.project.client %}<p class="text-xs text-slate-400">{{ vd.project.client }}</p>{% endif %}
+              <p class="text-sm text-slate-500 mt-1">
+                Capturada por <span class="font-medium text-slate-700">{{ vd.evaluator.full_name|default:"—" }}</span>
+                (Responsable) · {{ vd.project.get_duration_type_display }} · {{ vd.project.memberships.count }} persona{{ vd.project.memberships.count|pluralize }} en el equipo
+              </p>
             </div>
-            <span class="text-lg font-semibold text-slate-900 tabular-nums">{{ vd.score }}</span>
+            <div class="text-right">
+              <p class="text-xs text-slate-500 uppercase tracking-wide">Promedio de los 3 criterios</p>
+              <span class="text-lg font-semibold text-slate-900 tabular-nums">{{ vd.score|default:"—" }}</span>
+            </div>
           </div>
-          <dl class="mt-3 grid grid-cols-3 gap-3 text-sm">
-            <div><dt class="text-slate-500">Satisfacción</dt><dd class="font-medium">{{ vd.client_satisfaction|default:"—" }}</dd></div>
-            <div><dt class="text-slate-500">Entregables</dt><dd class="font-medium">{{ vd.deliverables|default:"—" }}</dd></div>
-            <div><dt class="text-slate-500">Tiempo</dt><dd class="font-medium">{% if vd.project.is_finite %}{{ vd.time_finite|default:"—" }}{% else %}{{ vd.time_indefinite|default:"—" }}{% endif %}</dd></div>
+
+          <dl class="mt-4 grid gap-4 sm:grid-cols-3">
+            {% for c in vd.criteria %}
+              <div>
+                <dt class="font-medium text-slate-900 text-sm">{{ c.label }}</dt>
+                <dd class="text-xs text-slate-500 mb-1">{{ c.help }}</dd>
+                <dd class="font-semibold text-slate-900">
+                  {% if c.value %}{{ c.value }} · {{ c.value|scale_label }}{% else %}<span class="text-slate-400 font-normal">Sin capturar</span>{% endif %}
+                </dd>
+              </div>
+            {% endfor %}
           </dl>
 
-          <div class="mt-4 flex items-center gap-2">
-            <form method="post">
+          <div class="mt-4 rounded-lg bg-slate-50 border border-slate-100 px-4 py-3">
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">Comentarios de la Entrega de Valor</p>
+            <p class="text-xs text-slate-500 mb-2">Los captura el Responsable; se muestran también en la Mesa de Talento de cada integrante del equipo. Puedes leerlos y, si quieres, complementarlos sin afectar la calificación.</p>
+            <form method="post" class="space-y-2">
               {% csrf_token %}
               <input type="hidden" name="vd" value="{{ vd.pk }}">
-              <input type="hidden" name="action" value="validate">
-              <button type="submit" class="btn-primary">Validar</button>
+              <input type="hidden" name="action" value="comment">
+              <textarea name="comments" rows="2" class="input" placeholder="Sin comentarios todavía.">{{ vd.comments }}</textarea>
+              <button type="submit" class="btn-secondary text-sm">Guardar comentario</button>
             </form>
-            <button type="button" class="btn-secondary" @click="rejecting = !rejecting">Regresar a borrador</button>
           </div>
 
-          <form method="post" x-show="rejecting" x-cloak class="mt-3">
-            {% csrf_token %}
-            <input type="hidden" name="vd" value="{{ vd.pk }}">
-            <input type="hidden" name="action" value="reject">
-            <label class="label" for="comment-{{ vd.pk }}">Motivo del rechazo</label>
-            <textarea id="comment-{{ vd.pk }}" name="comment" rows="2" class="input" required placeholder="Explica qué debe ajustar el líder."></textarea>
-            <button type="submit" class="btn-danger mt-2">Confirmar regreso</button>
-          </form>
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <div class="flex items-center gap-2 flex-wrap">
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="vd" value="{{ vd.pk }}">
+                <input type="hidden" name="action" value="validate">
+                <button type="submit" class="btn-primary">Validar</button>
+              </form>
+              <button type="button" class="btn-secondary" @click="rejecting = !rejecting">Regresar a borrador</button>
+            </div>
+            <p class="mt-2 text-xs text-slate-500">
+              <strong>Validar</strong> deja esta calificación como definitiva: se aplica de inmediato a la Entrega de Valor de las {{ vd.project.memberships.count }} persona{{ vd.project.memberships.count|pluralize }} del equipo y ya no podrá editarse.
+              <strong>Regresar a borrador</strong> la devuelve a {{ vd.evaluator.full_name|default:"el Responsable" }} para que la corrija y la reenvíe a validación.
+            </p>
+
+            <form method="post" x-show="rejecting" x-cloak class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="vd" value="{{ vd.pk }}">
+              <input type="hidden" name="action" value="reject">
+              <label class="label" for="comment-{{ vd.pk }}">Motivo del rechazo</label>
+              <textarea id="comment-{{ vd.pk }}" name="comment" rows="2" class="input" required placeholder="Explica qué debe ajustar el Responsable."></textarea>
+              <button type="submit" class="btn-danger mt-2">Confirmar regreso</button>
+            </form>
+          </div>
         </div>
       {% endfor %}
     </div>

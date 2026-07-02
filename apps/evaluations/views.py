@@ -572,6 +572,7 @@ def value_delivery_capture(request, project_id):
             client_satisfaction=_validate_scale(request.POST.get("client_satisfaction")),
             deliverables=_validate_scale(request.POST.get("deliverables")),
             time_value=_validate_scale(request.POST.get("time_value")),
+            comments=request.POST.get("comments", "").strip(),
         )
         errors = value_delivery_flow.submit_vd_for_validation(vd)
         if errors:
@@ -591,20 +592,27 @@ def value_delivery_capture(request, project_id):
     })
 
 
-# --- Entrega de Valor (director) ------------------------------------------
+# --- Entrega de Valor (Validador) ------------------------------------------
 
 @login_required
 def value_delivery_review(request):
-    """Cola del director: validar o rechazar las Entregas de Valor en validación."""
-    if not permissions.can_validate_value_delivery(request.user):
+    """Cola del Validador: validar o rechazar las Entregas de Valor de sus proyectos asignados."""
+    if not permissions.has_value_delivery_validations(request.user):
         return render(request, "errors/403.html", {
-            "titulo": "Solo el Director valida la Entrega de Valor",
-            "mensaje": "Esta cola es exclusiva del Director del área.",
+            "titulo": "No tienes proyectos por validar",
+            "mensaje": "Esta cola solo aparece para quien esté asignado como Validador de "
+            "Entrega de Valor de algún proyecto (o para Talento).",
         }, status=403)
 
     period = _open_period()
     if request.method == "POST":
-        vd = get_object_or_404(ValueDeliveryEvaluation, pk=request.POST.get("vd"))
+        vd = get_object_or_404(
+            ValueDeliveryEvaluation.objects.select_related("project"), pk=request.POST.get("vd")
+        )
+        if not permissions.can_validate_value_delivery(request.user, vd):
+            messages.error(request, "No eres el Validador asignado a este proyecto.")
+            return redirect("evaluations:value_delivery_review")
+
         action = request.POST.get("action")
         if action == "validate":
             value_delivery_flow.validate_vd(vd, request.user)
@@ -612,11 +620,19 @@ def value_delivery_review(request):
         elif action == "reject":
             value_delivery_flow.reject_vd(vd, request.POST.get("comment", "").strip())
             messages.info(request, f"Regresaste a borrador la Entrega de Valor de {vd.project.name}.")
+        elif action == "comment":
+            value_delivery_flow.save_vd_comment(vd, request.POST.get("comments", "").strip())
+            messages.success(request, "Guardaste el comentario.")
         return redirect("evaluations:value_delivery_review")
 
     queue = ValueDeliveryEvaluation.objects.filter(
         period=period, status=ValueDeliveryEvaluation.Status.EN_VALIDACION
-    ).select_related("project", "evaluator")
+    ).select_related("project", "evaluator", "project__validador")
+    if not request.user.is_admin:
+        queue = queue.filter(project__validador=request.user)
+    for vd in queue:
+        vd.criteria = value_delivery_flow.criteria_summary(vd)
+
     return render(request, "evaluations/value_delivery_review.html", {
         "page_title": "Validar Entrega de Valor",
         "queue": queue,

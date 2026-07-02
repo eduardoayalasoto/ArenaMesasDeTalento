@@ -132,9 +132,35 @@ def test_collaborator_cannot_capture_value_delivery(collaborator, project_finite
 
 
 @pytest.mark.django_db
-def test_only_director_validates_value_delivery(director, collaborator):
-    assert permissions.can_validate_value_delivery(director) is True
-    assert permissions.can_validate_value_delivery(collaborator) is False
+def test_assigned_validador_validates_value_delivery(collaborator, director, project_finite, period):
+    """El Validador asignado al proyecto puede validar, sin importar su rol o nivel."""
+    from apps.evaluations.models import ValueDeliveryEvaluation
+
+    project_finite.validador = collaborator
+    project_finite.save(update_fields=["validador"])
+    vd = ValueDeliveryEvaluation.objects.create(project=project_finite, period=period)
+
+    assert permissions.can_validate_value_delivery(collaborator, vd) is True
+    # Un director sin asignación explícita ya no tiene acceso genérico.
+    assert permissions.can_validate_value_delivery(director, vd) is False
+
+
+@pytest.mark.django_db
+def test_talento_always_validates_value_delivery(talento, project_finite, period):
+    from apps.evaluations.models import ValueDeliveryEvaluation
+
+    vd = ValueDeliveryEvaluation.objects.create(project=project_finite, period=period)
+    assert permissions.can_validate_value_delivery(talento, vd) is True
+
+
+@pytest.mark.django_db
+def test_has_value_delivery_validations(collaborator, director, talento, project_finite):
+    assert permissions.has_value_delivery_validations(director) is False
+    assert permissions.has_value_delivery_validations(talento) is True
+
+    project_finite.validador = collaborator
+    project_finite.save(update_fields=["validador"])
+    assert permissions.has_value_delivery_validations(collaborator) is True
 
 
 # --- projects_led_by -------------------------------------------------------
@@ -143,3 +169,10 @@ def test_only_director_validates_value_delivery(director, collaborator):
 def test_projects_led_by(lead, project_finite, project_indefinite):
     led = set(permissions.projects_led_by(lead))
     assert led == {project_finite, project_indefinite}
+
+
+@pytest.mark.django_db
+def test_projects_validated_by(collaborator, project_finite, project_indefinite):
+    project_finite.validador = collaborator
+    project_finite.save(update_fields=["validador"])
+    assert set(permissions.projects_validated_by(collaborator)) == {project_finite}

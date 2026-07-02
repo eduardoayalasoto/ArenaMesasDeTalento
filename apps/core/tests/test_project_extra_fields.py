@@ -62,3 +62,32 @@ def test_projectform_guarda_campos_nuevos(lead):
     assert p.responsable == resp
     assert p.kickoff == _date(2026, 1, 1)
     assert p.status == Project.Status.DELAYED
+
+
+@pytest.mark.django_db
+def test_projectform_validador_es_opcional(lead):
+    """Un proyecto puede guardarse sin Validador asignado todavía."""
+    form = ProjectForm(data={
+        "name": "Sin Validador", "client": "", "owner": lead.pk, "responsable": lead.pk,
+        "duration_type": Project.Duration.FINITO, "is_active": "on", "status": Project.Status.ON_TRACK,
+    })
+    assert form.is_valid(), form.errors
+    p = form.save()
+    assert p.validador is None
+
+
+@pytest.mark.django_db
+def test_projectform_acepta_validador_de_cualquier_perfil(lead):
+    """El Validador no está restringido a Directores: puede ser cualquier colaborador activo."""
+    colaborador = User.objects.create_user(
+        email="validador@arena-analytics.com", password="x", full_name="Validadora Uno",
+        role=User.Role.COLABORADOR,
+    )
+    form = ProjectForm(data={
+        "name": "Con Validador", "client": "", "owner": lead.pk, "responsable": lead.pk,
+        "validador": colaborador.pk,
+        "duration_type": Project.Duration.FINITO, "is_active": "on", "status": Project.Status.ON_TRACK,
+    })
+    assert form.is_valid(), form.errors
+    p = form.save()
+    assert p.validador == colaborador

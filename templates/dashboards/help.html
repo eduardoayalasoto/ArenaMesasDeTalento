@@ -92,7 +92,7 @@
         <li>Talento asigna área, nivel y proyectos.</li>
         <li>El colaborador hace su autoevaluación de Ownership por proyecto y elige a su evaluador.</li>
         <li>El evaluador revisa con la persona, complementa Fortalezas/Oportunidades y cierra.</li>
-        <li>El Lead captura la Entrega de Valor; Dirección la valida.</li>
+        <li>El Responsable del proyecto captura la Entrega de Valor; la valida quien esté asignado como Validador de ese proyecto.</li>
         <li>Talento captura el Impacto Arena.</li>
         <li>El sistema calcula la calificación final ponderada y su banda.</li>
       </ol>
@@ -121,13 +121,13 @@
   <div x-show="tab === 'lead'" x-cloak class="space-y-4">
     {% include "dashboards/_help_step.html" with n=1 icon="users" title="Revisa tu área" text="<b>Menú → Mi área</b>: las personas de tu área con su avance y calificaciones." %}
     {% include "dashboards/_help_step.html" with n=2 icon="folder" title="Gestiona proyectos y equipos" text="<b>Menú → Proyectos</b>: puedes crear proyectos, asignar equipos y editarlos." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="package" title="Captura la Entrega de Valor" text="<b>Menú → Entrega de Valor</b>: una por proyecto que lideras. Califica satisfacción, entregables y el criterio de <b>tiempo</b>; se envía al Director para validar." %}
+    {% include "dashboards/_help_step.html" with n=3 icon="package" title="Captura la Entrega de Valor" text="<b>Menú → Entrega de Valor</b>: una por proyecto donde seas Responsable. Califica satisfacción, entregables, el criterio de <b>tiempo</b> y agrega comentarios de contexto; se envía a validación de quien esté asignado como <b>Validador</b> de ese proyecto." %}
     {% include "dashboards/_help_step.html" with n=4 icon="user" title="También puedes ser evaluador" text="Si alguien te elige como evaluador, revisa tu sección <b>Validación de Ownership</b>." %}
   </div>
 
   <!-- Dirección -->
   <div x-show="tab === 'direccion'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="shield" title="Valida la Entrega de Valor" text="<b>Menú → Validar Entrega de Valor</b>: aprueba o regresa con un comentario al Lead." %}
+    {% include "dashboards/_help_step.html" with n=1 icon="shield" title="Valida la Entrega de Valor" text="<b>Menú → Validar Entrega de Valor</b> aparece si estás asignado como <b>Validador</b> en algún proyecto (ya no es automático para todos los directores). Aprueba o regresa con un comentario al Responsable, y puedes leer y complementar sus comentarios." %}
     {% include "dashboards/_help_step.html" with n=2 icon="table" title="Consulta la Mesa de Talento" text="<b>Menú → Mesa de Talento</b>: el informe de cada persona, con foto, scores y proyectos." %}
   </div>
 

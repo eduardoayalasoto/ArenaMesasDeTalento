@@ -29,7 +29,7 @@ def project_admin(request):
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
         }, status=403)
     projects = (
-        Project.objects.select_related("owner")
+        Project.objects.select_related("owner", "validador")
         .annotate(members=Count("memberships"))
         .order_by("name")
     )
@@ -214,10 +214,15 @@ def project_delete(request, pk):
             edit_url = f"/catalogo/proyectos/{pk}/"
             reactivar_url = f"/catalogo/proyectos/{pk}/reactivar/"
             client_html = f'<p class="text-xs text-slate-500">{project.client}</p>' if project.client else ""
+            validador_html = (
+                project.validador.full_name if project.validador
+                else '<span class="text-slate-400 italic text-xs">Sin asignar</span>'
+            )
             return HttpResponse(
                 f'<tr id="project-row-{pk}">'
                 f'<td class="px-4 py-3"><p class="font-medium text-slate-900">{project.name}</p>{client_html}</td>'
                 f'<td class="px-4 py-3 text-slate-600">{project.owner.full_name}</td>'
+                f'<td class="px-4 py-3 text-slate-600">{validador_html}</td>'
                 f'<td class="px-4 py-3 text-slate-600">{project.get_duration_type_display()}</td>'
                 f'<td class="px-4 py-3 text-center tabular-nums">—</td>'
                 f'<td class="px-4 py-3"><span class="badge bg-slate-100 text-slate-500">Inactivo</span></td>'
@@ -258,10 +263,15 @@ def project_reactivate(request, pk):
         edit_url = f"/catalogo/proyectos/{pk}/"
         delete_url = f"/catalogo/proyectos/{pk}/eliminar/"
         client_html = f'<p class="text-xs text-slate-500">{project.client}</p>' if project.client else ""
+        validador_html = (
+            project.validador.full_name if project.validador
+            else '<span class="text-slate-400 italic text-xs">Sin asignar</span>'
+        )
         return HttpResponse(
             f'<tr id="project-row-{pk}">'
             f'<td class="px-4 py-3"><p class="font-medium text-slate-900">{project.name}</p>{client_html}</td>'
             f'<td class="px-4 py-3 text-slate-600">{project.owner.full_name}</td>'
+            f'<td class="px-4 py-3 text-slate-600">{validador_html}</td>'
             f'<td class="px-4 py-3 text-slate-600">{project.get_duration_type_display()}</td>'
             f'<td class="px-4 py-3 text-center tabular-nums">{members_count}</td>'
             f'<td class="px-4 py-3"><span class="badge bg-emerald-50 text-emerald-700">Activo</span></td>'

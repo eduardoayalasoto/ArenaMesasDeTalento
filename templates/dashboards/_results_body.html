@@ -1,4 +1,4 @@
-{% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period.{% endcomment %}
+{% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period, vd_comment_rows.{% endcomment %}
 
 <!-- Hero: identidad + calificación final -->
 <div class="card overflow-hidden mb-5{% if sticky_hero %} sticky top-16 z-20 shadow-md{% endif %}">
@@ -153,6 +153,22 @@
   </div>
 {% endif %}
 
+<!-- Comentarios de Entrega de Valor (por proyecto validado) -->
+{% if vd_comment_rows %}
+  <div class="mb-6">
+    <h3 class="font-semibold text-slate-900 mb-3">Comentarios de Entrega de Valor</h3>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {% for row in vd_comment_rows %}
+        <div class="card p-5 h-full">
+          <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ row.project.name }}</h4>
+          <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ row.vd_comments }}</p>
+          {% if row.vd_evaluator %}<p class="mt-2 text-xs text-slate-400">Por {{ row.vd_evaluator.full_name }} (Responsable)</p>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
 <!-- Retroalimentación por proyecto -->
 {% for ev in feedback %}
   <div class="mb-6">
@@ -174,9 +190,7 @@
       {% include "evaluations/_feedback_card.html" with title="Fortalezas" value=ev.strengths empty="Sin información." %}
       {% include "evaluations/_feedback_card.html" with title="Oportunidades" value=ev.opportunities empty="Sin información." %}
     </div>
-    {% if ev.comments %}
-      <div class="mt-5">{% include "evaluations/_feedback_card.html" with title="Comentarios" value=ev.comments empty="" %}</div>
-    {% endif %}
+    <div class="mt-5">{% include "evaluations/_feedback_card.html" with title="Comentarios" value=ev.comments empty="Sin comentarios." %}</div>
   </div>
 {% endfor %}
 

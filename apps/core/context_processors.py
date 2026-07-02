@@ -88,8 +88,8 @@ def navigation(request):
     if user.is_admin or user.is_director:
         add("Mesa de Talento", "dashboards:talent_table", "table")
 
-    # Director — cola de validación de Entrega de Valor
-    if user.is_director or user.is_superuser:
+    # Validador de Entrega de Valor — cola de validación (asignado por proyecto, o Talento)
+    if user.is_admin or user.validates_projects:
         add("Validar Entrega de Valor", "evaluations:value_delivery_review", "shield")
 
     # Proyectos — Talento, Leads y Directores (crear/editar todos)

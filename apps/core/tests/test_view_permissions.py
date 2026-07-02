@@ -365,7 +365,7 @@ def test_talent_table_superuser_allowed(superuser, client_obj):
 
 
 # ---------------------------------------------------------------------------
-# 8. Validar Entrega de Valor — solo Director (o superusuario)
+# 8. Validar Entrega de Valor — Validador asignado por proyecto, o Talento/superusuario
 # ---------------------------------------------------------------------------
 
 @pytest.mark.django_db
@@ -379,13 +379,30 @@ def test_vd_review_colab_lead_denied(colab_lead, client_obj):
 
 
 @pytest.mark.django_db
-def test_vd_review_talento_denied(talento, client_obj):
-    assert _get(client_obj, talento, "evaluations:value_delivery_review") == 403
+def test_vd_review_talento_allowed(talento, client_obj):
+    """Talento conserva acceso total, igual que en el resto de las pantallas de administración."""
+    assert _get(client_obj, talento, "evaluations:value_delivery_review") == 200
 
 
 @pytest.mark.django_db
-def test_vd_review_director_allowed(director, client_obj):
+def test_vd_review_director_without_assignment_denied(director, client_obj):
+    """Un Director ya no tiene acceso genérico: solo entra si está asignado como Validador."""
+    assert _get(client_obj, director, "evaluations:value_delivery_review") == 403
+
+
+@pytest.mark.django_db
+def test_vd_review_director_with_assignment_allowed(director, existing_project, client_obj):
+    existing_project.validador = director
+    existing_project.save(update_fields=["validador"])
     assert _get(client_obj, director, "evaluations:value_delivery_review") == 200
+
+
+@pytest.mark.django_db
+def test_vd_review_colab_with_assignment_allowed(colab, existing_project, client_obj):
+    """Cualquier colaborador puede validar si está asignado, sin importar su rol o nivel."""
+    existing_project.validador = colab
+    existing_project.save(update_fields=["validador"])
+    assert _get(client_obj, colab, "evaluations:value_delivery_review") == 200
 
 
 @pytest.mark.django_db
