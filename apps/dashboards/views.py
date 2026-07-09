@@ -12,9 +12,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from apps.catalog.models import Area, EvaluationPeriod, ProjectMembership, SeniorityLevel
+from apps.catalog.models import Area, EvaluationPeriod, Project, ProjectMembership, SeniorityLevel
 from apps.core.services import final_flow, permissions
 from apps.evaluations.models import (
+    FeedbackResponsible,
     FinalScore,
     OwnershipEvaluation,
     ValueDeliveryEvaluation,
@@ -291,6 +292,93 @@ def talent_table(request):
     })
 
 
+def _pending_people(period):
+    """Personas con algo pendiente en el periodo: ownership propia, Entrega de Valor
+    (captura como responsable, validación como Validador) y retroalimentación.
+
+    No incluye Impacto Arena: lo captura Talento internamente, no es una tarea
+    delegada a un colaborador o lead.
+    """
+    from django.contrib.auth import get_user_model
+
+    User = get_user_model()
+    users = User.objects.filter(is_active=True, is_superuser=False).select_related("area", "level")
+
+    memberships_by_user = {}
+    for m in ProjectMembership.objects.filter(project__is_active=True).select_related("project"):
+        memberships_by_user.setdefault(m.user_id, []).append(m.project)
+
+    own_submitted = {}
+    lead_eval_submitted = set()
+    for ev in OwnershipEvaluation.objects.filter(period=period):
+        if ev.project_id is None:
+            if ev.is_submitted:
+                lead_eval_submitted.add(ev.user_id)
+        else:
+            own_submitted[(ev.user_id, ev.project_id)] = ev.is_submitted
+
+    vd_by_project = {
+        vd.project_id: vd for vd in ValueDeliveryEvaluation.objects.filter(period=period)
+    }
+
+    responsable_projects = {}
+    validador_projects = {}
+    for p in Project.objects.filter(is_active=True):
+        if p.responsable_id:
+            responsable_projects.setdefault(p.responsable_id, []).append(p)
+        if p.validador_id:
+            validador_projects.setdefault(p.validador_id, []).append(p)
+
+    feedback_missing_by_user = {}
+    for fr in (
+        FeedbackResponsible.objects.filter(note__period=period, note__feedback_agreed=False)
+        .select_related("note__user")
+    ):
+        feedback_missing_by_user.setdefault(fr.user_id, []).append(fr.note.user)
+
+    rows = []
+    for u in users:
+        ownership_missing = []
+        if u.is_lead:
+            if u.id not in lead_eval_submitted:
+                ownership_missing.append("Autoevaluación transversal")
+        else:
+            for project in memberships_by_user.get(u.id, []):
+                if not own_submitted.get((u.id, project.id), False):
+                    ownership_missing.append(project.name)
+
+        vd_capture_missing = []
+        for project in responsable_projects.get(u.id, []):
+            vd = vd_by_project.get(project.id)
+            if vd is None or vd.status == ValueDeliveryEvaluation.Status.BORRADOR:
+                vd_capture_missing.append(project.name)
+
+        vd_validation_missing = []
+        for project in validador_projects.get(u.id, []):
+            vd = vd_by_project.get(project.id)
+            if vd is not None and vd.status == ValueDeliveryEvaluation.Status.EN_VALIDACION:
+                vd_validation_missing.append(project.name)
+
+        feedback_missing = [t.full_name for t in feedback_missing_by_user.get(u.id, [])]
+
+        total = (
+            len(ownership_missing) + len(vd_capture_missing)
+            + len(vd_validation_missing) + len(feedback_missing)
+        )
+        if total:
+            rows.append({
+                "user": u,
+                "ownership_missing": ownership_missing,
+                "vd_capture_missing": vd_capture_missing,
+                "vd_validation_missing": vd_validation_missing,
+                "feedback_missing": feedback_missing,
+                "total": total,
+            })
+
+    rows.sort(key=lambda r: (-r["total"], r["user"].full_name))
+    return rows
+
+
 @login_required
 def period_progress(request):
     """Avance de llenado del periodo (solo Talento/admin)."""
@@ -313,6 +401,7 @@ def period_progress(request):
             "vd_validated": vd.filter(status=ValueDeliveryEvaluation.Status.VALIDADA).count(),
             "finals_complete": finals.filter(is_complete=True).count(),
             "finals_total": finals.count(),
+            "pending_rows": _pending_people(period),
         })
     return render(request, "dashboards/period_progress.html", ctx)
 
@@ -350,6 +439,22 @@ def talent_person(request, pk):
             .select_related("project")
             .order_by("project__name")
         )
+
+        # Igual para Entrega de Valor: aquí se ven los comentarios aunque el
+        # proyecto siga en Borrador/En validación, no solo cuando ya está Validada.
+        from apps.evaluations.models import ValueDeliveryEvaluation
+        project_ids = [row["project"].id for row in ctx["projects"] if row["project"]]
+        vd_by_project = {
+            vd.project_id: vd
+            for vd in ValueDeliveryEvaluation.objects.filter(period=period, project_id__in=project_ids)
+            .select_related("evaluator")
+        }
+        ctx["vd_comment_rows"] = [
+            {"project": row["project"], "vd_comments": vd_by_project[row["project"].id].comments,
+             "vd_evaluator": vd_by_project[row["project"].id].evaluator}
+            for row in ctx["projects"]
+            if row["project"] and row["project"].id in vd_by_project and vd_by_project[row["project"].id].comments
+        ]
 
         note, _ = TalentSessionNote.objects.get_or_create(
             user=target, period=period,

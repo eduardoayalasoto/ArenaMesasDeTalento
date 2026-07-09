@@ -14,5 +14,7 @@
       {% include "dashboards/_progress_card.html" with title="Calificaciones completas" done=finals_complete total=finals_total icon="trophy" %}
     </div>
     <p class="mt-6 text-sm text-slate-500">El avance se actualiza conforme las personas envían sus evaluaciones, los Leads capturan la Entrega de Valor y Talento registra el Impacto Arena.</p>
+
+    {% include "dashboards/_pending_people_table.html" with pending_rows=pending_rows %}
   {% endif %}
 {% endblock %}
