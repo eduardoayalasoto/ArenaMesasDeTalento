@@ -10,6 +10,7 @@ from apps.core.tests.conftest import make_membership
 from apps.dashboards.views import _pending_people
 from apps.evaluations.models import (
     FeedbackResponsible,
+    OwnershipAnswer,
     OwnershipEvaluation,
     TalentSessionNote,
     ValueDeliveryEvaluation,
@@ -30,15 +31,55 @@ def talento(db):
     return u
 
 
+@pytest.fixture
+def director(db, area):
+    return User.objects.create_user(
+        email="director-pp@arena-analytics.com", password="x", full_name="Director PP",
+        area=area, role=User.Role.DIRECTOR,
+    )
+
+
 @pytest.mark.django_db
-def test_persona_sin_ownership_enviada_aparece_como_pendiente(collaborator, project_finite, period):
+def test_persona_sin_ownership_enviada_aparece_como_pendiente_sin_iniciar(collaborator, project_finite, period):
     make_membership(project_finite, collaborator)
 
     rows = _pending_people(period)
 
     by_user = {r["user"]: r for r in rows}
-    assert by_user[collaborator]["ownership_missing"] == [project_finite.name]
+    assert by_user[collaborator]["ownership_missing"] == [
+        {"label": project_finite.name, "detail": "Sin iniciar"}
+    ]
     assert by_user[collaborator]["total"] == 1
+
+
+@pytest.mark.django_db
+def test_ownership_en_borrador_con_respuestas_indica_falta_enviar(
+    collaborator, project_finite, period, ownership_template
+):
+    make_membership(project_finite, collaborator)
+    ev = OwnershipEvaluation.objects.create(
+        user=collaborator, project=project_finite, period=period, template=ownership_template,
+    )
+    question = ownership_template.sections.first().questions.first()
+    OwnershipAnswer.objects.create(evaluation=ev, question=question, value=4)
+
+    rows = _pending_people(period)
+
+    by_user = {r["user"]: r for r in rows}
+    assert by_user[collaborator]["ownership_missing"] == [
+        {"label": project_finite.name, "detail": "Con avance, falta enviar"}
+    ]
+
+
+@pytest.mark.django_db
+def test_director_con_membresia_no_aparece_por_ownership(director, project_finite, period):
+    # Los Directores no llenan su propia autoevaluación (ni aparece en su menú),
+    # así que una membresía sin evaluación NO debe marcarse como pendiente.
+    make_membership(project_finite, director)
+
+    rows = _pending_people(period)
+
+    assert all(r["user"] != director for r in rows)
 
 
 @pytest.mark.django_db
@@ -63,7 +104,7 @@ def test_lead_con_vd_sin_capturar_aparece_como_pendiente(lead, project_finite, p
 
     assert len(rows) == 1
     assert rows[0]["user"] == lead
-    assert rows[0]["vd_capture_missing"] == [project_finite.name]
+    assert rows[0]["vd_capture_missing"] == [{"label": project_finite.name, "detail": "Sin iniciar"}]
     assert rows[0]["total"] == 1
 
 
@@ -79,7 +120,9 @@ def test_validador_con_vd_en_validacion_aparece_como_pendiente(lead, collaborato
     rows = _pending_people(period)
 
     by_user = {r["user"]: r for r in rows}
-    assert by_user[collaborator]["vd_validation_missing"] == [project_finite.name]
+    assert by_user[collaborator]["vd_validation_missing"] == [
+        {"label": project_finite.name, "detail": "Esperando su validación"}
+    ]
     # La Entrega de Valor ya fue capturada (está EN_VALIDACION, no BORRADOR), así
     # que el lead (responsable) ya no tiene pendiente de captura.
     assert lead not in by_user
@@ -107,7 +150,9 @@ def test_responsable_de_retroalimentacion_sin_cerrar_aparece_como_pendiente(coll
     rows = _pending_people(period)
 
     by_user = {r["user"]: r for r in rows}
-    assert by_user[lead]["feedback_missing"] == [collaborator.full_name]
+    assert by_user[lead]["feedback_missing"] == [
+        {"label": collaborator.full_name, "detail": "Sesión sin cerrar"}
+    ]
 
 
 @pytest.mark.django_db

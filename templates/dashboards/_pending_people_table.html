@@ -1,8 +1,8 @@
 {% comment %}
 Tabla de personas con pendientes en el periodo abierto. Params: pending_rows.
 Cada row: user, ownership_missing, vd_capture_missing, vd_validation_missing,
-feedback_missing (listas de nombres), total (int). Ya viene ordenada por
-total descendente.
+feedback_missing (listas de {label, detail}), total (int). Ya viene ordenada
+por total descendente.
 {% endcomment %}
 <div class="mt-8">
   <div class="flex items-center justify-between gap-2 mb-3 flex-wrap">
@@ -21,80 +21,55 @@ total descendente.
           <thead class="bg-slate-50 text-slate-500 text-left text-xs">
             <tr class="align-bottom">
               <th class="px-3 py-2 font-medium leading-tight">Persona</th>
-              <th class="px-3 py-2 font-medium leading-tight">Pendientes</th>
-              <th class="px-3 py-2 font-medium leading-tight text-center w-24">Total</th>
-              <th class="px-3 py-2 font-medium text-right w-16"></th>
+              <th class="px-3 py-2 font-medium leading-tight">Qué le falta</th>
+              <th class="px-3 py-2 font-medium leading-tight text-center w-20">Total</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
             {% for row in pending_rows %}
               <tr class="hover:bg-slate-50/70 transition align-top">
                 <td class="px-3 py-3">
-                  <div class="flex items-center gap-3">
+                  <a href="{% url 'dashboards:talent_person' pk=row.user.pk %}" class="flex items-center gap-3 group">
                     {% include "partials/avatar.html" with subject=row.user size="w-10 h-10" icon="w-5 h-5" %}
                     <div class="min-w-0">
-                      <p class="font-medium text-slate-900 truncate">{{ row.user.full_name }}</p>
+                      <p class="font-medium text-slate-900 truncate group-hover:underline">{{ row.user.full_name }}</p>
                       <p class="text-xs text-slate-500 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user.level.name|default:"Sin nivel" }}</p>
                     </div>
-                  </div>
+                  </a>
                 </td>
                 <td class="px-3 py-3">
-                  <div class="flex flex-wrap gap-1.5">
+                  <div class="space-y-1.5">
                     {% if row.ownership_missing %}
-                      <span x-data="{ open: false }" class="relative inline-block">
-                        <button @mouseenter="open=true" @mouseleave="open=false" type="button"
-                                class="badge bg-amber-50 text-amber-700 cursor-default">
-                          {% include "partials/icon.html" with name="clipboard" cls="w-3 h-3" %}
-                          Ownership {{ row.ownership_missing|length }}
-                        </button>
-                        <div x-show="open" x-cloak
-                             class="absolute z-10 left-0 top-full mt-1 w-56 rounded-lg shadow-lg bg-white border border-slate-200 p-2 text-left text-xs text-slate-700 space-y-1">
-                          <p class="font-medium text-slate-500 mb-1">Ownership por enviar</p>
-                          {% for name in row.ownership_missing %}<p class="truncate">{{ name }}</p>{% endfor %}
-                        </div>
-                      </span>
+                      <p class="flex items-start gap-1.5 text-xs text-slate-700">
+                        <span class="mt-0.5 shrink-0 text-amber-500">{% include "partials/icon.html" with name="clipboard" cls="w-3.5 h-3.5" %}</span>
+                        <span><span class="font-medium text-amber-700">Ownership pendiente de enviar:</span>
+                          {% for item in row.ownership_missing %}{{ item.label }} <span class="text-slate-400">({{ item.detail }})</span>{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </span>
+                      </p>
                     {% endif %}
                     {% if row.vd_capture_missing %}
-                      <span x-data="{ open: false }" class="relative inline-block">
-                        <button @mouseenter="open=true" @mouseleave="open=false" type="button"
-                                class="badge bg-orange-50 text-orange-700 cursor-default">
-                          {% include "partials/icon.html" with name="package" cls="w-3 h-3" %}
-                          Entrega de Valor {{ row.vd_capture_missing|length }}
-                        </button>
-                        <div x-show="open" x-cloak
-                             class="absolute z-10 left-0 top-full mt-1 w-56 rounded-lg shadow-lg bg-white border border-slate-200 p-2 text-left text-xs text-slate-700 space-y-1">
-                          <p class="font-medium text-slate-500 mb-1">Entrega de Valor sin capturar (como responsable)</p>
-                          {% for name in row.vd_capture_missing %}<p class="truncate">{{ name }}</p>{% endfor %}
-                        </div>
-                      </span>
+                      <p class="flex items-start gap-1.5 text-xs text-slate-700">
+                        <span class="mt-0.5 shrink-0 text-orange-500">{% include "partials/icon.html" with name="package" cls="w-3.5 h-3.5" %}</span>
+                        <span><span class="font-medium text-orange-700">Entrega de Valor sin capturar (responsable):</span>
+                          {% for item in row.vd_capture_missing %}{{ item.label }} <span class="text-slate-400">({{ item.detail }})</span>{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </span>
+                      </p>
                     {% endif %}
                     {% if row.vd_validation_missing %}
-                      <span x-data="{ open: false }" class="relative inline-block">
-                        <button @mouseenter="open=true" @mouseleave="open=false" type="button"
-                                class="badge bg-sky-50 text-sky-700 cursor-default">
-                          {% include "partials/icon.html" with name="shield" cls="w-3 h-3" %}
-                          Validación {{ row.vd_validation_missing|length }}
-                        </button>
-                        <div x-show="open" x-cloak
-                             class="absolute z-10 left-0 top-full mt-1 w-56 rounded-lg shadow-lg bg-white border border-slate-200 p-2 text-left text-xs text-slate-700 space-y-1">
-                          <p class="font-medium text-slate-500 mb-1">Entrega de Valor por validar (como Validador)</p>
-                          {% for name in row.vd_validation_missing %}<p class="truncate">{{ name }}</p>{% endfor %}
-                        </div>
-                      </span>
+                      <p class="flex items-start gap-1.5 text-xs text-slate-700">
+                        <span class="mt-0.5 shrink-0 text-sky-500">{% include "partials/icon.html" with name="shield" cls="w-3.5 h-3.5" %}</span>
+                        <span><span class="font-medium text-sky-700">Validación pendiente (Validador):</span>
+                          {% for item in row.vd_validation_missing %}{{ item.label }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </span>
+                      </p>
                     {% endif %}
                     {% if row.feedback_missing %}
-                      <span x-data="{ open: false }" class="relative inline-block">
-                        <button @mouseenter="open=true" @mouseleave="open=false" type="button"
-                                class="badge bg-violet-50 text-violet-700 cursor-default">
-                          {% include "partials/icon.html" with name="message-circle" cls="w-3 h-3" %}
-                          Retroalimentación {{ row.feedback_missing|length }}
-                        </button>
-                        <div x-show="open" x-cloak
-                             class="absolute z-10 left-0 top-full mt-1 w-56 rounded-lg shadow-lg bg-white border border-slate-200 p-2 text-left text-xs text-slate-700 space-y-1">
-                          <p class="font-medium text-slate-500 mb-1">Retroalimentación sin cerrar (como responsable)</p>
-                          {% for name in row.feedback_missing %}<p class="truncate">{{ name }}</p>{% endfor %}
-                        </div>
-                      </span>
+                      <p class="flex items-start gap-1.5 text-xs text-slate-700">
+                        <span class="mt-0.5 shrink-0 text-violet-500">{% include "partials/icon.html" with name="message-circle" cls="w-3.5 h-3.5" %}</span>
+                        <span><span class="font-medium text-violet-700">Retroalimentación sin cerrar (responsable):</span>
+                          {% for item in row.feedback_missing %}{{ item.label }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </span>
+                      </p>
                     {% endif %}
                   </div>
                 </td>
@@ -105,11 +80,6 @@ total descendente.
                     {% else %}bg-slate-100 text-slate-600{% endif %}">
                     {{ row.total }}
                   </span>
-                </td>
-                <td class="px-3 py-3 text-right">
-                  <a href="{% url 'dashboards:talent_person' pk=row.user.pk %}" class="btn-soft" aria-label="Ver Mesa de Talento de {{ row.user.full_name }}">
-                    Ver {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}
-                  </a>
                 </td>
               </tr>
             {% endfor %}

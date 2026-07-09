@@ -298,8 +298,14 @@ def _pending_people(period):
 
     No incluye Impacto Arena: lo captura Talento internamente, no es una tarea
     delegada a un colaborador o lead.
+
+    Directores y Talento nunca llenan su propia autoevaluación de Ownership (la
+    app ni siquiera les muestra "Mis evaluaciones" en el menú — ver
+    `context_processors.navigation`), así que quedan fuera de esa categoría
+    aunque tengan membresías de proyecto.
     """
     from django.contrib.auth import get_user_model
+    from django.db.models import Count, Q
 
     User = get_user_model()
     users = User.objects.filter(is_active=True, is_superuser=False).select_related("area", "level")
@@ -308,14 +314,19 @@ def _pending_people(period):
     for m in ProjectMembership.objects.filter(project__is_active=True).select_related("project"):
         memberships_by_user.setdefault(m.user_id, []).append(m.project)
 
-    own_submitted = {}
-    lead_eval_submitted = set()
-    for ev in OwnershipEvaluation.objects.filter(period=period):
+    own_by_project = {}
+    lead_eval_info = {}
+    own_evals = OwnershipEvaluation.objects.filter(period=period).annotate(
+        answered_count=Count(
+            "answers", filter=Q(answers__value__isnull=False) | Q(answers__is_na=True)
+        )
+    )
+    for ev in own_evals:
+        info = {"submitted": ev.is_submitted, "answered": ev.answered_count}
         if ev.project_id is None:
-            if ev.is_submitted:
-                lead_eval_submitted.add(ev.user_id)
+            lead_eval_info[ev.user_id] = info
         else:
-            own_submitted[(ev.user_id, ev.project_id)] = ev.is_submitted
+            own_by_project[(ev.user_id, ev.project_id)] = info
 
     vd_by_project = {
         vd.project_id: vd for vd in ValueDeliveryEvaluation.objects.filter(period=period)
@@ -336,30 +347,47 @@ def _pending_people(period):
     ):
         feedback_missing_by_user.setdefault(fr.user_id, []).append(fr.note.user)
 
+    def _detail(info):
+        return "Con avance, falta enviar" if info and info["answered"] else "Sin iniciar"
+
     rows = []
     for u in users:
         ownership_missing = []
-        if u.is_lead:
-            if u.id not in lead_eval_submitted:
-                ownership_missing.append("Autoevaluación transversal")
-        else:
-            for project in memberships_by_user.get(u.id, []):
-                if not own_submitted.get((u.id, project.id), False):
-                    ownership_missing.append(project.name)
+        if not (u.is_talento or u.is_director):
+            if u.is_lead:
+                info = lead_eval_info.get(u.id)
+                if not info or not info["submitted"]:
+                    ownership_missing.append({
+                        "label": "Autoevaluación transversal", "detail": _detail(info),
+                    })
+            else:
+                for project in memberships_by_user.get(u.id, []):
+                    info = own_by_project.get((u.id, project.id))
+                    if not info or not info["submitted"]:
+                        ownership_missing.append({"label": project.name, "detail": _detail(info)})
 
         vd_capture_missing = []
         for project in responsable_projects.get(u.id, []):
             vd = vd_by_project.get(project.id)
             if vd is None or vd.status == ValueDeliveryEvaluation.Status.BORRADOR:
-                vd_capture_missing.append(project.name)
+                started = vd is not None and any(
+                    v is not None for v in (
+                        vd.client_satisfaction, vd.deliverables, vd.time_finite, vd.time_indefinite,
+                    )
+                )
+                detail = "Con avance, falta enviar a validación" if started else "Sin iniciar"
+                vd_capture_missing.append({"label": project.name, "detail": detail})
 
         vd_validation_missing = []
         for project in validador_projects.get(u.id, []):
             vd = vd_by_project.get(project.id)
             if vd is not None and vd.status == ValueDeliveryEvaluation.Status.EN_VALIDACION:
-                vd_validation_missing.append(project.name)
+                vd_validation_missing.append({"label": project.name, "detail": "Esperando su validación"})
 
-        feedback_missing = [t.full_name for t in feedback_missing_by_user.get(u.id, [])]
+        feedback_missing = [
+            {"label": t.full_name, "detail": "Sesión sin cerrar"}
+            for t in feedback_missing_by_user.get(u.id, [])
+        ]
 
         total = (
             len(ownership_missing) + len(vd_capture_missing)
