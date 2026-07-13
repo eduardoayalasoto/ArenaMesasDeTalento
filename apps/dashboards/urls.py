@@ -13,6 +13,7 @@ urlpatterns = [
     path("mesa-talento/", views.talent_table, name="talent_table"),
     path("mesa-talento/persona/<int:pk>/", views.talent_person, name="talent_person"),
     path("mesa-talento/persona/<int:pk>/nota/", views.talent_note_autosave, name="talent_note_autosave"),
+    path("mesa-talento/persona/<int:pk>/listo/", views.talent_mesa_ready_toggle, name="talent_mesa_ready_toggle"),
     path("mesa-talento/persona/<int:pk>/escenario/<str:tipo>/", views.talent_scenario_toggle, name="talent_scenario_toggle"),
     path("mesa-talento/persona/<int:pk>/responsable/agregar/", views.talent_responsable_add, name="talent_responsable_add"),
     path("mesa-talento/persona/<int:pk>/responsable/<int:rid>/quitar/", views.talent_responsable_remove, name="talent_responsable_remove"),

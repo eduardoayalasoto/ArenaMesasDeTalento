@@ -25,6 +25,21 @@
     {% endif %}
   </div>
 
+  {# Estado "Listo en Mesa": marca el fin del trabajo del comité con esta persona #}
+  <div class="card p-5 mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <p class="text-sm font-semibold text-slate-700">Estado en Mesa de Talento</p>
+      <p class="text-xs text-slate-500">Marca cuando el comité haya terminado de revisar a esta persona.</p>
+    </div>
+    {% if request.user.is_admin %}
+      {% include "dashboards/_mesa_ready_toggle.html" with note=note target=target %}
+    {% elif note.mesa_ready %}
+      <span class="badge bg-emerald-50 text-emerald-700">Listo en Mesa</span>
+    {% else %}
+      <span class="badge bg-slate-100 text-slate-500">Pendiente</span>
+    {% endif %}
+  </div>
+
   {% if request.user.is_admin %}
   {# Editable para Talento #}
   <div x-data="talentNote({

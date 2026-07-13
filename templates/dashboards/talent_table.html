@@ -13,7 +13,63 @@
     {% include "dashboards/_stat_card.html" with icon="trending-up" label="Promedio general" value=stat_avg|default:"—" tone="arena" %}
   </div>
 
+  <!-- Avance por equipo (proyecto) -->
+  {% if project_progress %}
+  <div class="card overflow-hidden mb-4">
+    <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2 flex-wrap">
+      <i data-lucide="folder-kanban" class="w-4 h-4 text-arena-600"></i>
+      <h3 class="text-sm font-semibold text-slate-700">Avance por equipo</h3>
+      <span class="text-xs text-slate-400">Clic en un equipo para ver a sus integrantes</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-500 text-left text-xs">
+          <tr>
+            <th class="px-3 py-2 font-medium">Proyecto</th>
+            <th class="px-3 py-2 font-medium text-center w-16">Equipo</th>
+            <th class="px-3 py-2 font-medium text-center w-16">Listos</th>
+            <th class="px-3 py-2 font-medium text-center w-20">Pendientes</th>
+            <th class="px-3 py-2 font-medium w-48">Avance</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for p in project_progress %}
+          <tr class="hover:bg-slate-50/70 transition cursor-pointer {% if selected_project and selected_project.pk == p.project.pk %}bg-arena-50/60{% endif %}"
+              onclick="window.location='?proyecto={{ p.project.pk }}'">
+            <td class="px-3 py-2">
+              <a href="?proyecto={{ p.project.pk }}" class="font-medium text-slate-800 hover:text-arena-700">{{ p.project.name }}</a>
+            </td>
+            <td class="px-3 py-2 text-center tabular-nums text-slate-600">{{ p.total }}</td>
+            <td class="px-3 py-2 text-center tabular-nums text-emerald-700 font-medium">{{ p.listos }}</td>
+            <td class="px-3 py-2 text-center tabular-nums {% if p.pendientes %}text-amber-700{% else %}text-slate-400{% endif %}">{{ p.pendientes }}</td>
+            <td class="px-3 py-2">
+              <div class="flex items-center gap-2">
+                <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div class="h-full rounded-full {% if p.pct == 100 %}bg-emerald-500{% else %}bg-arena-500{% endif %}" style="width: {{ p.pct }}%"></div>
+                </div>
+                <span class="tabular-nums text-xs text-slate-500 w-9 text-right">{{ p.pct }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
   <!-- Filtros y búsqueda -->
+  {% if selected_project %}
+  <div class="flex items-center gap-2 mb-4">
+    <span class="inline-flex items-center gap-2 rounded-full bg-arena-50 text-arena-700 px-3 py-1.5 text-sm font-medium">
+      {% include "partials/icon.html" with name="users" cls="w-4 h-4" %}
+      Equipo: {{ selected_project.name }}
+      <a href="{% url 'dashboards:talent_table' %}" class="hover:text-arena-900" aria-label="Quitar filtro de equipo">
+        {% include "partials/icon.html" with name="x" cls="w-4 h-4" %}
+      </a>
+    </span>
+  </div>
+  {% else %}
   <form method="get" class="flex flex-wrap items-center gap-2 mb-4">
     <div class="relative">
       {% include "partials/icon.html" with name="search" cls="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" %}
@@ -29,6 +85,7 @@
     </select>
     <button type="submit" class="btn-secondary py-1.5">Buscar</button>
   </form>
+  {% endif %}
 
   <!-- Lista de colaboradores -->
   <div class="card overflow-hidden">
@@ -41,6 +98,7 @@
             <th class="px-3 py-2 font-medium leading-tight hidden lg:table-cell">Evaluador(es)</th>
             <th class="px-3 py-2 font-medium leading-tight text-center w-24">Calificación final</th>
             <th class="px-3 py-2 font-medium leading-tight hidden sm:table-cell">Banda</th>
+            <th class="px-3 py-2 font-medium leading-tight hidden md:table-cell w-28">Mesa</th>
             <th class="px-3 py-2 font-medium text-right w-16"></th>
           </tr>
         </thead>
@@ -88,6 +146,13 @@
                   <span class="badge bg-slate-100 text-slate-500">En proceso</span>
                 {% endif %}
               </td>
+              <td class="px-3 py-3 hidden md:table-cell">
+                {% if row.mesa_ready %}
+                  <span class="badge bg-emerald-50 text-emerald-700 text-xs">Listo</span>
+                {% else %}
+                  <span class="badge bg-slate-100 text-slate-500 text-xs">Pendiente</span>
+                {% endif %}
+              </td>
               <td class="px-3 py-3 text-right">
                 <a href="{% url 'dashboards:talent_person' pk=row.user.pk %}" class="btn-soft" aria-label="Ver informe de {{ row.user.full_name }}">
                   Ver {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}
@@ -95,7 +160,7 @@
               </td>
             </tr>
           {% empty %}
-            <tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">No hay colaboradores con esos filtros.</td></tr>
+            <tr><td colspan="7" class="px-5 py-8 text-center text-slate-400">No hay colaboradores con esos filtros.</td></tr>
           {% endfor %}
         </tbody>
       </table>

@@ -291,6 +291,15 @@ class TalentSessionNote(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
         related_name="feedback_sessions_agreed", verbose_name="acordado por",
     )
+    # "Listo en Mesa de Talento": lo marca Talento a mano cuando el comité
+    # terminó de trabajar a esta persona. Es el estado que alimenta el avance
+    # por proyecto en la Mesa (independiente de `feedback_agreed`).
+    mesa_ready = models.BooleanField("listo en Mesa de Talento", default=False)
+    mesa_ready_at = models.DateTimeField("listo en Mesa el", null=True, blank=True)
+    mesa_ready_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
+        related_name="mesa_ready_notes", verbose_name="marcado listo por",
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
         null=True, blank=True, related_name="created_talent_notes", verbose_name="creado por",

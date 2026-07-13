@@ -190,6 +190,67 @@ class HelpView(LoginRequiredMixin, TemplateView):
         return ctx
 
 
+def _project_team_ids(project):
+    """IDs de los integrantes del equipo de un proyecto: miembros ∪ owner (lead)."""
+    ids = set(
+        ProjectMembership.objects.filter(project=project).values_list("user_id", flat=True)
+    )
+    if project.owner_id:
+        ids.add(project.owner_id)
+    return ids
+
+
+def _project_progress(period):
+    """Avance de Mesa por proyecto: total del equipo, listos y pendientes.
+
+    Equipo = miembros activos ∪ owner del proyecto (sin duplicar). "Listo" = la
+    nota del periodo tiene `mesa_ready=True`. Solo proyectos activos con al
+    menos un integrante, ordenados por % ascendente (los más atrasados primero).
+    """
+    if not period:
+        return []
+    from django.contrib.auth import get_user_model
+    from apps.evaluations.models import TalentSessionNote
+
+    User = get_user_model()
+    valid_ids = set(
+        User.objects.filter(is_active=True, is_superuser=False).values_list("id", flat=True)
+    )
+    projects = {}
+    teams = {}
+    for p in Project.objects.filter(is_active=True).select_related("owner"):
+        projects[p.id] = p
+        ids = set()
+        if p.owner_id in valid_ids:
+            ids.add(p.owner_id)
+        teams[p.id] = ids
+    for pid, uid in (
+        ProjectMembership.objects.filter(project__is_active=True)
+        .values_list("project_id", "user_id")
+    ):
+        if pid in teams and uid in valid_ids:
+            teams[pid].add(uid)
+    ready_ids = set(
+        TalentSessionNote.objects.filter(period=period, mesa_ready=True)
+        .values_list("user_id", flat=True)
+    )
+    rows = []
+    for pid, ids in teams.items():
+        total = len(ids)
+        if total == 0:
+            continue
+        listos = len(ids & ready_ids)
+        rows.append({
+            "project": projects[pid],
+            "total": total,
+            "listos": listos,
+            "pendientes": total - listos,
+            "pct": round(listos / total * 100),
+        })
+    rows.sort(key=lambda r: (r["pct"], r["project"].name))
+    return rows
+
+
 @login_required
 def talent_table(request):
     """Mesa de Talento: lista de todos los colaboradores con su calificación general."""
@@ -211,15 +272,31 @@ def talent_table(request):
         .annotate(num_projects=Count("memberships", distinct=True))
         .order_by("full_name")
     )
-    level_code = request.GET.get("level")
-    area_code = request.GET.get("area")
-    q = request.GET.get("q", "").strip()
-    if level_code:
-        users = users.filter(level__code=level_code)
-    if area_code:
-        users = users.filter(area__code=area_code)
-    if q:
-        users = users.filter(full_name__icontains=q)
+
+    # Filtro exclusivo por proyecto: si viene ?proyecto=, la lista muestra solo
+    # el equipo de ese proyecto e ignora área/nivel/búsqueda.
+    selected_project = None
+    proyecto_id = request.GET.get("proyecto")
+    if proyecto_id:
+        selected_project = (
+            Project.objects.filter(pk=proyecto_id, is_active=True)
+            .select_related("owner").first()
+        )
+
+    if selected_project:
+        users = users.filter(id__in=_project_team_ids(selected_project))
+        level_code = area_code = ""
+        q = ""
+    else:
+        level_code = request.GET.get("level")
+        area_code = request.GET.get("area")
+        q = request.GET.get("q", "").strip()
+        if level_code:
+            users = users.filter(level__code=level_code)
+        if area_code:
+            users = users.filter(area__code=area_code)
+        if q:
+            users = users.filter(full_name__icontains=q)
 
     # Estadísticas sobre TODO el conjunto filtrado.
     finals_all = {}
@@ -259,12 +336,22 @@ def talent_table(request):
                 .values_list("project__name", flat=True)
             )
 
+    ready_ids = set()
+    if period:
+        from apps.evaluations.models import TalentSessionNote
+        ready_ids = set(
+            TalentSessionNote.objects.filter(
+                period=period, mesa_ready=True, user__in=page.object_list,
+            ).values_list("user_id", flat=True)
+        )
+
     rows = [
         {
             "user": u,
             "final": finals_all.get(u.id),
             "evaluators": evaluators_by_user.get(u.id, []),
             "lead_projects": lead_projects_by_user.get(u.id),
+            "mesa_ready": u.id in ready_ids,
         }
         for u in page.object_list
     ]
@@ -289,6 +376,8 @@ def talent_table(request):
         "stat_complete": len(complete),
         "stat_excede": excede,
         "stat_avg": avg,
+        "project_progress": _project_progress(period),
+        "selected_project": selected_project,
     })
 
 
@@ -577,6 +666,39 @@ def talent_scenario_toggle(request, pk, tipo):
     else:
         m2m.add(option)
     return HttpResponse(status=200)
+
+
+@login_required
+@require_POST
+def talent_mesa_ready_toggle(request, pk):
+    """Marca/desmarca 'Listo en Mesa de Talento' en la nota (HTMX). Solo Talento."""
+    if not request.user.is_admin:
+        return HttpResponse(status=403)
+
+    from django.contrib.auth import get_user_model
+    from django.utils import timezone
+    from apps.evaluations.models import TalentSessionNote
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True)
+    period = _open_period()
+    if not period:
+        return HttpResponse(status=400)
+
+    note, _ = TalentSessionNote.objects.get_or_create(
+        user=target, period=period,
+        defaults={"created_by": request.user},
+    )
+    if note.mesa_ready:
+        note.mesa_ready = False
+        note.mesa_ready_at = None
+        note.mesa_ready_by = None
+    else:
+        note.mesa_ready = True
+        note.mesa_ready_at = timezone.now()
+        note.mesa_ready_by = request.user
+    note.save(update_fields=["mesa_ready", "mesa_ready_at", "mesa_ready_by", "updated_at"])
+    return render(request, "dashboards/_mesa_ready_toggle.html", {"note": note, "target": target})
 
 
 @login_required
