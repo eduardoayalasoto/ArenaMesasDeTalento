@@ -361,7 +361,12 @@ def talent_table(request):
     params.pop("page", None)
     base_qs = params.urlencode()
 
-    return render(request, "dashboards/talent_table.html", {
+    template = (
+        "dashboards/_talent_table_main.html"
+        if request.headers.get("HX-Request")
+        else "dashboards/talent_table.html"
+    )
+    return render(request, template, {
         "page_title": "Mesa de Talento",
         "rows": rows,
         "page_obj": page,

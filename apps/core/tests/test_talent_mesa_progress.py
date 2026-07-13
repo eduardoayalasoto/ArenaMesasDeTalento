@@ -150,6 +150,23 @@ def test_filtro_proyecto_ignora_area_y_busqueda(talento, lead, collaborator, pro
 
 
 @pytest.mark.django_db
+def test_peticion_htmx_devuelve_solo_el_fragmento(talento, collaborator, project_finite, period, client):
+    make_membership(project_finite, collaborator)
+
+    client.force_login(talento)
+    resp = client.get(
+        reverse("dashboards:talent_table") + f"?proyecto={project_finite.pk}",
+        HTTP_HX_REQUEST="true",
+    )
+
+    assert resp.status_code == 200
+    body = resp.content.decode("utf-8")
+    # Fragmento, no documento completo (sin base.html).
+    assert "<html" not in body.lower()
+    assert collaborator.full_name in body
+
+
+@pytest.mark.django_db
 def test_badge_refleja_mesa_ready(talento, collaborator, project_finite, period, client):
     make_membership(project_finite, collaborator)
     _mark_ready(collaborator, period, talento)
