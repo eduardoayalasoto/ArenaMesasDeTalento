@@ -5,9 +5,11 @@
     <p class="text-slate-600">Informe de la evaluación de cada colaborador{% if period %} · {{ period.name }}{% endif %}.</p>
   </div>
 
-  {# Región intercambiable por HTMX: clic en un equipo / filtros / paginación
-     swapean solo este contenedor (sin recargar). Los elementos internos heredan
-     hx-target / hx-swap / hx-push-url de aquí. #}
+  {% comment %}
+  Región intercambiable por HTMX: clic en un equipo / filtros / paginación
+  swapean solo este contenedor (sin recargar). Los elementos internos heredan
+  hx-target / hx-swap / hx-push-url de aquí.
+  {% endcomment %}
   <div id="talent-main" hx-target="#talent-main" hx-swap="innerHTML" hx-push-url="true">
     {% include "dashboards/_talent_table_main.html" %}
   </div>
