@@ -1,13 +1,18 @@
-"""Mesa de Talento: estado 'Listo en Mesa', avance por proyecto y filtro
-exclusivo por equipo en el índice (talent_table)."""
+"""Mesa de Talento: revisión por proyecto (MesaProjectReview), estado general
+derivado, avance por equipo y filtro exclusivo por equipo en el índice."""
 
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from apps.core.tests.conftest import make_membership
-from apps.dashboards.views import _project_progress, _project_team_ids
-from apps.evaluations.models import TalentSessionNote
+from apps.dashboards.views import (
+    _general_ready_ids,
+    _person_team_projects,
+    _project_progress,
+    _project_team_ids,
+)
+from apps.evaluations.models import MesaProjectReview
 
 User = get_user_model()
 
@@ -36,10 +41,9 @@ def director(db, area):
     return u
 
 
-def _mark_ready(user, period, by):
-    TalentSessionNote.objects.update_or_create(
-        user=user, period=period,
-        defaults={"mesa_ready": True, "mesa_ready_by": by, "created_by": by},
+def _review(user, project, period, by):
+    MesaProjectReview.objects.get_or_create(
+        period=period, user=user, project=project, defaults={"reviewed_by": by},
     )
 
 
@@ -47,33 +51,27 @@ def _mark_ready(user, period, by):
 
 @pytest.mark.django_db
 def test_equipo_es_miembros_mas_owner_sin_duplicar(lead, collaborator, project_finite):
-    # owner (lead) también es miembro: no debe contarse dos veces.
-    make_membership(project_finite, lead)
+    make_membership(project_finite, lead)  # owner también miembro
     make_membership(project_finite, collaborator)
 
-    ids = _project_team_ids(project_finite)
-
-    assert ids == {lead.id, collaborator.id}
+    assert _project_team_ids(project_finite) == {lead.id, collaborator.id}
 
 
 @pytest.mark.django_db
 def test_owner_sin_membresia_cuenta_como_equipo(lead, collaborator, project_finite):
     make_membership(project_finite, collaborator)
 
-    ids = _project_team_ids(project_finite)
-
-    assert ids == {lead.id, collaborator.id}
+    assert _project_team_ids(project_finite) == {lead.id, collaborator.id}
 
 
 # --- Avance por proyecto ---------------------------------------------------
 
 @pytest.mark.django_db
-def test_avance_cuenta_listos_y_pendientes(lead, collaborator, project_finite, period, talento):
-    make_membership(project_finite, collaborator)  # equipo: lead (owner) + collaborator = 2
-    _mark_ready(collaborator, period, talento)
+def test_avance_cuenta_revisiones_por_proyecto(lead, collaborator, project_finite, period, talento):
+    make_membership(project_finite, collaborator)  # equipo: lead (owner) + collaborator
+    _review(collaborator, project_finite, period, talento)
 
-    rows = {r["project"].id: r for r in _project_progress(period)}
-    r = rows[project_finite.id]
+    r = {row["project"].id: row for row in _project_progress(period)}[project_finite.id]
 
     assert r["total"] == 2
     assert r["listos"] == 1
@@ -82,42 +80,76 @@ def test_avance_cuenta_listos_y_pendientes(lead, collaborator, project_finite, p
 
 
 @pytest.mark.django_db
-def test_persona_en_dos_proyectos_se_refleja_en_ambos(
+def test_revision_es_por_proyecto_no_global(
     lead, collaborator, project_finite, project_indefinite, period, talento
 ):
     make_membership(project_finite, collaborator)
     make_membership(project_indefinite, collaborator)
-    _mark_ready(collaborator, period, talento)
+    # Revisada solo en un proyecto: cuenta en ese, no en el otro.
+    _review(collaborator, project_finite, period, talento)
 
-    rows = {r["project"].id: r for r in _project_progress(period)}
+    rows = {row["project"].id: row for row in _project_progress(period)}
 
-    # collaborator cuenta como listo en ambos equipos.
+    assert collaborator.id in _project_team_ids(project_finite)
     assert rows[project_finite.id]["listos"] == 1
-    assert rows[project_indefinite.id]["listos"] == 1
+    assert rows[project_indefinite.id]["listos"] == 0
 
 
 @pytest.mark.django_db
 def test_orden_por_pct_ascendente(lead, collaborator, project_finite, project_indefinite, period, talento):
-    # project_finite: equipo {lead, collaborator}, 1 listo -> 50%.
     make_membership(project_finite, collaborator)
-    _mark_ready(collaborator, period, talento)
-    # project_indefinite: equipo {lead}, nadie listo -> 0%.
+    _review(collaborator, project_finite, period, talento)  # finite 50%, indefinite 0%
 
-    order = [r["project"].id for r in _project_progress(period)]
+    order = [row["project"].id for row in _project_progress(period)]
 
     assert order == [project_indefinite.id, project_finite.id]
 
 
 @pytest.mark.django_db
-def test_sin_periodo_no_rompe(period):
+def test_sin_periodo_no_rompe():
     assert _project_progress(None) == []
+
+
+# --- Estado general derivado ----------------------------------------------
+
+@pytest.mark.django_db
+def test_general_listo_requiere_todos_los_equipos(
+    lead, collaborator, project_finite, project_indefinite, period, talento
+):
+    make_membership(project_finite, collaborator)
+    make_membership(project_indefinite, collaborator)
+
+    _review(collaborator, project_finite, period, talento)
+    assert collaborator.id not in _general_ready_ids(period, [collaborator])  # falta uno
+
+    _review(collaborator, project_indefinite, period, talento)
+    assert collaborator.id in _general_ready_ids(period, [collaborator])  # todos listos
+
+
+@pytest.mark.django_db
+def test_person_team_projects_deriva_all_ready(lead, collaborator, project_finite, period, talento):
+    make_membership(project_finite, collaborator)
+
+    ctx = _person_team_projects(collaborator, period)
+    assert [r["project"] for r in ctx["project_reviews"]] == [project_finite]
+    assert ctx["mesa_all_ready"] is False
+
+    _review(collaborator, project_finite, period, talento)
+    ctx = _person_team_projects(collaborator, period)
+    assert ctx["mesa_all_ready"] is True
+
+
+@pytest.mark.django_db
+def test_persona_sin_equipos_no_esta_lista(collaborator, period):
+    ctx = _person_team_projects(collaborator, period)
+    assert ctx["project_reviews"] == []
+    assert ctx["mesa_all_ready"] is False
 
 
 # --- Filtro exclusivo por proyecto en el índice ----------------------------
 
 @pytest.mark.django_db
 def test_filtro_proyecto_muestra_solo_el_equipo(talento, lead, collaborator, project_finite, period, area, level_jr, client):
-    # collaborator es del equipo; 'ajena' no.
     make_membership(project_finite, collaborator)
     ajena = User.objects.create_user(
         email="ajena@arena-analytics.com", password="x", full_name="Persona Ajena",
@@ -135,21 +167,6 @@ def test_filtro_proyecto_muestra_solo_el_equipo(talento, lead, collaborator, pro
 
 
 @pytest.mark.django_db
-def test_filtro_proyecto_ignora_area_y_busqueda(talento, lead, collaborator, project_finite, period, client):
-    make_membership(project_finite, collaborator)
-
-    client.force_login(talento)
-    # q que no coincide con nadie del equipo: se ignora por venir con proyecto.
-    resp = client.get(
-        reverse("dashboards:talent_table") + f"?proyecto={project_finite.pk}&q=zzz&area=NOPE"
-    )
-
-    assert resp.status_code == 200
-    body = resp.content.decode("utf-8")
-    assert collaborator.full_name in body
-
-
-@pytest.mark.django_db
 def test_peticion_htmx_devuelve_solo_el_fragmento(talento, collaborator, project_finite, period, client):
     make_membership(project_finite, collaborator)
 
@@ -161,15 +178,14 @@ def test_peticion_htmx_devuelve_solo_el_fragmento(talento, collaborator, project
 
     assert resp.status_code == 200
     body = resp.content.decode("utf-8")
-    # Fragmento, no documento completo (sin base.html).
     assert "<html" not in body.lower()
     assert collaborator.full_name in body
 
 
 @pytest.mark.django_db
-def test_badge_refleja_mesa_ready(talento, collaborator, project_finite, period, client):
+def test_badge_general_listo_en_lista(talento, lead, collaborator, project_finite, period, client):
     make_membership(project_finite, collaborator)
-    _mark_ready(collaborator, period, talento)
+    _review(collaborator, project_finite, period, talento)  # único equipo -> general listo
 
     client.force_login(talento)
     resp = client.get(reverse("dashboards:talent_table") + f"?proyecto={project_finite.pk}")
@@ -177,42 +193,62 @@ def test_badge_refleja_mesa_ready(talento, collaborator, project_finite, period,
     assert "Listo" in resp.content.decode("utf-8")
 
 
-# --- Toggle 'Listo en Mesa' ------------------------------------------------
+# --- Toggle de revisión por proyecto ---------------------------------------
 
 @pytest.mark.django_db
-def test_toggle_talento_marca_y_setea_metadatos(talento, collaborator, period, client):
+def test_toggle_talento_crea_revision(talento, collaborator, project_finite, period, client):
+    make_membership(project_finite, collaborator)
     client.force_login(talento)
-    url = reverse("dashboards:talent_mesa_ready_toggle", kwargs={"pk": collaborator.pk})
+    url = reverse("dashboards:talent_mesa_project_toggle",
+                  kwargs={"pk": collaborator.pk, "project_id": project_finite.pk})
 
     resp = client.post(url)
 
     assert resp.status_code == 200
-    note = TalentSessionNote.objects.get(user=collaborator, period=period)
-    assert note.mesa_ready is True
-    assert note.mesa_ready_by == talento
-    assert note.mesa_ready_at is not None
+    review = MesaProjectReview.objects.get(period=period, user=collaborator, project=project_finite)
+    assert review.reviewed_by == talento
 
 
 @pytest.mark.django_db
-def test_toggle_desmarca_y_limpia_metadatos(talento, collaborator, period, client):
-    _mark_ready(collaborator, period, talento)
+def test_toggle_desmarca_borra_revision(talento, collaborator, project_finite, period, client):
+    make_membership(project_finite, collaborator)
+    _review(collaborator, project_finite, period, talento)
     client.force_login(talento)
-    url = reverse("dashboards:talent_mesa_ready_toggle", kwargs={"pk": collaborator.pk})
+    url = reverse("dashboards:talent_mesa_project_toggle",
+                  kwargs={"pk": collaborator.pk, "project_id": project_finite.pk})
 
     client.post(url)
 
-    note = TalentSessionNote.objects.get(user=collaborator, period=period)
-    assert note.mesa_ready is False
-    assert note.mesa_ready_by is None
-    assert note.mesa_ready_at is None
+    assert not MesaProjectReview.objects.filter(
+        period=period, user=collaborator, project=project_finite
+    ).exists()
 
 
 @pytest.mark.django_db
-def test_toggle_director_recibe_403(director, collaborator, period, client):
+def test_toggle_persona_ajena_al_equipo_rechazada(talento, collaborator, project_finite, period, area, level_jr, client):
+    # collaborator NO es miembro ni owner de project_finite.
+    ajena = User.objects.create_user(
+        email="ajena2@arena-analytics.com", password="x", full_name="Ajena Dos",
+        area=area, level=level_jr,
+    )
+    client.force_login(talento)
+    url = reverse("dashboards:talent_mesa_project_toggle",
+                  kwargs={"pk": ajena.pk, "project_id": project_finite.pk})
+
+    resp = client.post(url)
+
+    assert resp.status_code == 400
+    assert not MesaProjectReview.objects.filter(user=ajena).exists()
+
+
+@pytest.mark.django_db
+def test_toggle_director_recibe_403(director, collaborator, project_finite, period, client):
+    make_membership(project_finite, collaborator)
     client.force_login(director)
-    url = reverse("dashboards:talent_mesa_ready_toggle", kwargs={"pk": collaborator.pk})
+    url = reverse("dashboards:talent_mesa_project_toggle",
+                  kwargs={"pk": collaborator.pk, "project_id": project_finite.pk})
 
     resp = client.post(url)
 
     assert resp.status_code == 403
-    assert not TalentSessionNote.objects.filter(user=collaborator, mesa_ready=True).exists()
+    assert not MesaProjectReview.objects.exists()

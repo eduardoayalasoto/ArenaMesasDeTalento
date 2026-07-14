@@ -2,6 +2,29 @@
 
 Fecha: 2026-07-13
 
+## Actualización (2026-07-13, misma fecha) — check por proyecto
+
+El diseño original usaba un **check único por persona** (`TalentSessionNote.
+mesa_ready`). Tras implementarlo se cambió a un modelo **por proyecto**, más
+preciso para el avance por equipo:
+
+- Nuevo modelo `MesaProjectReview(period, user, project, reviewed_at,
+  reviewed_by)`; la existencia de la fila = "el comité revisó a esta persona
+  en ese proyecto".
+- El estado **general** de la persona se **deriva**: está lista cuando todos
+  sus equipos (proyectos activos donde es miembro u owner) tienen revisión.
+- El avance por proyecto cuenta las revisiones por proyecto directamente (una
+  persona en varios equipos ya no se marca lista en todos a la vez).
+- La ficha muestra un toggle por equipo (`talent_mesa_project_toggle`,
+  ruta `.../proyecto/<id>/revisado/`) + el badge general derivado.
+- Los campos `mesa_ready*` de `TalentSessionNote` quedan **obsoletos** (se
+  conservan las columnas para no hacer una migración destructiva).
+
+El resto del documento describe el diseño original (check único) y se conserva
+como historia.
+
+---
+
 ## Contexto
 
 `mesa-talento/` (`dashboards:talent_table`) es hoy una lista plana de todos

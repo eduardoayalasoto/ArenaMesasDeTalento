@@ -291,9 +291,10 @@ class TalentSessionNote(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
         related_name="feedback_sessions_agreed", verbose_name="acordado por",
     )
-    # "Listo en Mesa de Talento": lo marca Talento a mano cuando el comité
-    # terminó de trabajar a esta persona. Es el estado que alimenta el avance
-    # por proyecto en la Mesa (independiente de `feedback_agreed`).
+    # OBSOLETO: check único "Listo en Mesa" por persona. Reemplazado por
+    # `MesaProjectReview` (revisión por proyecto); el estado general ahora se
+    # deriva de tener todos los equipos revisados. Se conservan las columnas
+    # para no hacer una migración destructiva; ya no se leen ni se escriben.
     mesa_ready = models.BooleanField("listo en Mesa de Talento", default=False)
     mesa_ready_at = models.DateTimeField("listo en Mesa el", null=True, blank=True)
     mesa_ready_by = models.ForeignKey(
@@ -328,6 +329,47 @@ class TalentSessionNote(models.Model):
                 "expectativas_profesionales", "expectativas_personales", "comentarios_adicionales",
             )
         )
+
+
+class MesaProjectReview(models.Model):
+    """Sign-off del comité de Mesa de Talento por (periodo, persona, proyecto).
+
+    La existencia de una fila significa "el comité ya revisó a esta persona en
+    el contexto de este equipo". El estado 'Listo' general de la persona se
+    deriva: está lista cuando todos sus equipos (proyectos activos donde es
+    miembro u owner) tienen su fila de revisión.
+    """
+
+    period = models.ForeignKey(
+        "catalog.EvaluationPeriod", on_delete=models.PROTECT,
+        related_name="mesa_project_reviews", verbose_name="periodo",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name="mesa_project_reviews", verbose_name="colaborador",
+    )
+    project = models.ForeignKey(
+        "catalog.Project", on_delete=models.CASCADE,
+        related_name="mesa_project_reviews", verbose_name="proyecto",
+    )
+    reviewed_at = models.DateTimeField("revisado el", auto_now_add=True)
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
+        related_name="mesa_reviews_done", verbose_name="revisado por",
+    )
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "revisión de Mesa por proyecto"
+        verbose_name_plural = "revisiones de Mesa por proyecto"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["period", "user", "project"], name="unique_mesa_project_review",
+            )
+        ]
+
+    def __str__(self):
+        return f"Revisión Mesa · {self.user} en {self.project} ({self.period})"
 
 
 class FeedbackResponsible(models.Model):

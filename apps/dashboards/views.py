@@ -6,7 +6,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -203,14 +203,15 @@ def _project_team_ids(project):
 def _project_progress(period):
     """Avance de Mesa por proyecto: total del equipo, listos y pendientes.
 
-    Equipo = miembros activos ∪ owner del proyecto (sin duplicar). "Listo" = la
-    nota del periodo tiene `mesa_ready=True`. Solo proyectos activos con al
-    menos un integrante, ordenados por % ascendente (los más atrasados primero).
+    Equipo = miembros activos ∪ owner del proyecto (sin duplicar). "Listo" = el
+    comité tiene una revisión (`MesaProjectReview`) de esa persona EN ese
+    proyecto. Solo proyectos activos con al menos un integrante, ordenados por
+    % ascendente (los más atrasados primero).
     """
     if not period:
         return []
     from django.contrib.auth import get_user_model
-    from apps.evaluations.models import TalentSessionNote
+    from apps.evaluations.models import MesaProjectReview
 
     User = get_user_model()
     valid_ids = set(
@@ -230,16 +231,15 @@ def _project_progress(period):
     ):
         if pid in teams and uid in valid_ids:
             teams[pid].add(uid)
-    ready_ids = set(
-        TalentSessionNote.objects.filter(period=period, mesa_ready=True)
-        .values_list("user_id", flat=True)
+    reviewed = set(
+        MesaProjectReview.objects.filter(period=period).values_list("user_id", "project_id")
     )
     rows = []
     for pid, ids in teams.items():
         total = len(ids)
         if total == 0:
             continue
-        listos = len(ids & ready_ids)
+        listos = sum(1 for uid in ids if (uid, pid) in reviewed)
         rows.append({
             "project": projects[pid],
             "total": total,
@@ -249,6 +249,58 @@ def _project_progress(period):
         })
     rows.sort(key=lambda r: (r["pct"], r["project"].name))
     return rows
+
+
+def _person_team_projects(target, period):
+    """Equipos de una persona (proyectos activos donde es miembro u owner) con
+    el estado de revisión de Mesa por cada uno, y el estado general derivado
+    (`mesa_all_ready`: tiene equipos y todos están revisados)."""
+    projects = list(
+        Project.objects.filter(is_active=True)
+        .filter(Q(memberships__user=target) | Q(owner=target))
+        .distinct().order_by("name")
+    )
+    reviewed_ids = set()
+    if period and projects:
+        from apps.evaluations.models import MesaProjectReview
+        reviewed_ids = set(
+            MesaProjectReview.objects.filter(period=period, user=target, project__in=projects)
+            .values_list("project_id", flat=True)
+        )
+    rows = [{"project": p, "reviewed": p.id in reviewed_ids} for p in projects]
+    return {
+        "project_reviews": rows,
+        "mesa_all_ready": bool(rows) and all(r["reviewed"] for r in rows),
+    }
+
+
+def _general_ready_ids(period, users):
+    """IDs de las personas (de `users`) con estado 'Listo' general derivado:
+    tienen al menos un equipo y todos sus equipos están revisados en Mesa."""
+    if not period:
+        return set()
+    from apps.evaluations.models import MesaProjectReview
+
+    team_proj = {}
+    for pid, uid in (
+        ProjectMembership.objects.filter(project__is_active=True, user__in=users)
+        .values_list("project_id", "user_id")
+    ):
+        team_proj.setdefault(uid, set()).add(pid)
+    for pid, oid in (
+        Project.objects.filter(is_active=True, owner__in=users).values_list("id", "owner_id")
+    ):
+        team_proj.setdefault(oid, set()).add(pid)
+    reviewed = {}
+    for uid, pid in (
+        MesaProjectReview.objects.filter(period=period, user__in=users)
+        .values_list("user_id", "project_id")
+    ):
+        reviewed.setdefault(uid, set()).add(pid)
+    return {
+        uid for uid, pids in team_proj.items()
+        if pids and pids <= reviewed.get(uid, set())
+    }
 
 
 @login_required
@@ -336,14 +388,7 @@ def talent_table(request):
                 .values_list("project__name", flat=True)
             )
 
-    ready_ids = set()
-    if period:
-        from apps.evaluations.models import TalentSessionNote
-        ready_ids = set(
-            TalentSessionNote.objects.filter(
-                period=period, mesa_ready=True, user__in=page.object_list,
-            ).values_list("user_id", flat=True)
-        )
+    ready_ids = _general_ready_ids(period, page.object_list)
 
     rows = [
         {
@@ -601,6 +646,7 @@ def talent_person(request, pk):
             "secondaries": secondaries,
             "all_users": all_users,
         })
+        ctx.update(_person_team_projects(target, period))
     return render(request, "dashboards/talent_person.html", ctx)
 
 
@@ -675,35 +721,42 @@ def talent_scenario_toggle(request, pk, tipo):
 
 @login_required
 @require_POST
-def talent_mesa_ready_toggle(request, pk):
-    """Marca/desmarca 'Listo en Mesa de Talento' en la nota (HTMX). Solo Talento."""
+def talent_mesa_project_toggle(request, pk, project_id):
+    """Marca/desmarca 'revisado en Mesa' para (persona, proyecto) (HTMX). Solo Talento.
+
+    El estado 'Listo' general de la persona se deriva de tener todos sus
+    equipos revisados; aquí solo se alterna la revisión de un proyecto.
+    """
     if not request.user.is_admin:
         return HttpResponse(status=403)
 
     from django.contrib.auth import get_user_model
-    from django.utils import timezone
-    from apps.evaluations.models import TalentSessionNote
+    from apps.evaluations.models import MesaProjectReview
 
     User = get_user_model()
     target = get_object_or_404(User, pk=pk, is_active=True)
+    project = get_object_or_404(Project, pk=project_id, is_active=True)
     period = _open_period()
     if not period:
         return HttpResponse(status=400)
 
-    note, _ = TalentSessionNote.objects.get_or_create(
-        user=target, period=period,
-        defaults={"created_by": request.user},
-    )
-    if note.mesa_ready:
-        note.mesa_ready = False
-        note.mesa_ready_at = None
-        note.mesa_ready_by = None
+    # La persona debe pertenecer al equipo del proyecto (miembro u owner).
+    if target.id not in _project_team_ids(project):
+        return HttpResponse(status=400)
+
+    review = MesaProjectReview.objects.filter(
+        period=period, user=target, project=project,
+    ).first()
+    if review:
+        review.delete()
     else:
-        note.mesa_ready = True
-        note.mesa_ready_at = timezone.now()
-        note.mesa_ready_by = request.user
-    note.save(update_fields=["mesa_ready", "mesa_ready_at", "mesa_ready_by", "updated_at"])
-    return render(request, "dashboards/_mesa_ready_toggle.html", {"note": note, "target": target})
+        MesaProjectReview.objects.create(
+            period=period, user=target, project=project, reviewed_by=request.user,
+        )
+
+    ctx = {"target": target}
+    ctx.update(_person_team_projects(target, period))
+    return render(request, "dashboards/_mesa_review_block.html", ctx)
 
 
 @login_required

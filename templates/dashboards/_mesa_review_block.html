@@ -1,0 +1,40 @@
+<div id="mesa-review-block" class="card p-5">
+  <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
+    <div>
+      <p class="text-sm font-semibold text-slate-700">Estado en Mesa de Talento</p>
+      <p class="text-xs text-slate-500">Marca cada equipo cuando el comité haya revisado a la persona en ese proyecto. El estado general se activa cuando todos sus equipos están listos.</p>
+    </div>
+    {% if mesa_all_ready %}
+      <span class="badge bg-emerald-50 text-emerald-700">Listo en Mesa</span>
+    {% else %}
+      <span class="badge bg-slate-100 text-slate-500">Pendiente</span>
+    {% endif %}
+  </div>
+
+  {% if project_reviews %}
+    <ul class="divide-y divide-slate-100">
+      {% for r in project_reviews %}
+      <li class="flex items-center justify-between gap-3 py-2">
+        <span class="text-sm text-slate-700 min-w-0 truncate flex items-center gap-1.5">
+          <i data-lucide="folder" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+          {{ r.project.name }}
+        </span>
+        {% if request.user.is_admin %}
+          <button type="button"
+            hx-post="{% url 'dashboards:talent_mesa_project_toggle' pk=target.pk project_id=r.project.pk %}"
+            hx-target="#mesa-review-block" hx-swap="outerHTML"
+            class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition shrink-0 {% if r.reviewed %}bg-emerald-600 text-white hover:bg-emerald-700{% else %}btn-secondary{% endif %}">
+            {% if r.reviewed %}<i data-lucide="check" class="w-3.5 h-3.5"></i> Revisado{% else %}<i data-lucide="circle" class="w-3.5 h-3.5"></i> Marcar revisado{% endif %}
+          </button>
+        {% elif r.reviewed %}
+          <span class="badge bg-emerald-50 text-emerald-700 text-xs shrink-0">Revisado</span>
+        {% else %}
+          <span class="badge bg-slate-100 text-slate-500 text-xs shrink-0">Pendiente</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-sm text-slate-400 italic">Esta persona no pertenece a ningún equipo activo.</p>
+  {% endif %}
+</div>
