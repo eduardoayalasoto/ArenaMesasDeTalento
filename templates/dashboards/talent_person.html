@@ -73,6 +73,24 @@
         @input.debounce.800ms="save('oportunidades', $el.value)">{{ note.oportunidades }}</textarea>
     </div>
 
+    {# Comentarios #}
+    <div class="card p-5">
+      <label class="block text-sm font-semibold text-slate-700 mb-2">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="message-square" class="w-4 h-4 text-arena-600"></i>
+          Mesa de Talento — Comentarios
+          <span x-show="state.comentarios === 'saving'" class="text-xs text-slate-400 font-normal ml-2">Guardando…</span>
+          <span x-show="state.comentarios === 'saved'" x-cloak class="text-xs text-emerald-600 font-normal ml-2 flex items-center gap-1">
+            <i data-lucide="check" class="w-3 h-3"></i> Guardado
+          </span>
+        </span>
+      </label>
+      <textarea name="comentarios" rows="4"
+        class="input w-full resize-y"
+        placeholder="Comentarios generales de la sesión de Mesa de Talento…"
+        @input.debounce.800ms="save('comentarios', $el.value)">{{ note.comentarios }}</textarea>
+    </div>
+
     {# Escenarios #}
     <div class="card p-5">
       <h3 class="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-1.5">
@@ -119,7 +137,7 @@
     function talentNote(cfg) {
       return {
         url: cfg.url, csrf: cfg.csrf,
-        state: { fortalezas: null, oportunidades: null },
+        state: { fortalezas: null, oportunidades: null, comentarios: null },
         async save(field, value) {
           this.state[field] = 'saving';
           try {
@@ -154,6 +172,12 @@
         <i data-lucide="trending-up" class="w-4 h-4 text-amber-600"></i> Mesa de Talento — Oportunidades
       </h4>
       <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ note.oportunidades|default:"Sin información." }}</p>
+    </div>
+    <div class="card p-5">
+      <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+        <i data-lucide="message-square" class="w-4 h-4 text-arena-600"></i> Mesa de Talento — Comentarios
+      </h4>
+      <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ note.comentarios|default:"Sin información." }}</p>
     </div>
     <div class="card p-5">
       <h3 class="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-1.5">
