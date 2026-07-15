@@ -653,7 +653,7 @@ def talent_person(request, pk):
 @login_required
 @require_POST
 def talent_note_autosave(request, pk):
-    """Guarda fortalezas/oportunidades de la nota de Mesa de Talento (JSON). Solo Talento."""
+    """Guarda fortalezas/oportunidades/comentarios de la nota de Mesa de Talento (JSON). Solo Talento."""
     if not request.user.is_admin:
         return JsonResponse({"ok": False, "error": "No autorizado."}, status=403)
 
