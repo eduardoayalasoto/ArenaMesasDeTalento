@@ -34,3 +34,6 @@ neon.md
 
 # Snapshots de BD (datos personales, NO subir)
 /backups/
+
+# Scratch de superpowers (ledger de subagent-driven-development, no se versiona)
+/.superpowers/
