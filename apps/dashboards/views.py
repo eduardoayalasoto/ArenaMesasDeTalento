@@ -679,6 +679,9 @@ def talent_note_autosave(request, pk):
     elif field == "oportunidades":
         note.oportunidades = value
         note.save(update_fields=["oportunidades", "updated_at"])
+    elif field == "comentarios":
+        note.comentarios = value
+        note.save(update_fields=["comentarios", "updated_at"])
     else:
         return JsonResponse({"ok": False, "error": "Campo inválido."}, status=400)
     return JsonResponse({"ok": True})
