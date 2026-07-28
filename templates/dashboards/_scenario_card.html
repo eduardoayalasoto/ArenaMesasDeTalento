@@ -1,0 +1,14 @@
+{% comment %}Tarjeta arrastrable de colaborador para el tablero de Escenario Actual.
+Params: user{% endcomment %}
+<div class="scenario-card flex items-center gap-2 p-2 rounded-lg border border-slate-200 bg-white shadow-sm cursor-grab active:cursor-grabbing"
+     data-user-id="{{ user.pk }}"
+     data-area="{{ user.area.code|default:'' }}"
+     data-level="{{ user.level.code|default:'' }}">
+  {% include "partials/avatar.html" with subject=user size="w-8 h-8" mini=True %}
+  <div class="min-w-0">
+    <p class="text-xs font-medium text-slate-800 truncate">{{ user.full_name }}</p>
+    <p class="text-[11px] text-slate-500 truncate">
+      {{ user.area.code|default:"—" }} · {{ user.level.code|default:"—" }}
+    </p>
+  </div>
+</div>

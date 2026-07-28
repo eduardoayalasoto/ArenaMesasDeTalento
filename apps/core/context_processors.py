@@ -92,6 +92,7 @@ def navigation(request):
     # Comité de Talento y Dirección — Mesa de Talento
     if user.is_admin or user.is_director:
         add("Mesa de Talento", "dashboards:talent_table", "table")
+        add("Escenario Actual", "dashboards:current_scenario_board", "move")
 
     # Validador de Entrega de Valor — cola de validación (asignado por proyecto, o Talento)
     if user.is_admin or user.validates_projects:

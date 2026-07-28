@@ -79,6 +79,9 @@ class User(AbstractUser):
     # La foto se guarda en la BD (Vercel tiene FS de solo lectura): bytes + tipo MIME.
     photo_data = models.BinaryField(null=True, blank=True, editable=False)
     photo_mime = models.CharField(max_length=40, blank=True, default="")
+    # Miniatura chica (64x64) para vistas con muchas fotos a la vez (p.ej. el
+    # tablero de Escenario Actual) — evita transferir el JPEG de 400x400 por tarjeta.
+    photo_thumb_data = models.BinaryField(null=True, blank=True, editable=False)
     must_change_password = models.BooleanField(
         "debe cambiar contraseña", default=False,
         help_text="Si está activo, se obliga a crear una nueva contraseña al ingresar.",

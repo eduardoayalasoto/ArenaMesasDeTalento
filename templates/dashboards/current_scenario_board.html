@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="mb-6">
+  <h2 class="text-xl font-semibold text-slate-900">Escenario Actual</h2>
+  <p class="text-slate-600">Arrastra a un colaborador entre columnas para actualizar su Escenario Actual.</p>
+</div>
+
+{% if not period %}
+  <div class="card p-8 text-center text-slate-400">No hay periodo abierto.</div>
+{% else %}
+
+<div class="card p-4 mb-6 flex flex-wrap items-center gap-3" x-data="{ area: 'todos', level: 'todos' }" x-init="
+  $watch('area', v => applyScenarioFilters(v, level));
+  $watch('level', v => applyScenarioFilters(area, v));
+">
+  <label class="text-sm text-slate-600 flex items-center gap-2">
+    Área
+    <select x-model="area" class="input">
+      <option value="todos">Todas</option>
+      {% for a in areas %}<option value="{{ a.code }}">{{ a.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label class="text-sm text-slate-600 flex items-center gap-2">
+    Nivel
+    <select x-model="level" class="input">
+      <option value="todos">Todos</option>
+      {% for l in levels %}<option value="{{ l.code }}">{{ l.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <span class="text-xs text-slate-400 ml-auto">Los filtros solo afectan lo que ves; no cambian el escenario de nadie.</span>
+</div>
+
+<div id="scenario-board" data-move-url-template="{% url 'dashboards:current_scenario_move' pk=0 %}"
+     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+  {% for col in columns %}
+  <div class="card p-3 min-h-[16rem] flex flex-col">
+    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+      {{ col.label }} <span class="text-slate-400 scenario-count">({{ col.cards|length }})</span>
+    </p>
+    <div class="scenario-list flex-1 space-y-2 min-h-[4rem]"
+         data-scenario-pk="{% if col.option %}{{ col.option.pk }}{% endif %}">
+      {% for card in col.cards %}
+        {% include "dashboards/_scenario_card.html" with user=card.user %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if critical_option %}
+<div class="card p-3 mt-4 border-2 border-red-200 bg-red-50/40">
+  <p class="text-xs font-semibold text-red-600 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+    <i data-lucide="alert-triangle" class="w-4 h-4"></i> {{ critical_option.name }}
+    <span class="text-red-400 font-normal scenario-count">({{ critical_cards|length }})</span>
+  </p>
+  <div class="scenario-list flex flex-wrap gap-2 min-h-[4rem]" data-scenario-pk="{{ critical_option.pk }}">
+    {% for card in critical_cards %}
+      {% include "dashboards/_scenario_card.html" with user=card.user %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<script defer src="{% static 'vendor/sortable.min.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const urlTemplate = document.getElementById('scenario-board').dataset.moveUrlTemplate;
+    document.querySelectorAll('.scenario-list').forEach(function (el) {
+      new Sortable(el, {
+        group: 'escenario-actual',
+        animation: 150,
+        ghostClass: 'opacity-40',
+        onEnd: function (evt) {
+          if (evt.from === evt.to) return;
+          const userId = evt.item.dataset.userId;
+          const scenarioPk = evt.to.dataset.scenarioPk || '';
+          const url = urlTemplate.replace('/0/', '/' + userId + '/');
+          htmx.ajax('POST', url, {
+            source: evt.item,
+            values: { scenario_pk: scenarioPk },
+            swap: 'none',
+          });
+          updateScenarioCount(evt.from);
+          updateScenarioCount(evt.to);
+        },
+      });
+    });
+  });
+
+  function updateScenarioCount(listEl) {
+    const countEl = listEl.closest('.card').querySelector('.scenario-count');
+    if (countEl) countEl.textContent = '(' + listEl.querySelectorAll('.scenario-card').length + ')';
+  }
+
+  function applyScenarioFilters(area, level) {
+    document.querySelectorAll('.scenario-card').forEach(function (card) {
+      const matchArea = area === 'todos' || card.dataset.area === area;
+      const matchLevel = level === 'todos' || card.dataset.level === level;
+      card.style.display = (matchArea && matchLevel) ? '' : 'none';
+    });
+  }
+</script>
+{% endif %}
+{% endblock %}

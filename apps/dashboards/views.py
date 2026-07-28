@@ -431,6 +431,96 @@ def talent_table(request):
     })
 
 
+@login_required
+def current_scenario_board(request):
+    """Tablero drag-and-drop de Escenario Actual (no es un catálogo, es un
+    accionador): permite a Talento y Dirección mover colaboradores entre los
+    valores de escenario actual, filtrando por área/nivel en el cliente."""
+    if not request.user.is_admin and not request.user.is_director:
+        return render(request, "errors/403.html", {
+            "titulo": "Panel reservado al comité de Talento",
+            "mensaje": "Escenario Actual es para Talento y Cultura y la Dirección.",
+        }, status=403)
+
+    from django.contrib.auth import get_user_model
+
+    from apps.catalog.models import ScenarioOption
+    from apps.evaluations.models import TalentSessionNote
+
+    User = get_user_model()
+    period = _open_period()
+    ctx = {"page_title": "Escenario Actual", "period": period}
+    if not period:
+        return render(request, "dashboards/current_scenario_board.html", ctx)
+
+    users = (
+        User.objects.filter(is_active=True, is_superuser=False)
+        .select_related("area", "level").order_by("full_name")
+    )
+    scenario_by_user = dict(
+        TalentSessionNote.objects.filter(period=period, user__in=users)
+        .values_list("user_id", "scenario_actual_id")
+    )
+    options = list(ScenarioOption.objects.filter(is_active=True).order_by("order"))
+    critical_option = next((o for o in options if o.order == 1), None)
+    board_options = [o for o in options if o.order != 1]
+
+    columns = [{"key": "none", "option": None, "label": "Sin asignar", "cards": []}] + [
+        {"key": str(o.pk), "option": o, "label": o.name, "cards": []} for o in board_options
+    ]
+    columns_by_key = {c["key"]: c for c in columns}
+    critical_cards = []
+    for u in users:
+        scenario_id = scenario_by_user.get(u.id)
+        card = {"user": u}
+        if critical_option and scenario_id == critical_option.pk:
+            critical_cards.append(card)
+        else:
+            columns_by_key.get(str(scenario_id) if scenario_id else "none", columns_by_key["none"])["cards"].append(card)
+
+    ctx.update({
+        "areas": Area.objects.filter(is_active=True).order_by("code"),
+        "levels": SeniorityLevel.objects.order_by("order"),
+        "columns": columns,
+        "critical_option": critical_option,
+        "critical_cards": critical_cards,
+    })
+    return render(request, "dashboards/current_scenario_board.html", ctx)
+
+
+@login_required
+@require_POST
+def current_scenario_move(request, pk):
+    """HTMX: mueve a una persona a otro valor de Escenario Actual (o a 'sin
+    asignar' si scenario_pk viene vacío). Talento y Dirección."""
+    if not request.user.is_admin and not request.user.is_director:
+        return HttpResponse(status=403)
+
+    from django.contrib.auth import get_user_model
+
+    from apps.catalog.models import ScenarioOption
+    from apps.evaluations.models import TalentSessionNote
+
+    User = get_user_model()
+    target = get_object_or_404(User, pk=pk, is_active=True, is_superuser=False)
+    period = _open_period()
+    if not period:
+        return HttpResponse(status=400)
+
+    scenario_pk = request.POST.get("scenario_pk")
+    option = None
+    if scenario_pk:
+        option = get_object_or_404(ScenarioOption, pk=scenario_pk, is_active=True)
+
+    note, _ = TalentSessionNote.objects.get_or_create(
+        user=target, period=period,
+        defaults={"created_by": request.user},
+    )
+    note.scenario_actual = option
+    note.save(update_fields=["scenario_actual"])
+    return HttpResponse(status=204)
+
+
 def _pending_people(period):
     """Personas con algo pendiente en el periodo: ownership propia, Entrega de Valor
     (captura como responsable, validación como Validador) y retroalimentación.
@@ -638,7 +728,7 @@ def talent_person(request, pk):
             "note": note,
             "scenario_options": scenario_options,
             "escenarios_ctx": [
-                ("actual", "Escenario Actual", set(note.scenario_actual.values_list("pk", flat=True))),
+                ("actual", "Escenario Actual", {note.scenario_actual_id} if note.scenario_actual_id else set()),
                 ("s1", "Escenario S+1", set(note.scenario_s1.values_list("pk", flat=True))),
                 ("s2", "Escenario S+2", set(note.scenario_s2.values_list("pk", flat=True))),
             ],
@@ -710,7 +800,14 @@ def talent_scenario_toggle(request, pk, tipo):
         defaults={"created_by": request.user},
     )
 
-    scenario_map = {"actual": note.scenario_actual, "s1": note.scenario_s1, "s2": note.scenario_s2}
+    if tipo == "actual":
+        # Escenario Actual es de selección única (FK): seleccionar reemplaza,
+        # no hay toggle posible desde un <input type="radio">.
+        note.scenario_actual = option
+        note.save(update_fields=["scenario_actual"])
+        return HttpResponse(status=200)
+
+    scenario_map = {"s1": note.scenario_s1, "s2": note.scenario_s2}
     m2m = scenario_map.get(tipo)
     if m2m is None:
         return HttpResponse(status=400)
@@ -916,7 +1013,7 @@ def feedback_session_detail(request, pk):
         "final": results["final"],
         "weight": results["weight"],
         "evaluators": evaluators,
-        "scenario_actual": note.scenario_actual.all(),
+        "scenario_actual": [note.scenario_actual] if note.scenario_actual_id else [],
         "can_reopen": note.feedback_agreed and request.user.is_admin,
     })
 

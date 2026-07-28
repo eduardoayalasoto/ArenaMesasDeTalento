@@ -40,11 +40,19 @@ def user_create(request):
 
 @login_required
 def user_photo(request, pk):
-    """Sirve la foto guardada en la BD (Vercel no tiene FS de escritura)."""
-    u = User.objects.filter(pk=pk).only("photo_data", "photo_mime").first()
-    if not u or not u.photo_data:
+    """Sirve la foto guardada en la BD (Vercel no tiene FS de escritura).
+
+    `?mini=1` sirve la miniatura chica (64x64); si aún no se generó (usuario
+    con foto de antes de este campo), cae a la foto completa.
+    """
+    u = User.objects.filter(pk=pk).only("photo_data", "photo_thumb_data", "photo_mime").first()
+    if not u:
         raise Http404("Sin foto")
-    resp = HttpResponse(bytes(u.photo_data), content_type=u.photo_mime or "image/jpeg")
+    mini = request.GET.get("mini") == "1"
+    data = (u.photo_thumb_data or u.photo_data) if mini else u.photo_data
+    if not data:
+        raise Http404("Sin foto")
+    resp = HttpResponse(bytes(data), content_type=u.photo_mime or "image/jpeg")
     resp["Cache-Control"] = "private, max-age=86400"
     return resp
 

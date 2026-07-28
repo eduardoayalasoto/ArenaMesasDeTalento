@@ -1,7 +1,8 @@
-{% comment %}Avatar circular. Params: subject (User), size (clases w/h, def w-10 h-10), icon (clases del icono).
+{% comment %}Avatar circular. Params: subject (User), size (clases w/h, def w-10 h-10), icon (clases del icono),
+mini (bool, sirve la miniatura de 64px en vez de la foto completa de 400px).
 Si no hay foto, muestra un icono de usuario de Lucide.{% endcomment %}
 {% if subject.has_photo %}
-  <img src="{% url 'accounts:user_photo' subject.pk %}" alt="Foto de {{ subject.full_name }}"
+  <img src="{% url 'accounts:user_photo' subject.pk %}{% if mini %}?mini=1{% endif %}" alt="Foto de {{ subject.full_name }}"
        class="{{ size|default:'w-10 h-10' }} rounded-full object-cover ring-1 ring-slate-200 shrink-0">
 {% else %}
   <span class="{{ size|default:'w-10 h-10' }} rounded-full bg-arena-50 text-arena-500 grid place-items-center ring-1 ring-arena-100 shrink-0">

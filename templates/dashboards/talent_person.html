@@ -104,8 +104,9 @@
           <div class="space-y-2">
             {% for opt in scenario_options %}
             <label class="flex items-center gap-2 cursor-pointer group">
-              <input type="checkbox"
-                class="rounded border-slate-300 text-arena-600 focus:ring-arena-500"
+              <input type="{% if tipo == 'actual' %}radio{% else %}checkbox{% endif %}"
+                {% if tipo == 'actual' %}name="scenario_actual_{{ target.pk }}"{% endif %}
+                class="{% if tipo == 'actual' %}rounded-full{% else %}rounded{% endif %} border-slate-300 text-arena-600 focus:ring-arena-500"
                 {% if opt.pk in selected %}checked{% endif %}
                 hx-post="{% url 'dashboards:talent_scenario_toggle' pk=target.pk tipo=tipo %}"
                 hx-vals='{"option_pk": "{{ opt.pk }}"}'

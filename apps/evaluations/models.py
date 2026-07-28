@@ -265,9 +265,9 @@ class TalentSessionNote(models.Model):
     fortalezas = models.TextField("fortalezas Mesa de Talento", blank=True)
     oportunidades = models.TextField("oportunidades Mesa de Talento", blank=True)
     comentarios = models.TextField("comentarios Mesa de Talento", blank=True)
-    scenario_actual = models.ManyToManyField(
-        "catalog.ScenarioOption", related_name="notes_actual",
-        blank=True, verbose_name="escenario actual",
+    scenario_actual = models.ForeignKey(
+        "catalog.ScenarioOption", on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="notes_actual", verbose_name="escenario actual",
     )
     scenario_s1 = models.ManyToManyField(
         "catalog.ScenarioOption", related_name="notes_s1",

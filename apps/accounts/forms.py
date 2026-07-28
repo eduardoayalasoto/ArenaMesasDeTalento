@@ -7,15 +7,20 @@ from django import forms
 User = get_user_model()
 
 
-def square_jpeg_bytes(upload) -> bytes:
-    """Recorta a cuadrado y devuelve la imagen como JPEG 400x400 (bytes), en memoria."""
+PHOTO_SIZE = 400
+PHOTO_THUMB_SIZE = 64
+
+
+def square_jpeg_bytes(upload, size: int = PHOTO_SIZE) -> bytes:
+    """Recorta a cuadrado y devuelve la imagen como JPEG `size`x`size` (bytes), en memoria."""
     import io
 
     from PIL import Image, ImageOps
 
+    upload.seek(0)
     img = Image.open(upload)
     img = ImageOps.exif_transpose(img).convert("RGB")
-    img = ImageOps.fit(img, (400, 400), Image.LANCZOS)
+    img = ImageOps.fit(img, (size, size), Image.LANCZOS)
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=85, optimize=True)
     return buf.getvalue()
@@ -80,6 +85,7 @@ class PhotoForm(forms.ModelForm):
         upload = self.cleaned_data.get("photo")
         if upload and hasattr(upload, "file"):
             user.photo_data = square_jpeg_bytes(upload)
+            user.photo_thumb_data = square_jpeg_bytes(upload, size=PHOTO_THUMB_SIZE)
             user.photo_mime = "image/jpeg"
         if commit:
             user.save()
@@ -106,11 +112,14 @@ class ProfileInfoForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         upload = self.cleaned_data.get("photo")
+        fields = ["full_name"]
         if upload and hasattr(upload, "file"):
             user.photo_data = square_jpeg_bytes(upload)
+            user.photo_thumb_data = square_jpeg_bytes(upload, size=PHOTO_THUMB_SIZE)
             user.photo_mime = "image/jpeg"
+            fields += ["photo_data", "photo_thumb_data", "photo_mime"]
         if commit:
-            user.save(update_fields=["full_name", "photo_data", "photo_mime"])
+            user.save(update_fields=fields)
         return user
 
 
