@@ -204,7 +204,7 @@ class ScenarioOption(models.Model):
     class Meta:
         verbose_name = "opción de escenario"
         verbose_name_plural = "opciones de escenario"
-        ordering = ["order"]
+        ordering = ["-order"]
 
     def __str__(self):
         return self.name

@@ -35,7 +35,7 @@ def navigation(request):
     except AttributeError:
         current_resolved = ""
 
-    def add(label, url_name, icon="", also_active=()):
+    def add(label, url_name, icon="", also_active=(), target=None):
         url = _safe_url(url_name)
         if not url:
             return
@@ -46,7 +46,7 @@ def navigation(request):
         else:
             # Fallback (p.ej. página 404): comparación por ruta
             active = current == url or current.startswith(url)
-        items.append(
+        (target if target is not None else items).append(
             {"label": label, "url": url, "icon": icon, "name": url_name, "active": active}
         )
 
@@ -106,11 +106,22 @@ def navigation(request):
     if user.is_admin:
         add("Impacto Arena", "evaluations:arena_impact", "star")
         add("Avance del periodo", "dashboards:period_progress", "chart")
-        add("Cuestionarios", "questionnaires:admin_list", "list")
-        add("Usuarios", "accounts:user_admin", "id")
-        add("Escenarios", "catalog:scenario_admin", "layers")
-        add("Periodos", "catalog:period_admin", "calendar")
-        add("Ponderaciones", "catalog:weight_admin", "scale")
+
+        # Catálogos administrables — agrupados en un folder colapsable.
+        catalog_children: list[dict] = []
+        add("Cuestionarios", "questionnaires:admin_list", "list", target=catalog_children)
+        add("Usuarios", "accounts:user_admin", "id", target=catalog_children)
+        add("Escenarios", "catalog:scenario_admin", "layers", target=catalog_children)
+        add("Periodos", "catalog:period_admin", "calendar", target=catalog_children)
+        add("Ponderaciones", "catalog:weight_admin", "scale", target=catalog_children)
+        if catalog_children:
+            items.append({
+                "type": "group",
+                "label": "Catálogos",
+                "icon": "catalog",
+                "children": catalog_children,
+                "active": any(c["active"] for c in catalog_children),
+            })
 
     return {"nav_items": items}
 

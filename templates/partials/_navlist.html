@@ -2,13 +2,39 @@
 <nav class="flex-1 flex flex-col overflow-y-auto px-3 py-4" aria-label="Navegación principal">
   <div class="space-y-1">
     {% for item in nav_items %}
-      <a href="{{ item.url }}"
-         class="nav-link {% if item.active %}nav-link-active{% endif %}"
-         @click="$store.ui.sidebarOpen = false"
-         {% if item.active %}aria-current="page"{% endif %}>
-        {% include "partials/icon.html" with name=item.icon cls="w-5 h-5 shrink-0" %}
-        <span>{{ item.label }}</span>
-      </a>
+      {% if item.type == "group" %}
+        <div x-data="{ open: {{ item.active|yesno:'true,false' }} }">
+          <button type="button" @click="open = !open"
+                  class="nav-link w-full justify-between {% if item.active %}text-slate-900{% endif %}">
+            <span class="flex items-center gap-3">
+              {% include "partials/icon.html" with name=item.icon cls="w-5 h-5 shrink-0" %}
+              <span>{{ item.label }}</span>
+            </span>
+            <span :class="open ? 'rotate-180' : ''" class="transition-transform">
+              {% include "partials/icon.html" with name="chevron-down" cls="w-4 h-4 shrink-0" %}
+            </span>
+          </button>
+          <div x-show="open" x-cloak class="mt-1 ml-4 space-y-1 border-l border-slate-100 pl-3">
+            {% for child in item.children %}
+              <a href="{{ child.url }}"
+                 class="nav-link {% if child.active %}nav-link-active{% endif %}"
+                 @click="$store.ui.sidebarOpen = false"
+                 {% if child.active %}aria-current="page"{% endif %}>
+                {% include "partials/icon.html" with name=child.icon cls="w-5 h-5 shrink-0" %}
+                <span>{{ child.label }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        <a href="{{ item.url }}"
+           class="nav-link {% if item.active %}nav-link-active{% endif %}"
+           @click="$store.ui.sidebarOpen = false"
+           {% if item.active %}aria-current="page"{% endif %}>
+          {% include "partials/icon.html" with name=item.icon cls="w-5 h-5 shrink-0" %}
+          <span>{{ item.label }}</span>
+        </a>
+      {% endif %}
     {% endfor %}
   </div>
 
