@@ -1139,9 +1139,9 @@ def export_scores_xlsx(request):
             float(f.final_score) if f and f.final_score is not None else None,
             f.band if f else "",
             "Sí" if (f and f.is_complete) else "No",
-            note.scenario_actual.name if note and note.scenario_actual_id else "",
-            ", ".join(o.name for o in note.scenario_s1.all()) if note else "",
-            ", ".join(o.name for o in note.scenario_s2.all()) if note else "",
+            note.scenario_actual.order if note and note.scenario_actual_id else None,
+            ", ".join(str(o.order) for o in note.scenario_s1.all()) if note else "",
+            ", ".join(str(o.order) for o in note.scenario_s2.all()) if note else "",
         ])
 
     for i, header in enumerate(headers, start=1):
