@@ -926,11 +926,18 @@ def feedback_session_list(request):
             .order_by("user__full_name")
         )
         for note in notes:
+            all_responsables = note.responsables.all()
             secondaries = [
-                r.user for r in note.responsables.all()
+                r.user for r in all_responsables
                 if not r.is_primary and r.user_id != request.user.pk
             ]
-            rows.append({"note": note, "target": note.user, "secondaries": secondaries})
+            viewer_record = next((r for r in all_responsables if r.user_id == request.user.pk), None)
+            rows.append({
+                "note": note,
+                "target": note.user,
+                "secondaries": secondaries,
+                "is_primary": bool(viewer_record and viewer_record.is_primary),
+            })
 
     return render(request, "dashboards/feedback_session_list.html", {
         "page_title": "Retroalimentación",
