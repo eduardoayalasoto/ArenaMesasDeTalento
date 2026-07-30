@@ -23,5 +23,5 @@ urlpatterns = [
     path("retroalimentacion/", views.feedback_session_list, name="feedback_session_list"),
     path("retroalimentacion/<int:pk>/", views.feedback_session_detail, name="feedback_session_detail"),
     path("avance-periodo/", views.period_progress, name="period_progress"),
-    path("exportar/calificaciones.csv", views.export_scores_csv, name="export_scores_csv"),
+    path("exportar/calificaciones.xlsx", views.export_scores_xlsx, name="export_scores_xlsx"),
 ]

@@ -1,6 +1,5 @@
 """Tableros, vista de área, avance del periodo y exportes."""
 
-import csv
 import json
 
 from django.contrib import messages
@@ -1093,34 +1092,65 @@ def _responsables_fragment(request, note, target):
 
 
 @login_required
-def export_scores_csv(request):
-    """Exporta a CSV las calificaciones de los colaboradores visibles para el viewer."""
+def export_scores_xlsx(request):
+    """Exporta a XLSX las calificaciones y escenarios de Mesa de Talento del periodo
+    abierto, para los colaboradores visibles del viewer."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font
+    from openpyxl.utils import get_column_letter
+
+    from apps.evaluations.models import TalentSessionNote
+
     period = _open_period()
     users = permissions.visible_users(request.user).select_related("area", "level")
     finals = {}
+    notes = {}
     if period:
         finals = {f.user_id: f for f in FinalScore.objects.filter(period=period, user__in=users)}
+        notes = {
+            n.user_id: n for n in
+            TalentSessionNote.objects.filter(period=period, user__in=users)
+            .select_related("scenario_actual")
+            .prefetch_related("scenario_s1", "scenario_s2")
+        }
 
-    response = HttpResponse(content_type="text/csv; charset=utf-8")
-    period_name = period.name if period else "sin-periodo"
-    response["Content-Disposition"] = f'attachment; filename="calificaciones_{period_name}.csv"'
-    response.write("﻿")  # BOM para que Excel reconozca UTF-8
-    writer = csv.writer(response)
-    writer.writerow([
+    headers = [
         "Colaborador", "Correo", "Área", "Nivel",
         "Ownership", "Entrega de Valor", "Impacto Arena", "Final", "Banda", "Completa",
-    ])
+        "Escenario Actual", "Escenario S+1", "Escenario S+2",
+    ]
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Calificaciones"
+    ws.append(headers)
+    for cell in ws[1]:
+        cell.font = Font(bold=True)
+
     for u in users:
         f = finals.get(u.id)
-        writer.writerow([
+        note = notes.get(u.id)
+        ws.append([
             u.full_name, u.email,
             u.area.name if u.area else "",
             u.level.name if u.level else "",
-            f.ownership_score if f else "",
-            f.value_delivery_score if f else "",
-            f.arena_impact_score if f else "",
-            f.final_score if f else "",
+            float(f.ownership_score) if f and f.ownership_score is not None else None,
+            float(f.value_delivery_score) if f and f.value_delivery_score is not None else None,
+            float(f.arena_impact_score) if f and f.arena_impact_score is not None else None,
+            float(f.final_score) if f and f.final_score is not None else None,
             f.band if f else "",
             "Sí" if (f and f.is_complete) else "No",
+            note.scenario_actual.name if note and note.scenario_actual_id else "",
+            ", ".join(o.name for o in note.scenario_s1.all()) if note else "",
+            ", ".join(o.name for o in note.scenario_s2.all()) if note else "",
         ])
+
+    for i, header in enumerate(headers, start=1):
+        ws.column_dimensions[get_column_letter(i)].width = max(14, len(header) + 4)
+
+    period_name = period.name if period else "sin-periodo"
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = f'attachment; filename="calificaciones_{period_name}.xlsx"'
+    wb.save(response)
     return response

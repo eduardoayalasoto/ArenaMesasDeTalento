@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Avance del periodo</h2>
-    {% if period %}<p class="text-slate-600">{{ period.name }} · {{ period.get_status_display }}</p>{% endif %}
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Avance del periodo</h2>
+      {% if period %}<p class="text-slate-600">{{ period.name }} · {{ period.get_status_display }}</p>{% endif %}
+    </div>
+    {% if period %}
+      <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn-secondary">
+        {% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar Excel
+      </a>
+    {% endif %}
   </div>
 
   {% if not period %}

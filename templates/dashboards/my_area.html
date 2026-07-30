@@ -5,7 +5,7 @@
       <h2 class="text-xl font-semibold text-slate-900">Mi área</h2>
       {% if period %}<p class="text-slate-600">Periodo {{ period.name }} · {{ rows|length }} persona(s)</p>{% endif %}
     </div>
-    <a href="{% url 'dashboards:export_scores_csv' %}" class="btn-secondary">{% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar CSV</a>
+    <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn-secondary">{% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar Excel</a>
   </div>
 
   <form method="get" class="flex items-center gap-2 mb-4">
