@@ -44,9 +44,16 @@ Espera `card`: {note, target, final, projects, givers, viewer_role}{% endcomment
     </p>
     <div class="flex flex-wrap gap-1.5">
       {% for g in card.givers %}
-        <span class="badge text-xs {% if g.is_primary %}bg-arena-50 text-arena-700{% else %}bg-slate-100 text-slate-600{% endif %} {% if g.user_id == request.user.pk %}ring-2 ring-arena-400{% endif %}">
-          {{ g.user.full_name }} · {% if g.is_primary %}Principal{% else %}Secundario{% endif %}
-        </span>
+        {% if g.is_primary %}
+          <span class="badge text-xs font-semibold bg-arena-100 text-arena-800 ring-1 ring-arena-300 {% if g.user_id == request.user.pk %}ring-2 ring-arena-500{% endif %}">
+            {% include "partials/icon.html" with name="star" cls="w-3 h-3 shrink-0" %}
+            {{ g.user.full_name }} · Principal
+          </span>
+        {% else %}
+          <span class="badge text-xs bg-slate-100 text-slate-600 {% if g.user_id == request.user.pk %}ring-2 ring-arena-400{% endif %}">
+            {{ g.user.full_name }} · Secundario
+          </span>
+        {% endif %}
       {% empty %}
         <span class="text-sm text-slate-400 italic">Sin responsables asignados todavía.</span>
       {% endfor %}
