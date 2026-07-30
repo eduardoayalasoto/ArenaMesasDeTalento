@@ -61,48 +61,57 @@
     </div>
   {% endif %}
 
+  {% if not can_edit %}
+    <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-sm text-arena-800">
+      Esta es tu retroalimentación de Mesa de Talento del periodo {{ period.name }}. Solo puedes consultarla; la
+      captura quien esté asignado como tu responsable de retroalimentación.
+    </div>
+  {% endif %}
+
   <form method="post" class="card p-5 space-y-5">
-    {% csrf_token %}
+    {% if can_edit %}{% csrf_token %}{% endif %}
     <div>
       <h3 class="font-semibold text-slate-900 mb-1">Sesión de retroalimentación</h3>
-      <p class="text-sm text-slate-500">Lo que captures aquí queda visible para {{ target.full_name }} en su propio tablero, como su retroalimentación del periodo {{ period.name }}.</p>
+      {% if can_edit %}
+        <p class="text-sm text-slate-500">Lo que captures aquí queda visible para {{ target.full_name }} en su propio tablero, como su retroalimentación del periodo {{ period.name }}.</p>
+      {% endif %}
     </div>
 
     <div>
       <label class="label" for="objetivo_desarrollo_1">Objetivo de desarrollo 1</label>
-      <textarea id="objetivo_desarrollo_1" name="objetivo_desarrollo_1" rows="3" class="input" {% if note.feedback_agreed %}disabled{% endif %}>{{ note.objetivo_desarrollo_1 }}</textarea>
+      <textarea id="objetivo_desarrollo_1" name="objetivo_desarrollo_1" rows="3" class="input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_1 }}</textarea>
     </div>
     <div>
       <label class="label" for="objetivo_desarrollo_2">Objetivo de desarrollo 2</label>
-      <textarea id="objetivo_desarrollo_2" name="objetivo_desarrollo_2" rows="3" class="input" {% if note.feedback_agreed %}disabled{% endif %}>{{ note.objetivo_desarrollo_2 }}</textarea>
+      <textarea id="objetivo_desarrollo_2" name="objetivo_desarrollo_2" rows="3" class="input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_2 }}</textarea>
     </div>
     <div>
       <label class="label" for="objetivo_desarrollo_3">Objetivo de desarrollo 3</label>
-      <textarea id="objetivo_desarrollo_3" name="objetivo_desarrollo_3" rows="3" class="input" {% if note.feedback_agreed %}disabled{% endif %}>{{ note.objetivo_desarrollo_3 }}</textarea>
+      <textarea id="objetivo_desarrollo_3" name="objetivo_desarrollo_3" rows="3" class="input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_3 }}</textarea>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
       <div>
         <label class="label" for="expectativas_profesionales">Expectativas profesionales</label>
-        <textarea id="expectativas_profesionales" name="expectativas_profesionales" rows="3" class="input" {% if note.feedback_agreed %}disabled{% endif %}>{{ note.expectativas_profesionales }}</textarea>
+        <textarea id="expectativas_profesionales" name="expectativas_profesionales" rows="3" class="input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.expectativas_profesionales }}</textarea>
       </div>
       <div>
         <label class="label" for="expectativas_personales">Expectativas personales</label>
-        <textarea id="expectativas_personales" name="expectativas_personales" rows="3" class="input" {% if note.feedback_agreed %}disabled{% endif %}>{{ note.expectativas_personales }}</textarea>
+        <textarea id="expectativas_personales" name="expectativas_personales" rows="3" class="input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.expectativas_personales }}</textarea>
       </div>
     </div>
 
     <div>
       <label class="label" for="comentarios_adicionales">Comentarios adicionales</label>
-      <textarea id="comentarios_adicionales" name="comentarios_adicionales" rows="3" class="input" {% if note.feedback_agreed %}disabled{% endif %}>{{ note.comentarios_adicionales }}</textarea>
+      <textarea id="comentarios_adicionales" name="comentarios_adicionales" rows="3" class="input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.comentarios_adicionales }}</textarea>
     </div>
 
-    {% if not note.feedback_agreed %}
+    {% if can_edit and not note.feedback_agreed %}
       <button type="submit" class="btn-primary">Guardar</button>
     {% endif %}
   </form>
 
-  {% if not note.feedback_agreed %}
+  {% if can_edit and not note.feedback_agreed %}
     <div class="card p-5 mt-5">
       <h4 class="font-semibold text-slate-900 mb-1">Cerrar con acuerdo</h4>
       <p class="text-sm text-slate-500 mb-3">Cuando ya tuviste la sesión con {{ target.full_name }} y quedaron de acuerdo, marca esto para cerrarla. El texto quedará bloqueado y visible en su tablero.</p>

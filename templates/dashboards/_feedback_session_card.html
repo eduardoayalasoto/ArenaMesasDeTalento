@@ -1,0 +1,75 @@
+{% comment %}Tarjeta unificada de sesión de retroalimentación, usada en las 3 secciones
+de feedback_session_list.html (doy · principal, asisto · secundario, recibo).
+Espera `card`: {note, target, final, projects, givers, viewer_role}{% endcomment %}
+<div class="card p-4 flex flex-col gap-3">
+  <div class="flex items-center gap-3">
+    {% include "partials/avatar.html" with subject=card.target size="w-10 h-10" %}
+    <div class="min-w-0 flex-1">
+      <p class="font-medium text-slate-900 truncate">{{ card.target.full_name }}</p>
+      <p class="text-xs text-slate-500 truncate">{{ card.target.area.name|default:"Sin área" }}{% if card.target.level %} · {{ card.target.level.name }}{% endif %}</p>
+    </div>
+    <span class="badge text-xs shrink-0
+      {% if card.viewer_role == 'Principal' %}bg-arena-50 text-arena-700
+      {% elif card.viewer_role == 'Secundario' %}bg-slate-100 text-slate-600
+      {% else %}bg-indigo-50 text-indigo-700{% endif %}">
+      Tú: {{ card.viewer_role }}
+    </span>
+  </div>
+
+  <div class="flex items-center gap-2 text-sm">
+    {% if card.final.is_complete %}
+      <span class="font-semibold text-slate-900 tabular-nums">{{ card.final.final_score }}</span>
+      <span class="badge text-xs
+        {% if card.final.band == 'Excede' %}bg-emerald-50 text-emerald-700
+        {% elif card.final.band == 'Cumple' %}bg-arena-50 text-arena-700
+        {% elif card.final.band == 'Cumple parcial' %}bg-amber-50 text-amber-700
+        {% else %}bg-rose-50 text-rose-700{% endif %}">{{ card.final.band }}</span>
+    {% else %}
+      <span class="text-xs text-slate-400">Puntaje aún no completo</span>
+    {% endif %}
+  </div>
+
+  <div>
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">Proyectos</p>
+    {% if card.projects %}
+      <p class="text-sm text-slate-700">{{ card.projects|join:", " }}</p>
+    {% else %}
+      <p class="text-sm text-slate-400 italic">Sin proyectos activos.</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+      {% if card.viewer_role == 'Receptor' %}Quién te da retroalimentación{% else %}Responsables{% endif %}
+    </p>
+    <div class="flex flex-wrap gap-1.5">
+      {% for g in card.givers %}
+        <span class="badge text-xs {% if g.is_primary %}bg-arena-50 text-arena-700{% else %}bg-slate-100 text-slate-600{% endif %} {% if g.user_id == request.user.pk %}ring-2 ring-arena-400{% endif %}">
+          {{ g.user.full_name }} · {% if g.is_primary %}Principal{% else %}Secundario{% endif %}
+        </span>
+      {% empty %}
+        <span class="text-sm text-slate-400 italic">Sin responsables asignados todavía.</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if card.viewer_role == 'Receptor' and card.givers %}
+    <p class="text-xs text-slate-600 bg-slate-50 rounded-lg px-3 py-2 flex items-start gap-1.5">
+      {% include "partials/icon.html" with name="calendar" cls="w-3.5 h-3.5 shrink-0 mt-0.5" %}
+      <span>Busca a {{ card.givers|length }} colaborador{{ card.givers|pluralize }} de arriba para agendar tu sesión de retroalimentación.</span>
+    </p>
+  {% endif %}
+
+  <div class="flex items-center justify-between gap-3 pt-1 mt-auto">
+    {% if card.note.feedback_agreed %}
+      <span class="badge bg-emerald-50 text-emerald-700 text-xs">Acordada · cerrada</span>
+    {% elif card.note.has_feedback_session %}
+      <span class="badge bg-amber-50 text-amber-700 text-xs">Con avance</span>
+    {% else %}
+      <span class="badge bg-slate-100 text-slate-500 text-xs">Sin iniciar</span>
+    {% endif %}
+    <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}" class="btn-soft">
+      {% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver
+    </a>
+  </div>
+</div>

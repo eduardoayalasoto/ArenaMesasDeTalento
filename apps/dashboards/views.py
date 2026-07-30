@@ -910,40 +910,78 @@ def talent_responsable_remove(request, pk, rid):
 
 # --- Retroalimentación (responsables de retroalimentación) -----------------
 
+def _project_names(user):
+    """Nombres de los proyectos activos donde `user` es miembro u owner."""
+    return list(
+        Project.objects.filter(is_active=True)
+        .filter(Q(memberships__user=user) | Q(owner=user))
+        .distinct().order_by("name").values_list("name", flat=True)
+    )
+
+
+def _feedback_card(note, responsables, final, viewer_role):
+    """Tarjeta unificada de sesión de retroalimentación (se usa en las 3 secciones
+    de `feedback_session_list`: doy como principal, asisto como secundario, recibo)."""
+    givers = sorted(responsables, key=lambda r: (not r.is_primary, r.user.full_name))
+    return {
+        "note": note,
+        "target": note.user,
+        "final": final,
+        "projects": _project_names(note.user),
+        "givers": givers,
+        "viewer_role": viewer_role,
+    }
+
+
 @login_required
 def feedback_session_list(request):
-    """Índice de personas a las que el usuario debe dar retroalimentación en el periodo abierto."""
+    """Retroalimentación: 3 secciones dinámicas según tu relación con cada nota —
+    doy como principal, asisto como secundario, y recibo (tu propia nota)."""
     from apps.evaluations.models import TalentSessionNote
 
     period = _open_period()
-    rows = []
-    if period:
-        notes = (
-            TalentSessionNote.objects.filter(period=period, responsables__user=request.user)
-            .select_related("user__area", "user__level")
-            .prefetch_related("responsables__user")
-            .distinct()
-            .order_by("user__full_name")
-        )
-        for note in notes:
-            all_responsables = note.responsables.all()
-            secondaries = [
-                r.user for r in all_responsables
-                if not r.is_primary and r.user_id != request.user.pk
-            ]
-            viewer_record = next((r for r in all_responsables if r.user_id == request.user.pk), None)
-            rows.append({
-                "note": note,
-                "target": note.user,
-                "secondaries": secondaries,
-                "is_primary": bool(viewer_record and viewer_record.is_primary),
-            })
+    ctx = {
+        "page_title": "Retroalimentación", "period": period,
+        "primary_cards": [], "secondary_cards": [], "own_cards": [],
+    }
+    if not period:
+        return render(request, "dashboards/feedback_session_list.html", ctx)
 
-    return render(request, "dashboards/feedback_session_list.html", {
-        "page_title": "Retroalimentación",
-        "rows": rows,
-        "period": period,
-    })
+    given_notes = list(
+        TalentSessionNote.objects.filter(period=period, responsables__user=request.user)
+        .select_related("user__area", "user__level")
+        .prefetch_related("responsables__user")
+        .distinct()
+    )
+    own_note = (
+        TalentSessionNote.objects.filter(period=period, user=request.user)
+        .select_related("user__area", "user__level")
+        .prefetch_related("responsables__user")
+        .first()
+    )
+
+    target_ids = {n.user_id for n in given_notes}
+    if own_note:
+        target_ids.add(own_note.user_id)
+    finals = {f.user_id: f for f in FinalScore.objects.filter(period=period, user_id__in=target_ids)}
+
+    for note in given_notes:
+        responsables = list(note.responsables.all())
+        viewer_record = next((r for r in responsables if r.user_id == request.user.pk), None)
+        is_primary = bool(viewer_record and viewer_record.is_primary)
+        card = _feedback_card(note, responsables, finals.get(note.user_id),
+                               "Principal" if is_primary else "Secundario")
+        (ctx["primary_cards"] if is_primary else ctx["secondary_cards"]).append(card)
+
+    if own_note:
+        ctx["own_cards"].append(
+            _feedback_card(own_note, list(own_note.responsables.all()), finals.get(own_note.user_id), "Receptor")
+        )
+
+    ctx["primary_cards"].sort(key=lambda c: c["target"].full_name)
+    ctx["secondary_cards"].sort(key=lambda c: c["target"].full_name)
+
+    return render(request, "dashboards/feedback_session_list.html", ctx)
 
 
 @login_required
@@ -962,14 +1000,19 @@ def feedback_session_detail(request, pk):
     note = get_object_or_404(
         TalentSessionNote.objects.select_related("user"), user=target, period=period
     )
-    if not permissions.can_edit_feedback_session(request.user, note):
+    if not permissions.can_view_feedback_session(request.user, note):
         return render(request, "errors/403.html", {
-            "titulo": "No puedes dar retroalimentación a esta persona",
+            "titulo": "No puedes ver esta retroalimentación",
             "mensaje": "Esta pantalla es solo para quien esté asignado como responsable "
-            "de retroalimentación de esta persona en Mesa de Talento.",
+            "de retroalimentación de esta persona en Mesa de Talento, o para la propia "
+            "persona a la que corresponde.",
         }, status=403)
 
+    can_edit = permissions.can_edit_feedback_session(request.user, note)
+
     if request.method == "POST":
+        if not can_edit:
+            return HttpResponse(status=403)
         action = request.POST.get("action", "save")
 
         if action == "reopen":
@@ -1022,6 +1065,7 @@ def feedback_session_detail(request, pk):
         "evaluators": evaluators,
         "scenario_actual": [note.scenario_actual] if note.scenario_actual_id else [],
         "can_reopen": note.feedback_agreed and request.user.is_admin,
+        "can_edit": can_edit,
     })
 
 

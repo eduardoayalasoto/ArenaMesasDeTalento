@@ -2,48 +2,39 @@
 {% block content %}
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-slate-900">Retroalimentación</h2>
-    <p class="text-slate-600">Personas a las que te toca dar retroalimentación en la sesión de Mesa de Talento de este periodo{% if period %} ({{ period.name }}){% endif %}.</p>
+    <p class="text-slate-600">Sesiones de retroalimentación de Mesa de Talento{% if period %} · {{ period.name }}{% endif %} en las que participas.</p>
   </div>
 
-  {% if not rows %}
-    {% include "partials/empty_state.html" with icon="message-circle" title="No tienes retroalimentaciones asignadas" message="Cuando Talento te asigne como responsable de retroalimentación de alguien, aparecerá aquí." %}
+  {% if not primary_cards and not secondary_cards and not own_cards %}
+    {% include "partials/empty_state.html" with icon="message-circle" title="Nada por aquí todavía" message="Cuando Talento te asigne como responsable de alguien, o alguien sea asignado para darte retroalimentación a ti, aparecerá aquí." %}
   {% else %}
-    <div class="card divide-y divide-slate-100">
-      {% for row in rows %}
-        <div class="flex items-center justify-between gap-4 p-4 flex-wrap">
-          <div class="flex items-center gap-3 min-w-0">
-            {% include "partials/avatar.html" with subject=row.target size="w-10 h-10" icon="w-5 h-5" %}
-            <div class="min-w-0">
-              <p class="font-medium text-slate-900 truncate flex items-center gap-2">
-                {{ row.target.full_name }}
-                {% if row.is_primary %}
-                  <span class="badge bg-arena-50 text-arena-700 text-xs">Principal</span>
-                {% else %}
-                  <span class="badge bg-slate-100 text-slate-500 text-xs">Secundario</span>
-                {% endif %}
-              </p>
-              <p class="text-xs text-slate-500">{{ row.target.area.name|default:"Sin área" }}{% if row.target.level %} · {{ row.target.level.name }}{% endif %}</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3 shrink-0">
-            {% if row.secondaries %}
-              <p class="text-xs text-slate-500 max-w-xs">
-                También invitados: {% for u in row.secondaries %}{{ u.full_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
-              </p>
-            {% endif %}
-            {% if row.note.feedback_agreed %}
-              <span class="badge bg-emerald-50 text-emerald-700 text-xs">Acordado · cerrado</span>
-            {% elif row.note.has_feedback_session %}
-              <span class="badge bg-amber-50 text-amber-700 text-xs">Con avance</span>
-            {% else %}
-              <span class="badge bg-slate-100 text-slate-500 text-xs">Sin iniciar</span>
-            {% endif %}
-            <a href="{% url 'dashboards:feedback_session_detail' pk=row.target.pk %}" class="btn-soft">
-              {% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver
-            </a>
-          </div>
+
+    {% if primary_cards %}
+      <div class="mb-8">
+        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Doy retroalimentación · Principal</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for card in primary_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
         </div>
-      {% endfor %}
-    </div>
+      </div>
+    {% endif %}
+
+    {% if secondary_cards %}
+      <div class="mb-8">
+        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Asisto · Secundario</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for card in secondary_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if own_cards %}
+      <div class="mb-8">
+        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Recibo retroalimentación</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for card in own_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
   {% endif %}
 {% endblock %}

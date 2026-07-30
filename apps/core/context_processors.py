@@ -78,9 +78,16 @@ def navigation(request):
     if OwnershipEvaluator.objects.filter(user=user).exists():
         add("Validación de Ownership", "evaluations:ownership_validation", "check")
 
-    # Responsable de retroalimentación — solo si tiene al menos una sesión asignada, o es Talento
-    from apps.evaluations.models import FeedbackResponsible
-    if user.is_admin or FeedbackResponsible.objects.filter(user=user).exists():
+    # Retroalimentación — la doy (responsable asignado), la recibo (soy el colaborador de
+    # la nota en el periodo abierto), o soy Talento.
+    from apps.catalog.models import EvaluationPeriod
+    from apps.evaluations.models import FeedbackResponsible, TalentSessionNote
+    open_period = EvaluationPeriod.objects.filter(status=EvaluationPeriod.Status.ABIERTO).first()
+    has_feedback_role = (
+        FeedbackResponsible.objects.filter(user=user).exists()
+        or (open_period and TalentSessionNote.objects.filter(user=user, period=open_period).exists())
+    )
+    if user.is_admin or has_feedback_role:
         add("Retroalimentación", "dashboards:feedback_session_list", "message-circle")
 
     # Líder de proyecto — captura de Entrega de Valor

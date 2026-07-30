@@ -77,6 +77,12 @@ def can_edit_feedback_session(viewer, note) -> bool:
     return bool(viewer.is_admin) or note.responsables.filter(user_id=viewer.pk).exists()
 
 
+def can_view_feedback_session(viewer, note) -> bool:
+    """Ver (no necesariamente editar): quien puede editar, más el propio colaborador de la nota
+    (quien recibe la retroalimentación puede consultarla en solo lectura)."""
+    return can_edit_feedback_session(viewer, note) or note.user_id == viewer.pk
+
+
 def has_feedback_sessions(viewer) -> bool:
     """Tiene al menos una asignación como responsable de retroalimentación."""
     return viewer.feedback_responsable_records.exists()
