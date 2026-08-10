@@ -7,7 +7,16 @@
       "Bash(py --version)",
       "Bash(python -m pip --version)",
       "Bash(python -m venv --help)",
-      "Bash(.venv/Scripts/python.exe -m pip install \"Django>=6.0,<6.1\" whitenoise python-dotenv PyYAML django-simple-history pytest pytest-django)"
+      "Bash(.venv/Scripts/python.exe -m pip install \"Django>=6.0,<6.1\" whitenoise python-dotenv PyYAML django-simple-history pytest pytest-django)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(./.venv/Scripts/python.exe -c ' *)",
+      "Bash(xargs -I{} echo {})",
+      "Bash(vercel env *)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "codegraph"
+  ],
+  "enableAllProjectMcpServers": true
 }

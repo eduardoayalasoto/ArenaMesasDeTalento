@@ -37,3 +37,9 @@ neon.md
 
 # Scratch de superpowers (ledger de subagent-driven-development, no se versiona)
 /.superpowers/
+
+# CodeGraph (índice local del código, se reconstruye por máquina)
+/.codegraph/
+
+.vercel
+.env*
