@@ -1,7 +1,9 @@
 # Contexto del Sistema — Mesa de Talento (Arena Analytics)
 
 > Documento de referencia rápida para retomar el proyecto sin leer todo el código.
-> Última actualización: 2026-06-17.
+> Última actualización: 2026-08-10. Ver `docs/contexto-2026-08-10.md` para el detalle de la
+> sesión más reciente (folder Catálogos, valor invertido de Escenarios, tablero drag-and-drop
+> "Escenario Actual", Retroalimentación en 3 secciones, exporte a Excel).
 
 ## 1. Qué es
 Webapp interna del **Modelo de Desempeño Analítica 2026**. Cada colaborador se evalúa por **3 pilares** (escala 1–4): **Ownership**, **Entrega de Valor** e **Impacto Arena**. La **calificación final** es el promedio **ponderado por nivel** de los 3 pilares. Reglas de negocio en `docs/KB_Modelo_Desempeno_2026.md` (RN-xx).
@@ -38,11 +40,12 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 
 ## 4. Modelo de datos (resumen)
 - **User** (`accounts`): `email` (login), `full_name`, `area`→Area, `level`→SeniorityLevel, `role` (COLABORADOR/TALENTO/DIRECTOR), `photo` (obligatoria, se recorta a 400×400), `must_change_password`. Propiedades derivadas: `is_lead` (level.code==LEAD), `is_talento`, `is_director`, `is_admin` (superuser o talento), `leads_projects`.
-- **catalog:** `Area` (ID/CD/PM/UXUI), `SeniorityLevel` (JR/MID/SNR/LEAD), `PillarWeight` (pesos por nivel, suman 1.00), `EvaluationPeriod` (PLANEADO/ABIERTO/CERRADO), `Project` (lead, responsable FK, kickoff, target_close, status ON_TRACK/DELAYED, duration_type FINITO/INDEFINIDO), `ProjectMembership`. Editables desde la pantalla de proyecto en Talento.
+- **catalog:** `Area` (ID/CD/PM/UXUI), `SeniorityLevel` (JR/MID/SNR/LEAD), `PillarWeight` (pesos por nivel, suman 1.00), `EvaluationPeriod` (PLANEADO/ABIERTO/CERRADO), `Project` (lead, responsable FK, kickoff, target_close, status ON_TRACK/DELAYED, duration_type FINITO/INDEFINIDO), `ProjectMembership`, `ScenarioOption` (catálogo de escenarios de Mesa de Talento; `order` **es el valor de ranking**, mayor = mejor — 5 = Promoción de puesto, 1 = Desempeño no satisfactorio). Editables desde la pantalla de proyecto/escenarios en Talento.
 - **questionnaires:** `QuestionnaireTemplate` (kind OWNERSHIP/VALUE_DELIVERY, area, level, version, status BORRADOR/PUBLICADO/ARCHIVADO; solo 1 PUBLICADO por kind/area/level) → `Section` → `Question` (SCALE/TEXT_LONG) → `ScaleOption`.
 - **evaluations:**
   - `OwnershipEvaluation` (user×project×period, `template`, `status` BORRADOR→ENVIADA(=cerrada), strengths/opportunities/comments, score) → `OwnershipAnswer` (value 1–4 o is_na). Los evaluadores ya **no** son un FK directo: se gestionan vía `OwnershipEvaluator` (ver abajo).
   - `OwnershipEvaluator` (migración `0002`): relación N:N entre evaluación y usuarios evaluadores. Campos: `evaluation`, `user`, `is_primary` (bool), `added_at`. Cualquier evaluador —primario o secundario— tiene los mismos permisos: editar respuestas, complementar Fortalezas/Oportunidades y cerrar. El colaborador gestiona la lista mientras la evaluación esté abierta.
+  - `TalentSessionNote` (user×period): nota de Mesa de Talento — fortalezas/oportunidades/comentarios, `scenario_actual` (**FK nullable** a `ScenarioOption`, selección única desde 2026-08) y `scenario_s1`/`scenario_s2` (M2M, multi-select). `responsables` → `FeedbackResponsible` (N:N con `is_primary`) para la sesión de retroalimentación.
   - `ValueDeliveryEvaluation` (project×period, evaluator/validated_by, status BORRADOR→EN_VALIDACION→VALIDADA, criterios, score).
   - `ArenaImpactScore` (user×period, score, notes, captured_by).
   - `FinalScore` (materializado: pilares, final_score, band, is_complete).
@@ -68,8 +71,10 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Colaborador:** `/evaluaciones/ownership/` (lista) → iniciar (elige evaluador) → editar/ver.
 - **Evaluador:** `/evaluaciones/ownership/validacion/` (solo si tiene validaciones asignadas).
 - **Líder:** `/evaluaciones/entrega-valor/` (captura).
-- **Director:** `/evaluaciones/entrega-valor/validar/`, `/mesa-talento/`.
-- **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`, autoguardado), **reabrir** evaluaciones de Ownership cerradas (botón en la vista), Avance (`/avance-periodo/`), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación masiva con búsqueda; botón **”Resetear”** por fila para restablecer contraseña a `Arena2026!` vía htmx sin recargar, activa `must_change_password`; POST `/cuenta/usuarios/<pk>/reset-password/`; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar).
+- **Director:** `/evaluaciones/entrega-valor/validar/`, `/mesa-talento/`, `/escenario-actual/`.
+- **Talento (admin) y Director:** **Escenario Actual** (`/escenario-actual/`, tablero drag-and-drop con SortableJS — mueve gente entre valores de Escenario Actual, filtros de Área/Nivel en cliente).
+- **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`, autoguardado), **reabrir** evaluaciones de Ownership cerradas (botón en la vista), Avance (`/avance-periodo/`, con botón **Exportar Excel** de calificaciones + escenarios), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación masiva con búsqueda; botón **”Resetear”** por fila para restablecer contraseña a `Arena2026!` vía htmx sin recargar, activa `must_change_password`; POST `/cuenta/usuarios/<pk>/reset-password/`; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar). Estas últimas 5 (Cuestionarios/Usuarios/Escenarios/Periodos/Ponderaciones) viven agrupadas en un folder colapsable "Catálogos" en el sidebar.
+- **Todos (según su relación con cada nota):** `/retroalimentacion/` — 3 secciones dinámicas (Doy · Principal, Asisto · Secundario, Recibo retroalimentación); el detalle (`/retroalimentacion/<pk>/`) es editable solo por responsables/Talento, y de solo lectura para quien recibe la retro.
 
 ## 9. Seed y comandos (`manage.py`)
 - `seed_all` = `seed_superuser` + `seed_catalogs` + `seed_users` + `seed_questionnaires` (+ `seed_demo` con `--demo`).
@@ -99,3 +104,4 @@ Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.
 - **Bug crítico corregido (2026-06-17):** la vista masiva de usuarios (`/cuenta/usuarios/`) borraba área y nivel de todos los usuarios si se guardaba con un filtro activo (porque el loop del POST cubría todos los usuarios, no solo los visibles). Fix: el loop ahora omite usuarios cuyo campo no llegó en el POST.
 - **Reset de contraseña desde Usuarios (2026-06-17):** botón "Resetear" por fila en `/cuenta/usuarios/`; restablece a `Arena2026!` y activa `must_change_password`; responde como fragment htmx (sin recarga).
 - **Pendiente/opcional:** compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).
+- **Sesión 2026-08-10:** folder "Catálogos" en el sidebar; valor de `ScenarioOption.order` invertido (mayor = mejor); tablero drag-and-drop "Escenario Actual" (Talento+Director, SortableJS vendorizado); `TalentSessionNote.scenario_actual` migrado de M2M a FK (selección única; S+1/S+2 siguen M2M); miniaturas de foto (64×64, `photo_thumb_data`) para que el tablero cargue rápido; Retroalimentación rediseñada en 3 secciones dinámicas con permiso de solo-lectura para quien recibe la retro; exporte de calificaciones migrado de CSV a `.xlsx` real (openpyxl) con columnas numéricas de Escenario Actual/S+1/S+2. Detalle completo en `docs/contexto-2026-08-10.md`.
