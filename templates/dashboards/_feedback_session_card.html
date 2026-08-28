@@ -1,6 +1,7 @@
-{% comment %}Tarjeta unificada de sesión de retroalimentación, usada en las 3 secciones
-de feedback_session_list.html (doy · principal, asisto · secundario, recibo).
-Espera `card`: {note, target, final, projects, givers, viewer_role}{% endcomment %}
+{% comment %}Tarjeta unificada de sesión de retroalimentación, usada en las 4 secciones
+de feedback_session_list.html (doy · principal, asisto · secundario, recibo, y
+—para Talento/superusuario— todas).
+Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{% endcomment %}
 <div class="card p-4 flex flex-col gap-3">
   <div class="flex items-center gap-3">
     {% include "partials/avatar.html" with subject=card.target size="w-10 h-10" %}
@@ -75,8 +76,18 @@ Espera `card`: {note, target, final, projects, givers, viewer_role}{% endcomment
     {% else %}
       <span class="badge bg-slate-100 text-slate-500 text-xs">Sin iniciar</span>
     {% endif %}
-    <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}" class="btn-soft">
-      {% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver
-    </a>
+    <div class="flex items-center gap-2">
+      {% if card.note.feedback_agreed and card.can_reopen %}
+        <form method="post" action="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="reopen">
+          <input type="hidden" name="next" value="{% url 'dashboards:feedback_session_list' %}">
+          <button type="submit" class="btn-soft">Reabrir</button>
+        </form>
+      {% endif %}
+      <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}" class="btn-soft">
+        {% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver
+      </a>
+    </div>
   </div>
 </div>

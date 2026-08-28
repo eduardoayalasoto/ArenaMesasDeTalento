@@ -5,7 +5,7 @@
     <p class="text-slate-600">Sesiones de retroalimentación de Mesa de Talento{% if period %} · {{ period.name }}{% endif %} en las que participas.</p>
   </div>
 
-  {% if not primary_cards and not secondary_cards and not own_cards %}
+  {% if not primary_cards and not secondary_cards and not own_cards and not all_cards %}
     {% include "partials/empty_state.html" with icon="message-circle" title="Nada por aquí todavía" message="Cuando Talento te asigne como responsable de alguien, o alguien sea asignado para darte retroalimentación a ti, aparecerá aquí." %}
   {% else %}
 
@@ -32,6 +32,15 @@
         <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Recibo retroalimentación</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% for card in own_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if all_cards %}
+      <div class="mb-8">
+        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Todas · vista de Talento</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {% for card in all_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
         </div>
       </div>
     {% endif %}

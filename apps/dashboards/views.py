@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
@@ -918,9 +919,10 @@ def _project_names(user):
     )
 
 
-def _feedback_card(note, responsables, final, viewer_role):
-    """Tarjeta unificada de sesión de retroalimentación (se usa en las 3 secciones
-    de `feedback_session_list`: doy como principal, asisto como secundario, recibo)."""
+def _feedback_card(note, responsables, final, viewer_role, can_reopen):
+    """Tarjeta unificada de sesión de retroalimentación (se usa en las 4 secciones
+    de `feedback_session_list`: doy como principal, asisto como secundario, recibo,
+    y —para Talento/superusuario— todas)."""
     givers = sorted(responsables, key=lambda r: (not r.is_primary, r.user.full_name))
     return {
         "note": note,
@@ -929,19 +931,23 @@ def _feedback_card(note, responsables, final, viewer_role):
         "projects": _project_names(note.user),
         "givers": givers,
         "viewer_role": viewer_role,
+        "can_reopen": can_reopen,
     }
 
 
 @login_required
 def feedback_session_list(request):
     """Retroalimentación: 3 secciones dinámicas según tu relación con cada nota —
-    doy como principal, asisto como secundario, y recibo (tu propia nota)."""
+    doy como principal, asisto como secundario, y recibo (tu propia nota)— más una
+    4ª sección "Todas" exclusiva para Talento/superusuario, con el resto de las
+    retroalimentaciones del periodo (RN: perfil de superusuario de Talento ve y
+    opera sobre absolutamente todo)."""
     from apps.evaluations.models import TalentSessionNote
 
     period = _open_period()
     ctx = {
         "page_title": "Retroalimentación", "period": period,
-        "primary_cards": [], "secondary_cards": [], "own_cards": [],
+        "primary_cards": [], "secondary_cards": [], "own_cards": [], "all_cards": [],
     }
     if not period:
         return render(request, "dashboards/feedback_session_list.html", ctx)
@@ -968,17 +974,42 @@ def feedback_session_list(request):
         responsables = list(note.responsables.all())
         viewer_record = next((r for r in responsables if r.user_id == request.user.pk), None)
         is_primary = bool(viewer_record and viewer_record.is_primary)
+        can_reopen = permissions.can_edit_feedback_session(request.user, note)
         card = _feedback_card(note, responsables, finals.get(note.user_id),
-                               "Principal" if is_primary else "Secundario")
+                               "Principal" if is_primary else "Secundario", can_reopen)
         (ctx["primary_cards"] if is_primary else ctx["secondary_cards"]).append(card)
 
     if own_note:
         ctx["own_cards"].append(
-            _feedback_card(own_note, list(own_note.responsables.all()), finals.get(own_note.user_id), "Receptor")
+            _feedback_card(
+                own_note, list(own_note.responsables.all()), finals.get(own_note.user_id), "Receptor",
+                permissions.can_edit_feedback_session(request.user, own_note),
+            )
         )
 
     ctx["primary_cards"].sort(key=lambda c: c["target"].full_name)
     ctx["secondary_cards"].sort(key=lambda c: c["target"].full_name)
+
+    if request.user.is_admin:
+        seen_note_ids = {note.pk for note in given_notes}
+        if own_note:
+            seen_note_ids.add(own_note.pk)
+        other_notes = list(
+            TalentSessionNote.objects.filter(period=period)
+            .exclude(pk__in=seen_note_ids)
+            .select_related("user__area", "user__level")
+            .prefetch_related("responsables__user")
+        )
+        other_finals = {
+            f.user_id: f for f in FinalScore.objects.filter(
+                period=period, user_id__in={n.user_id for n in other_notes}
+            )
+        }
+        ctx["all_cards"] = [
+            _feedback_card(n, list(n.responsables.all()), other_finals.get(n.user_id), "Talento", True)
+            for n in other_notes
+        ]
+        ctx["all_cards"].sort(key=lambda c: c["target"].full_name)
 
     return render(request, "dashboards/feedback_session_list.html", ctx)
 
@@ -1015,14 +1046,19 @@ def feedback_session_detail(request, pk):
         action = request.POST.get("action", "save")
 
         if action == "reopen":
-            if not request.user.is_admin:
-                messages.error(request, "Solo Talento y Cultura puede reabrir una retroalimentación acordada.")
-            else:
-                note.feedback_agreed = False
-                note.feedback_agreed_at = None
-                note.feedback_agreed_by = None
-                note.save(update_fields=["feedback_agreed", "feedback_agreed_at", "feedback_agreed_by", "updated_at"])
-                messages.success(request, f"Reabriste la retroalimentación de {target.full_name}.")
+            # `can_edit` ya garantiza responsable asignado o Talento/superusuario
+            # (chequeado arriba); reabrir usa el mismo alcance de permiso que
+            # editar/cerrar, sin restricción adicional.
+            note.feedback_agreed = False
+            note.feedback_agreed_at = None
+            note.feedback_agreed_by = None
+            note.save(update_fields=["feedback_agreed", "feedback_agreed_at", "feedback_agreed_by", "updated_at"])
+            messages.success(request, f"Reabriste la retroalimentación de {target.full_name}.")
+            next_url = request.POST.get("next")
+            if next_url and url_has_allowed_host_and_scheme(
+                url=next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+            ):
+                return redirect(next_url)
             return redirect("dashboards:feedback_session_detail", pk=target.pk)
 
         if note.feedback_agreed:
@@ -1063,7 +1099,7 @@ def feedback_session_detail(request, pk):
         "weight": results["weight"],
         "evaluators": evaluators,
         "scenario_actual": [note.scenario_actual] if note.scenario_actual_id else [],
-        "can_reopen": note.feedback_agreed and request.user.is_admin,
+        "can_reopen": note.feedback_agreed and can_edit,
         "can_edit": can_edit,
     })
 
