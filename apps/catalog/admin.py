@@ -31,8 +31,20 @@ class PillarWeightAdmin(admin.ModelAdmin):
 
 @admin.register(EvaluationPeriod)
 class EvaluationPeriodAdmin(admin.ModelAdmin):
+    """Solo lectura para status/fechas/tipo: las transiciones de ciclo de vida
+    (abrir/cerrar) y la edición de fechas viven en las vistas de `catalog`,
+    que pasan por `period_lifecycle` — nunca directo desde este admin
+    (evitaría el constraint de unicidad y la continuidad, ver spec 002-ciclo-vida-periodos FR-002/FR-005/FR-013)."""
+
     list_display = ["name", "kind", "status", "start_date", "end_date"]
     list_filter = ["status", "kind"]
+
+    def get_readonly_fields(self, request, obj=None):
+        # Al crear (obj is None) sí se capturan status/fechas/tipo iniciales;
+        # al editar un periodo ya existente quedan bloqueados.
+        if obj is None:
+            return []
+        return ["status", "start_date", "end_date", "kind"]
 
 
 class ProjectMembershipInline(admin.TabularInline):

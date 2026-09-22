@@ -69,7 +69,9 @@ Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{
   {% endif %}
 
   <div class="flex items-center justify-between gap-3 pt-1 mt-auto">
-    {% if card.note.feedback_agreed %}
+    {% if card.read_only %}
+      <span class="badge bg-slate-100 text-slate-500 text-xs">Histórico · solo lectura</span>
+    {% elif card.note.feedback_agreed %}
       <span class="badge bg-emerald-50 text-emerald-700 text-xs">Acordada · cerrada</span>
     {% elif card.note.has_feedback_session %}
       <span class="badge bg-amber-50 text-amber-700 text-xs">Con avance</span>
@@ -78,14 +80,14 @@ Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{
     {% endif %}
     <div class="flex items-center gap-2">
       {% if card.note.feedback_agreed and card.can_reopen %}
-        <form method="post" action="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}">
+        <form method="post" action="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}{% if card.period %}?periodo={{ card.period.pk }}{% endif %}">
           {% csrf_token %}
           <input type="hidden" name="action" value="reopen">
-          <input type="hidden" name="next" value="{% url 'dashboards:feedback_session_list' %}">
+          <input type="hidden" name="next" value="{% url 'dashboards:feedback_session_list' %}{% if card.period %}?periodo={{ card.period.pk }}{% endif %}">
           <button type="submit" class="btn-soft">Reabrir</button>
         </form>
       {% endif %}
-      <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}" class="btn-soft">
+      <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}{% if card.period %}?periodo={{ card.period.pk }}{% endif %}" class="btn-soft">
         {% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver
       </a>
     </div>

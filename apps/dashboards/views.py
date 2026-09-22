@@ -5,15 +5,17 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
 from apps.catalog.models import Area, EvaluationPeriod, Project, ProjectMembership, SeniorityLevel
-from apps.core.services import final_flow, permissions
+from apps.core.services import final_flow, period_lifecycle, permissions
 from apps.evaluations.models import (
     FeedbackResponsible,
     FinalScore,
@@ -24,6 +26,17 @@ from apps.evaluations.models import (
 
 def _open_period():
     return EvaluationPeriod.objects.filter(status=EvaluationPeriod.Status.ABIERTO).first()
+
+
+def _resolve_period(request):
+    """Periodo a mostrar: el indicado en `?periodo=<id>` (histórico, cualquier
+    estatus) o, por defecto, el Abierto vigente (spec 002-ciclo-vida-periodos, FR-007)."""
+    raw_pk = request.GET.get("periodo")
+    if raw_pk:
+        period = EvaluationPeriod.objects.filter(pk=raw_pk).first()
+        if period is not None:
+            return period
+    return _open_period()
 
 
 def build_results(subject, period):
@@ -645,8 +658,8 @@ def period_progress(request):
             "mensaje": "El avance del periodo lo consulta Talento y Cultura.",
         }, status=403)
 
-    period = _open_period()
-    ctx = {"page_title": "Avance del periodo", "period": period}
+    period = _resolve_period(request)
+    ctx = {"page_title": "Avance del periodo", "period": period, "periods": EvaluationPeriod.objects.all()}
     if period:
         own = OwnershipEvaluation.objects.filter(period=period)
         vd = ValueDeliveryEvaluation.objects.filter(period=period)
@@ -678,12 +691,14 @@ def talent_person(request, pk):
 
     User = get_user_model()
     target = get_object_or_404(User, pk=pk, is_active=True, is_superuser=False)
-    period = _open_period()
+    period = _resolve_period(request)
 
     ctx = {
         "page_title": f"Mesa de Talento · {target.full_name}",
         "target": target,
         "period": period,
+        "periods": EvaluationPeriod.objects.all(),
+        "read_only": bool(period and period.is_closed),
     }
     if period:
         ctx.update(build_results(target, period))
@@ -713,10 +728,17 @@ def talent_person(request, pk):
             if row["project"] and row["project"].id in vd_by_project and vd_by_project[row["project"].id].comments
         ]
 
-        note, _ = TalentSessionNote.objects.get_or_create(
-            user=target, period=period,
-            defaults={"created_by": request.user},
-        )
+        if period.is_closed:
+            # No se crea una nota nueva en un periodo Cerrado (FR-009): si nunca
+            # se capturó, simplemente no hay nada que consultar históricamente.
+            note = TalentSessionNote.objects.filter(user=target, period=period).first()
+        else:
+            note, _ = TalentSessionNote.objects.get_or_create(
+                user=target, period=period,
+                defaults={"created_by": request.user},
+            )
+        if note is None:
+            return render(request, "dashboards/talent_person.html", ctx)
         scenario_options = ScenarioOption.objects.filter(is_active=True)
         responsables = list(note.responsables.select_related("user__area").order_by("-is_primary", "user__full_name"))
         primary = next((r for r in responsables if r.is_primary), None)
@@ -919,11 +941,12 @@ def _project_names(user):
     )
 
 
-def _feedback_card(note, responsables, final, viewer_role, can_reopen):
+def _feedback_card(note, responsables, final, viewer_role, can_reopen, *, period=None):
     """Tarjeta unificada de sesión de retroalimentación (se usa en las 4 secciones
     de `feedback_session_list`: doy como principal, asisto como secundario, recibo,
     y —para Talento/superusuario— todas)."""
     givers = sorted(responsables, key=lambda r: (not r.is_primary, r.user.full_name))
+    read_only = bool(period and period.is_closed)
     return {
         "note": note,
         "target": note.user,
@@ -931,7 +954,9 @@ def _feedback_card(note, responsables, final, viewer_role, can_reopen):
         "projects": _project_names(note.user),
         "givers": givers,
         "viewer_role": viewer_role,
-        "can_reopen": can_reopen,
+        "can_reopen": can_reopen and not read_only,
+        "read_only": read_only,
+        "period": period,
     }
 
 
@@ -944,9 +969,10 @@ def feedback_session_list(request):
     opera sobre absolutamente todo)."""
     from apps.evaluations.models import TalentSessionNote
 
-    period = _open_period()
+    period = _resolve_period(request)
     ctx = {
         "page_title": "Retroalimentación", "period": period,
+        "periods": EvaluationPeriod.objects.all(),
         "primary_cards": [], "secondary_cards": [], "own_cards": [], "all_cards": [],
     }
     if not period:
@@ -976,14 +1002,14 @@ def feedback_session_list(request):
         is_primary = bool(viewer_record and viewer_record.is_primary)
         can_reopen = permissions.can_edit_feedback_session(request.user, note)
         card = _feedback_card(note, responsables, finals.get(note.user_id),
-                               "Principal" if is_primary else "Secundario", can_reopen)
+                               "Principal" if is_primary else "Secundario", can_reopen, period=period)
         (ctx["primary_cards"] if is_primary else ctx["secondary_cards"]).append(card)
 
     if own_note:
         ctx["own_cards"].append(
             _feedback_card(
                 own_note, list(own_note.responsables.all()), finals.get(own_note.user_id), "Receptor",
-                permissions.can_edit_feedback_session(request.user, own_note),
+                permissions.can_edit_feedback_session(request.user, own_note), period=period,
             )
         )
 
@@ -1006,7 +1032,7 @@ def feedback_session_list(request):
             )
         }
         ctx["all_cards"] = [
-            _feedback_card(n, list(n.responsables.all()), other_finals.get(n.user_id), "Talento", True)
+            _feedback_card(n, list(n.responsables.all()), other_finals.get(n.user_id), "Talento", True, period=period)
             for n in other_notes
         ]
         ctx["all_cards"].sort(key=lambda c: c["target"].full_name)
@@ -1021,7 +1047,7 @@ def feedback_session_detail(request, pk):
     from apps.evaluations.models import OwnershipEvaluator, TalentSessionNote
 
     User = get_user_model()
-    period = _open_period()
+    period = _resolve_period(request)
     if not period:
         messages.error(request, "No hay un periodo abierto en este momento.")
         return redirect("dashboards:feedback_session_list")
@@ -1038,11 +1064,31 @@ def feedback_session_detail(request, pk):
             "persona a la que corresponde.",
         }, status=403)
 
-    can_edit = permissions.can_edit_feedback_session(request.user, note)
+    # Con el periodo Cerrado (histórico), la nota es de solo lectura salvo la
+    # excepción auditada de Talento/superusuario (FR-006/FR-007).
+    can_correct_closed = period.is_closed and permissions.is_period_correction_allowed(request.user)
+    can_edit = permissions.can_edit_feedback_session(request.user, note) and (
+        not period.is_closed or can_correct_closed
+    )
+
+    def _back(next_url=None):
+        if next_url and url_has_allowed_host_and_scheme(
+            url=next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+        ):
+            return redirect(next_url)
+        url = reverse("dashboards:feedback_session_detail", kwargs={"pk": target.pk})
+        if period.is_closed:
+            url = f"{url}?periodo={period.pk}"
+        return redirect(url)
 
     if request.method == "POST":
         if not can_edit:
             return HttpResponse(status=403)
+        try:
+            period_lifecycle.assert_record_editable(note, request.user, request.POST.get("reason"))
+        except (PermissionDenied, ValidationError) as e:
+            messages.error(request, str(e))
+            return _back()
         action = request.POST.get("action", "save")
 
         if action == "reopen":
@@ -1054,16 +1100,11 @@ def feedback_session_detail(request, pk):
             note.feedback_agreed_by = None
             note.save(update_fields=["feedback_agreed", "feedback_agreed_at", "feedback_agreed_by", "updated_at"])
             messages.success(request, f"Reabriste la retroalimentación de {target.full_name}.")
-            next_url = request.POST.get("next")
-            if next_url and url_has_allowed_host_and_scheme(
-                url=next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
-            ):
-                return redirect(next_url)
-            return redirect("dashboards:feedback_session_detail", pk=target.pk)
+            return _back(request.POST.get("next"))
 
         if note.feedback_agreed:
             messages.error(request, "Esta retroalimentación ya está acordada y cerrada; no puede editarse.")
-            return redirect("dashboards:feedback_session_detail", pk=target.pk)
+            return _back()
 
         if action == "agree":
             from django.utils import timezone
@@ -1072,7 +1113,7 @@ def feedback_session_detail(request, pk):
             note.feedback_agreed_by = request.user
             note.save(update_fields=["feedback_agreed", "feedback_agreed_at", "feedback_agreed_by", "updated_at"])
             messages.success(request, f"Marcaste como acordada la retroalimentación de {target.full_name}. Queda cerrada.")
-            return redirect("dashboards:feedback_session_detail", pk=target.pk)
+            return _back()
 
         fields = [
             "objetivo_desarrollo_1", "objetivo_desarrollo_2", "objetivo_desarrollo_3",
@@ -1082,7 +1123,7 @@ def feedback_session_detail(request, pk):
             setattr(note, field, request.POST.get(field, "").strip())
         note.save(update_fields=fields + ["updated_at"])
         messages.success(request, f"Guardaste la retroalimentación de {target.full_name}.")
-        return redirect("dashboards:feedback_session_detail", pk=target.pk)
+        return _back()
 
     results = build_results(target, period)
     evaluators = list(
@@ -1101,6 +1142,7 @@ def feedback_session_detail(request, pk):
         "scenario_actual": [note.scenario_actual] if note.scenario_actual_id else [],
         "can_reopen": note.feedback_agreed and can_edit,
         "can_edit": can_edit,
+        "can_correct_closed": can_correct_closed,
     })
 
 

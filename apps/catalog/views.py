@@ -3,11 +3,13 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db.models import ProtectedError
 from django.db.models import Count
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.core.services import period_lifecycle
 from apps.core.services import permissions as perm_service
 
 from .forms import PeriodForm, ProjectForm
@@ -170,13 +172,21 @@ def period_admin(request):
         period = get_object_or_404(EvaluationPeriod, pk=request.POST.get("period"))
         action = request.POST.get("action")
         if action == "open":
-            period.status = EvaluationPeriod.Status.ABIERTO
-            period.save(update_fields=["status"])
-            messages.success(request, f"Abriste el periodo {period.name}.")
+            try:
+                period_lifecycle.open_period(period, actor=request.user)
+                messages.success(request, f"Abriste el periodo {period.name}.")
+            except ValidationError as e:
+                messages.error(request, " ".join(e.messages))
         elif action == "close":
-            period.status = EvaluationPeriod.Status.CERRADO
-            period.save(update_fields=["status"])
-            messages.info(request, f"Cerraste el periodo {period.name}. Queda en solo lectura.")
+            try:
+                next_period = period_lifecycle.close_and_open_next(period, actor=request.user)
+                messages.info(
+                    request,
+                    f"Cerraste el periodo {period.name}. Queda en solo lectura. "
+                    f"Se abrió automáticamente «{next_period.name}».",
+                )
+            except ValidationError as e:
+                messages.error(request, " ".join(e.messages))
         return redirect("catalog:period_admin")
 
     return render(request, "catalog/period_admin.html", {

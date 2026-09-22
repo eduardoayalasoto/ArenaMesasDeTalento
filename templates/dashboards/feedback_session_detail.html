@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-2">
-    <a href="{% url 'dashboards:feedback_session_list' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Retroalimentación</a>
+    <a href="{% url 'dashboards:feedback_session_list' %}{% if period.is_closed %}?periodo={{ period.pk }}{% endif %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Retroalimentación</a>
   </div>
 
   <div class="card overflow-hidden mb-5">
@@ -52,16 +52,24 @@
         <strong>Acordada y cerrada</strong> el {{ note.feedback_agreed_at|date:"d/m/Y H:i" }}{% if note.feedback_agreed_by %} por {{ note.feedback_agreed_by.full_name }}{% endif %}. Ya no puede editarse.
       </span>
       {% if can_reopen %}
-        <form method="post">
+        <form method="post" class="flex items-center gap-2">
           {% csrf_token %}
           <input type="hidden" name="action" value="reopen">
+          {% if can_correct_closed %}
+            <input type="text" name="reason" class="input" placeholder="Motivo (queda auditado)" required>
+          {% endif %}
           <button type="submit" class="btn-soft">Reabrir</button>
         </form>
       {% endif %}
     </div>
   {% endif %}
 
-  {% if not can_edit %}
+  {% if period.is_closed %}
+    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-5 text-sm text-slate-700">
+      El periodo <b>{{ period.name }}</b> ya está Cerrado: esta retroalimentación es histórica, de solo lectura
+      {% if can_correct_closed %}salvo la corrección excepcional de Talento (con motivo, quedará auditada){% endif %}.
+    </div>
+  {% elif not can_edit %}
     <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-sm text-arena-800">
       Esta es tu retroalimentación de Mesa de Talento del periodo {{ period.name }}. Solo puedes consultarla; la
       captura quien esté asignado como tu responsable de retroalimentación.
@@ -69,7 +77,15 @@
   {% endif %}
 
   <form method="post" class="card p-5 space-y-5">
-    {% if can_edit %}{% csrf_token %}{% endif %}
+    {% if can_edit %}
+      {% csrf_token %}
+      {% if can_correct_closed %}
+        <div>
+          <label class="label" for="reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
+          <input type="text" id="reason" name="reason" class="input" maxlength="200" required>
+        </div>
+      {% endif %}
+    {% endif %}
     <div>
       <h3 class="font-semibold text-slate-900 mb-1">Sesión de retroalimentación</h3>
       {% if can_edit %}
@@ -115,9 +131,12 @@
     <div class="card p-5 mt-5">
       <h4 class="font-semibold text-slate-900 mb-1">Cerrar con acuerdo</h4>
       <p class="text-sm text-slate-500 mb-3">Cuando ya tuviste la sesión con {{ target.full_name }} y quedaron de acuerdo, marca esto para cerrarla. El texto quedará bloqueado y visible en su tablero.</p>
-      <form method="post">
+      <form method="post" class="flex items-center gap-2 flex-wrap">
         {% csrf_token %}
         <input type="hidden" name="action" value="agree">
+        {% if can_correct_closed %}
+          <input type="text" name="reason" class="input" placeholder="Motivo (queda auditado)" required>
+        {% endif %}
         <button type="submit" class="btn-secondary">Marcar como acordado con el colaborador</button>
       </form>
     </div>

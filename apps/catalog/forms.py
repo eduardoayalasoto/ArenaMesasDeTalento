@@ -12,20 +12,21 @@ class PeriodForm(forms.ModelForm):
 
     class Meta:
         model = EvaluationPeriod
-        fields = ["name", "start_date", "end_date", "kind", "status"]
+        # `status` NO se expone aquí: sus transiciones solo pasan por
+        # `period_lifecycle` (acciones Abrir/Cerrar en period_admin), nunca
+        # por este formulario de alta/edición (spec 002-ciclo-vida-periodos, FR-002/FR-005).
+        fields = ["name", "start_date", "end_date", "kind"]
         labels = {
             "name": "Nombre",
             "start_date": "Fecha de inicio",
             "end_date": "Fecha de cierre",
             "kind": "Tipo",
-            "status": "Estado",
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. 2026-S2"}),
             "start_date": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "end_date": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "kind": forms.Select(attrs={"class": _INPUT}),
-            "status": forms.Select(attrs={"class": _INPUT}),
         }
 
 

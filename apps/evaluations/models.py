@@ -239,6 +239,7 @@ class FinalScore(models.Model):
     band = models.CharField("banda", max_length=20, blank=True)
     is_complete = models.BooleanField("completa", default=False)
     updated_at = models.DateTimeField("actualizada el", auto_now=True)
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "calificación final"

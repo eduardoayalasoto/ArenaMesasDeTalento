@@ -2,7 +2,7 @@
 
 from django.utils import timezone
 
-from apps.core.services import scoring
+from apps.core.services import period_lifecycle, scoring
 
 
 def resolve_ownership_template(user):
@@ -127,7 +127,7 @@ def sync_evaluation_template(evaluation) -> bool:
     return True
 
 
-def close_ownership_evaluation(evaluation) -> list[str]:
+def close_ownership_evaluation(evaluation, actor=None, reason=None) -> list[str]:
     """Cierre por cualquier evaluador: valida, calcula score y bloquea para todos.
 
     Las Fortalezas y Oportunidades son obligatorias para cerrar.
@@ -135,6 +135,8 @@ def close_ownership_evaluation(evaluation) -> list[str]:
     """
     from apps.core.services import final_flow
     from apps.evaluations.models import OwnershipEvaluation
+
+    period_lifecycle.assert_record_editable(evaluation, actor, reason)
 
     if evaluation.status == OwnershipEvaluation.Status.ENVIADA:
         return ["Esta evaluación ya está cerrada y no puede modificarse."]
@@ -158,7 +160,7 @@ def close_ownership_evaluation(evaluation) -> list[str]:
     return []
 
 
-def reopen_ownership_evaluation(evaluation):
+def reopen_ownership_evaluation(evaluation, actor=None, reason=None):
     """Reapertura por Talento/admin: ENVIADA → BORRADOR (RN-06).
 
     Al reabrir, la evaluación deja de contar como enviada, así que se recalcula
@@ -168,19 +170,23 @@ def reopen_ownership_evaluation(evaluation):
     from apps.core.services import final_flow
     from apps.evaluations.models import OwnershipEvaluation
 
+    period_lifecycle.assert_record_editable(evaluation, actor, reason)
+
     evaluation.status = OwnershipEvaluation.Status.BORRADOR
     evaluation.submitted_at = None
     evaluation.save(update_fields=["status", "submitted_at", "updated_at"])
     final_flow.recompute_final_score(evaluation.user, evaluation.period)
 
 
-def reset_ownership_evaluation(evaluation):
+def reset_ownership_evaluation(evaluation, actor=None, reason=None):
     """Reinicio completo por Talento: elimina la evaluación para que el colaborador empiece desde cero.
 
     Borra respuestas y evaluadores asignados (CASCADE) y recalcula la calificación
     final (Ownership quedará sin datos hasta que el colaborador reenvíe).
     """
     from apps.core.services import final_flow
+
+    period_lifecycle.assert_record_editable(evaluation, actor, reason)
 
     user = evaluation.user
     period = evaluation.period

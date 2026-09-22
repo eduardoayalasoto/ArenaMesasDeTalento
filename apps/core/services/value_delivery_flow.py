@@ -2,7 +2,7 @@
 
 from django.utils import timezone
 
-from apps.core.services import final_flow, scoring
+from apps.core.services import final_flow, period_lifecycle, scoring
 
 
 def get_or_create_vd(project, period, evaluator=None):
@@ -15,8 +15,9 @@ def get_or_create_vd(project, period, evaluator=None):
     return vd
 
 
-def save_vd_criteria(vd, *, client_satisfaction, deliverables, time_value, comments=None):
+def save_vd_criteria(vd, *, client_satisfaction, deliverables, time_value, comments=None, actor=None, reason=None):
     """Guarda los criterios; el criterio de tiempo se ubica según el tipo de proyecto (RN-08)."""
+    period_lifecycle.assert_record_editable(vd, actor, reason)
     vd.client_satisfaction = client_satisfaction
     vd.deliverables = deliverables
     if vd.project.is_finite:
@@ -32,11 +33,12 @@ def save_vd_criteria(vd, *, client_satisfaction, deliverables, time_value, comme
     return vd
 
 
-def save_vd_comment(vd, comment):
+def save_vd_comment(vd, comment, actor=None, reason=None):
     """Actualiza el comentario de la Entrega de Valor, sin tocar criterios ni estado.
 
     Lo puede usar tanto el responsable (al capturar) como el Validador (al revisar).
     """
+    period_lifecycle.assert_record_editable(vd, actor, reason)
     vd.comments = comment
     vd.save(update_fields=["comments", "updated_at"])
     return vd
@@ -67,9 +69,11 @@ def criteria_summary(vd) -> list[dict]:
     ]
 
 
-def submit_vd_for_validation(vd) -> list[str]:
+def submit_vd_for_validation(vd, actor=None, reason=None) -> list[str]:
     """Envía la Entrega de Valor a validación del director."""
     from apps.evaluations.models import ValueDeliveryEvaluation
+
+    period_lifecycle.assert_record_editable(vd, actor, reason)
 
     errors = []
     if vd.client_satisfaction is None:
@@ -87,9 +91,11 @@ def submit_vd_for_validation(vd) -> list[str]:
     return []
 
 
-def validate_vd(vd, director):
+def validate_vd(vd, director, reason=None):
     """El director valida: persiste score, marca VALIDADA y recalcula los finales del equipo (RN-09)."""
     from apps.evaluations.models import ValueDeliveryEvaluation
+
+    period_lifecycle.assert_record_editable(vd, director, reason)
 
     vd.score = scoring.value_delivery_project_score(vd)
     vd.status = ValueDeliveryEvaluation.Status.VALIDADA
@@ -101,9 +107,11 @@ def validate_vd(vd, director):
     return vd
 
 
-def reject_vd(vd, comment):
+def reject_vd(vd, comment, actor=None, reason=None):
     """Rechazo: regresa a BORRADOR con comentario."""
     from apps.evaluations.models import ValueDeliveryEvaluation
+
+    period_lifecycle.assert_record_editable(vd, actor, reason)
 
     vd.status = ValueDeliveryEvaluation.Status.BORRADOR
     vd.rejection_comment = comment

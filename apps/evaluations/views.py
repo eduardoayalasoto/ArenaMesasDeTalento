@@ -4,6 +4,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Prefetch, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -16,6 +17,7 @@ from apps.catalog.models import EvaluationPeriod, Project
 from apps.core.services import (
     final_flow,
     ownership_flow,
+    period_lifecycle,
     permissions,
     scoring,
     value_delivery_flow,
@@ -380,6 +382,10 @@ def ownership_autosave(request, pk):
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
     if not _can_edit_answers(request.user, evaluation):
         return JsonResponse({"ok": False, "error": "No editable."}, status=403)
+    try:
+        period_lifecycle.assert_record_editable(evaluation, request.user)
+    except (PermissionDenied, ValidationError) as e:
+        return JsonResponse({"ok": False, "error": str(e)}, status=403)
 
     payload = json.loads(request.body or "{}")
     question = get_object_or_404(
@@ -407,6 +413,11 @@ def ownership_save(request, pk):
     if not _can_complement(request.user, evaluation):
         messages.error(request, "Solo los evaluadores o Talento pueden completar y cerrar esta evaluación.")
         return redirect("evaluations:ownership_view", pk=pk)
+    try:
+        period_lifecycle.assert_record_editable(evaluation, request.user, request.POST.get("reason"))
+    except (PermissionDenied, ValidationError) as e:
+        messages.error(request, str(e))
+        return redirect("evaluations:ownership_view", pk=pk)
 
     evaluation.strengths = request.POST.get("strengths", "").strip()
     evaluation.opportunities = request.POST.get("opportunities", "").strip()
@@ -414,7 +425,9 @@ def ownership_save(request, pk):
     evaluation.save(update_fields=["strengths", "opportunities", "comments", "updated_at"])
 
     if request.POST.get("action") == "save_close":
-        errors = ownership_flow.close_ownership_evaluation(evaluation)
+        errors = ownership_flow.close_ownership_evaluation(
+            evaluation, actor=request.user, reason=request.POST.get("reason")
+        )
         if errors:
             for e in errors:
                 messages.error(request, e)
@@ -443,7 +456,13 @@ def ownership_reopen(request, pk):
         messages.info(request, "Esta evaluación ya está abierta.")
         return redirect("evaluations:ownership_edit", pk=pk)
 
-    ownership_flow.reopen_ownership_evaluation(evaluation)
+    try:
+        ownership_flow.reopen_ownership_evaluation(
+            evaluation, actor=request.user, reason=request.POST.get("reason")
+        )
+    except (PermissionDenied, ValidationError) as e:
+        messages.error(request, str(e))
+        return redirect("evaluations:ownership_view", pk=pk)
     project_label = evaluation.project.name if evaluation.project else "todos sus proyectos"
     messages.success(
         request,
@@ -471,7 +490,7 @@ def ownership_reset_user(request, user_pk):
 
     evals = list(OwnershipEvaluation.objects.filter(user=target, period=period))
     for ev in evals:
-        ownership_flow.reset_ownership_evaluation(ev)
+        ownership_flow.reset_ownership_evaluation(ev, actor=request.user)
 
     if request.headers.get("HX-Request"):
         label = f"{len(evals)} reiniciada{'s' if len(evals) != 1 else ''}" if evals else "sin evaluaciones"
@@ -493,9 +512,17 @@ def ownership_reset(request, pk):
         messages.error(request, "Solo Talento y Cultura puede reiniciar una evaluación.")
         return redirect("evaluations:ownership_view", pk=pk)
 
+    try:
+        period_lifecycle.assert_record_editable(evaluation, request.user, request.POST.get("reason"))
+    except (PermissionDenied, ValidationError) as e:
+        messages.error(request, str(e))
+        return redirect("evaluations:ownership_view", pk=pk)
+
     user_name = evaluation.user.full_name
     project_label = evaluation.project.name if evaluation.project else "todos sus proyectos"
-    ownership_flow.reset_ownership_evaluation(evaluation)
+    ownership_flow.reset_ownership_evaluation(
+        evaluation, actor=request.user, reason=request.POST.get("reason")
+    )
     messages.success(
         request,
         f"Reiniciaste la evaluación de {user_name} ({project_label}). "
@@ -556,7 +583,6 @@ def value_delivery_list(request):
 @login_required
 def value_delivery_capture(request, project_id):
     """Captura de los 3 criterios de Entrega de Valor por el líder del proyecto."""
-    period = _open_period()
     project = get_object_or_404(Project, pk=project_id)
     if not permissions.can_capture_value_delivery(request.user, project):
         return render(request, "errors/403.html", {
@@ -564,17 +590,27 @@ def value_delivery_capture(request, project_id):
             "mensaje": "Solo el líder del proyecto o Talento pueden capturarla.",
         }, status=403)
 
+    try:
+        period = period_lifecycle.require_open_period()
+    except period_lifecycle.NoOpenPeriodError as e:
+        messages.error(request, str(e))
+        return redirect("evaluations:value_delivery_list")
+
     vd = value_delivery_flow.get_or_create_vd(project, period, evaluator=request.user)
 
     if request.method == "POST" and vd.status != ValueDeliveryEvaluation.Status.VALIDADA:
-        value_delivery_flow.save_vd_criteria(
-            vd,
-            client_satisfaction=_validate_scale(request.POST.get("client_satisfaction")),
-            deliverables=_validate_scale(request.POST.get("deliverables")),
-            time_value=_validate_scale(request.POST.get("time_value")),
-            comments=request.POST.get("comments", "").strip(),
-        )
-        errors = value_delivery_flow.submit_vd_for_validation(vd)
+        try:
+            value_delivery_flow.save_vd_criteria(
+                vd,
+                client_satisfaction=_validate_scale(request.POST.get("client_satisfaction")),
+                deliverables=_validate_scale(request.POST.get("deliverables")),
+                time_value=_validate_scale(request.POST.get("time_value")),
+                comments=request.POST.get("comments", "").strip(),
+                actor=request.user,
+            )
+            errors = value_delivery_flow.submit_vd_for_validation(vd, actor=request.user)
+        except (PermissionDenied, ValidationError) as e:
+            errors = [str(e)]
         if errors:
             for e in errors:
                 messages.error(request, e)
@@ -614,15 +650,23 @@ def value_delivery_review(request):
             return redirect("evaluations:value_delivery_review")
 
         action = request.POST.get("action")
-        if action == "validate":
-            value_delivery_flow.validate_vd(vd, request.user)
-            messages.success(request, f"Validaste la Entrega de Valor de {vd.project.name}.")
-        elif action == "reject":
-            value_delivery_flow.reject_vd(vd, request.POST.get("comment", "").strip())
-            messages.info(request, f"Regresaste a borrador la Entrega de Valor de {vd.project.name}.")
-        elif action == "comment":
-            value_delivery_flow.save_vd_comment(vd, request.POST.get("comments", "").strip())
-            messages.success(request, "Guardaste el comentario.")
+        reason = request.POST.get("reason")
+        try:
+            if action == "validate":
+                value_delivery_flow.validate_vd(vd, request.user, reason=reason)
+                messages.success(request, f"Validaste la Entrega de Valor de {vd.project.name}.")
+            elif action == "reject":
+                value_delivery_flow.reject_vd(
+                    vd, request.POST.get("comment", "").strip(), actor=request.user, reason=reason
+                )
+                messages.info(request, f"Regresaste a borrador la Entrega de Valor de {vd.project.name}.")
+            elif action == "comment":
+                value_delivery_flow.save_vd_comment(
+                    vd, request.POST.get("comments", "").strip(), actor=request.user, reason=reason
+                )
+                messages.success(request, "Guardaste el comentario.")
+        except (PermissionDenied, ValidationError) as e:
+            messages.error(request, str(e))
         return redirect("evaluations:value_delivery_review")
 
     queue = ValueDeliveryEvaluation.objects.filter(

@@ -5,11 +5,25 @@
       <h2 class="text-xl font-semibold text-slate-900">Avance del periodo</h2>
       {% if period %}<p class="text-slate-600">{{ period.name }} · {{ period.get_status_display }}</p>{% endif %}
     </div>
-    {% if period %}
-      <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn-secondary">
-        {% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar Excel
-      </a>
-    {% endif %}
+    <div class="flex items-center gap-3">
+      {% if periods %}
+        <form method="get" class="flex items-center gap-2">
+          <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
+          <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+            {% for p in periods %}
+              <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
+                {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
+              </option>
+            {% endfor %}
+          </select>
+        </form>
+      {% endif %}
+      {% if period %}
+        <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn-secondary">
+          {% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar Excel
+        </a>
+      {% endif %}
+    </div>
   </div>
 
   {% if not period %}

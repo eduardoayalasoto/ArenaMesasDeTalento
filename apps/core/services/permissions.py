@@ -91,3 +91,8 @@ def has_feedback_sessions(viewer) -> bool:
 def can_edit_project(user) -> bool:
     """Talento, Director o cualquier colaborador con nivel Lead pueden administrar proyectos."""
     return _is_admin(user) or user.is_lead
+
+
+def is_period_correction_allowed(user) -> bool:
+    """Solo Talento/superusuario puede corregir un registro de un periodo ya Cerrado (FR-006)."""
+    return bool(user.is_admin)

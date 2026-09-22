@@ -5,6 +5,9 @@
 
   <form method="post" class="card p-6 max-w-xl space-y-4">
     {% csrf_token %}
+    {% for e in form.non_field_errors %}
+      <p class="rounded-lg bg-rose-50 border border-rose-200 px-3 py-2 text-sm text-rose-700">{{ e }}</p>
+    {% endfor %}
     <div>
       <label class="label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
       {{ form.name }}
@@ -25,12 +28,12 @@
         <label class="label" for="{{ form.kind.id_for_label }}">{{ form.kind.label }}</label>
         {{ form.kind }}
       </div>
-      <div>
-        <label class="label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
-        {{ form.status }}
-        <p class="mt-1 text-xs text-slate-500">Marca <b>Abierto</b> para que se puedan capturar evaluaciones.</p>
-      </div>
     </div>
+    {% if period and period.status != 'PLANEADO' %}
+      <p class="text-xs text-slate-500">Este periodo está <b>{{ period.get_status_display }}</b>: la fecha de
+        inicio, la fecha de cierre y el tipo ya no son editables. Abre o cierra el periodo desde
+        <a href="{% url 'catalog:period_admin' %}" class="text-arena-600 hover:text-arena-700">Periodos</a>.</p>
+    {% endif %}
     <div class="pt-2">
       <button type="submit" class="btn-primary">{% if period %}Guardar cambios{% else %}Crear periodo{% endif %}</button>
     </div>
