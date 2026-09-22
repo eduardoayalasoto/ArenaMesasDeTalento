@@ -1,9 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-4">
-    <h2 class="text-xl font-semibold text-slate-900">Validación de Ownership</h2>
-    <p class="text-slate-600">Evaluaciones en las que participas como evaluador.</p>
+  <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Validación de Ownership</h2>
+      <p class="text-slate-600">Evaluaciones en las que participas como evaluador.</p>
+    </div>
+    {% if periods %}
+      <form method="get" class="flex items-center gap-2">
+        <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+          {% for p in periods %}
+            <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
+              {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+    {% endif %}
   </div>
+  {% if period and not period.is_open and request.user.is_admin %}
+    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-5 text-sm text-slate-700">
+      Consultando el periodo <b>{{ period.name }}</b>: se muestran todas las evaluaciones de ese periodo, no solo las tuyas como evaluador.
+    </div>
+  {% endif %}
   {% include "partials/info_panel.html" with title="Cómo validar" text="<p>1. Revisa con cada persona su autoevaluación en una sesión conjunta, ajustando lo que sea necesario.</p><p>2. Cualquier evaluador puede complementar Fortalezas, Oportunidades y Comentarios, y cerrar la evaluación.</p><p>3. Una vez cerrada, queda inmutable; si hubo un error, Talento puede reabrirla.</p>" %}
 
   {% if not ev_records %}

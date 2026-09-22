@@ -8,6 +8,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Prefetch, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 
@@ -51,7 +52,7 @@ def _progress(evaluation):
 @login_required
 def ownership_list(request):
     """Para Leads: una tarjeta transversal. Para el resto: una tarjeta por proyecto."""
-    period = _open_period()
+    period = period_lifecycle.resolve_requested_period(request, fallback=_open_period)
 
     if request.user.is_lead:
         lead_eval = None
@@ -70,6 +71,7 @@ def ownership_list(request):
         return render(request, "evaluations/ownership_list.html", {
             "page_title": "Mis evaluaciones",
             "period": period,
+            "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
             "is_lead": True,
             "lead_eval": lead_eval,
             "lead_projects": lead_projects,
@@ -96,6 +98,7 @@ def ownership_list(request):
     return render(request, "evaluations/ownership_list.html", {
         "page_title": "Mis evaluaciones",
         "period": period,
+        "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
         "is_lead": False,
         "cards": cards,
     })
@@ -213,14 +216,27 @@ def ownership_lead_start(request):
 
 
 def _can_edit_answers(user, evaluation):
-    """Respuestas: editables por el evaluado o por cualquier evaluador/admin, mientras no esté cerrada."""
+    """Respuestas: editables por el evaluado o por cualquier evaluador/admin, mientras no esté cerrada.
+
+    Excepción (spec 003-salvaguardas-cierre-periodo, US3): si el periodo ya está
+    Cerrado, la evaluación normalmente queda de solo lectura (esté ENVIADA o no);
+    Talento/superusuario con permiso de corrección puede seguir editando, con
+    motivo auditado (lo exige `period_lifecycle.assert_record_editable`).
+    """
+    if evaluation.period.is_closed:
+        return permissions.is_period_correction_allowed(user)
     if evaluation.is_submitted:
         return False
     return evaluation.user_id == user.pk or permissions.can_validate_ownership(user, evaluation)
 
 
 def _can_complement(user, evaluation):
-    """Fortalezas/Oportunidades/Comentarios y cierre: cualquier evaluador/admin, mientras no esté cerrada."""
+    """Fortalezas/Oportunidades/Comentarios y cierre: cualquier evaluador/admin, mientras no esté cerrada.
+
+    Misma excepción de corrección que `_can_edit_answers` (spec 003, US3).
+    """
+    if evaluation.period.is_closed:
+        return permissions.is_period_correction_allowed(user)
     return not evaluation.is_submitted and permissions.can_validate_ownership(user, evaluation)
 
 
@@ -244,6 +260,7 @@ def _render_ownership(request, pk, *, editing):
 
     can_edit_answers = _can_edit_answers(request.user, evaluation)
     can_complement = _can_complement(request.user, evaluation)
+    can_correct_closed = evaluation.period.is_closed and permissions.is_period_correction_allowed(request.user)
     is_owner = evaluation.user_id == request.user.pk
     can_manage_evaluators = editing and is_owner and not evaluation.is_submitted
 
@@ -294,7 +311,10 @@ def _render_ownership(request, pk, *, editing):
         "ev_records": ev_records,
         "can_edit_link": (can_edit_answers or can_complement),
         "can_reopen": evaluation.is_submitted and request.user.is_admin,
-        "can_reset": request.user.is_admin,
+        # "Reiniciar" elimina el registro por completo: nunca disponible sobre un
+        # periodo Cerrado, ni con motivo (FR-011a de spec 003 — no es una corrección).
+        "can_reset": request.user.is_admin and not evaluation.period.is_closed,
+        "can_correct_closed": can_correct_closed,
         "lead_projects": lead_projects,
     })
 
@@ -382,12 +402,13 @@ def ownership_autosave(request, pk):
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
     if not _can_edit_answers(request.user, evaluation):
         return JsonResponse({"ok": False, "error": "No editable."}, status=403)
+
+    payload = json.loads(request.body or "{}")
     try:
-        period_lifecycle.assert_record_editable(evaluation, request.user)
+        period_lifecycle.assert_record_editable(evaluation, request.user, payload.get("reason"))
     except (PermissionDenied, ValidationError) as e:
         return JsonResponse({"ok": False, "error": str(e)}, status=403)
 
-    payload = json.loads(request.body or "{}")
     question = get_object_or_404(
         Question, pk=payload.get("question"), section__template=evaluation.template
     )
@@ -423,6 +444,14 @@ def ownership_save(request, pk):
     evaluation.opportunities = request.POST.get("opportunities", "").strip()
     evaluation.comments = request.POST.get("comments", "").strip()
     evaluation.save(update_fields=["strengths", "opportunities", "comments", "updated_at"])
+
+    if evaluation.period.is_closed:
+        # Llegamos aquí solo si `_can_complement` permitió la corrección
+        # excepcional (Talento/superusuario con motivo). No se reabre el
+        # flujo normal de cierre: ya está ENVIADA y así se queda (FR-011 de
+        # spec 003-salvaguardas-cierre-periodo).
+        messages.success(request, "Guardaste la corrección de la evaluación.")
+        return redirect("evaluations:ownership_edit", pk=pk)
 
     if request.POST.get("action") == "save_close":
         errors = ownership_flow.close_ownership_evaluation(
@@ -512,10 +541,14 @@ def ownership_reset(request, pk):
         messages.error(request, "Solo Talento y Cultura puede reiniciar una evaluación.")
         return redirect("evaluations:ownership_view", pk=pk)
 
-    try:
-        period_lifecycle.assert_record_editable(evaluation, request.user, request.POST.get("reason"))
-    except (PermissionDenied, ValidationError) as e:
-        messages.error(request, str(e))
+    if evaluation.period.is_closed:
+        # Reiniciar ELIMINA el registro: nunca es una "corrección", así que no
+        # aplica la excepción de assert_record_editable (FR-011a de spec 003).
+        messages.error(
+            request,
+            f"El periodo «{evaluation.period.name}» ya está Cerrado: no puedes reiniciar "
+            "(eliminar) una evaluación de un periodo Cerrado.",
+        )
         return redirect("evaluations:ownership_view", pk=pk)
 
     user_name = evaluation.user.full_name
@@ -535,17 +568,39 @@ def ownership_reset(request, pk):
 
 @login_required
 def ownership_validation(request):
-    """Evaluaciones donde el usuario es evaluador (primario o secundario)."""
-    period = _open_period()
-    ev_records = (
-        OwnershipEvaluator.objects.filter(user=request.user, evaluation__period=period)
-        .select_related("evaluation__user", "evaluation__project")
-        .order_by("evaluation__user__full_name")
-        if period else OwnershipEvaluator.objects.none()
-    )
+    """Evaluaciones donde el usuario es evaluador (primario o secundario).
+
+    Para Talento/superusuario consultando un periodo histórico (no el Abierto
+    vigente), se muestran TODAS las evaluaciones del periodo, no solo las
+    propias como evaluador — es el único punto de navegación hoy para llegar
+    a una evaluación de Ownership de un periodo Cerrado (spec 003, US3).
+    """
+    period = period_lifecycle.resolve_requested_period(request, fallback=_open_period)
+    if not period:
+        ev_records = OwnershipEvaluator.objects.none()
+    elif request.user.is_admin and not period.is_open:
+        seen_evaluation_ids = set()
+        ev_records = []
+        for rec in (
+            OwnershipEvaluator.objects.filter(evaluation__period=period)
+            .select_related("evaluation__user", "evaluation__project")
+            .order_by("evaluation__user__full_name")
+        ):
+            if rec.evaluation_id in seen_evaluation_ids:
+                continue
+            seen_evaluation_ids.add(rec.evaluation_id)
+            ev_records.append(rec)
+    else:
+        ev_records = (
+            OwnershipEvaluator.objects.filter(user=request.user, evaluation__period=period)
+            .select_related("evaluation__user", "evaluation__project")
+            .order_by("evaluation__user__full_name")
+        )
     return render(request, "evaluations/ownership_validation.html", {
         "page_title": "Validación de Ownership",
         "ev_records": ev_records,
+        "period": period,
+        "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
     })
 
 
@@ -564,9 +619,18 @@ def _validate_scale(raw):
 
 @login_required
 def value_delivery_list(request):
-    """Proyectos que lidera el usuario, con el estado de su Entrega de Valor."""
-    period = _open_period()
-    led = permissions.projects_led_by(request.user)
+    """Proyectos que lidera el usuario, con el estado de su Entrega de Valor.
+
+    Para Talento/superusuario consultando un periodo histórico (no el
+    Abierto vigente), se muestran TODOS los proyectos activos, no solo los
+    que lidera — es el punto de navegación para llegar a una Entrega de
+    Valor de un periodo Cerrado (spec 003, US3).
+    """
+    period = period_lifecycle.resolve_requested_period(request, fallback=_open_period)
+    if period and request.user.is_admin and not period.is_open:
+        led = Project.objects.filter(is_active=True).order_by("name")
+    else:
+        led = permissions.projects_led_by(request.user)
     rows = []
     if period:
         existing = {vd.project_id: vd for vd in ValueDeliveryEvaluation.objects.filter(
@@ -577,12 +641,18 @@ def value_delivery_list(request):
         "page_title": "Entrega de Valor",
         "rows": rows,
         "period": period,
+        "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
     })
 
 
 @login_required
 def value_delivery_capture(request, project_id):
-    """Captura de los 3 criterios de Entrega de Valor por el líder del proyecto."""
+    """Captura de los 3 criterios de Entrega de Valor por el líder del proyecto.
+
+    Fuera del periodo Abierto vigente (navegación histórica de Talento vía
+    `?periodo=<id>`, spec 003 US3), NUNCA se crea una Entrega de Valor nueva:
+    solo se consulta/corrige la que ya exista.
+    """
     project = get_object_or_404(Project, pk=project_id)
     if not permissions.can_capture_value_delivery(request.user, project):
         return render(request, "errors/403.html", {
@@ -591,38 +661,69 @@ def value_delivery_capture(request, project_id):
         }, status=403)
 
     try:
-        period = period_lifecycle.require_open_period()
+        period = period_lifecycle.resolve_requested_period(
+            request, fallback=period_lifecycle.require_open_period
+        )
     except period_lifecycle.NoOpenPeriodError as e:
         messages.error(request, str(e))
         return redirect("evaluations:value_delivery_list")
 
-    vd = value_delivery_flow.get_or_create_vd(project, period, evaluator=request.user)
-
-    if request.method == "POST" and vd.status != ValueDeliveryEvaluation.Status.VALIDADA:
-        try:
-            value_delivery_flow.save_vd_criteria(
-                vd,
-                client_satisfaction=_validate_scale(request.POST.get("client_satisfaction")),
-                deliverables=_validate_scale(request.POST.get("deliverables")),
-                time_value=_validate_scale(request.POST.get("time_value")),
-                comments=request.POST.get("comments", "").strip(),
-                actor=request.user,
+    if period.is_open:
+        vd = value_delivery_flow.get_or_create_vd(project, period, evaluator=request.user)
+    else:
+        vd = ValueDeliveryEvaluation.objects.filter(project=project, period=period).first()
+        if vd is None:
+            messages.info(
+                request,
+                f"No hay Entrega de Valor capturada para «{project.name}» en el periodo «{period.name}».",
             )
-            errors = value_delivery_flow.submit_vd_for_validation(vd, actor=request.user)
-        except (PermissionDenied, ValidationError) as e:
-            errors = [str(e)]
-        if errors:
-            for e in errors:
-                messages.error(request, e)
-        else:
-            messages.success(request, "Enviaste la Entrega de Valor a validación del director.")
-            return redirect("evaluations:value_delivery_list")
+            return redirect(f"{reverse('evaluations:value_delivery_list')}?periodo={period.pk}")
+
+    can_correct_closed = period.is_closed and permissions.is_period_correction_allowed(request.user)
+
+    if request.method == "POST":
+        reason = request.POST.get("reason")
+        criteria_kwargs = dict(
+            client_satisfaction=_validate_scale(request.POST.get("client_satisfaction")),
+            deliverables=_validate_scale(request.POST.get("deliverables")),
+            time_value=_validate_scale(request.POST.get("time_value")),
+            comments=request.POST.get("comments", "").strip(),
+            actor=request.user,
+            reason=reason,
+        )
+        if vd.status != ValueDeliveryEvaluation.Status.VALIDADA:
+            try:
+                value_delivery_flow.save_vd_criteria(vd, **criteria_kwargs)
+                errors = value_delivery_flow.submit_vd_for_validation(vd, actor=request.user, reason=reason)
+            except (PermissionDenied, ValidationError) as e:
+                errors = [str(e)]
+            if errors:
+                for e in errors:
+                    messages.error(request, e)
+            else:
+                messages.success(request, "Enviaste la Entrega de Valor a validación del director.")
+                return redirect("evaluations:value_delivery_list")
+        elif can_correct_closed:
+            # Corrección auditada de una Entrega de Valor ya Validada, sobre un
+            # periodo Cerrado: se guarda y se recalcula el score, sin reabrir
+            # el flujo normal de envío/validación (FR-011 de spec 003).
+            try:
+                value_delivery_flow.save_vd_criteria(vd, **criteria_kwargs)
+                final_flow.recompute_for_project_members(vd.project, vd.period)
+                messages.success(request, "Guardaste la corrección de la Entrega de Valor.")
+            except (PermissionDenied, ValidationError) as e:
+                messages.error(request, str(e))
+            return redirect(
+                f"{reverse('evaluations:value_delivery_capture', kwargs={'project_id': project.pk})}?periodo={period.pk}"
+            )
 
     members = project.memberships.select_related("user").count()
     return render(request, "evaluations/value_delivery_capture.html", {
         "page_title": "Entrega de Valor",
         "project": project,
         "vd": vd,
+        "period": period,
+        "can_correct_closed": can_correct_closed,
         "members_count": members,
         "scale_values": [1, 2, 3, 4],
     })

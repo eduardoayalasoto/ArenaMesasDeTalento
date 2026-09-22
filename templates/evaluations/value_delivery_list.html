@@ -1,9 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Entrega de Valor</h2>
-    <p class="text-slate-600">Captura la Entrega de Valor de los proyectos que lideras. La calificación se aplicará a todo el equipo.</p>
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Entrega de Valor</h2>
+      <p class="text-slate-600">Captura la Entrega de Valor de los proyectos que lideras. La calificación se aplicará a todo el equipo.</p>
+    </div>
+    {% if periods %}
+      <form method="get" class="flex items-center gap-2">
+        <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+          {% for p in periods %}
+            <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
+              {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+    {% endif %}
   </div>
+  {% if period and not period.is_open and request.user.is_admin %}
+    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-5 text-sm text-slate-700">
+      Consultando el periodo <b>{{ period.name }}</b>: se muestran todos los proyectos activos, no solo los que lideras.
+    </div>
+  {% endif %}
 
   {% if not rows %}
     {% include "partials/empty_state.html" with icon="package" title="No lideras proyectos en este periodo" message="Cuando seas líder de un proyecto, podrás capturar aquí su Entrega de Valor." %}
@@ -22,7 +41,7 @@
             {% else %}
               <span class="badge bg-slate-100 text-slate-500">Sin iniciar</span>
             {% endif %}
-            <a href="{% url 'evaluations:value_delivery_capture' project_id=row.project.pk %}" class="btn-soft">
+            <a href="{% url 'evaluations:value_delivery_capture' project_id=row.project.pk %}?periodo={{ period.pk }}" class="btn-soft">
               {% if row.vd and row.vd.status == 'VALIDADA' %}{% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver{% else %}{% include "partials/icon.html" with name="edit" cls="w-3.5 h-3.5" %} Capturar{% endif %}
             </a>
           </div>

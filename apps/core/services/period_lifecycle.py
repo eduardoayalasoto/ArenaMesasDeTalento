@@ -109,3 +109,43 @@ def require_open_period():
             "Contacta a Talento para que abra el periodo correspondiente."
         )
     return period
+
+
+def resolve_requested_period(request, *, fallback=None):
+    """Periodo indicado en `?periodo=<id>` (cualquier estatus), o `fallback()` si no viene o no existe.
+
+    Centraliza el patrón de navegación histórica ya usado en 002
+    (spec 003-salvaguardas-cierre-periodo, FR de US3): permite a las
+    pantallas de listado/consulta operar sobre un periodo específico en vez
+    de forzar siempre el periodo Abierto vigente.
+    """
+    from apps.catalog.models import EvaluationPeriod
+
+    raw_pk = request.GET.get("periodo")
+    if raw_pk:
+        period = EvaluationPeriod.objects.filter(pk=raw_pk).first()
+        if period is not None:
+            return period
+    return fallback() if fallback else None
+
+
+def pending_activity_counts(period):
+    """Conteos de actividad aún no completada en `period` (solo lectura).
+
+    Mismos conteos que ya muestra `dashboards.period_progress`, extraídos
+    aquí para que también los use la confirmación de cierre de
+    `catalog.period_admin` sin duplicar las queries (spec 003, FR-005/FR-008).
+    """
+    from apps.evaluations.models import FinalScore, OwnershipEvaluation, ValueDeliveryEvaluation
+
+    own = OwnershipEvaluation.objects.filter(period=period)
+    vd = ValueDeliveryEvaluation.objects.filter(period=period)
+    finals = FinalScore.objects.filter(period=period)
+    return {
+        "own_total": own.count(),
+        "own_submitted": own.filter(status=OwnershipEvaluation.Status.ENVIADA).count(),
+        "vd_total": vd.count(),
+        "vd_validated": vd.filter(status=ValueDeliveryEvaluation.Status.VALIDADA).count(),
+        "finals_total": finals.count(),
+        "finals_complete": finals.filter(is_complete=True).count(),
+    }

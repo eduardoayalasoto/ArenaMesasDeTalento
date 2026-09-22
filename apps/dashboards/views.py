@@ -31,12 +31,7 @@ def _open_period():
 def _resolve_period(request):
     """Periodo a mostrar: el indicado en `?periodo=<id>` (histórico, cualquier
     estatus) o, por defecto, el Abierto vigente (spec 002-ciclo-vida-periodos, FR-007)."""
-    raw_pk = request.GET.get("periodo")
-    if raw_pk:
-        period = EvaluationPeriod.objects.filter(pk=raw_pk).first()
-        if period is not None:
-            return period
-    return _open_period()
+    return period_lifecycle.resolve_requested_period(request, fallback=_open_period)
 
 
 def build_results(subject, period):
@@ -661,18 +656,8 @@ def period_progress(request):
     period = _resolve_period(request)
     ctx = {"page_title": "Avance del periodo", "period": period, "periods": EvaluationPeriod.objects.all()}
     if period:
-        own = OwnershipEvaluation.objects.filter(period=period)
-        vd = ValueDeliveryEvaluation.objects.filter(period=period)
-        finals = FinalScore.objects.filter(period=period)
-        ctx.update({
-            "own_total": own.count(),
-            "own_submitted": own.filter(status=OwnershipEvaluation.Status.ENVIADA).count(),
-            "vd_total": vd.count(),
-            "vd_validated": vd.filter(status=ValueDeliveryEvaluation.Status.VALIDADA).count(),
-            "finals_complete": finals.filter(is_complete=True).count(),
-            "finals_total": finals.count(),
-            "pending_rows": _pending_people(period),
-        })
+        ctx.update(period_lifecycle.pending_activity_counts(period))
+        ctx["pending_rows"] = _pending_people(period)
     return render(request, "dashboards/period_progress.html", ctx)
 
 

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
   {% with locked=vd.status|stringformat:"s" %}
-  <div class="mb-2"><a href="{% url 'evaluations:value_delivery_list' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Entrega de Valor</a></div>
+  <div class="mb-2"><a href="{% url 'evaluations:value_delivery_list' %}{% if period %}?periodo={{ period.pk }}{% endif %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Entrega de Valor</a></div>
   <div class="flex items-start justify-between gap-3 mb-4">
     <div>
       <h2 class="text-xl font-semibold text-slate-900">{{ project.name }}</h2>
-      <p class="text-slate-600">{{ project.get_duration_type_display }}</p>
+      <p class="text-slate-600">{{ project.get_duration_type_display }}{% if period %} · {{ period.name }}{% endif %}</p>
     </div>
     {% include "partials/status_badge.html" with status=vd.status label=vd.get_status_display %}
   </div>
@@ -13,6 +13,13 @@
   <div class="rounded-lg bg-arena-50 border border-arena-100 px-4 py-3 mb-6 text-sm text-arena-800">
     Esta calificación se aplicará a las <span class="font-semibold">{{ members_count }}</span> personas del equipo del proyecto.
   </div>
+
+  {% if period.is_closed %}
+    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-6 text-sm text-slate-700">
+      El periodo <b>{{ period.name }}</b> ya está Cerrado: esta Entrega de Valor es histórica, de solo lectura
+      {% if can_correct_closed %}salvo la corrección excepcional de Talento (con motivo, queda auditada){% endif %}.
+    </div>
+  {% endif %}
 
   {% if vd.rejection_comment %}
   <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6 text-sm text-amber-800">
@@ -26,23 +33,32 @@
       <p class="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">Validada. Calificación: <span class="font-semibold">{{ vd.score }}</span>.</p>
     {% endif %}
 
-    {% include "evaluations/_vd_criterion.html" with name="client_satisfaction" label="Satisfacción del cliente" help="Nivel de satisfacción del cliente con el trabajo entregado." current=vd.client_satisfaction values=scale_values disabled=vd.status %}
-    {% include "evaluations/_vd_criterion.html" with name="deliverables" label="Entregables" help="Cumplimiento y calidad de los entregables comprometidos." current=vd.deliverables values=scale_values disabled=vd.status %}
+    {% if can_correct_closed %}
+      <div>
+        <label class="label" for="reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
+        <input type="text" id="reason" name="reason" class="input" maxlength="200" required>
+      </div>
+    {% endif %}
+
+    {% include "evaluations/_vd_criterion.html" with name="client_satisfaction" label="Satisfacción del cliente" help="Nivel de satisfacción del cliente con el trabajo entregado." current=vd.client_satisfaction values=scale_values disabled=vd.status can_correct_closed=can_correct_closed %}
+    {% include "evaluations/_vd_criterion.html" with name="deliverables" label="Entregables" help="Cumplimiento y calidad de los entregables comprometidos." current=vd.deliverables values=scale_values disabled=vd.status can_correct_closed=can_correct_closed %}
 
     {% if project.is_finite %}
-      {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — cumplimiento de la fecha de entrega" help="Aplica porque el proyecto tiene fecha de cierre definida." current=vd.time_finite values=scale_values disabled=vd.status %}
+      {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — cumplimiento de la fecha de entrega" help="Aplica porque el proyecto tiene fecha de cierre definida." current=vd.time_finite values=scale_values disabled=vd.status can_correct_closed=can_correct_closed %}
     {% else %}
-      {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — consistencia del servicio" help="Aplica porque el proyecto es de tiempo indefinido." current=vd.time_indefinite values=scale_values disabled=vd.status %}
+      {% include "evaluations/_vd_criterion.html" with name="time_value" label="Tiempo — consistencia del servicio" help="Aplica porque el proyecto es de tiempo indefinido." current=vd.time_indefinite values=scale_values disabled=vd.status can_correct_closed=can_correct_closed %}
     {% endif %}
 
     <div>
       <label class="label" for="comments">Comentarios</label>
       <p class="text-sm text-slate-600 mb-2">Contexto opcional sobre esta Entrega de Valor: hitos, riesgos o aclaraciones. Lo podrá leer —y complementar si lo desea— quien la valide, y se mostrará también en la Mesa de Talento de cada integrante del equipo.</p>
-      <textarea id="comments" name="comments" rows="3" class="input" {% if vd.status == 'VALIDADA' %}disabled{% endif %}>{{ vd.comments }}</textarea>
+      <textarea id="comments" name="comments" rows="3" class="input" {% if vd.status == 'VALIDADA' and not can_correct_closed %}disabled{% endif %}>{{ vd.comments }}</textarea>
     </div>
 
     {% if vd.status != 'VALIDADA' %}
       <button type="submit" class="btn-primary w-full">Enviar a validación del director</button>
+    {% elif can_correct_closed %}
+      <button type="submit" class="btn-primary w-full">Guardar corrección</button>
     {% endif %}
   </form>
   {% endwith %}

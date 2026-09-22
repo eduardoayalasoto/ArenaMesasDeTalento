@@ -1,12 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Mis evaluaciones de Ownership</h2>
-    {% if period %}
-      <p class="text-slate-600">Periodo <span class="font-medium">{{ period.name }}</span>.
-        {% if is_lead %}Una evaluación transversal para todos tus proyectos.
-        {% else %}Una evaluación por proyecto.{% endif %}
-      </p>
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Mis evaluaciones de Ownership</h2>
+      {% if period %}
+        <p class="text-slate-600">Periodo <span class="font-medium">{{ period.name }}</span>.
+          {% if is_lead %}Una evaluación transversal para todos tus proyectos.
+          {% else %}Una evaluación por proyecto.{% endif %}
+        </p>
+      {% endif %}
+    </div>
+    {% if periods %}
+      <form method="get" class="flex items-center gap-2">
+        <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+          {% for p in periods %}
+            <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
+              {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
     {% endif %}
   </div>
 

@@ -22,10 +22,10 @@
             <input type="hidden" name="period" value="{{ p.pk }}">
             {% if p.status == 'ABIERTO' %}
               <input type="hidden" name="action" value="close">
-              <button type="submit" class="btn-soft">Cerrar</button>
+              <button type="submit" class="btn-soft" onclick="return confirm('{{ close_confirm_message|escapejs }}');">Cerrar</button>
             {% else %}
               <input type="hidden" name="action" value="open">
-              <button type="submit" class="btn-soft">Abrir</button>
+              <button type="submit" class="btn-soft" onclick="return confirm('¿Abrir el periodo «{{ p.name|escapejs }}»?');">Abrir</button>
             {% endif %}
           </form>
           <a href="{% url 'catalog:period_edit' pk=p.pk %}" class="btn-soft">Editar</a>

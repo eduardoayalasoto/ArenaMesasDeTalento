@@ -189,9 +189,37 @@ def period_admin(request):
                 messages.error(request, " ".join(e.messages))
         return redirect("catalog:period_admin")
 
+    open_period = EvaluationPeriod.objects.filter(status=EvaluationPeriod.Status.ABIERTO).first()
+    close_confirm_message = None
+    if open_period:
+        next_period = period_lifecycle.find_contiguous_next(open_period)
+        pending = period_lifecycle.pending_activity_counts(open_period)
+        lines = [f"¿Cerrar el periodo «{open_period.name}»?", ""]
+        if pending["own_total"] or pending["vd_total"] or pending["finals_total"]:
+            lines.append("Actividad pendiente:")
+            own_pending = pending["own_total"] - pending["own_submitted"]
+            vd_pending = pending["vd_total"] - pending["vd_validated"]
+            finals_pending = pending["finals_total"] - pending["finals_complete"]
+            if own_pending:
+                lines.append(f"• {own_pending} evaluación(es) de Ownership sin enviar")
+            if vd_pending:
+                lines.append(f"• {vd_pending} Entrega(s) de Valor sin validar")
+            if finals_pending:
+                lines.append(f"• {finals_pending} calificación(es) final(es) incompleta(s)")
+            if not (own_pending or vd_pending or finals_pending):
+                lines.append("• Ninguna: toda la actividad de este periodo ya está completa.")
+        else:
+            lines.append("No hay actividad registrada en este periodo.")
+        lines.append("")
+        if next_period:
+            lines.append(f"Se abrirá automáticamente «{next_period.name}».")
+        lines.append("Esta acción no se puede deshacer desde aquí.")
+        close_confirm_message = "\n".join(lines)
+
     return render(request, "catalog/period_admin.html", {
         "page_title": "Periodos",
         "periods": EvaluationPeriod.objects.all(),
+        "close_confirm_message": close_confirm_message,
     })
 
 
