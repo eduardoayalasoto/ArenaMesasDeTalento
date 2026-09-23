@@ -134,8 +134,9 @@ class HomeView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["page_title"] = "Mi tablero"
-        period = _open_period()
+        period = _resolve_period(self.request)
         ctx["period"] = period
+        ctx["periods"] = EvaluationPeriod.objects.all()
         if period:
             ctx.update(build_results(self.request.user, period))
         return ctx
@@ -144,7 +145,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 @login_required
 def my_area(request):
     """Lista de colaboradores visibles con su avance y calificación (RN-14/15)."""
-    period = _open_period()
+    period = _resolve_period(request)
     users = permissions.visible_users(request.user).select_related("area", "level")
 
     # Filtros
@@ -169,6 +170,7 @@ def my_area(request):
         "page_title": "Mi área",
         "rows": rows,
         "period": period,
+        "periods": EvaluationPeriod.objects.all(),
         "levels": SeniorityLevel.objects.all(),
         "level_filter": level_code or "",
     })
@@ -180,8 +182,11 @@ def user_results(request, pk):
     target = get_object_or_404(
         permissions.visible_users(request.user).select_related("area", "level"), pk=pk
     )
-    period = _open_period()
-    ctx = {"page_title": f"Resultados · {target.full_name}", "target": target, "period": period}
+    period = _resolve_period(request)
+    ctx = {
+        "page_title": f"Resultados · {target.full_name}", "target": target, "period": period,
+        "periods": EvaluationPeriod.objects.all(),
+    }
     if period:
         ctx.update(build_results(target, period))
     return render(request, "dashboards/user_results.html", ctx)

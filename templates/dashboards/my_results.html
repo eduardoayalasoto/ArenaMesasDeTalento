@@ -1,8 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
+  {% if periods %}
+    <div class="mb-4 flex justify-end">
+      <form method="get" class="flex items-center gap-2">
+        <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+          {% for p in periods %}
+            <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
+              {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+  {% endif %}
   {% if not period %}
     {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="Tus resultados se mostrarán cuando haya un periodo en curso." %}
   {% else %}
+    {% if period.is_closed %}
+      <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-sm text-arena-800">
+        Estás viendo el periodo <b>{{ period.name }}</b>, ya Cerrado: histórico, de solo lectura.
+      </div>
+    {% endif %}
     {% include "dashboards/_results_body.html" with subject=user final=final weight=weight projects=projects feedback=feedback arena_notes=arena_notes period=period %}
   {% endif %}
 {% endblock %}
