@@ -79,13 +79,11 @@ def navigation(request):
         add("Validación de Ownership", "evaluations:ownership_validation", "check")
 
     # Retroalimentación — la doy (responsable asignado), la recibo (soy el colaborador de
-    # la nota en el periodo abierto), o soy Talento.
-    from apps.catalog.models import EvaluationPeriod
+    # la nota, en cualquier periodo, no solo el abierto — spec de navegación histórica), o soy Talento.
     from apps.evaluations.models import FeedbackResponsible, TalentSessionNote
-    open_period = EvaluationPeriod.objects.filter(status=EvaluationPeriod.Status.ABIERTO).first()
     has_feedback_role = (
         FeedbackResponsible.objects.filter(user=user).exists()
-        or (open_period and TalentSessionNote.objects.filter(user=user, period=open_period).exists())
+        or TalentSessionNote.objects.filter(user=user).exists()
     )
     if user.is_admin or has_feedback_role:
         add("Retroalimentación", "dashboards:feedback_session_list", "message-circle")
