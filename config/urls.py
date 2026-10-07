@@ -10,6 +10,7 @@ urlpatterns = [
     path("catalogo/", include("apps.catalog.urls")),
     path("cuestionarios/", include("apps.questionnaires.urls")),
     path("evaluaciones/", include("apps.evaluations.urls")),
+    path("arena-learn/", include("apps.learning.urls")),
 ]
 
 # Servir archivos subidos (fotos) en desarrollo. En producción usar Blob/S3.

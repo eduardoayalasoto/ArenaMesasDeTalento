@@ -1,0 +1,28 @@
+{% comment %}Encabezado y pestañas de Arena Learn. Contexto: learn_tab, approvals_count, can_manage, can_track.{% endcomment %}
+{% url 'learning:my_courses' as u_mine %}{% url 'learning:catalog_list' as u_cat %}{% url 'learning:people_list' as u_people %}{% url 'learning:approvals_inbox' as u_appr %}{% url 'learning:tracking' as u_track %}
+<div class="mb-6">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div class="flex items-center gap-3">
+      <span class="grid place-items-center w-10 h-10 rounded-xl bg-arena-50 text-arena-600"><i data-lucide="graduation-cap" class="w-5 h-5"></i></span>
+      <div>
+        <h2 class="text-xl font-semibold text-slate-900 font-display">Arena Learn</h2>
+        <p class="text-sm text-slate-600">Solicita, registra y comparte los cursos que impulsan tu desarrollo.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="{% url 'learning:direct_create' %}" class="btn-secondary"><i data-lucide="book-plus" class="w-4 h-4"></i> Registrar curso</a>
+      <a href="{% url 'learning:request_create' %}" class="btn-primary"><i data-lucide="send" class="w-4 h-4"></i> Solicitar curso</a>
+    </div>
+  </div>
+  <nav class="flex gap-1 overflow-x-auto border-b border-slate-200" aria-label="Secciones de Arena Learn">
+    <a href="{{ u_mine }}" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'mine' %}border-arena-600 text-arena-700{% else %}border-transparent text-slate-500 hover:text-slate-800{% endif %}">Mis cursos</a>
+    <a href="{{ u_cat }}" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'catalog' %}border-arena-600 text-arena-700{% else %}border-transparent text-slate-500 hover:text-slate-800{% endif %}">Catálogo</a>
+    <a href="{{ u_people }}" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'people' %}border-arena-600 text-arena-700{% else %}border-transparent text-slate-500 hover:text-slate-800{% endif %}">Personas</a>
+    {% if approvals_count or learn_tab == 'approvals' %}
+    <a href="{{ u_appr }}" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px whitespace-nowrap inline-flex items-center gap-1.5 {% if learn_tab == 'approvals' %}border-arena-600 text-arena-700{% else %}border-transparent text-slate-500 hover:text-slate-800{% endif %}">Por aprobar{% if approvals_count %} <span class="badge bg-rose-600 text-white">{{ approvals_count }}</span>{% endif %}</a>
+    {% endif %}
+    {% if can_track %}
+    <a href="{{ u_track }}" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'tracking' %}border-arena-600 text-arena-700{% else %}border-transparent text-slate-500 hover:text-slate-800{% endif %}">Seguimiento</a>
+    {% endif %}
+  </nav>
+</div>

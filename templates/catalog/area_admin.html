@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-slate-900">Áreas</h2>
+    <p class="text-slate-600">El Director de cada área aprueba el nivel de Dirección de las solicitudes de curso de Arena Learn. Si un área no tiene Director, cualquier Director puede aprobar.</p>
+  </div>
+
+  <div class="card divide-y divide-slate-100">
+    {% for a in areas %}
+      <form method="post" class="flex flex-wrap items-center justify-between gap-4 p-4">
+        {% csrf_token %}
+        <input type="hidden" name="area" value="{{ a.pk }}">
+        <div class="min-w-0">
+          <p class="font-medium text-slate-900">{{ a.name }} <span class="text-xs text-slate-400">· {{ a.code }}</span></p>
+          {% if not a.is_active %}<span class="badge bg-slate-100 text-slate-500">Inactiva</span>{% endif %}
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="dir-{{ a.pk }}">Director de {{ a.name }}</label>
+          <select id="dir-{{ a.pk }}" name="director" class="input w-64">
+            <option value="">— Cualquier Director —</option>
+            {% for d in directors %}
+              <option value="{{ d.pk }}" {% if a.director_id == d.pk %}selected{% endif %}>{{ d.full_name }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn-soft">Guardar</button>
+        </div>
+      </form>
+    {% empty %}
+      <p class="p-6 text-sm text-slate-500">No hay áreas registradas.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

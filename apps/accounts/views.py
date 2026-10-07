@@ -125,6 +125,11 @@ def user_admin(request):
     areas = {a.code: a for a in Area.objects.all()}
     levels = {l.code: l for l in SeniorityLevel.objects.all()}
 
+    lead_candidates = User.objects.filter(
+        is_active=True, deleted_at__isnull=True,
+    ).select_related("level").order_by("full_name")
+    lead_ids = set(lead_candidates.values_list("id", flat=True))
+
     if request.method == "POST":
         updated = 0
         for user in User.objects.filter(is_superuser=False, deleted_at__isnull=True):
@@ -135,13 +140,22 @@ def user_admin(request):
             role = request.POST.get(f"role-{user.id}", user.role)
             new_area = areas.get(area_code)
             new_level = levels.get(level_code)
+            # Lead directo (Arena Learn): solo si el campo llegó en el POST; nunca él mismo.
+            lead_raw = request.POST.get(f"lead-{user.id}")
+            new_lead_id = user.direct_lead_id
+            if lead_raw is not None:
+                new_lead_id = int(lead_raw) if lead_raw.isdigit() and int(lead_raw) in lead_ids else None
+                if new_lead_id == user.id:
+                    new_lead_id = None
             if (user.area_id != (new_area.id if new_area else None)
                     or user.level_id != (new_level.id if new_level else None)
-                    or user.role != role):
+                    or user.role != role
+                    or user.direct_lead_id != new_lead_id):
                 user.area = new_area
                 user.level = new_level
                 user.role = role
-                user.save(update_fields=["area", "level", "role"])
+                user.direct_lead_id = new_lead_id
+                user.save(update_fields=["area", "level", "role", "direct_lead"])
                 updated += 1
         messages.success(request, f"Actualizaste {updated} colaborador(es).")
         return redirect("accounts:user_admin")
@@ -157,6 +171,7 @@ def user_admin(request):
         "areas": Area.objects.all(),
         "levels": SeniorityLevel.objects.all(),
         "roles": User.Role.choices,
+        "lead_candidates": lead_candidates,
         "q": q,
     })
 

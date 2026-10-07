@@ -1,0 +1,22 @@
+{% comment %}Selector de archivos de evidencia con vista previa (Alpine, solo estado local). Param: files_form.{% endcomment %}
+<div x-data="{ files: [], tooBig: false, pick(e) { this.files = Array.from(e.target.files); this.tooBig = this.files.some(f => f.size > 4 * 1024 * 1024); } }"
+     @change="pick($event)">
+  <span class="label">Certificado, constancia o captura <span class="text-rose-600">*</span></span>
+  <label class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-center cursor-pointer hover:border-arena-300 hover:bg-arena-50 transition">
+    <i data-lucide="upload" class="w-6 h-6 text-arena-600"></i>
+    <span class="text-sm font-medium text-slate-700">Elige uno o varios archivos</span>
+    <span class="text-xs text-slate-500">PDF, PNG, JPG o WEBP · máximo 4 MB cada uno</span>
+    {{ files_form.files }}
+  </label>
+  <ul class="mt-2 space-y-1" x-show="files.length" x-cloak>
+    <template x-for="f in files" :key="f.name">
+      <li class="text-sm flex items-center gap-2" :class="f.size > 4 * 1024 * 1024 ? 'text-rose-600' : 'text-slate-600'">
+        <span x-text="f.name"></span>
+        <span class="text-xs text-slate-400" x-text="(f.size / 1024 / 1024).toFixed(1) + ' MB'"></span>
+      </li>
+    </template>
+  </ul>
+  <p x-show="tooBig" x-cloak class="mt-1 text-sm text-rose-600">Algún archivo pesa más de 4 MB; comprímelo o sube una captura.</p>
+  {% for e in files_form.files.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+  {% for e in files_form.non_field_errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+</div>

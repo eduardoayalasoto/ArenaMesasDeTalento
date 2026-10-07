@@ -73,3 +73,10 @@ class ProjectForm(forms.ModelForm):
         self.fields["validador"].queryset = active
         self.fields["validador"].required = False
         self.fields["validador"].empty_label = "— Selecciona un Validador —"
+
+
+class AreaDirectorForm(forms.Form):
+    """Director del área (Arena Learn, spec 004): aprueba el nivel Dirección de solicitudes de curso."""
+
+    area = forms.IntegerField(widget=forms.HiddenInput)
+    director = forms.IntegerField(required=False)

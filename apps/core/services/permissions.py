@@ -96,3 +96,54 @@ def can_edit_project(user) -> bool:
 def is_period_correction_allowed(user) -> bool:
     """Solo Talento/superusuario puede corregir un registro de un periodo ya Cerrado (FR-006)."""
     return bool(user.is_admin)
+
+
+# --- Arena Learn (spec 004) ------------------------------------------------------
+# Excepción explícita y acotada a RN-14: la ficha pública y la sección Arena Learn de
+# cualquier persona son visibles para todo usuario autenticado. Calificaciones,
+# evaluaciones, escenarios y retroalimentación siguen con `visible_users`.
+
+
+def can_view_learning_profile(viewer, person) -> bool:
+    """Cualquier usuario autenticado ve la ficha pública + Arena Learn de otra persona."""
+    return bool(viewer and viewer.is_authenticated)
+
+
+def can_view_course_public(viewer, req) -> bool:
+    """Vista pública de un curso: solo estados públicos (o siempre para quien ve lo privado)."""
+    if not (viewer and viewer.is_authenticated):
+        return False
+    return req.is_public or can_view_course_private(viewer, req)
+
+
+def can_view_course_private(viewer, req) -> bool:
+    """Costo, pago, justificación, comprobante y bitácora: dueño, sus aprobadores,
+    Talento/superusuario y Dirección (FR-024/025)."""
+    if not (viewer and viewer.is_authenticated):
+        return False
+    if req.user_id == viewer.pk or _is_admin(viewer):
+        return True
+    from apps.core.services import learning_flow
+
+    if req.steps.filter(actor=viewer).exists():
+        return True
+    if req.current_stage and learning_flow.eligible_approvers(req, req.current_stage).filter(
+        pk=viewer.pk
+    ).exists():
+        return True
+    return False
+
+
+def can_decide_course(viewer, req) -> bool:
+    from apps.core.services import learning_flow
+
+    return learning_flow.can_decide(viewer, req)
+
+
+def can_manage_learning(viewer) -> bool:
+    """Catálogo, validación de evidencia, reasignación, histórico, configuración."""
+    return bool(viewer.is_admin)
+
+
+def can_view_learning_tracking(viewer) -> bool:
+    return bool(viewer.is_admin or viewer.is_director)

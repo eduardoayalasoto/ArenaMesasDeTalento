@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+
+<div class="grid lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 space-y-6">
+    <section class="card p-6">
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        <span class="badge bg-arena-50 text-arena-700">{{ course.get_kind_display }}</span>
+        {% if course.pillar %}<span class="badge bg-slate-100 text-slate-600">{{ course.get_pillar_display }}</span>{% endif %}
+        {% if not course.is_active %}<span class="badge bg-slate-200 text-slate-600">Archivado</span>{% endif %}
+      </div>
+      <h3 class="text-lg font-semibold text-slate-900">{{ course.name }}</h3>
+      <p class="text-sm text-slate-600">{{ course.provider }}{% if course.duration_hours %} · {{ course.duration_hours }} h{% endif %}{% if course.reference_cost is not None %} · referencia ${{ course.reference_cost|floatformat:2 }} {{ course.currency }}{% endif %}</p>
+      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-sm text-arena-700 hover:underline"><i data-lucide="external-link" class="w-4 h-4"></i> Ver el curso</a>{% endif %}
+      {% if course.description %}<p class="mt-4 text-sm text-slate-700 whitespace-pre-line">{{ course.description }}</p>{% endif %}
+      <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+        {% for a in course.areas.all %}<span class="badge bg-slate-100 text-slate-600">{{ a.name }}</span>{% endfor %}
+        {% for l in course.levels.all %}<span class="badge bg-slate-100 text-slate-600">{{ l.name }}</span>{% endfor %}
+        {% for t in course.tag_list %}<span class="badge bg-white border border-slate-200 text-slate-500">#{{ t }}</span>{% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <h4 class="font-semibold text-slate-900 mb-3">Reseñas de Arena <span class="text-slate-400 font-normal">· {{ reviews|length }}</span></h4>
+      <div class="space-y-3">
+        {% for rv in reviews %}
+          <article class="card p-5">
+            <div class="flex items-center justify-between gap-3">
+              <a href="{% url 'learning:person_profile' rv.request.user.pk %}" class="flex items-center gap-2 text-sm font-medium text-slate-900 hover:underline">
+                {% include "partials/avatar.html" with subject=rv.request.user size="w-8 h-8" mini=True %} {{ rv.request.user.full_name }}
+              </a>
+              {% include "learning/_stars.html" with value=rv.rating %}
+            </div>
+            <p class="mt-2 text-sm text-slate-700 whitespace-pre-line">{{ rv.opinion }}</p>
+            <p class="mt-2 text-sm"><span class="font-medium">{{ rv.get_recommends_display }}.</span> {{ rv.recommend_why }}</p>
+            <a href="{% url 'learning:course_public' rv.request.pk %}" class="mt-2 inline-block text-xs text-arena-700 hover:underline">Ver reseña completa</a>
+          </article>
+        {% empty %}
+          <p class="text-sm text-slate-500">Todavía nadie ha reseñado este curso. ¡Sé la primera persona!</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <aside class="space-y-4">
+    <div class="card p-5 text-center">
+      {% if course.avg_rating %}
+        <p class="text-3xl font-semibold text-slate-900">{{ course.avg_rating|floatformat:1 }}</p>
+        {% include "learning/_stars.html" with value=course.avg_rating %}
+      {% else %}<p class="text-sm text-slate-500">Sin calificaciones aún</p>{% endif %}
+      <p class="mt-2 text-sm text-slate-600">{{ course.completed_count }} persona{{ course.completed_count|pluralize }} de Arena lo completó</p>
+      {% if course.is_active %}
+        <a href="{% url 'learning:request_create' %}?catalogo={{ course.pk }}" class="btn-primary w-full mt-4"><i data-lucide="send" class="w-4 h-4"></i> Solicitar este curso</a>
+        <a href="{% url 'learning:direct_create' %}?catalogo={{ course.pk }}" class="btn-ghost w-full mt-2 text-sm">Ya lo tomé: registrarlo</a>
+      {% endif %}
+    </div>
+    {% if can_manage %}
+      <div class="card p-5 space-y-2">
+        <a href="{% url 'learning:catalog_edit' course.pk %}" class="btn-secondary w-full"><i data-lucide="pencil" class="w-4 h-4"></i> Editar</a>
+        <form method="post" action="{% url 'learning:catalog_archive' course.pk %}">{% csrf_token %}
+          <button type="submit" class="btn-ghost w-full">{% if course.is_active %}Archivar{% else %}Reactivar{% endif %}</button>
+        </form>
+      </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

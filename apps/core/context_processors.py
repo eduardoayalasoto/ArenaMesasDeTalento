@@ -94,6 +94,16 @@ def navigation(request):
             "evaluations:value_delivery_capture",
         ))
 
+    # Arena Learn (spec 004) — para todos: solicitar, aprobar y consultar cursos.
+    add("Arena Learn", "learning:my_courses", "graduation-cap", also_active=(
+        "learning:request_create", "learning:request_edit", "learning:request_detail",
+        "learning:request_complete", "learning:review_edit", "learning:direct_create",
+        "learning:approvals_inbox", "learning:catalog_list", "learning:catalog_detail",
+        "learning:catalog_create", "learning:catalog_edit", "learning:people_list",
+        "learning:person_profile", "learning:course_public", "learning:tracking",
+        "learning:historic_create", "learning:settings_edit",
+    ))
+
     # Comité de Talento y Dirección — Mesa de Talento
     if user.is_admin or user.is_director:
         add("Mesa de Talento", "dashboards:talent_table", "table")
@@ -119,6 +129,7 @@ def navigation(request):
         add("Usuarios", "accounts:user_admin", "id", target=catalog_children)
         add("Escenarios", "catalog:scenario_admin", "layers", target=catalog_children)
         add("Periodos", "catalog:period_admin", "calendar", target=catalog_children)
+        add("Áreas", "catalog:area_admin", "map", target=catalog_children)
         add("Ponderaciones", "catalog:weight_admin", "scale", target=catalog_children)
         if catalog_children:
             items.append({
@@ -207,6 +218,10 @@ def notifications(request):
                         "text": "Continúa tu evaluación de Ownership",
                         "url": _safe_url_args("evaluations:ownership_edit", ev.pk) or list_url,
                     })
+    # Arena Learn: solicitudes por aprobar, ajustes, cursos por cerrar, evidencias.
+    from apps.core.services.learning_flow import pending_for
+
+    items.extend(pending_for(user))
     return {"pending_items": items, "pending_count": len(items)}
 
 

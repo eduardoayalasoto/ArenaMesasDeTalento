@@ -31,6 +31,7 @@ apps/
   questionnaires/  Template, Section, Question, ScaleOption + editor/versionado
   evaluations/     OwnershipEvaluation, OwnershipAnswer, ValueDeliveryEvaluation, ArenaImpactScore, FinalScore + flujos
   dashboards/      tablero (=resultados), Mi área, Mesa de Talento, avance, exportes, ayuda
+  learning/        Arena Learn (spec 004): CatalogCourse, CourseRequest, ApprovalStep, CourseEvidence, CourseReview, LearningSettings
   core/            services/ (lógica), middleware, context_processors, management/commands (seed*), text, templatetags
 templates/         base.html + partials/ + por app
 static/            src/input.css, css/app.css (compilado), vendor/ (lucide/alpine/htmx), img/ (logo, favicon)
@@ -50,6 +51,8 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
   - `ArenaImpactScore` (user×period, score, notes, captured_by).
   - `FinalScore` (materializado: pilares, final_score, band, is_complete).
 
+- **learning (Arena Learn, spec 004):** `CourseRequest` (solicitud/registro de curso; `status` BORRADOR→EN_REVISION(+`current_stage` LEAD/DIRECCION/TALENTO)→AUTORIZADA→COMPLETADA→VALIDADA, o REQUIERE_AJUSTES/RECHAZADA/CANCELADA/NO_CONCLUIDA; `origin` SOLICITUD/REGISTRO_DIRECTO/HISTORICO; campos de pago solo informativos), `ApprovalStep` (bitácora inmutable), `CourseEvidence` (archivos en BD, máx. 4 MB; CERTIFICADO público, COMPROBANTE_FISCAL privado), `CourseReview`, `CatalogCourse`, `LearningSettings` (instrucciones fiscales). Nuevos campos: `User.direct_lead` y `Area.director` (aprobadores).
+
 ## 5. Roles, permisos y reglas clave
 - **Roles:** Colaborador, Talento (admin), Director. **Lead** se deriva del nivel (LEAD). **Evaluador** se deriva de ser `validator` de alguna evaluación (no del liderazgo).
 - **Visibilidad** (`core/services/permissions.py`): colaborador → solo él; lead → su área; Talento/Director/superuser → todos. Filtrado a nivel queryset.
@@ -57,10 +60,13 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Ponderación por nivel** (RN-19): JR 60/20/20 · MID 50/25/25 · SNR 40/30/30 · LEAD 30/35/35 (Ownership/EV/Impacto).
 - **Bandas** (RN-20): ≥3.50 Excede · 3.00–3.49 Cumple · 2.00–2.99 Cumple parcial · <2.00 No cumple.
 
+- **Excepción acotada a RN-14 (Arena Learn):** la ficha pública y la sección Arena Learn de cualquier persona son visibles para todo usuario autenticado (`permissions.can_view_learning_profile`). Costo, pago, justificación, comprobante y bitácora solo para dueño, aprobadores, Talento y Dirección (`can_view_course_private`). `visible_users` no cambia.
+
 ## 6. Flujos principales
 - **Ownership:** el colaborador inicia su evaluación y **elige evaluador** (cualquiera de Arena) → captura respuestas (autosave, promedio en vivo). El **evaluador** entra a *Validación de Ownership*, complementa **Fortalezas/Oportunidades/Comentarios** y hace **Guardar y cerrar** (modal de confirmación) → queda **inmutable** y se calcula el score. El evaluado puede cambiar de evaluador solo mientras esté abierta. Vistas **Ver** y **Editar** separadas. **Reapertura (RN-06):** solo Talento/admin puede **Reabrir** una evaluación cerrada (botón con modal en la vista) → vuelve a borrador y recalcula la final.
 - **Entrega de Valor:** el **líder del proyecto** captura (criterio de tiempo según FINITO/INDEFINIDO) → **Director** valida o regresa con comentario → recalcula finales del equipo.
 - **Impacto Arena:** **Talento** captura en tabla con **autoguardado por campo** (carga los datos de la BD; guarda calificación/nota al salir del campo; indicador por fila) → recalcula finales. Mismo patrón que el autosave de Ownership.
+- **Arena Learn:** el colaborador solicita un curso (catálogo o nuevo) → Lead directo (o cualquier Lead del área) → Director del área (o cualquier Director) → Talento; se omiten las etapas donde el solicitante sería su propio aprobador. Regresar exige comentario y al reenviar reanuda en esa etapa. Autorizado: registra modalidad/estado de pago (no se gestiona). Cierre: evidencia + reseña obligatorias; un curso autorizado sin cerrar bloquea nuevas solicitudes (o se marca No concluido). Talento valida evidencia. Lógica en `core/services/learning_flow.py`; rutas bajo `/arena-learn/`.
 - **Calificación final:** `FinalScore` materializado; se recalcula al validar EV / guardar Impacto / abrir resultados.
 
 ## 7. Capa de servicios (`apps/core/services/`)
@@ -74,6 +80,7 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Director:** `/evaluaciones/entrega-valor/validar/`, `/mesa-talento/`, `/escenario-actual/`.
 - **Talento (admin) y Director:** **Escenario Actual** (`/escenario-actual/`, tablero drag-and-drop con SortableJS — mueve gente entre valores de Escenario Actual, filtros de Área/Nivel en cliente).
 - **Talento (admin):** Impacto Arena (`/evaluaciones/impacto-arena/`, autoguardado), **reabrir** evaluaciones de Ownership cerradas (botón en la vista), Avance (`/avance-periodo/`, con botón **Exportar Excel** de calificaciones + escenarios), **Mesa de Talento** (`/mesa-talento/`, con buscador/paginación; “Ver” abre informe en nueva pestaña), **Usuarios** (`/cuenta/usuarios/` lista+asignación masiva con búsqueda; botón **”Resetear”** por fila para restablecer contraseña a `Arena2026!` vía htmx sin recargar, activa `must_change_password`; POST `/cuenta/usuarios/<pk>/reset-password/`; `/cuenta/usuarios/nuevo/` alta), **Proyectos** (`/catalogo/proyectos/` + alta/edición + equipo), **Periodos** (`/catalogo/periodos/` + `/catalogo/periodos/nuevo/`), **Cuestionarios** (`/cuestionarios/admin/` editar/versionar). Estas últimas 5 (Cuestionarios/Usuarios/Escenarios/Periodos/Ponderaciones) viven agrupadas en un folder colapsable "Catálogos" en el sidebar.
+- **Todos:** `/arena-learn/` (Mis cursos, Catálogo, Personas, Por aprobar si aplica). **Talento y Director:** `/arena-learn/seguimiento/` (tablero + Excel). **Talento:** catálogo, carga histórica, instrucciones fiscales, `/catalogo/areas/` (Director por área) y columna "Lead directo" en Usuarios.
 - **Todos (según su relación con cada nota):** `/retroalimentacion/` — 3 secciones dinámicas (Doy · Principal, Asisto · Secundario, Recibo retroalimentación); el detalle (`/retroalimentacion/<pk>/`) es editable solo por responsables/Talento, y de solo lectura para quien recibe la retro.
 
 ## 9. Seed y comandos (`manage.py`)

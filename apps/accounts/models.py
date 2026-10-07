@@ -82,6 +82,16 @@ class User(AbstractUser):
     # Miniatura chica (64x64) para vistas con muchas fotos a la vez (p.ej. el
     # tablero de Escenario Actual) — evita transferir el JPEG de 400x400 por tarjeta.
     photo_thumb_data = models.BinaryField(null=True, blank=True, editable=False)
+    # Lead directo (Arena Learn, spec 004): primer aprobador de solicitudes de curso.
+    # Si está vacío, aprueba cualquier Lead del área del colaborador.
+    direct_lead = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="direct_reports",
+        verbose_name="lead directo",
+    )
     must_change_password = models.BooleanField(
         "debe cambiar contraseña", default=False,
         help_text="Si está activo, se obliga a crear una nueva contraseña al ingresar.",

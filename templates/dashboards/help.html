@@ -14,7 +14,8 @@
         {k:'evaluador', l:'Evaluador', i:'check'},
         {k:'lead', l:'Lead', i:'package'},
         {k:'direccion', l:'Dirección', i:'shield'},
-        {k:'talento', l:'Talento', i:'settings'}
+        {k:'talento', l:'Talento', i:'settings'},
+        {k:'learn', l:'Arena Learn', i:'book'}
       ]" :key="t.k">
       <button @click="tab = t.k"
               class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition"
@@ -139,6 +140,16 @@
     {% include "dashboards/_help_step.html" with n=4 icon="calendar" title="Abre y cierra periodos" text="<b>Menú → Periodos</b>. Al cerrar, la captura queda en solo lectura." %}
     {% include "dashboards/_help_step.html" with n=5 icon="star" title="Captura el Impacto Arena" text="<b>Menú → Impacto Arena</b>: tabla por persona; al guardar se recalcula la calificación final." %}
     {% include "dashboards/_help_step.html" with n=6 icon="chart" title="Da seguimiento y exporta" text="<b>Avance del periodo</b> (% de avance) y <b>Mesa de Talento</b> (exporta CSV desde Mi área)." %}
+  </div>
+
+  <!-- Arena Learn (spec 004) -->
+  <div x-show="tab === 'learn'" x-cloak class="space-y-4">
+    {% include "dashboards/_help_step.html" with n=1 icon="book" title="Busca en el catálogo" text="<b>Menú → Arena Learn → Catálogo</b>: cursos recomendados por Talento, con la calificación y las reseñas de quienes ya los tomaron." %}
+    {% include "dashboards/_help_step.html" with n=2 icon="send" title="Solicita tu curso con costo" text="Desde el catálogo o capturando uno nuevo, con tu <b>justificación</b>. Pasa por tu <b>Lead directo</b> (o un Lead de tu área), el <b>Director</b> de tu área y <b>Talento</b>, que confirma fondos. Te pueden regresar la solicitud con comentarios; al reenviarla vuelve a quien la regresó." %}
+    {% include "dashboards/_help_step.html" with n=3 icon="briefcase" title="Compra y registra el pago" text="Al quedar autorizado verás las instrucciones fiscales (CFDI a nombre de Arena Analytics o nota/recibo con datos fiscales). Registra si es reembolso o pago directo; el reembolso sigue su proceso con Talento." %}
+    {% include "dashboards/_help_step.html" with n=4 icon="upload" title="Cierra el curso" text="Sube tu certificado, constancia o captura (PDF o imagen, máx. 4 MB) y tu reseña: calificación, opinión, a quién lo recomiendas y qué aprendiste. <b>Es indispensable para solicitar otro curso</b> (o márcalo como no concluido)." %}
+    {% include "dashboards/_help_step.html" with n=5 icon="users" title="Comparte lo aprendido" text="Tus cursos completados aparecen en tu perfil de Arena Learn, visible para todo Arena. El costo, el pago y la justificación son privados (tú, tus aprobadores, Talento y Dirección)." %}
+    {% include "dashboards/_help_step.html" with n=6 icon="star" title="¿Cursos gratuitos o que pagaste tú?" text="Usa <b>Registrar curso</b>: no requieren autorización y suman a tu historial y al conocimiento del equipo." %}
   </div>
 </div>
 {% endblock %}

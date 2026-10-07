@@ -15,6 +15,17 @@ class Area(models.Model):
     code = models.CharField("clave", max_length=8, unique=True)
     name = models.CharField("nombre", max_length=80)
     is_active = models.BooleanField("activa", default=True)
+    # Director del área (Arena Learn, spec 004): aprueba el nivel Dirección de las
+    # solicitudes de curso. Si está vacío, aprueba cualquier Director.
+    director = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="directed_areas",
+        limit_choices_to={"role": "DIRECTOR"},
+        verbose_name="director",
+    )
 
     class Meta:
         verbose_name = "área"

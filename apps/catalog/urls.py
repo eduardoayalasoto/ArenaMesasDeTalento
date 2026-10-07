@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from . import views
+from . import views, views_areas
 
 app_name = "catalog"
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path("periodos/nuevo/", views.period_create, name="period_create"),
     path("periodos/<int:pk>/editar/", views.period_edit, name="period_edit"),
     path("periodos/<int:pk>/eliminar/", views.period_delete, name="period_delete"),
+    path("areas/", views_areas.area_admin, name="area_admin"),
     path("escenarios/", views.scenario_admin, name="scenario_admin"),
     path("escenarios/nuevo/", views.scenario_create, name="scenario_create"),
     path("escenarios/<int:pk>/editar/", views.scenario_edit, name="scenario_edit"),

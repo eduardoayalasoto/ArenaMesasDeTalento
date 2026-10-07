@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "apps.questionnaires",
     "apps.evaluations",
     "apps.dashboards",
+    "apps.learning",
 ]
 
 MIDDLEWARE = [

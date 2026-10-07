@@ -7,7 +7,7 @@
     </div>
     <a href="{% url 'accounts:user_create' %}" class="btn-primary">{% include "partials/icon.html" with name="user-plus" cls="w-4 h-4" %} Nuevo usuario</a>
   </div>
-  {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El nivel <strong>Lead</strong> habilita ver a toda su área. El rol <strong>Director</strong> habilita validar la Entrega de Valor; <strong>Talento</strong> administra todo. Los cambios se guardan al presionar «Guardar cambios».</p>" %}
+  {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El nivel <strong>Lead</strong> habilita ver a toda su área. El <strong>Lead directo</strong> es quien aprueba primero sus solicitudes de curso en Arena Learn (si está vacío, aprueba cualquier Lead de su área). El rol <strong>Director</strong> habilita validar la Entrega de Valor; <strong>Talento</strong> administra todo. Los cambios se guardan al presionar «Guardar cambios».</p>" %}
 
   <form method="get" class="mb-4">
     <div class="relative max-w-sm">
@@ -26,6 +26,7 @@
             <th class="px-4 py-3 font-medium w-44">Área</th>
             <th class="px-4 py-3 font-medium w-44">Nivel</th>
             <th class="px-4 py-3 font-medium w-48">Rol</th>
+            <th class="px-4 py-3 font-medium w-52" title="Primer aprobador de sus solicitudes de curso en Arena Learn">Lead directo</th>
             <th class="px-4 py-3 font-medium w-36">Acciones</th>
           </tr>
         </thead>
@@ -65,6 +66,18 @@
                 <div class="relative">
                   <select name="role-{{ u.id }}" class="input py-1.5 appearance-none pr-8 text-sm bg-white cursor-pointer">
                     {% for value, label in roles %}<option value="{{ value }}" {% if u.role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                  </div>
+                </div>
+              </td>
+
+              <td class="px-4 py-2.5">
+                <div class="relative">
+                  <select name="lead-{{ u.id }}" class="input py-1.5 appearance-none pr-8 text-sm bg-white cursor-pointer">
+                    <option value="">— Lead del área —</option>
+                    {% for c in lead_candidates %}{% if c.id != u.id %}<option value="{{ c.id }}" {% if u.direct_lead_id == c.id %}selected{% endif %}>{{ c.full_name }}{% if c.level and c.level.code == "LEAD" %} · Lead{% endif %}</option>{% endif %}{% endfor %}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
                     <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>

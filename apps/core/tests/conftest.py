@@ -117,3 +117,71 @@ def ownership_template_lead(db, area, level_lead):
 
 def make_membership(project, user, period=None):
     return ProjectMembership.objects.create(project=project, user=user)
+
+
+# --- Arena Learn (spec 004) --------------------------------------------------------------
+
+def make_learn_user(email, *, area=None, level=None, role=None, **extra):
+    """Usuario con foto (evita el redirect de PhotoRequiredMiddleware en pruebas de vista)."""
+    # password=None → contraseña inutilizable: evita el hash PBKDF2 (lento) en cada usuario.
+    return User.objects.create_user(
+        email=email, password=None, full_name=email.split("@")[0].replace(".", " ").title(),
+        area=area, level=level, role=role or User.Role.COLABORADOR,
+        photo_data=b"x", photo_mime="image/jpeg", **extra,
+    )
+
+
+@pytest.fixture
+def learn_area(db):
+    return Area.objects.create(code="CD", name="Ciencia de Datos")
+
+
+@pytest.fixture
+def learn_levels(db):
+    jr = SeniorityLevel.objects.create(code="JR", name="Junior", order=1)
+    lead = SeniorityLevel.objects.create(code="LEAD", name="Lead", order=4)
+    return {"JR": jr, "LEAD": lead}
+
+
+@pytest.fixture
+def learn_people(db, learn_area, learn_levels):
+    """Colaborador, Lead del área, Director, Talento y otro colaborador de la misma área."""
+    return {
+        "colab": make_learn_user("ana@arena-analytics.com", area=learn_area, level=learn_levels["JR"]),
+        "other": make_learn_user("beto@arena-analytics.com", area=learn_area, level=learn_levels["JR"]),
+        "lead": make_learn_user("lia@arena-analytics.com", area=learn_area, level=learn_levels["LEAD"]),
+        "director": make_learn_user("dora@arena-analytics.com", role=User.Role.DIRECTOR),
+        "talento": make_learn_user("tito@arena-analytics.com", role=User.Role.TALENTO),
+    }
+
+
+@pytest.fixture
+def catalog_course(db):
+    from apps.learning.models import CatalogCourse
+
+    return CatalogCourse.objects.create(
+        name="Spark para analítica", provider="Databricks Academy", kind="CURSO",
+        reference_cost=Decimal("3500.00"), currency="MXN", duration_hours=20, tags="Spark, Big Data",
+    )
+
+
+def learn_request_data(**overrides):
+    data = {
+        "name": "Curso de dbt", "provider": "dbt Labs", "url": "https://learn.getdbt.com",
+        "kind": "CURSO", "duration_hours": 12, "pillar": "ENTREGA_VALOR", "tags": "dbt",
+        "estimated_cost": Decimal("2500.00"), "currency": "MXN",
+        "start_date_planned": date(2026, 10, 1), "end_date_planned": date(2026, 11, 1),
+        "justification": "Modelado de datos para el proyecto X.",
+    }
+    data.update(overrides)
+    return data
+
+
+def learn_review_data(**overrides):
+    data = {
+        "rating": 5, "opinion": "Muy práctico.", "recommends": "SI",
+        "recommend_why": "Aplica directo a nuestros pipelines.", "learnings": "Tests de dbt y snapshots.",
+        "audience_areas": [], "audience_levels": [], "audience_notes": "",
+    }
+    data.update(overrides)
+    return data
