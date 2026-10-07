@@ -98,11 +98,18 @@ def navigation(request):
     add("Arena Learn", "learning:my_courses", "graduation-cap", also_active=(
         "learning:request_start", "learning:request_create", "learning:request_edit", "learning:request_detail",
         "learning:request_complete", "learning:review_edit", "learning:direct_create",
-        "learning:approvals_inbox", "learning:catalog_list", "learning:catalog_detail",
+        "learning:catalog_list", "learning:catalog_detail",
         "learning:catalog_create", "learning:catalog_edit", "learning:people_list",
         "learning:person_profile", "learning:course_public", "learning:tracking",
         "learning:historic_create", "learning:settings_edit",
     ))
+
+    # Arena Learn — aprobadores (Lead, Lead directo, Director, Talento): acceso fijo con contador.
+    from apps.core.services.learning_flow import approvals_for, is_course_approver
+    if is_course_approver(user):
+        add("Aprobar cursos", "learning:approvals_inbox", "check")
+        if items and items[-1]["name"] == "learning:approvals_inbox":
+            items[-1]["badge"] = len(approvals_for(user))
 
     # Comité de Talento y Dirección — Mesa de Talento
     if user.is_admin or user.is_director:

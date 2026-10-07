@@ -81,6 +81,7 @@ def _base_ctx(request, active, **extra):
         "can_manage": permissions.can_manage_learning(request.user),
         "can_track": permissions.can_view_learning_tracking(request.user),
         "approvals_count": len(flow.approvals_for(request.user)),
+        "is_approver": flow.is_course_approver(request.user),
     }
     ctx.update(extra)
     return ctx

@@ -286,8 +286,10 @@ def test_views_render_and_request_via_form(client, learn_people, catalog_course)
     assert resp.status_code == 302 and req.catalog_course == catalog_course
     assert (req.name, req.status, req.payment_mode) == (catalog_course.name, St.EN_REVISION, "REEMBOLSO")
 
+    assert "Aprobar cursos" not in client.get(reverse("learning:my_courses")).content.decode()  # no aprueba
     client.force_login(p["lead"])
-    assert "solicitud de curso por aprobar" in client.get(reverse("learning:approvals_inbox")).content.decode()
+    html = client.get(reverse("learning:approvals_inbox")).content.decode()
+    assert "solicitud de curso por aprobar" in html and "Aprobar cursos" in html  # campana + menú
     client.post(reverse("learning:request_decide", args=[req.pk]), {"action": "return", "comment": ""})
     req.refresh_from_db()
     assert req.current_stage == Stage.LEAD  # sin comentario no se regresa

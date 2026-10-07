@@ -952,6 +952,13 @@ def approver_context(req) -> dict:
 # --- Bandeja y campana ---------------------------------------------------------------
 
 
+def is_course_approver(user) -> bool:
+    """Puede llegarle una solicitud: Lead, Lead directo de alguien, Director o Talento."""
+    return bool(
+        user.is_lead or user.is_director or user.is_admin or user.direct_reports.exists()
+    )
+
+
 def approvals_for(user) -> list:
     """Solicitudes en revisión donde `user` es aprobador elegible de la etapa actual."""
     m = _models()
