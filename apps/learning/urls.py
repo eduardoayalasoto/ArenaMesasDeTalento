@@ -8,7 +8,8 @@ app_name = "learning"
 
 urlpatterns = [
     path("", views.my_courses, name="my_courses"),
-    path("solicitar/", views.request_create, name="request_create"),
+    path("solicitar/", views.request_start, name="request_start"),
+    path("solicitar/nuevo/", views.request_create, name="request_create"),
     path("registrar/", views.direct_create, name="direct_create"),
     path("por-aprobar/", views.approvals_inbox, name="approvals_inbox"),
     path("solicitudes/<int:pk>/", views.request_detail, name="request_detail"),

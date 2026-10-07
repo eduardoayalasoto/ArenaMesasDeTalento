@@ -371,3 +371,29 @@ def test_admin_screens_lead_and_director(client, learn_people, learn_area):
     learn_area.refresh_from_db()
     assert learn_area.director == p["director"]
     assert client.get(reverse("catalog:area_admin")).status_code == 200
+
+
+@pytest.mark.django_db
+def test_request_start_lists_known_courses_and_blocks_duplicates(client, learn_people, catalog_course):
+    """Solicitar curso: elegir del catálogo o de lo ya autorizado en Arena; sin pedir dos veces lo mismo."""
+    p = learn_people
+    taken = authorize(submit(p["other"], name="Curso de dbt"), p)
+    flow.update_payment(taken, p["other"], "REEMBOLSO", "COMPRADO")
+
+    data = flow.requestable_courses(p["colab"])
+    assert [c["course"] for c in data["catalog"]] == [catalog_course]
+    [known] = data["known"]
+    assert known["template"] == taken and known["count"] == 1 and known["payment_mode"] == "Reembolso al colaborador"
+    assert known["mine"] is None
+
+    client.force_login(p["colab"])
+    html = client.get(reverse("learning:request_start")).content.decode()
+    assert "Curso de dbt" in html and catalog_course.name in html and "Es un curso nuevo" in html
+    html = client.get(reverse("learning:request_create") + f"?desde={taken.pk}").content.decode()
+    assert "Curso ya autorizado en Arena" in html and 'value="dbt Labs"' in html
+    assert "Modelado de datos" not in html  # nunca se copia la justificación ajena
+
+    mine = submit(p["colab"], name="curso de DBT ")  # mismo curso, otra capitalización
+    assert flow.requestable_courses(p["colab"])["known"][0]["mine"] == mine
+    with pytest.raises(ValidationError, match="Ya tienes este curso"):
+        submit(p["colab"], name="Curso de dbt")

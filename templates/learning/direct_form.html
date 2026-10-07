@@ -8,8 +8,8 @@
       <h3 class="text-lg font-semibold text-slate-900">Carga histórica de un curso</h3>
       <p class="text-sm text-slate-600">Registra un curso que la persona completó antes de Arena Learn (por ejemplo, desde SharePoint), con su evidencia y reseña.</p>
     {% else %}
-      <h3 class="text-lg font-semibold text-slate-900">Registrar un curso que ya tomaste</h3>
-      <p class="text-sm text-slate-600">Para cursos gratuitos o que pagaste por tu cuenta: no pasan por autorización, pero suman a tu Arena Learn y al conocimiento de todo el equipo. Si el curso tiene costo para Arena, mejor <a class="text-arena-700 font-medium hover:underline" href="{% url 'learning:request_create' %}">solicítalo</a>.</p>
+      <h3 class="text-lg font-semibold text-slate-900">Registrar un curso ya tomado</h3>
+      <p class="text-sm text-slate-600">Para cursos gratuitos o que pagaste por tu cuenta: no pasan por autorización, pero suman a tu Arena Learn y al conocimiento de todo el equipo. Si el curso tiene costo para Arena, mejor <a class="text-arena-700 font-medium hover:underline" href="{% url 'learning:request_start' %}">solicítalo</a>.</p>
     {% endif %}
   </div>
 

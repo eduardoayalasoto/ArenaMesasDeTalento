@@ -96,7 +96,7 @@ def navigation(request):
 
     # Arena Learn (spec 004) — para todos: solicitar, aprobar y consultar cursos.
     add("Arena Learn", "learning:my_courses", "graduation-cap", also_active=(
-        "learning:request_create", "learning:request_edit", "learning:request_detail",
+        "learning:request_start", "learning:request_create", "learning:request_edit", "learning:request_detail",
         "learning:request_complete", "learning:review_edit", "learning:direct_create",
         "learning:approvals_inbox", "learning:catalog_list", "learning:catalog_detail",
         "learning:catalog_create", "learning:catalog_edit", "learning:people_list",

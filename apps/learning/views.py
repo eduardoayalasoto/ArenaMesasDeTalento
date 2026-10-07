@@ -118,10 +118,34 @@ def _catalog_from_query(request):
 
 
 @login_required
+def request_start(request):
+    """Paso 1 de "Solicitar curso": elegir un curso ya conocido en Arena o uno nuevo."""
+    q = request.GET.get("q", "").strip()
+    data = flow.requestable_courses(request.user, q)
+    return render(request, "learning/request_start.html", _base_ctx(
+        request, "mine", page_title="Solicitar curso", q=q, catalog=data["catalog"], known=data["known"],
+        pending=flow.pending_closure(request.user),
+    ))
+
+
+def _template_from_query(request):
+    """`?desde=<pk>`: curso que alguien en Arena ya tomó con autorización (plantilla)."""
+    pk = request.GET.get("desde") or request.POST.get("desde")
+    if not pk or not str(pk).isdigit():
+        return None
+    return CourseRequest.objects.filter(
+        pk=pk, status__in=flow.KNOWN_STATUSES, catalog_course__isnull=True,
+    ).first()
+
+
+@login_required
 def request_create(request):
     catalog_course = _catalog_from_query(request)
-    form = RequestForm(request.POST or None, catalog_course=catalog_course,
-                       initial={"currency": "MXN", "kind": "CURSO"})
+    template_req = None if catalog_course else _template_from_query(request)
+    initial = {"currency": "MXN", "kind": "CURSO"}
+    if template_req is not None:
+        initial.update(flow.template_data_from(template_req))
+    form = RequestForm(request.POST or None, catalog_course=catalog_course, initial=initial)
     if request.method == "POST" and form.is_valid():
         submit = request.POST.get("action") == "submit"
         try:
@@ -140,8 +164,13 @@ def request_create(request):
                 messages.error(request, _error_text(exc))
                 return redirect("learning:request_edit", pk=req.pk)
             _apply_errors(form, exc)
+    duplicate = flow.open_request_for(
+        request.user, catalog_course,
+        template_req.name if template_req else "", template_req.provider if template_req else "",
+    ) if (catalog_course or template_req) else None
     return render(request, "learning/request_form.html", _base_ctx(
         request, "mine", page_title="Solicitar curso", form=form, catalog_course=catalog_course,
+        template_req=template_req, duplicate=duplicate,
         pending=flow.pending_closure(request.user), editing=None,
     ))
 

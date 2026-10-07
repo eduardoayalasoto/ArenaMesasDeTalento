@@ -10,8 +10,8 @@
       </div>
     </div>
     <div class="flex flex-wrap gap-2">
-      <a href="{% url 'learning:direct_create' %}" class="btn-secondary"><i data-lucide="book-plus" class="w-4 h-4"></i> Registrar curso</a>
-      <a href="{% url 'learning:request_create' %}" class="btn-primary"><i data-lucide="send" class="w-4 h-4"></i> Solicitar curso</a>
+      <a href="{% url 'learning:direct_create' %}" class="btn-secondary" title="Para cursos que ya tomaste por tu cuenta o gratuitos: no requieren autorización"><i data-lucide="book-check" class="w-4 h-4"></i> Registrar curso ya tomado</a>
+      <a href="{% url 'learning:request_start' %}" class="btn-primary" title="Para cursos con costo para Arena: pasan por autorización"><i data-lucide="send" class="w-4 h-4"></i> Solicitar curso</a>
     </div>
   </div>
   <nav class="flex gap-1 overflow-x-auto border-b border-slate-200" aria-label="Secciones de Arena Learn">

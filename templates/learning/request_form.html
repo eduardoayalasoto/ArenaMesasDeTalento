@@ -4,7 +4,8 @@
 
 <div class="max-w-3xl">
   <div class="mb-5">
-    <h3 class="text-lg font-semibold text-slate-900">{% if editing %}Editar solicitud{% else %}Solicitar un curso con costo{% endif %}</h3>
+    {% if not editing %}<a href="{% url 'learning:request_start' %}" class="text-sm text-arena-700 hover:underline inline-flex items-center gap-1 mb-1"><i data-lucide="chevron-left" class="w-4 h-4"></i> Elegir otro curso</a>{% endif %}
+    <h3 class="text-lg font-semibold text-slate-900">{% if editing %}Editar solicitud{% elif catalog_course or template_req %}Solicitar curso{% else %}Solicitar un curso nuevo{% endif %}</h3>
     <p class="text-sm text-slate-600">Tu solicitud pasa por tu Lead, Dirección y Talento. Talento confirma fondos y te avisa cuando quede autorizada.</p>
   </div>
 
@@ -22,6 +23,22 @@
     </div>
   {% endif %}
 
+  {% if duplicate %}
+    <div class="rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 mb-5 text-sm text-rose-800">
+      Ya tienes este curso pedido ({{ duplicate.status_display|lower }}). <a class="font-semibold underline" href="{% url 'learning:request_detail' duplicate.pk %}">Ver tu solicitud</a>.
+    </div>
+  {% endif %}
+
+  {% if template_req %}
+    <div class="card p-4 mb-5 flex items-start gap-3 bg-emerald-50 border-emerald-100">
+      <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600 mt-0.5"></i>
+      <div class="text-sm">
+        <p class="font-medium text-slate-900">Curso ya autorizado en Arena: {{ template_req.name }}</p>
+        <p class="text-slate-600">Precargamos sus datos; ajústalos si tu caso cambia y completa fechas y justificación.</p>
+      </div>
+    </div>
+  {% endif %}
+
   {% if catalog_course %}
     <div class="card p-4 mb-5 flex items-start gap-3 bg-arena-50 border-arena-100">
       <i data-lucide="bookmark" class="w-5 h-5 text-arena-600 mt-0.5"></i>
@@ -30,13 +47,14 @@
         <p class="text-slate-600">Los datos del curso vienen del catálogo; solo completa fechas, costo y tu justificación.</p>
       </div>
     </div>
-  {% else %}
-    <p class="text-sm text-slate-500 mb-4">¿Ya existe en el catálogo? <a href="{% url 'learning:catalog_list' %}" class="text-arena-700 font-medium hover:underline">Búscalo ahí</a> y verás las reseñas de quienes ya lo tomaron.</p>
+  {% elif not template_req and not editing %}
+    <p class="text-sm text-slate-500 mb-4">¿Ya existe en el catálogo? <a href="{% url 'learning:request_start' %}" class="text-arena-700 font-medium hover:underline">Búscalo entre los cursos de Arena</a> y verás las reseñas de quienes ya lo tomaron.</p>
   {% endif %}
 
   <form method="post" class="card p-6 space-y-5" novalidate>
     {% csrf_token %}
     {% if catalog_course and not editing %}<input type="hidden" name="catalogo" value="{{ catalog_course.pk }}">{% endif %}
+    {% if template_req and not editing %}<input type="hidden" name="desde" value="{{ template_req.pk }}">{% endif %}
     {% for e in form.non_field_errors %}<p class="text-sm text-rose-600">{{ e }}</p>{% endfor %}
 
     <div class="grid sm:grid-cols-2 gap-4">

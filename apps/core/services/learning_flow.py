@@ -215,6 +215,8 @@ def _apply_data(req, data, catalog_course=None):
         if data.get("estimated_cost") is None and catalog_course.reference_cost is not None:
             req.estimated_cost = catalog_course.reference_cost
     req.tags = normalize_tags(req.tags)
+    req.name = " ".join((req.name or "").split())
+    req.provider = " ".join((req.provider or "").split())
 
 
 def _blank_for(field):
@@ -277,6 +279,10 @@ def submit_request(req, actor):
         raise ValidationError("Esta solicitud ya fue enviada.")
     _validate_request_data(req)
     assert_can_submit(req.user)
+    dup = open_request_for(req.user, req.catalog_course if req.catalog_course_id else None,
+                           req.name, req.provider, exclude_pk=req.pk)
+    if dup is not None:
+        raise ValidationError(f"Ya tienes este curso pedido («{dup.name}», {dup.status_display.lower()}).")
 
     from_status = req.status
     resuming = from_status == St.REQUIERE_AJUSTES and req.returned_from_stage
@@ -751,6 +757,108 @@ def promote_to_catalog(req, actor):
     req.catalog_course = course
     req.save(update_fields=["catalog_course", "updated_at"])
     return course
+
+
+# --- Selector "Solicitar curso": cursos ya conocidos en Arena --------------------------
+
+OPEN_STATUSES = ("BORRADOR", "EN_REVISION", "REQUIERE_AJUSTES", "AUTORIZADA")
+KNOWN_STATUSES = ("AUTORIZADA", "COMPLETADA", "VALIDADA")
+
+
+def _course_key(name: str, provider: str) -> tuple[str, str]:
+    return (" ".join((name or "").lower().split()), " ".join((provider or "").lower().split()))
+
+
+def open_request_for(user, catalog_course=None, name="", provider="", exclude_pk=None):
+    """Solicitud abierta del usuario para el mismo curso (evita pedirlo dos veces), o None."""
+    m = _models()
+    qs = m.CourseRequest.objects.filter(user=user, status__in=OPEN_STATUSES).exclude(pk=exclude_pk)
+    if catalog_course is not None:
+        return qs.filter(catalog_course=catalog_course).first()
+    if not name:
+        return None
+    key = _course_key(name, provider)
+    for r in qs.filter(catalog_course__isnull=True).only("pk", "name", "provider", "status", "current_stage"):
+        if _course_key(r.name, r.provider) == key:
+            return r
+    return None
+
+
+def requestable_courses(user, q: str = "") -> dict:
+    """Cursos que el colaborador puede pedir sin capturarlos de cero (selector de US1).
+
+    - `catalog`: catálogo sugerido activo, con veces autorizado y modalidad de pago usada.
+    - `known`: cursos fuera del catálogo que alguien en Arena ya tomó con autorización
+      (agrupados por nombre + proveedor; se toma el registro más reciente como plantilla).
+    Cada elemento indica si el usuario ya tiene una solicitud abierta de ese curso.
+    Solo expone datos de curso (costo de referencia y modalidad), nunca justificaciones.
+    """
+    m = _models()
+    St = m.CourseRequest.Status
+    q = (q or "").strip()
+    mine = list(
+        m.CourseRequest.objects.filter(user=user, status__in=OPEN_STATUSES)
+        .only("pk", "name", "provider", "status", "current_stage", "catalog_course_id")
+    )
+    mine_by_catalog = {r.catalog_course_id: r for r in mine if r.catalog_course_id}
+    mine_by_key = {_course_key(r.name, r.provider): r for r in mine if not r.catalog_course_id}
+
+    known_qs = m.CourseRequest.objects.filter(status__in=KNOWN_STATUSES).select_related("review")
+    if q:
+        known_qs = known_qs.filter(Q(name__icontains=q) | Q(provider__icontains=q) | Q(tags__icontains=q))
+
+    # Uso histórico de cada curso del catálogo: veces autorizado y modalidad más reciente.
+    catalog_usage: dict[int, dict] = {}
+    groups: dict[tuple, dict] = {}
+    for r in known_qs.order_by("-authorized_at", "-created_at"):
+        if r.catalog_course_id:
+            u = catalog_usage.setdefault(r.catalog_course_id, {"count": 0, "payment_mode": ""})
+            u["count"] += 1
+            if not u["payment_mode"] and r.payment_mode:
+                u["payment_mode"] = r.get_payment_mode_display()
+            continue
+        key = _course_key(r.name, r.provider)
+        g = groups.get(key)
+        if g is None:
+            g = groups[key] = {
+                "template": r, "count": 0, "ratings": [], "validated": False, "payment_mode": "",
+            }
+        g["count"] += 1
+        g["validated"] = g["validated"] or r.status == St.VALIDADA
+        if not g["payment_mode"] and r.payment_mode:
+            g["payment_mode"] = r.get_payment_mode_display()
+        review = getattr(r, "review", None)
+        if review is not None:
+            g["ratings"].append(review.rating)
+
+    catalog = []
+    for c in catalog_queryset({"q": q} if q else None):
+        usage = catalog_usage.get(c.pk, {"count": 0, "payment_mode": ""})
+        catalog.append({
+            "course": c, "authorized_count": usage["count"], "payment_mode": usage["payment_mode"],
+            "mine": mine_by_catalog.get(c.pk),
+        })
+
+    known = []
+    for key, g in groups.items():
+        t = g["template"]
+        known.append({
+            "template": t,
+            "count": g["count"],
+            "avg_rating": (sum(g["ratings"]) / len(g["ratings"])) if g["ratings"] else None,
+            "validated": g["validated"],
+            "payment_mode": g["payment_mode"],
+            "mine": mine_by_key.get(key),
+        })
+    known.sort(key=lambda k: (-k["count"], k["template"].name.lower()))
+    return {"catalog": catalog, "known": known}
+
+
+def template_data_from(req) -> dict:
+    """Datos de curso (sin justificación ni fechas) para precargar una solicitud nueva."""
+    return {f: getattr(req, f) for f in (
+        "name", "provider", "url", "kind", "duration_hours", "pillar", "tags", "estimated_cost", "currency",
+    )}
 
 
 # --- Lecturas para perfil público (R6) ---------------------------------------------
