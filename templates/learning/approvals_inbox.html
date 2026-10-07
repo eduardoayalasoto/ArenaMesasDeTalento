@@ -2,6 +2,7 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 
+{% if others is not None %}<h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Te toca decidir <span class="text-slate-400">· {{ items|length }}</span></h3>{% endif %}
 {% if items %}
   <div class="space-y-4">
     {% for it in items %}
@@ -48,6 +49,48 @@
     {% endfor %}
   </div>
 {% else %}
-  {% include "partials/empty_state.html" with icon="check" title="No tienes solicitudes por aprobar" message="Cuando alguien te necesite para autorizar un curso, aparecerá aquí y en la campana." %}
+  {% if others is not None %}
+    <p class="text-sm text-slate-500 card p-4">No tienes solicitudes en tu etapa.</p>
+  {% else %}
+    {% include "partials/empty_state.html" with icon="check" title="No tienes solicitudes por aprobar" message="Cuando alguien te necesite para autorizar un curso, aparecerá aquí y en la campana." %}
+  {% endif %}
+{% endif %}
+
+{% if others is not None %}
+  {# Talento ve todo: solicitudes en revisión en cualquier etapa (solo lectura + reasignar desde el detalle). #}
+  <section class="mt-8">
+    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-1">Todas las solicitudes en revisión <span class="text-slate-400">· {{ others|length }}</span></h3>
+    <p class="text-xs text-slate-500 mb-3">Visibles para Talento. Si una se atora, ábrela y usa «Reasignar aprobador».</p>
+    {% if others %}
+      <div class="card overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-600 text-left">
+              <tr>
+                <th class="px-4 py-3 font-medium">Colaborador</th>
+                <th class="px-4 py-3 font-medium">Curso</th>
+                <th class="px-4 py-3 font-medium">Etapa</th>
+                <th class="px-4 py-3 font-medium">La tiene</th>
+                <th class="px-4 py-3 font-medium text-right">Días hábiles</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {% for row in others %}{% with r=row.req %}
+                <tr class="hover:bg-slate-50">
+                  <td class="px-4 py-2.5"><p class="font-medium text-slate-900">{{ r.user.full_name }}</p><p class="text-xs text-slate-500">{{ r.user.area.name|default:"Sin área" }}{% if r.user.level %} · {{ r.user.level.name }}{% endif %}</p></td>
+                  <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-arena-700 hover:underline">{{ r.name }}</a><p class="text-xs text-slate-500">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}Sin costo{% endif %}</p></td>
+                  <td class="px-4 py-2.5">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}{% if r.missing_lead %} <span class="badge bg-slate-100 text-slate-600">Sin Lead</span>{% endif %}</td>
+                  <td class="px-4 py-2.5 text-xs text-slate-600">{% for u in row.approvers %}{{ u.full_name }}{% if not forloop.last %}, {% endif %}{% empty %}<span class="text-rose-600">Sin aprobador</span>{% endfor %}</td>
+                  <td class="px-4 py-2.5 text-right tabular-nums">{% if row.stale %}<span class="badge bg-amber-50 text-amber-700">{{ row.days }} · atascada</span>{% else %}{{ row.days }}{% endif %}</td>
+                </tr>
+              {% endwith %}{% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-sm text-slate-500">No hay otras solicitudes en revisión.</p>
+    {% endif %}
+  </section>
 {% endif %}
 {% endblock %}

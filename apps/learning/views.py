@@ -302,9 +302,15 @@ def request_reassign(request, pk):
 @login_required
 def approvals_inbox(request):
     reqs = flow.approvals_for(request.user)
+    # Talento ve todo: además de lo que le toca decidir, todas las solicitudes en revisión.
+    others = (
+        flow.all_in_review_for_talento(exclude_pks=[r.pk for r in reqs])
+        if permissions.can_manage_learning(request.user) else None
+    )
     return render(request, "learning/approvals_inbox.html", _base_ctx(
         request, "approvals", page_title="Por aprobar · Arena Learn",
         items=[{"req": r, "ctx": flow.approver_context(r)} for r in reqs],
+        others=others,
     ))
 
 

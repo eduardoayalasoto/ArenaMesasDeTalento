@@ -983,6 +983,30 @@ def approvals_for(user) -> list:
     return [r for r in candidates.order_by("submitted_at") if can_decide(user, r)]
 
 
+def all_in_review_for_talento(exclude_pks=()) -> list[dict]:
+    """Talento ve todo: solicitudes en revisión en cualquier etapa, con quién la tiene y su antigüedad."""
+    m = _models()
+    reqs = list(
+        m.CourseRequest.objects.filter(status=m.CourseRequest.Status.EN_REVISION)
+        .exclude(pk__in=list(exclude_pks))
+        .select_related("user", "user__area", "user__level")
+        .order_by("submitted_at")
+    )
+    last = _last_step_dates([r.pk for r in reqs])
+    today = timezone.localdate()
+    rows = []
+    for r in reqs:
+        since = timezone.localtime(last.get(r.pk) or r.created_at).date()
+        days = business_days_between(since, today)
+        rows.append({
+            "req": r,
+            "approvers": list(eligible_approvers(r, r.current_stage)) if r.current_stage else [],
+            "days": days,
+            "stale": days > STALE_BUSINESS_DAYS,
+        })
+    return rows
+
+
 def pending_for(user) -> list[dict]:
     """Pendientes de Arena Learn para la campana (FR-012)."""
     m = _models()

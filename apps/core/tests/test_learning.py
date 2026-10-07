@@ -297,6 +297,13 @@ def test_views_render_and_request_via_form(client, learn_people, catalog_course)
     req.refresh_from_db()
     assert req.current_stage == Stage.DIRECCION
 
+    # Talento ve todo: la solicitud en etapa de Dirección aparece en su bandeja (solo lectura).
+    client.force_login(p["talento"])
+    html = client.get(reverse("learning:approvals_inbox")).content.decode()
+    assert "Todas las solicitudes en revisión" in html and req.name in html and p["director"].full_name in html
+    client.force_login(p["director"])
+    assert "Todas las solicitudes en revisión" not in client.get(reverse("learning:approvals_inbox")).content.decode()
+
 
 @pytest.mark.django_db
 def test_views_access_control(client, learn_people, catalog_course):
