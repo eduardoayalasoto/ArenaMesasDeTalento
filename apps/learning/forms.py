@@ -143,6 +143,9 @@ class ReviewForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Sin la opción vacía "---------" que Django agrega a los radios sin valor por defecto.
+        self.fields["rating"].choices = [(i, str(i)) for i in range(1, 6)]
+        self.fields["recommends"].choices = CourseReview.Recommends.choices
         self.fields["audience_areas"].queryset = Area.objects.filter(is_active=True)
         self.fields["audience_levels"].queryset = SeniorityLevel.objects.all()
         self.fields["audience_areas"].required = False

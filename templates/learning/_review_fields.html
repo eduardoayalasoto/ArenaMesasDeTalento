@@ -1,17 +1,27 @@
 {% comment %}Campos de reseña (FR-019). Param: review_form (prefix r).{% endcomment %}
 <div class="space-y-5">
-  <div>
-    <span class="label">Calificación general <span class="text-rose-600">*</span></span>
-    <div class="flex gap-2" role="radiogroup" aria-label="Calificación de 1 a 5">
-      {% for radio in review_form.rating %}
-        <label class="cursor-pointer">
-          <span class="sr-only">{{ radio.choice_label }}</span>
-          {{ radio.tag }}
-          <span aria-hidden="true" class="inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-300 text-sm font-medium text-slate-600 hover:bg-amber-50 has-[:checked]:bg-amber-500 has-[:checked]:text-white has-[:checked]:border-amber-500">{{ radio.choice_label }}</span>
-        </label>
-      {% endfor %}
+  {# Calificación: estrellas clicables; los radios reales quedan ocultos (accesibles por teclado). #}
+  <div x-data="{ r: Number('{{ review_form.rating.value|default:0 }}') || 0, h: 0,
+                 names: ['', 'No me aportó', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'] }">
+    <span class="label" id="rating-label">Calificación general <span class="text-rose-600">*</span></span>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1" role="radiogroup" aria-labelledby="rating-label" @mouseleave="h = 0">
+        {% for radio in review_form.rating %}
+          <label class="cursor-pointer rounded-md p-0.5 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-arena-300"
+                 @mouseenter="h = {{ radio.data.value }}">
+            <input type="radio" name="{{ radio.data.name }}" value="{{ radio.data.value }}" class="sr-only"
+                   {% if radio.data.selected %}checked{% endif %} @change="r = {{ radio.data.value }}" required>
+            <span class="sr-only">{{ radio.data.value }} de 5</span>
+            <span aria-hidden="true" class="block transition-colors"
+                  :class="(h || r) >= {{ radio.data.value }} ? 'text-amber-400 [&_svg]:fill-amber-400' : 'text-slate-300'">
+              <i data-lucide="star" class="w-8 h-8"></i>
+            </span>
+          </label>
+        {% endfor %}
+      </div>
+      <span class="text-sm font-medium" :class="(h || r) ? 'text-slate-700' : 'text-slate-400'"
+            x-text="(h || r) ? names[h || r] : 'Elige de 1 a 5 estrellas'"></span>
     </div>
-    <p class="mt-1 text-xs text-slate-500">1 = no aportó · 5 = excelente</p>
     {% for e in review_form.rating.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
   </div>
   <div>
@@ -20,12 +30,23 @@
     {% for e in review_form.opinion.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
   </div>
   <div>
-    <span class="label">¿Lo recomiendas? <span class="text-rose-600">*</span></span>
-    <div class="flex flex-wrap gap-2">
+    <span class="label" id="recommends-label">¿Lo recomiendas? <span class="text-rose-600">*</span></span>
+    {# Tarjetas seleccionables: el estilo vive en el <label> que contiene al radio (has-[:checked]). #}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" role="radiogroup" aria-labelledby="recommends-label">
       {% for radio in review_form.recommends %}
-        <label class="cursor-pointer">
-          {{ radio.tag }}
-          <span class="inline-flex items-center rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50 has-[:checked]:bg-arena-600 has-[:checked]:text-white has-[:checked]:border-arena-600">{{ radio.choice_label }}</span>
+        <label class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 cursor-pointer transition
+                      hover:border-slate-300 hover:bg-slate-50
+                      has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-arena-300
+                      {% if radio.data.value == 'SI' %}has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50
+                      {% elif radio.data.value == 'NO' %}has-[:checked]:border-rose-500 has-[:checked]:bg-rose-50
+                      {% else %}has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50{% endif %}">
+          <input type="radio" name="{{ radio.data.name }}" value="{{ radio.data.value }}" class="sr-only"
+                 {% if radio.data.selected %}checked{% endif %} required>
+          <span class="grid place-items-center w-9 h-9 rounded-full shrink-0
+                       {% if radio.data.value == 'SI' %}bg-emerald-100 text-emerald-600{% elif radio.data.value == 'NO' %}bg-rose-100 text-rose-600{% else %}bg-amber-100 text-amber-600{% endif %}">
+            <i data-lucide="{% if radio.data.value == 'SI' %}thumbs-up{% elif radio.data.value == 'NO' %}thumbs-down{% else %}hand{% endif %}" class="w-4 h-4"></i>
+          </span>
+          <span class="text-sm font-medium text-slate-800">{{ radio.choice_label }}</span>
         </label>
       {% endfor %}
     </div>
