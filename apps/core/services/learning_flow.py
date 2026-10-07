@@ -187,10 +187,13 @@ def _validate_request_data(req):
     if req.origin == req.Origin.SOLICITUD:
         for field, label in (
             ("name", "el nombre del curso"), ("provider", "el proveedor"),
+            ("url", "la liga del curso (identifica al curso y evita duplicados)"),
             ("start_date_planned", "la fecha tentativa de inicio"),
             ("end_date_planned", "la fecha tentativa de fin"),
             ("justification", "la justificación"),
         ):
+            if field == "url" and req.catalog_course_id:
+                continue  # el curso del catálogo ya identifica al curso
             value = getattr(req, field)
             if value in (None, "") or (isinstance(value, str) and not value.strip()):
                 errors[field] = f"Falta {label}."
@@ -231,6 +234,8 @@ def create_request(user, data: dict, catalog_course=None, submit=False):
     m = _models()
     if catalog_course is not None and not catalog_course.is_active:
         raise ValidationError("Ese curso del catálogo ya no está disponible.")
+    if catalog_course is None:
+        catalog_course = catalog_for_url(data.get("url", ""))
     req = m.CourseRequest(user=user, origin=m.CourseRequest.Origin.SOLICITUD)
     _apply_data(req, data, catalog_course)
     if submit:
@@ -280,7 +285,7 @@ def submit_request(req, actor):
     _validate_request_data(req)
     assert_can_submit(req.user)
     dup = open_request_for(req.user, req.catalog_course if req.catalog_course_id else None,
-                           req.name, req.provider, exclude_pk=req.pk)
+                           req.name, req.provider, url=req.url, exclude_pk=req.pk)
     if dup is not None:
         raise ValidationError(f"Ya tienes este curso pedido («{dup.name}», {dup.status_display.lower()}).")
 
@@ -769,17 +774,62 @@ def _course_key(name: str, provider: str) -> tuple[str, str]:
     return (" ".join((name or "").lower().split()), " ".join((provider or "").lower().split()))
 
 
-def open_request_for(user, catalog_course=None, name="", provider="", exclude_pk=None):
-    """Solicitud abierta del usuario para el mismo curso (evita pedirlo dos veces), o None."""
+def normalize_url(url: str) -> str:
+    """Liga canónica del curso: sin esquema, `www.`, parámetros, fragmento ni diagonal final.
+
+    'https://www.udemy.com/course/x/?couponCode=A#r' y 'udemy.com/course/x' -> 'udemy.com/course/x'.
+    """
+    from urllib.parse import urlsplit
+
+    url = (url or "").strip()
+    if not url:
+        return ""
+    parts = urlsplit(url if "://" in url else f"https://{url}")
+    host = (parts.hostname or "").lower()
+    if host.startswith("www."):
+        host = host[4:]
+    path = parts.path.rstrip("/").lower()
+    return f"{host}{path}" if host else ""
+
+
+def course_identity(name: str, provider: str, url: str = "") -> tuple:
+    """Misma liga = mismo curso aunque cambie el nombre; sin liga, nombre + proveedor."""
+    key = normalize_url(url)
+    return ("url", key) if key else ("name", *_course_key(name, provider))
+
+
+def catalog_for_url(url: str):
+    """Curso activo del catálogo con la misma liga (normalizada), o None."""
+    key = normalize_url(url)
+    if not key:
+        return None
+    m = _models()
+    for c in m.CatalogCourse.objects.filter(is_active=True).exclude(url="").only("pk", "url"):
+        if normalize_url(c.url) == key:
+            return m.CatalogCourse.objects.get(pk=c.pk)
+    return None
+
+
+def open_request_for(user, catalog_course=None, name="", provider="", url="", exclude_pk=None):
+    """Solicitud abierta del usuario para el mismo curso (evita pedirlo dos veces), o None.
+
+    Coincide por curso del catálogo, por liga normalizada o, sin liga, por nombre + proveedor.
+    """
     m = _models()
     qs = m.CourseRequest.objects.filter(user=user, status__in=OPEN_STATUSES).exclude(pk=exclude_pk)
     if catalog_course is not None:
-        return qs.filter(catalog_course=catalog_course).first()
-    if not name:
+        found = qs.filter(catalog_course=catalog_course).first()
+        if found is not None:
+            return found
+        url = url or catalog_course.url
+    url_key = normalize_url(url)
+    name_key = _course_key(name, provider) if name else None
+    if not url_key and not name_key:
         return None
-    key = _course_key(name, provider)
-    for r in qs.filter(catalog_course__isnull=True).only("pk", "name", "provider", "status", "current_stage"):
-        if _course_key(r.name, r.provider) == key:
+    for r in qs.only("pk", "name", "provider", "url", "status", "current_stage", "catalog_course_id"):
+        if url_key and normalize_url(r.url) == url_key:
+            return r
+        if name_key and not r.catalog_course_id and _course_key(r.name, r.provider) == name_key:
             return r
     return None
 
@@ -798,10 +848,14 @@ def requestable_courses(user, q: str = "") -> dict:
     q = (q or "").strip()
     mine = list(
         m.CourseRequest.objects.filter(user=user, status__in=OPEN_STATUSES)
-        .only("pk", "name", "provider", "status", "current_stage", "catalog_course_id")
+        .only("pk", "name", "provider", "url", "status", "current_stage", "catalog_course_id")
     )
     mine_by_catalog = {r.catalog_course_id: r for r in mine if r.catalog_course_id}
-    mine_by_key = {_course_key(r.name, r.provider): r for r in mine if not r.catalog_course_id}
+    mine_by_key = {course_identity(r.name, r.provider, r.url): r for r in mine}
+    catalog_by_url = {
+        normalize_url(c.url): c.pk
+        for c in m.CatalogCourse.objects.filter(is_active=True).exclude(url="").only("pk", "url")
+    }
 
     known_qs = m.CourseRequest.objects.filter(status__in=KNOWN_STATUSES).select_related("review")
     if q:
@@ -811,13 +865,14 @@ def requestable_courses(user, q: str = "") -> dict:
     catalog_usage: dict[int, dict] = {}
     groups: dict[tuple, dict] = {}
     for r in known_qs.order_by("-authorized_at", "-created_at"):
-        if r.catalog_course_id:
-            u = catalog_usage.setdefault(r.catalog_course_id, {"count": 0, "payment_mode": ""})
+        catalog_pk = r.catalog_course_id or catalog_by_url.get(normalize_url(r.url))
+        if catalog_pk:
+            u = catalog_usage.setdefault(catalog_pk, {"count": 0, "payment_mode": ""})
             u["count"] += 1
             if not u["payment_mode"] and r.payment_mode:
                 u["payment_mode"] = r.get_payment_mode_display()
             continue
-        key = _course_key(r.name, r.provider)
+        key = course_identity(r.name, r.provider, r.url)
         g = groups.get(key)
         if g is None:
             g = groups[key] = {
@@ -836,7 +891,7 @@ def requestable_courses(user, q: str = "") -> dict:
         usage = catalog_usage.get(c.pk, {"count": 0, "payment_mode": ""})
         catalog.append({
             "course": c, "authorized_count": usage["count"], "payment_mode": usage["payment_mode"],
-            "mine": mine_by_catalog.get(c.pk),
+            "mine": mine_by_catalog.get(c.pk) or mine_by_key.get(course_identity(c.name, c.provider, c.url)),
         })
 
     known = []

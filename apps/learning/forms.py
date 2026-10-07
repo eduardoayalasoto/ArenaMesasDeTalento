@@ -75,6 +75,7 @@ class RequestForm(forms.Form):
     def __init__(self, *args, catalog_course=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.catalog_course = catalog_course
+        self.fields["url"].help_text = "Copia la liga de la página del curso: lo identifica y evita pedirlo dos veces."
         if catalog_course is not None:
             for f in ("name", "provider", "url", "kind", "duration_hours", "pillar", "tags", "currency"):
                 self.fields[f].disabled = True

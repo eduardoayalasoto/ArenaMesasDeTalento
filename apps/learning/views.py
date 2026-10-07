@@ -168,6 +168,7 @@ def request_create(request):
     duplicate = flow.open_request_for(
         request.user, catalog_course,
         template_req.name if template_req else "", template_req.provider if template_req else "",
+        url=template_req.url if template_req else "",
     ) if (catalog_course or template_req) else None
     return render(request, "learning/request_form.html", _base_ctx(
         request, "mine", page_title="Solicitar curso", form=form, catalog_course=catalog_course,

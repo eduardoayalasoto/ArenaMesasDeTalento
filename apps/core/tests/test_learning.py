@@ -309,7 +309,7 @@ def test_views_render_and_request_via_form(client, learn_people, catalog_course)
 def test_views_access_control(client, learn_people, catalog_course):
     p = learn_people
     review = submit(p["colab"])
-    req = closed(p, name="Cerrado")
+    req = closed(p, name="Cerrado", url="https://example.com/curso-cerrado")
     receipt = flow.add_evidence(req, p["colab"], pdf("cfdi.pdf"), CourseEvidence.Kind.COMPROBANTE_FISCAL)
     cert = req.evidences.get(kind=CourseEvidence.Kind.CERTIFICADO)
 
@@ -406,3 +406,17 @@ def test_request_start_lists_known_courses_and_blocks_duplicates(client, learn_p
     assert flow.requestable_courses(p["colab"])["known"][0]["mine"] == mine
     with pytest.raises(ValidationError, match="Ya tienes este curso"):
         submit(p["colab"], name="Curso de dbt")
+
+    # La liga identifica al curso: otro nombre + misma liga (con www, parámetros y '/') = duplicado.
+    assert flow.normalize_url("https://WWW.learn.getdbt.com/?utm=x#a") == flow.normalize_url("learn.getdbt.com/")
+    with pytest.raises(ValidationError, match="Ya tienes este curso"):
+        submit(p["colab"], name="dbt Fundamentals", url="https://www.learn.getdbt.com/?ref=mail")
+    # Liga obligatoria en un curso nuevo (fuera del catálogo).
+    with pytest.raises(ValidationError) as exc:
+        submit(p["other"], name="Sin liga", url="")
+    assert "url" in exc.value.message_dict
+    # Liga de un curso del catálogo -> la solicitud se enlaza al catálogo aunque se llame distinto.
+    catalog_course.url = "https://www.udemy.com/course/spark-analitica/"
+    catalog_course.save()
+    linked = submit(p["lead"], name="Spark (nombre libre)", url="udemy.com/course/spark-analitica?coupon=1")
+    assert linked.catalog_course == catalog_course and linked.name == catalog_course.name

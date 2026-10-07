@@ -61,9 +61,10 @@
       {% for field in form %}
         {% if field.name != "justification" %}
         <div class="{% if field.name == 'name' or field.name == 'url' %}sm:col-span-2{% endif %}">
-          <label class="label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.name in "name provider start_date_planned end_date_planned" %} <span class="text-rose-600">*</span>{% endif %}</label>
+          <label class="label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.name in "name provider url start_date_planned end_date_planned" %} <span class="text-rose-600">*</span>{% endif %}</label>
           {{ field }}
           {% if field.name == "tags" %}<p class="mt-1 text-xs text-slate-500">Sepáralas por coma; ayudan a que otros encuentren el curso.</p>{% endif %}
+          {% if field.name == "url" and not catalog_course %}<p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>{% endif %}
           {% for e in field.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
         </div>
         {% endif %}
