@@ -11,7 +11,7 @@
         {% if not course.is_active %}<span class="badge bg-slate-200 text-slate-600">Archivado</span>{% endif %}
       </div>
       <h3 class="text-lg font-semibold text-slate-900">{{ course.name }}</h3>
-      <p class="text-sm text-slate-600">{{ course.provider }}{% if course.duration_hours %} · {{ course.duration_hours }} h{% endif %}{% if course.reference_cost is not None %} · referencia ${{ course.reference_cost|floatformat:2 }} {{ course.currency }}{% endif %}</p>
+      <p class="text-sm text-slate-600">{{ course.provider }}{% if course.duration_hours %} · {{ course.duration_hours }} h{% endif %}{% if course.reference_cost is not None %} · referencia ${{ course.reference_cost|floatformat:"0g" }} {{ course.currency }}{% endif %}</p>
       {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-sm text-arena-700 hover:underline"><i data-lucide="external-link" class="w-4 h-4"></i> Ver el curso</a>{% endif %}
       {% if course.description %}<p class="mt-4 text-sm text-slate-700 whitespace-pre-line">{{ course.description }}</p>{% endif %}
       <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">

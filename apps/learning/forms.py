@@ -14,6 +14,30 @@ TEXTAREA = {"class": "input", "rows": 3}
 DATE = {"class": "input", "type": "date"}
 
 
+def _whole(value):
+    """3500.00 → 3500 para mostrar el costo sin decimales en el campo."""
+    try:
+        return int(value) if value is not None and value == int(value) else value
+    except (TypeError, ValueError):
+        return value
+
+
+class WholeCostMixin:
+    """Muestra los campos de costo sin decimales (el modelo conserva 2 decimales)."""
+
+    cost_fields = ()
+
+    def _whole_costs(self):
+        for name in self.cost_fields:
+            if name in self.fields:
+                if name in self.initial:
+                    self.initial[name] = _whole(self.initial[name])
+                self.fields[name].initial = _whole(self.fields[name].initial)
+                self.fields[name].decimal_places = 0
+                self.fields[name].error_messages["max_decimal_places"] = "Captura el costo sin decimales."
+                self.fields[name].widget.attrs["step"] = "1"
+
+
 class RequestForm(forms.Form):
     """Datos de la solicitud (FR-002). Con curso de catálogo, los datos del curso se precargan."""
 
@@ -33,7 +57,8 @@ class RequestForm(forms.Form):
     tags = forms.CharField(label="Etiquetas temáticas", max_length=200, required=False,
                            widget=forms.TextInput(attrs={**INPUT, "placeholder": "power bi, mlops, liderazgo"}))
     estimated_cost = forms.DecimalField(label="Costo", required=False, min_value=0, max_digits=10,
-                                        decimal_places=2, widget=forms.NumberInput(attrs={**INPUT, "step": "0.01"}))
+                                        decimal_places=0,
+                                        error_messages={"max_decimal_places": "Captura el costo sin decimales."}, widget=forms.NumberInput(attrs={**INPUT, "step": "1"}))
     currency = forms.ChoiceField(label="Moneda", choices=CourseRequest._meta.get_field("currency").choices,
                                  widget=forms.Select(attrs=INPUT))
     start_date_planned = forms.DateField(label="Inicio tentativo", required=False, widget=forms.DateInput(attrs=DATE))
@@ -55,7 +80,9 @@ class RequestForm(forms.Form):
                 self.fields[f].disabled = True
                 self.fields[f].initial = getattr(catalog_course, f)
             if catalog_course.reference_cost is not None:
-                self.fields["estimated_cost"].initial = catalog_course.reference_cost
+                self.fields["estimated_cost"].initial = _whole(catalog_course.reference_cost)
+        if "estimated_cost" in self.initial:
+            self.initial["estimated_cost"] = _whole(self.initial["estimated_cost"])
 
     def clean(self):
         data = super().clean()
@@ -187,19 +214,27 @@ class EvidenceValidationForm(forms.Form):
     comment = forms.CharField(required=False, widget=forms.Textarea(attrs={**TEXTAREA, "rows": 2}))
 
 
-class PaymentForm(forms.ModelForm):
+class PaymentForm(WholeCostMixin, forms.ModelForm):
+    cost_fields = ("final_cost",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._whole_costs()
+
     class Meta:
         model = CourseRequest
         fields = ["payment_mode", "payment_status", "final_cost", "receipt_type"]
         widgets = {
             "payment_mode": forms.Select(attrs=INPUT),
             "payment_status": forms.Select(attrs=INPUT),
-            "final_cost": forms.NumberInput(attrs={**INPUT, "step": "0.01", "min": "0"}),
+            "final_cost": forms.NumberInput(attrs={**INPUT, "step": "1", "min": "0"}),
             "receipt_type": forms.Select(attrs=INPUT),
         }
 
 
-class CatalogCourseForm(forms.ModelForm):
+class CatalogCourseForm(WholeCostMixin, forms.ModelForm):
+    cost_fields = ("reference_cost",)
+
     class Meta:
         model = CatalogCourse
         fields = ["name", "provider", "url", "kind", "reference_cost", "currency", "duration_hours",
@@ -209,7 +244,7 @@ class CatalogCourseForm(forms.ModelForm):
             "provider": forms.TextInput(attrs=INPUT),
             "url": forms.URLInput(attrs=INPUT),
             "kind": forms.Select(attrs=INPUT),
-            "reference_cost": forms.NumberInput(attrs={**INPUT, "step": "0.01", "min": "0"}),
+            "reference_cost": forms.NumberInput(attrs={**INPUT, "step": "1", "min": "0"}),
             "currency": forms.Select(attrs=INPUT),
             "duration_hours": forms.NumberInput(attrs=INPUT),
             "pillar": forms.Select(attrs=INPUT),
@@ -222,6 +257,7 @@ class CatalogCourseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["areas"].queryset = Area.objects.filter(is_active=True)
+        self._whole_costs()
 
 
 class SettingsForm(forms.ModelForm):

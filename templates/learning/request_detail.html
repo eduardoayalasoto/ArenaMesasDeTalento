@@ -71,7 +71,7 @@
         <div><dt class="text-slate-500">Liga</dt><dd class="truncate">{% if req.url %}<a href="{{ req.url }}" target="_blank" rel="noopener" class="text-arena-700 hover:underline">{{ req.url }}</a>{% else %}—{% endif %}</dd></div>
         <div><dt class="text-slate-500">Fechas tentativas</dt><dd class="text-slate-900">{{ req.start_date_planned|date:"d/m/Y"|default:"—" }} – {{ req.end_date_planned|date:"d/m/Y"|default:"—" }}</dd></div>
         <div><dt class="text-slate-500">Duración</dt><dd class="text-slate-900">{% if req.duration_hours %}{{ req.duration_hours }} h{% else %}—{% endif %}</dd></div>
-        <div><dt class="text-slate-500">Costo estimado</dt><dd class="text-slate-900 font-medium">{% if req.estimated_cost is not None %}${{ req.estimated_cost|floatformat:2 }} {{ req.currency }}{% else %}Gratuito / no indicado{% endif %}</dd></div>
+        <div><dt class="text-slate-500">Costo estimado</dt><dd class="text-slate-900 font-medium">{% if req.estimated_cost is not None %}${{ req.estimated_cost|floatformat:"0g" }} {{ req.currency }}{% else %}Gratuito / no indicado{% endif %}</dd></div>
         <div><dt class="text-slate-500">Pilar</dt><dd class="text-slate-900">{{ req.get_pillar_display|default:"—" }}</dd></div>
         {% if req.tag_list %}<div class="sm:col-span-2"><dt class="text-slate-500">Etiquetas</dt><dd class="flex flex-wrap gap-1 mt-1">{% for t in req.tag_list %}<span class="badge bg-slate-100 text-slate-600">{{ t }}</span>{% endfor %}</dd></div>{% endif %}
       </dl>
@@ -178,7 +178,7 @@
           <div class="rounded-lg bg-slate-100 p-2"><dt class="text-xs text-slate-600">No concluidos</dt><dd class="font-semibold text-slate-800">{{ approver_ctx.counts.not_completed }}</dd></div>
         </dl>
         <p class="mt-3 text-sm text-slate-600">Autorizado este año:
-          {% for cur, total in approver_ctx.cost_year.items %}<span class="font-medium text-slate-900">${{ total|floatformat:2 }} {{ cur }}</span>{% if not forloop.last %} · {% endif %}{% empty %}<span class="font-medium text-slate-900">$0</span>{% endfor %}
+          {% for cur, total in approver_ctx.cost_year.items %}<span class="font-medium text-slate-900">${{ total|floatformat:"0g" }} {{ cur }}</span>{% if not forloop.last %} · {% endif %}{% empty %}<span class="font-medium text-slate-900">$0</span>{% endfor %}
         </p>
         {% if approver_ctx.history %}
           <ul class="mt-3 space-y-1 text-sm">

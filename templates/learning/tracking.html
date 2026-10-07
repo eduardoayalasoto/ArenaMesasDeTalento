@@ -26,7 +26,7 @@
   <div class="card p-4 sm:col-span-2">
     <p class="text-xs text-slate-500">Costo autorizado {{ data.year }} por área</p>
     {% if data.cost_by_area %}
-      <ul class="mt-1 text-sm space-y-0.5">{% for c in data.cost_by_area %}<li class="flex justify-between gap-3"><span class="text-slate-600">{{ c.area }}</span><span class="font-medium text-slate-900 tabular-nums">${{ c.total|floatformat:2 }} {{ c.currency }}</span></li>{% endfor %}</ul>
+      <ul class="mt-1 text-sm space-y-0.5">{% for c in data.cost_by_area %}<li class="flex justify-between gap-3"><span class="text-slate-600">{{ c.area }}</span><span class="font-medium text-slate-900 tabular-nums">${{ c.total|floatformat:"0g" }} {{ c.currency }}</span></li>{% endfor %}</ul>
     {% else %}<p class="text-sm text-slate-500 mt-1">Sin cursos autorizados este año.</p>{% endif %}
   </div>
 </div>
@@ -54,7 +54,7 @@
             <td class="px-4 py-2.5"><p class="font-medium text-slate-900">{{ r.user.full_name }}</p><p class="text-xs text-slate-500">{{ r.user.area.name|default:"Sin área" }}</p></td>
             <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-arena-700 hover:underline">{{ r.name }}</a><p class="text-xs text-slate-500">{{ r.provider }} · {{ r.get_origin_display }}</p></td>
             <td class="px-4 py-2.5">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}</td>
-            <td class="px-4 py-2.5 text-right tabular-nums">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:2 }} {{ r.currency }}{% else %}—{% endif %}</td>
+            <td class="px-4 py-2.5 text-right tabular-nums">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}—{% endif %}</td>
             <td class="px-4 py-2.5 text-xs text-slate-600">{{ r.get_payment_mode_display|default:"—" }}{% if r.payment_status %}<br>{{ r.get_payment_status_display }}{% endif %}</td>
             <td class="px-4 py-2.5 text-xs">
               {% if row.stale %}<span class="badge bg-amber-50 text-amber-700">Atascada</span>{% endif %}

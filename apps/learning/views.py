@@ -715,7 +715,7 @@ def tracking_export(request):
         ws.column_dimensions[get_column_letter(idx)].width = max(12, len(header) + 4)
     for col in ("I", "K"):
         for cell in ws[col][1:]:
-            cell.number_format = "#,##0.00"
+            cell.number_format = "#,##0"
     for col in ("N", "O", "P"):
         for cell in ws[col][1:]:
             cell.number_format = "dd/mm/yyyy"
