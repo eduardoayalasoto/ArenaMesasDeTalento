@@ -1,9 +1,9 @@
 {% comment %}Estado vacío reutilizable. Params: icon, title, message, (opcional) cta_url, cta_label.{% endcomment %}
-<div class="ui-card p-10 text-center">
-  <div class="mx-auto grid place-items-center w-12 h-12 rounded-full bg-arena-50 text-arena-600">
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-10 text-center">
+  <div class="mx-auto grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary">
     {% include "partials/icon.html" with name=icon|default:"info" cls="w-6 h-6" %}
   </div>
-  <h3 class="mt-4 font-semibold text-slate-900">{{ title }}</h3>
-  <p class="mt-1 text-base text-slate-600 max-w-md mx-auto">{{ message }}</p>
-  {% if cta_url %}<a href="{{ cta_url }}" class="ui-btn-primary mt-5">{{ cta_label }}</a>{% endif %}
+  <h3 class="mt-4 font-semibold text-base-content">{{ title }}</h3>
+  <p class="mt-1 text-base text-base-content/70 max-w-md mx-auto">{{ message }}</p>
+  {% if cta_url %}<a href="{{ cta_url }}" class="btn btn-primary mt-5">{{ cta_label }}</a>{% endif %}
 </div>

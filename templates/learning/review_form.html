@@ -2,14 +2,14 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 <div>
-  <h3 class="text-lg font-semibold text-slate-900 mb-4">Editar reseña: {{ req.name }}</h3>
-  <form method="post" class="ui-card p-6 space-y-6" novalidate>
+  <h3 class="text-lg font-semibold text-base-content mb-4">Editar reseña: {{ req.name }}</h3>
+  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 space-y-6" novalidate>
     {% csrf_token %}
-    {% for e in review_form.non_field_errors %}<p class="text-base text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in review_form.non_field_errors %}<p class="text-base text-error">{{ e }}</p>{% endfor %}
     {% include "learning/_review_fields.html" %}
     <div class="flex justify-end gap-2">
-      <a href="{% url 'learning:request_detail' req.pk %}" class="ui-btn-ghost">Cancelar</a>
-      <button type="submit" class="ui-btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar reseña</button>
+      <a href="{% url 'learning:request_detail' req.pk %}" class="btn btn-ghost">Cancelar</a>
+      <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar reseña</button>
     </div>
   </form>
 </div>

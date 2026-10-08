@@ -1,16 +1,16 @@
 {% comment %}Resumen público de Arena Learn de una persona (lo usan Mi perfil y Mesa de Talento). Contexto: person, courses, title.{% endcomment %}
-<section class="ui-card p-5">
+<section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
   <div class="flex items-center justify-between gap-3 mb-3">
-    <h3 class="text-base font-semibold text-slate-700 flex items-center gap-1.5"><i data-lucide="graduation-cap" class="w-4 h-4"></i> {{ title }}</h3>
-    <a href="{% url 'learning:person_profile' person.pk %}" class="text-base text-arena-700 hover:underline">Ver todo</a>
+    <h3 class="text-base font-semibold text-base-content/80 flex items-center gap-1.5"><i data-lucide="graduation-cap" class="w-4 h-4"></i> {{ title }}</h3>
+    <a href="{% url 'learning:person_profile' person.pk %}" class="text-base text-primary hover:underline">Ver todo</a>
   </div>
   {% if courses %}
-    <ul class="divide-y divide-slate-100">
+    <ul class="divide-y divide-base-200">
       {% for c in courses %}
         <li class="py-2 flex items-center justify-between gap-3">
           <a href="{% url 'learning:course_public' c.pk %}" class="min-w-0">
-            <p class="text-base font-medium text-slate-900 truncate hover:underline">{{ c.name }}</p>
-            <p class="text-base text-slate-500 truncate">{{ c.provider }}</p>
+            <p class="text-base font-medium text-base-content truncate hover:underline">{{ c.name }}</p>
+            <p class="text-base text-base-content/60 truncate">{{ c.provider }}</p>
           </a>
           <span class="shrink-0 flex items-center gap-2">
             {% if c.review %}{% include "learning/_stars.html" with value=c.review.rating size="w-3 h-3" %}{% endif %}
@@ -20,6 +20,6 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p class="text-base text-slate-500">Sin cursos registrados todavía.</p>
+    <p class="text-base text-base-content/60">Sin cursos registrados todavía.</p>
   {% endif %}
 </section>

@@ -3,8 +3,8 @@
   {% if periods %}
     <div class="mb-4 flex justify-end">
       <form method="get" class="flex items-center gap-2">
-        <label class="text-base text-slate-500" for="periodo-select">Periodo</label>
-        <select id="periodo-select" name="periodo" class="ui-input" onchange="this.form.submit()">
+        <label class="text-base text-base-content/60" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="select w-full" onchange="this.form.submit()">
           {% for p in periods %}
             <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
               {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
@@ -18,7 +18,7 @@
     {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="Tus resultados se mostrarán cuando haya un periodo en curso." %}
   {% else %}
     {% if period.is_closed %}
-      <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-base text-arena-800">
+      <div class="rounded-lg bg-primary/10 border border-primary/25 px-4 py-3 mb-5 text-base text-primary">
         Estás viendo el periodo <b>{{ period.name }}</b>, ya Cerrado: histórico, de solo lectura.
       </div>
     {% endif %}

@@ -1,33 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-3">
-    <a href="{% url 'catalog:scenario_admin' %}" class="text-base text-arena-600 hover:text-arena-700">&larr; Escenarios</a>
+    <a href="{% url 'catalog:scenario_admin' %}" class="text-base text-primary hover:text-primary">&larr; Escenarios</a>
   </div>
-  <h2 class="text-xl font-semibold text-slate-900 mb-6">{{ page_title }}</h2>
+  <h2 class="text-xl font-semibold text-base-content mb-6">{{ page_title }}</h2>
 
-  <form method="post" class="ui-card p-6 space-y-4">
+  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 space-y-4">
     {% csrf_token %}
     <div>
-      <label class="ui-label" for="id_name">Nombre</label>
+      <label class="fieldset-legend" for="id_name">Nombre</label>
       <input type="text" id="id_name" name="name" maxlength="120"
         value="{{ option.name|default:'' }}"
-        class="ui-input w-full" required placeholder="Ej. Empujar a Lead">
+        class="input w-full w-full" required placeholder="Ej. Empujar a Lead">
     </div>
     <div>
-      <label class="ui-label" for="id_description">Descripción</label>
+      <label class="fieldset-legend" for="id_description">Descripción</label>
       <textarea id="id_description" name="description" rows="3"
-        class="ui-input w-full resize-y"
+        class="textarea w-full w-full resize-y"
         placeholder="Descripción opcional del escenario…">{{ option.description|default:'' }}</textarea>
     </div>
     <div>
-      <label class="ui-label" for="id_order">Orden</label>
+      <label class="fieldset-legend" for="id_order">Orden</label>
       <input type="number" id="id_order" name="order" min="1"
         value="{{ option.order|default:1 }}"
-        class="ui-input w-24">
-      <p class="mt-1 text-base text-slate-500">Define el orden en que aparece en la lista.</p>
+        class="input w-full w-24">
+      <p class="mt-1 text-base text-base-content/60">Define el orden en que aparece en la lista.</p>
     </div>
     <div class="pt-2">
-      <button type="submit" class="ui-btn-primary">
+      <button type="submit" class="btn btn-primary">
         {% if option %}Guardar cambios{% else %}Crear escenario{% endif %}
       </button>
     </div>

@@ -4,7 +4,8 @@ from django import forms
 
 from .models import EvaluationPeriod, Project
 
-_INPUT = "ui-input"
+_INPUT = "input w-full"
+_SELECT = "select w-full"
 
 
 class PeriodForm(forms.ModelForm):
@@ -26,7 +27,7 @@ class PeriodForm(forms.ModelForm):
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. 2026-S2"}),
             "start_date": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "end_date": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
-            "kind": forms.Select(attrs={"class": _INPUT}),
+            "kind": forms.Select(attrs={"class": _SELECT}),
         }
 
 
@@ -54,11 +55,11 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Tablero Comercial"}),
             "client": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Cliente Retail (opcional)"}),
-            "owner": forms.Select(attrs={"class": _INPUT}),
-            "responsable": forms.Select(attrs={"class": _INPUT}),
-            "validador": forms.Select(attrs={"class": _INPUT}),
+            "owner": forms.Select(attrs={"class": _SELECT}),
+            "responsable": forms.Select(attrs={"class": _SELECT}),
+            "validador": forms.Select(attrs={"class": _SELECT}),
             "duration_type": forms.RadioSelect(),
-            "status": forms.Select(attrs={"class": _INPUT}),
+            "status": forms.Select(attrs={"class": _SELECT}),
             "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "target_close": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
         }

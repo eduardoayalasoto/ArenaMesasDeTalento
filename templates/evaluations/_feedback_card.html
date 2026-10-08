@@ -1,9 +1,9 @@
 {% comment %}Tarjeta de texto no editable. Params: title, value, empty (texto si no hay valor).{% endcomment %}
-<div class="ui-card p-5 h-full">
-  <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ title }}</h4>
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 h-full">
+  <h4 class="text-base font-semibold text-base-content/60 uppercase tracking-wide mb-2">{{ title }}</h4>
   {% if value %}
-    <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ value }}</p>
+    <p class="text-base-content whitespace-pre-line leading-relaxed">{{ value }}</p>
   {% else %}
-    <p class="text-slate-400 italic">{{ empty|default:"Sin información." }}</p>
+    <p class="text-base-content/50 italic">{{ empty|default:"Sin información." }}</p>
   {% endif %}
 </div>

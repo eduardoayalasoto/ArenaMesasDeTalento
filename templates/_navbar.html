@@ -126,9 +126,9 @@ clases, anchos, colores (activo = `bg-secondary/15 text-secondary`), separadores
                 </span>
             </button>
             <ul tabindex='0' class='dropdown-content menu bg-neutral text-neutral-content rounded-box w-64 shadow-lg mt-2 p-2 text-base'>
-                <li class='menu-title'>
-                    <div class='text-base font-semibold text-neutral-content truncate normal-case'>{{ user.get_full_name|default:user.email }}</div>
-                    <div class='text-base text-neutral-content/50 truncate normal-case'>{{ user.email }}</div>
+                <li class='menu-title min-w-0 max-w-full overflow-hidden'>
+                    <div class='text-base font-semibold text-neutral-content truncate normal-case max-w-full'>{{ user.get_full_name|default:user.email }}</div>
+                    <div class='text-base text-neutral-content/50 truncate normal-case max-w-full'>{{ user.email }}</div>
                 </li>
                 <li>
                     <label class='flex items-center justify-between gap-2.5 cursor-pointer'>

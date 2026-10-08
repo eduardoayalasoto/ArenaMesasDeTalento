@@ -1,25 +1,25 @@
 {% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period, vd_comment_rows, feedback_session.{% endcomment %}
 
 <!-- Hero: identidad + calificación final -->
-<div class="ui-card overflow-hidden mb-5{% if sticky_hero %} sticky top-16 z-20 shadow-md{% endif %}">
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden mb-5{% if sticky_hero %} sticky top-16 z-20 shadow-md{% endif %}">
   <div class="grid md:grid-cols-3">
     <div class="md:col-span-2 p-6 flex items-center gap-5">
       {% include "partials/avatar.html" with subject=subject size="w-24 h-24 sm:w-28 sm:h-28" icon="w-12 h-12" %}
       <div class="min-w-0">
-        <h2 class="text-3xl font-bold text-slate-900 leading-tight truncate">{{ subject.full_name }}</h2>
-        <p class="mt-1 text-lg text-slate-600">{{ subject.area.name|default:"Sin área" }}{% if subject.level %} · {{ subject.level.name }}{% endif %}</p>
-        <p class="mt-1 text-base text-slate-500">Periodo {{ period.name }}</p>
+        <h2 class="text-3xl font-bold text-base-content leading-tight truncate">{{ subject.full_name }}</h2>
+        <p class="mt-1 text-lg text-base-content/70">{{ subject.area.name|default:"Sin área" }}{% if subject.level %} · {{ subject.level.name }}{% endif %}</p>
+        <p class="mt-1 text-base text-base-content/60">Periodo {{ period.name }}</p>
       </div>
     </div>
-    <div class="bg-arena-700 text-white p-6 flex flex-col justify-center items-center text-center">
+    <div class="bg-primary-800 text-white p-6 flex flex-col justify-center items-center text-center">
       {% if final.is_complete %}
-        <p class="text-base text-arena-100 uppercase tracking-wide">Calificación final</p>
+        <p class="text-base text-primary-100 uppercase tracking-wide">Calificación final</p>
         <p class="text-6xl font-bold leading-none my-1 tabular-nums">{{ final.final_score }}</p>
-        <span class="ui-badge bg-white/15 text-white px-3 py-1 text-base mt-1">{{ final.band }}</span>
+        <span class="badge bg-white/15 text-white px-3 py-1 text-base mt-1">{{ final.band }}</span>
       {% else %}
-        <p class="text-base text-arena-100 uppercase tracking-wide">Calificación final</p>
+        <p class="text-base text-primary-100 uppercase tracking-wide">Calificación final</p>
         <p class="text-2xl font-semibold my-2">En proceso</p>
-        <p class="text-base text-arena-100">Faltan pilares por capturar o validar</p>
+        <p class="text-base text-primary-100">Faltan pilares por capturar o validar</p>
       {% endif %}
     </div>
   </div>
@@ -35,32 +35,32 @@
 {% if lead_eval %}
   <!-- Lead: acceso directo a su evaluación de Ownership (visible para Talento) -->
   {% if detail_links %}
-  <div class="ui-card p-4 mb-4 flex items-center justify-between gap-3">
-    <div class="flex items-center gap-2 text-base text-slate-700">
-      {% include "partials/icon.html" with name="clipboard" cls="w-4 h-4 text-arena-600" %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 mb-4 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-2 text-base text-base-content/80">
+      {% include "partials/icon.html" with name="clipboard" cls="w-4 h-4 text-primary" %}
       <span>Evaluación de Ownership · <span class="font-medium">Todos sus proyectos</span></span>
       {% if lead_eval.is_submitted %}
-        <span class="ui-badge bg-emerald-50 text-emerald-700">Cerrada · {{ lead_eval.score }}</span>
+        <span class="badge bg-success/10 text-success">Cerrada · {{ lead_eval.score }}</span>
       {% else %}
-        <span class="ui-badge bg-slate-100 text-slate-600">Abierta</span>
+        <span class="badge bg-base-200 text-base-content/70">Abierta</span>
       {% endif %}
     </div>
     <a href="{% url 'evaluations:ownership_edit' pk=lead_eval.pk %}"
-       class="ui-btn-soft shrink-0">Ver / Reiniciar {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}</a>
+       class="btn btn-sm btn-soft btn-primary shrink-0">Ver / Reiniciar {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}</a>
   </div>
   {% endif %}
 
   <!-- Lead: composición de Entrega de Valor por proyecto -->
-  <div class="ui-card overflow-hidden mb-6">
-    <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
-      {% include "partials/icon.html" with name="trending-up" cls="w-4 h-4 text-arena-600" %}
-      <h3 class="font-semibold text-slate-900">Composición · Entrega de Valor</h3>
-      <span class="text-base text-slate-400 ml-1">Promedio de los proyectos validados del periodo</span>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden mb-6">
+    <div class="px-5 py-3 border-b border-base-200 flex items-center gap-2">
+      {% include "partials/icon.html" with name="trending-up" cls="w-4 h-4 text-primary" %}
+      <h3 class="font-semibold text-base-content">Composición · Entrega de Valor</h3>
+      <span class="text-base text-base-content/50 ml-1">Promedio de los proyectos validados del periodo</span>
     </div>
     {% if projects %}
       <div class="overflow-x-auto">
         <table class="w-full text-base">
-          <thead class="bg-slate-50 text-slate-500 text-left text-base uppercase tracking-wide">
+          <thead class="bg-base-200/50 text-base-content/60 text-left text-base uppercase tracking-wide">
             <tr>
               <th class="px-4 py-2.5 font-medium">Proyecto</th>
               <th class="px-4 py-2.5 font-medium">Owner del proyecto</th>
@@ -68,51 +68,51 @@
               <th class="px-4 py-2.5 font-medium text-right">Entrega de Valor</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 text-base">
+          <tbody class="divide-y divide-base-200 text-base">
             {% for row in projects %}
-              <tr class="hover:bg-slate-50/60">
+              <tr class="hover:bg-base-200/50">
                 <td class="px-4 py-2.5">
-                  <p class="font-medium text-slate-800 leading-tight">{{ row.project.name }}</p>
-                  {% if row.project.client %}<p class="text-base text-slate-400 mt-0.5">{{ row.project.client }}</p>{% endif %}
+                  <p class="font-medium text-base-content leading-tight">{{ row.project.name }}</p>
+                  {% if row.project.client %}<p class="text-base text-base-content/50 mt-0.5">{{ row.project.client }}</p>{% endif %}
                 </td>
-                <td class="px-4 py-2.5 text-base text-slate-600 leading-tight">{{ row.project.owner.full_name }}</td>
+                <td class="px-4 py-2.5 text-base text-base-content/70 leading-tight">{{ row.project.owner.full_name }}</td>
                 <td class="px-4 py-2.5 text-base leading-tight">
-                  {% if row.vd_evaluator %}<span class="text-slate-600">{{ row.vd_evaluator.full_name }}</span>
-                  {% else %}<span class="text-slate-400">—</span>{% endif %}
+                  {% if row.vd_evaluator %}<span class="text-base-content/70">{{ row.vd_evaluator.full_name }}</span>
+                  {% else %}<span class="text-base-content/50">—</span>{% endif %}
                 </td>
                 <td class="px-4 py-2.5 text-right font-semibold tabular-nums">
-                  {% if row.vd_score %}{{ row.vd_score }}{% else %}<span class="text-slate-400 font-normal text-base">Pendiente</span>{% endif %}
+                  {% if row.vd_score %}{{ row.vd_score }}{% else %}<span class="text-base-content/50 font-normal text-base">Pendiente</span>{% endif %}
                 </td>
               </tr>
             {% endfor %}
           </tbody>
           {% if final.value_delivery_score %}
             <tfoot>
-              <tr class="border-t-2 border-slate-200 bg-arena-50">
-                <td class="px-4 py-2.5 text-base text-slate-500 italic" colspan="3">
+              <tr class="border-t-2 border-base-300 bg-primary/10">
+                <td class="px-4 py-2.5 text-base text-base-content/60 italic" colspan="3">
                   Promedio de proyectos con Entrega de Valor validada
                 </td>
-                <td class="px-4 py-2.5 text-right font-bold text-arena-700 tabular-nums text-base">{{ final.value_delivery_score }}</td>
+                <td class="px-4 py-2.5 text-right font-bold text-primary tabular-nums text-base">{{ final.value_delivery_score }}</td>
               </tr>
             </tfoot>
           {% endif %}
         </table>
       </div>
     {% else %}
-      <p class="px-5 py-6 text-base text-slate-500">Sin proyectos en este periodo.</p>
+      <p class="px-5 py-6 text-base text-base-content/60">Sin proyectos en este periodo.</p>
     {% endif %}
   </div>
 {% else %}
   <!-- Colaborador normal: tabla completa de proyectos -->
-  <div class="ui-card overflow-hidden mb-6">
-    <div class="px-5 py-3 border-b border-slate-100 flex items-center gap-2">
-      {% include "partials/icon.html" with name="folder" cls="w-4 h-4 text-arena-600" %}
-      <h3 class="font-semibold text-slate-900">Proyectos del periodo</h3>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden mb-6">
+    <div class="px-5 py-3 border-b border-base-200 flex items-center gap-2">
+      {% include "partials/icon.html" with name="folder" cls="w-4 h-4 text-primary" %}
+      <h3 class="font-semibold text-base-content">Proyectos del periodo</h3>
     </div>
     {% if projects %}
       <div class="overflow-x-auto">
         <table class="w-full text-base">
-          <thead class="bg-slate-50 text-slate-500 text-left text-base uppercase tracking-wide">
+          <thead class="bg-base-200/50 text-base-content/60 text-left text-base uppercase tracking-wide">
             <tr>
               <th class="px-4 py-2.5 font-medium">Proyecto</th>
               <th class="px-4 py-2.5 font-medium">Owner · Responsable del proyecto</th>
@@ -122,33 +122,33 @@
               {% if detail_links %}<th class="px-4 py-2.5 font-medium"></th>{% endif %}
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100 text-base">
+          <tbody class="divide-y divide-base-200 text-base">
             {% for row in projects %}
-              <tr class="hover:bg-slate-50/60">
+              <tr class="hover:bg-base-200/50">
                 <td class="px-4 py-2.5">
-                  <p class="font-medium text-slate-800 leading-tight">{{ row.project.name }}</p>
-                  {% if row.project.client %}<p class="text-base text-slate-400 mt-0.5">{{ row.project.client }}</p>{% endif %}
+                  <p class="font-medium text-base-content leading-tight">{{ row.project.name }}</p>
+                  {% if row.project.client %}<p class="text-base text-base-content/50 mt-0.5">{{ row.project.client }}</p>{% endif %}
                 </td>
                 <td class="px-4 py-2.5">
-                  <p class="text-base text-slate-600 leading-tight">{{ row.project.owner.full_name }}</p>
+                  <p class="text-base text-base-content/70 leading-tight">{{ row.project.owner.full_name }}</p>
                   {% if row.vd_evaluator %}
-                    <p class="text-base text-slate-400 mt-0.5">Responsable del proyecto: {{ row.vd_evaluator.full_name }}</p>
+                    <p class="text-base text-base-content/50 mt-0.5">Responsable del proyecto: {{ row.vd_evaluator.full_name }}</p>
                   {% endif %}
                 </td>
                 <td class="px-4 py-2.5 text-center font-semibold tabular-nums">{{ row.ownership_score|default:"—" }}</td>
                 <td class="px-4 py-2.5 text-center font-semibold tabular-nums">{{ row.vd_score|default:"—" }}</td>
                 <td class="px-4 py-2.5">
-                  {% if row.closed %}<span class="ui-badge bg-emerald-50 text-emerald-700">Cerrada</span>
-                  {% else %}<span class="ui-badge bg-slate-100 text-slate-600">Abierta</span>{% endif %}
+                  {% if row.closed %}<span class="badge bg-success/10 text-success">Cerrada</span>
+                  {% else %}<span class="badge bg-base-200 text-base-content/70">Abierta</span>{% endif %}
                 </td>
-                {% if detail_links %}<td class="px-4 py-2.5 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-base font-medium text-arena-600 hover:text-arena-700">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
+                {% if detail_links %}<td class="px-4 py-2.5 text-right">{% if row.evaluation %}<a href="{% url 'evaluations:ownership_view' pk=row.evaluation.pk %}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-base font-medium text-primary hover:text-primary">Ver {% include "partials/icon.html" with name="external" cls="w-3.5 h-3.5" %}</a>{% endif %}</td>{% endif %}
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     {% else %}
-      <p class="px-5 py-6 text-base text-slate-500">Sin proyectos en este periodo.</p>
+      <p class="px-5 py-6 text-base text-base-content/60">Sin proyectos en este periodo.</p>
     {% endif %}
   </div>
 {% endif %}
@@ -156,13 +156,13 @@
 <!-- Comentarios de Entrega de Valor (por proyecto validado) -->
 {% if vd_comment_rows %}
   <div class="mb-6">
-    <h3 class="font-semibold text-slate-900 mb-3">Comentarios de Entrega de Valor</h3>
+    <h3 class="font-semibold text-base-content mb-3">Comentarios de Entrega de Valor</h3>
     <div class="grid gap-4 sm:grid-cols-2">
       {% for row in vd_comment_rows %}
-        <div class="ui-card p-5 h-full">
-          <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2">{{ row.project.name }}</h4>
-          <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ row.vd_comments }}</p>
-          {% if row.vd_evaluator %}<p class="mt-2 text-base text-slate-400">Por {{ row.vd_evaluator.full_name }} (Responsable)</p>{% endif %}
+        <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 h-full">
+          <h4 class="text-base font-semibold text-base-content/60 uppercase tracking-wide mb-2">{{ row.project.name }}</h4>
+          <p class="text-base-content whitespace-pre-line leading-relaxed">{{ row.vd_comments }}</p>
+          {% if row.vd_evaluator %}<p class="mt-2 text-base text-base-content/50">Por {{ row.vd_evaluator.full_name }} (Responsable)</p>{% endif %}
         </div>
       {% endfor %}
     </div>
@@ -173,11 +173,11 @@
 {% if feedback_session %}
   <div class="mb-6">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-      <h3 class="font-semibold text-slate-900">Retroalimentación · Mesa de Talento ({{ period.name }})</h3>
+      <h3 class="font-semibold text-base-content">Retroalimentación · Mesa de Talento ({{ period.name }})</h3>
       {% if feedback_session.feedback_agreed %}
-        <span class="ui-badge bg-emerald-50 text-emerald-700 text-base">Acordada el {{ feedback_session.feedback_agreed_at|date:"d/m/Y" }}</span>
+        <span class="badge bg-success/10 text-success text-base">Acordada el {{ feedback_session.feedback_agreed_at|date:"d/m/Y" }}</span>
       {% else %}
-        <span class="ui-badge bg-amber-50 text-amber-700 text-base">Pendiente de cerrar</span>
+        <span class="badge bg-warning/10 text-warning text-base">Pendiente de cerrar</span>
       {% endif %}
     </div>
     <div class="grid gap-5 sm:grid-cols-2">
@@ -195,14 +195,14 @@
 {% for ev in feedback %}
   <div class="mb-6">
     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-      <h3 class="font-semibold text-slate-900">Retroalimentación{% if ev.project %} · {{ ev.project.name }}{% endif %}</h3>
+      <h3 class="font-semibold text-base-content">Retroalimentación{% if ev.project %} · {{ ev.project.name }}{% endif %}</h3>
       {% if ev.primary_evaluator %}
-        <span class="inline-flex items-center gap-1.5 text-base text-slate-500">
+        <span class="inline-flex items-center gap-1.5 text-base text-base-content/60">
           {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
           Por {{ ev.primary_evaluator.full_name }}
         </span>
       {% elif ev.project and ev.project.responsable %}
-        <span class="inline-flex items-center gap-1.5 text-base text-slate-500">
+        <span class="inline-flex items-center gap-1.5 text-base text-base-content/60">
           {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
           Por {{ ev.project.responsable.full_name }}
         </span>
@@ -218,8 +218,8 @@
 
 <!-- Comentario de Impacto Arena (al final de todo) -->
 {% if arena_notes %}
-  <div class="ui-card p-5 mt-2">
-    <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1.5">{% include "partials/icon.html" with name="star" cls="w-4 h-4 text-arena-600" %} Comentario de Impacto Arena</h4>
-    <p class="text-slate-800 whitespace-pre-line leading-relaxed">{{ arena_notes }}</p>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mt-2">
+    <h4 class="text-base font-semibold text-base-content/60 uppercase tracking-wide mb-2 flex items-center gap-1.5">{% include "partials/icon.html" with name="star" cls="w-4 h-4 text-primary" %} Comentario de Impacto Arena</h4>
+    <p class="text-base-content whitespace-pre-line leading-relaxed">{{ arena_notes }}</p>
   </div>
 {% endif %}

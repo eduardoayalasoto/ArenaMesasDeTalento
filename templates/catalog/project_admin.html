@@ -3,10 +3,10 @@
 {% block content %}
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div>
-      <h2 class="text-xl font-semibold text-slate-900">Proyectos</h2>
-      <p class="text-slate-600">Crea y edita proyectos, asigna Owner, Responsable, Validador y equipo.</p>
+      <h2 class="text-xl font-semibold text-base-content">Proyectos</h2>
+      <p class="text-base-content/70">Crea y edita proyectos, asigna Owner, Responsable, Validador y equipo.</p>
     </div>
-    <a href="{% url 'catalog:project_create' %}" class="ui-btn-primary">Nuevo proyecto</a>
+    <a href="{% url 'catalog:project_create' %}" class="btn btn-primary">Nuevo proyecto</a>
   </div>
 
   {% include "partials/info_panel.html" with title="Tipo de duración y Entrega de Valor" text="<p>El <strong>tipo de duración</strong> del proyecto define qué criterio de tiempo aparece en su Entrega de Valor: los proyectos <strong>finitos</strong> evalúan el cumplimiento de la fecha de entrega; los <strong>indefinidos</strong>, la consistencia del servicio.</p>" %}
@@ -14,10 +14,10 @@
   {% if not projects %}
     {% include "partials/empty_state.html" with icon="folder" title="Aún no hay proyectos" message="Crea el primer proyecto para asignar equipos y habilitar las evaluaciones." cta_url="" %}
   {% else %}
-    <div class="ui-card overflow-hidden">
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-base">
-          <thead class="bg-slate-50 text-slate-600 text-left">
+          <thead class="bg-base-200/50 text-base-content/70 text-left">
             <tr>
               <th class="px-4 py-3 font-medium">Proyecto</th>
               <th class="px-4 py-3 font-medium">Owner</th>
@@ -28,26 +28,26 @@
               <th class="px-4 py-3 font-medium"></th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-base-200">
             {% for p in projects %}
               <tr id="project-row-{{ p.pk }}">
                 <td class="px-4 py-3">
-                  <p class="font-medium text-slate-900">{{ p.name }}</p>
-                  {% if p.client %}<p class="text-base text-slate-500">{{ p.client }}</p>{% endif %}
+                  <p class="font-medium text-base-content">{{ p.name }}</p>
+                  {% if p.client %}<p class="text-base text-base-content/60">{{ p.client }}</p>{% endif %}
                 </td>
-                <td class="px-4 py-3 text-slate-600">{{ p.owner.full_name }}</td>
-                <td class="px-4 py-3 text-slate-600">
-                  {% if p.validador %}{{ p.validador.full_name }}{% else %}<span class="text-slate-400 italic text-base">Sin asignar</span>{% endif %}
+                <td class="px-4 py-3 text-base-content/70">{{ p.owner.full_name }}</td>
+                <td class="px-4 py-3 text-base-content/70">
+                  {% if p.validador %}{{ p.validador.full_name }}{% else %}<span class="text-base-content/50 italic text-base">Sin asignar</span>{% endif %}
                 </td>
-                <td class="px-4 py-3 text-slate-600">{{ p.get_duration_type_display }}</td>
+                <td class="px-4 py-3 text-base-content/70">{{ p.get_duration_type_display }}</td>
                 <td class="px-4 py-3 text-center tabular-nums">{{ p.members }}</td>
                 <td class="px-4 py-3">
-                  {% if p.is_active %}<span class="ui-badge bg-emerald-50 text-emerald-700">Abierto</span>
-                  {% else %}<span class="ui-badge bg-slate-100 text-slate-500">Cerrado</span>{% endif %}
+                  {% if p.is_active %}<span class="badge bg-success/10 text-success">Abierto</span>
+                  {% else %}<span class="badge bg-base-200 text-base-content/60">Cerrado</span>{% endif %}
                 </td>
                 <td class="px-4 py-3 text-right">
                   <div class="flex items-center justify-end gap-1">
-                    <a href="{% url 'catalog:project_edit' pk=p.pk %}" class="ui-btn-soft">Editar</a>
+                    <a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn btn-sm btn-soft btn-primary">Editar</a>
                     {% if request.user|can:"projects.close" %}
                       {% if not p.is_active %}
                         <button type="button"
@@ -55,7 +55,7 @@
                           hx-target="#project-row-{{ p.pk }}"
                           hx-swap="outerHTML"
                           hx-confirm="¿Reabrir «{{ p.name }}»? Volverá a aparecer para hacer evaluaciones en el periodo Abierto."
-                          class="ui-btn-soft">
+                          class="btn btn-sm btn-soft btn-primary">
                           {% include "partials/icon.html" with name="rotate-ccw" cls="w-3.5 h-3.5" %} Reabrir
                         </button>
                       {% elif p.has_evals %}
@@ -64,7 +64,7 @@
                           hx-target="#project-row-{{ p.pk }}"
                           hx-swap="outerHTML"
                           hx-confirm="¿Cerrar «{{ p.name }}»? Ya no aparecerá para hacer evaluaciones del periodo Abierto. Puedes reabrirlo cuando quieras."
-                          class="ui-btn-soft">
+                          class="btn btn-sm btn-soft btn-primary">
                           {% include "partials/icon.html" with name="lock" cls="w-3.5 h-3.5" %} Cerrar proyecto
                         </button>
                       {% else %}
@@ -74,10 +74,10 @@
                             hx-target="#project-row-{{ p.pk }}"
                             hx-swap="outerHTML"
                             hx-confirm="¿Eliminar «{{ p.name }}»? Esta acción no se puede deshacer."
-                            class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer">
+                            class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                           </button>
-                          <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/ptip:opacity-100 z-20">Eliminar proyecto</span>
+                          <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/ptip:opacity-100 z-20">Eliminar proyecto</span>
                         </span>
                       {% endif %}
                     {% endif %}

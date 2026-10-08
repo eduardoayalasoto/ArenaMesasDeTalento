@@ -10,44 +10,44 @@
         reason: ''
      })">
 
-  <div class="mb-3"><a href="{% url 'evaluations:ownership_list' %}" class="text-base text-arena-600 hover:text-arena-700">&larr; Volver</a></div>
+  <div class="mb-3"><a href="{% url 'evaluations:ownership_list' %}" class="text-base text-primary hover:text-primary">&larr; Volver</a></div>
 
   {% if can_correct_closed %}
-    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-5">
-      <p class="text-base text-slate-700 mb-2">El periodo de esta evaluación ya está Cerrado: puedes corregirla excepcionalmente, con un motivo que queda auditado. El motivo aplica a todos los cambios que hagas en esta página (respuestas, fortalezas/oportunidades).</p>
-      <label class="ui-label" for="global-reason">Motivo de la corrección</label>
-      <input type="text" id="global-reason" class="ui-input" maxlength="200" required x-model="reason">
+    <div class="rounded-lg bg-base-200 border border-base-300 px-4 py-3 mb-5">
+      <p class="text-base text-base-content/80 mb-2">El periodo de esta evaluación ya está Cerrado: puedes corregirla excepcionalmente, con un motivo que queda auditado. El motivo aplica a todos los cambios que hagas en esta página (respuestas, fortalezas/oportunidades).</p>
+      <label class="fieldset-legend" for="global-reason">Motivo de la corrección</label>
+      <input type="text" id="global-reason" class="input w-full" maxlength="200" required x-model="reason">
     </div>
   {% endif %}
 
   <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
     <div>
-      <h2 class="text-xl font-semibold text-slate-900">
+      <h2 class="text-xl font-semibold text-base-content">
         {% if evaluation.project %}{{ evaluation.project.name }}{% else %}Todos mis proyectos{% endif %}
       </h2>
-      <p class="text-slate-600">Checklist de Ownership · {{ evaluation.template.area.name }} · {{ evaluation.template.level.name }} · <span class="text-slate-500">{{ evaluation.user.full_name }}</span></p>
+      <p class="text-base-content/70">Checklist de Ownership · {{ evaluation.template.area.name }} · {{ evaluation.template.level.name }} · <span class="text-base-content/60">{{ evaluation.user.full_name }}</span></p>
       <div class="mt-2" {% if can_manage_evaluators %}x-data="{ editingPrimary: false, addingSecondary: false }"{% endif %}>
         {% for rec in ev_records %}
-          <p class="text-base text-slate-500 flex items-center gap-1.5 mb-1">
+          <p class="text-base text-base-content/60 flex items-center gap-1.5 mb-1">
             {% include "partials/icon.html" with name="user" cls="w-4 h-4" %}
-            <span class="font-medium text-slate-700">{{ rec.user.full_name }}</span>
+            <span class="font-medium text-base-content/80">{{ rec.user.full_name }}</span>
             {% if rec.is_primary %}
-              <span class="ui-badge bg-arena-50 text-arena-700 text-base">Principal</span>
+              <span class="badge bg-primary/10 text-primary text-base">Principal</span>
               {% if can_manage_evaluators %}
-                <button type="button" class="text-arena-600 hover:text-arena-700 text-base ml-1" @click="editingPrimary = !editingPrimary">cambiar</button>
+                <button type="button" class="text-primary hover:text-primary text-base ml-1" @click="editingPrimary = !editingPrimary">cambiar</button>
               {% endif %}
             {% else %}
-              <span class="ui-badge bg-slate-100 text-slate-500 text-base">Secundario</span>
+              <span class="badge bg-base-200 text-base-content/60 text-base">Secundario</span>
               {% if can_manage_evaluators %}
                 <form method="post" action="{% url 'evaluations:ownership_remove_evaluator' pk=evaluation.pk user_pk=rec.user.pk %}" class="inline">
                   {% csrf_token %}
-                  <button type="submit" class="text-rose-500 hover:text-rose-700 text-base ml-1" title="Quitar evaluador">quitar</button>
+                  <button type="submit" class="text-error hover:text-error text-base ml-1" title="Quitar evaluador">quitar</button>
                 </form>
               {% endif %}
             {% endif %}
           </p>
         {% empty %}
-          <p class="text-base text-slate-400 italic">Sin evaluadores asignados.</p>
+          <p class="text-base text-base-content/50 italic">Sin evaluadores asignados.</p>
         {% endfor %}
 
         {% if can_manage_evaluators %}
@@ -55,17 +55,17 @@
           <form method="post" action="{% url 'evaluations:ownership_set_evaluator' pk=evaluation.pk %}"
                 x-show="editingPrimary" x-cloak class="mt-2 flex flex-wrap gap-2">
             {% csrf_token %}
-            <select name="evaluator" class="ui-input max-w-xs py-1.5" required>
+            <select name="evaluator" class="select w-full max-w-xs py-1.5" required>
               <option value="">— Nuevo evaluador principal —</option>
               {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
             </select>
-            <button type="submit" class="ui-btn-secondary py-1.5">Guardar</button>
-            <button type="button" class="ui-btn-soft py-1.5" @click="editingPrimary = false">Cancelar</button>
+            <button type="submit" class="btn btn-outline btn-primary py-1.5">Guardar</button>
+            <button type="button" class="btn btn-sm btn-soft btn-primary py-1.5" @click="editingPrimary = false">Cancelar</button>
           </form>
 
           <!-- Agregar evaluador secundario -->
           <div class="mt-2">
-            <button type="button" class="text-base text-arena-600 hover:text-arena-700 flex items-center gap-1"
+            <button type="button" class="text-base text-primary hover:text-primary flex items-center gap-1"
                     @click="addingSecondary = !addingSecondary">
               {% include "partials/icon.html" with name="user-plus" cls="w-3.5 h-3.5" %}
               Agregar evaluador secundario
@@ -73,52 +73,52 @@
             <form method="post" action="{% url 'evaluations:ownership_add_evaluator' pk=evaluation.pk %}"
                   x-show="addingSecondary" x-cloak class="mt-2 flex flex-wrap gap-2">
               {% csrf_token %}
-              <select name="evaluator" class="ui-input max-w-xs py-1.5" required>
+              <select name="evaluator" class="select w-full max-w-xs py-1.5" required>
                 <option value="">— Elegir persona —</option>
                 {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
               </select>
-              <button type="submit" class="ui-btn-secondary py-1.5">Agregar</button>
-              <button type="button" class="ui-btn-soft py-1.5" @click="addingSecondary = false">Cancelar</button>
+              <button type="submit" class="btn btn-outline btn-primary py-1.5">Agregar</button>
+              <button type="button" class="btn btn-sm btn-soft btn-primary py-1.5" @click="addingSecondary = false">Cancelar</button>
             </form>
           </div>
-          <p class="text-base text-slate-400 mt-1">Solo puedes cambiarlos mientras la evaluación esté abierta.</p>
+          <p class="text-base text-base-content/50 mt-1">Solo puedes cambiarlos mientras la evaluación esté abierta.</p>
         {% endif %}
       </div>
     </div>
     <div class="flex items-center gap-2">
       {% if evaluation.is_submitted %}
-        <span class="ui-badge bg-emerald-50 text-emerald-700">Cerrada</span>
+        <span class="badge bg-success/10 text-success">Cerrada</span>
       {% else %}
-        <span class="ui-badge bg-slate-100 text-slate-600">Abierta</span>
+        <span class="badge bg-base-200 text-base-content/70">Abierta</span>
       {% endif %}
       {% if editing and can_edit_link %}
-        <a href="{% url 'evaluations:ownership_view' pk=evaluation.pk %}" class="ui-btn-secondary">Ver</a>
+        <a href="{% url 'evaluations:ownership_view' pk=evaluation.pk %}" class="btn btn-outline btn-primary">Ver</a>
       {% elif not editing and can_edit_link %}
-        <a href="{% url 'evaluations:ownership_edit' pk=evaluation.pk %}" class="ui-btn-primary">{% include "partials/icon.html" with name="edit" cls="w-4 h-4" %} Editar</a>
+        <a href="{% url 'evaluations:ownership_edit' pk=evaluation.pk %}" class="btn btn-primary">{% include "partials/icon.html" with name="edit" cls="w-4 h-4" %} Editar</a>
       {% endif %}
       {% if can_reset %}
         <div x-data="{ confirmReset: false }">
           <button type="button" @click="confirmReset = true"
-                  class="ui-btn-secondary text-rose-600 border-rose-200 hover:bg-rose-50"
+                  class="btn btn-outline btn-primary text-error border-error/25 hover:bg-error/10"
                   title="Reiniciar evaluación (Talento)">
             {% include "partials/icon.html" with name="rotate-ccw" cls="w-4 h-4" %} Reiniciar
           </button>
           <!-- Modal de confirmación de reinicio -->
           <div x-show="confirmReset" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
-            <div class="fixed inset-0 bg-slate-900/50" @click="confirmReset = false"></div>
+            <div class="fixed inset-0 bg-neutral/50" @click="confirmReset = false"></div>
             <div x-show="confirmReset" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                 class="relative bg-white rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
+                 class="relative bg-base-100 rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
               <div class="flex items-start gap-3">
-                <span class="grid place-items-center w-10 h-10 rounded-full bg-rose-50 text-rose-600 shrink-0">{% include "partials/icon.html" with name="rotate-ccw" cls="w-5 h-5" %}</span>
+                <span class="grid place-items-center w-10 h-10 rounded-full bg-error/10 text-error shrink-0">{% include "partials/icon.html" with name="rotate-ccw" cls="w-5 h-5" %}</span>
                 <div>
-                  <h4 class="font-semibold text-slate-900">¿Reiniciar la evaluación?</h4>
-                  <p class="mt-1 text-base text-slate-600">Se borrarán <strong>todas las respuestas</strong> y el <strong>evaluador asignado</strong>. {{ evaluation.user.full_name }} podrá elegir un nuevo evaluador y comenzar desde cero. Esta acción no se puede deshacer.</p>
+                  <h4 class="font-semibold text-base-content">¿Reiniciar la evaluación?</h4>
+                  <p class="mt-1 text-base text-base-content/70">Se borrarán <strong>todas las respuestas</strong> y el <strong>evaluador asignado</strong>. {{ evaluation.user.full_name }} podrá elegir un nuevo evaluador y comenzar desde cero. Esta acción no se puede deshacer.</p>
                 </div>
               </div>
               <form method="post" action="{% url 'evaluations:ownership_reset' pk=evaluation.pk %}" class="mt-5 flex justify-end gap-2">
                 {% csrf_token %}
-                <button type="button" class="ui-btn-secondary" @click="confirmReset = false">Cancelar</button>
-                <button type="submit" class="ui-btn-danger">Sí, reiniciar</button>
+                <button type="button" class="btn btn-outline btn-primary" @click="confirmReset = false">Cancelar</button>
+                <button type="submit" class="btn btn-error">Sí, reiniciar</button>
               </form>
             </div>
           </div>
@@ -129,38 +129,38 @@
 
   {% if evaluation.is_submitted %}
     <div {% if can_reopen %}x-data="{ confirmReopen: false }"{% endif %}>
-      <div class="rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 mb-6 text-base text-emerald-800 flex flex-wrap items-center gap-2">
+      <div class="rounded-lg bg-success/10 border border-success/25 px-4 py-3 mb-6 text-base text-success flex flex-wrap items-center gap-2">
         {% include "partials/icon.html" with name="lock" cls="w-4 h-4" %}
         <span>Evaluación cerrada el {{ evaluation.submitted_at|date:"d/m/Y H:i" }} — ya no puede modificarse. Calificación: <span class="font-semibold">{{ evaluation.score }}</span>.</span>
         {% if can_reopen %}
-          <button type="button" @click="confirmReopen = true" class="ui-btn-soft ml-auto">{% include "partials/icon.html" with name="edit" cls="w-3.5 h-3.5" %} Reabrir</button>
+          <button type="button" @click="confirmReopen = true" class="btn btn-sm btn-soft btn-primary ml-auto">{% include "partials/icon.html" with name="edit" cls="w-3.5 h-3.5" %} Reabrir</button>
         {% endif %}
       </div>
 
       {% if can_reopen %}
       <!-- Confirmación de reapertura (Talento) -->
       <div x-show="confirmReopen" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-slate-900/50" @click="confirmReopen = false"></div>
+        <div class="fixed inset-0 bg-neutral/50" @click="confirmReopen = false"></div>
         <div x-show="confirmReopen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-             class="relative bg-white rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
+             class="relative bg-base-100 rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
           <div class="flex items-start gap-3">
-            <span class="grid place-items-center w-10 h-10 rounded-full bg-amber-50 text-amber-600 shrink-0">{% include "partials/icon.html" with name="edit" cls="w-5 h-5" %}</span>
+            <span class="grid place-items-center w-10 h-10 rounded-full bg-warning/10 text-warning shrink-0">{% include "partials/icon.html" with name="edit" cls="w-5 h-5" %}</span>
             <div>
-              <h4 class="font-semibold text-slate-900">¿Reabrir la evaluación?</h4>
-              <p class="mt-1 text-base text-slate-600">Volverá a estado <span class="font-medium">borrador</span> para que la persona y su evaluador puedan corregirla. La calificación final se recalculará y deberán volver a cerrarla.</p>
+              <h4 class="font-semibold text-base-content">¿Reabrir la evaluación?</h4>
+              <p class="mt-1 text-base text-base-content/70">Volverá a estado <span class="font-medium">borrador</span> para que la persona y su evaluador puedan corregirla. La calificación final se recalculará y deberán volver a cerrarla.</p>
             </div>
           </div>
           <form method="post" action="{% url 'evaluations:ownership_reopen' pk=evaluation.pk %}" class="mt-5 space-y-3">
             {% csrf_token %}
             {% if can_correct_closed %}
               <div>
-                <label class="ui-label" for="reopen-reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
-                <input type="text" id="reopen-reason" name="reason" class="ui-input" maxlength="200" required>
+                <label class="fieldset-legend" for="reopen-reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
+                <input type="text" id="reopen-reason" name="reason" class="input w-full" maxlength="200" required>
               </div>
             {% endif %}
             <div class="flex justify-end gap-2">
-              <button type="button" class="ui-btn-secondary" @click="confirmReopen = false">Cancelar</button>
-              <button type="submit" class="ui-btn-primary">Sí, reabrir</button>
+              <button type="button" class="btn btn-outline btn-primary" @click="confirmReopen = false">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Sí, reabrir</button>
             </div>
           </form>
         </div>
@@ -170,14 +170,14 @@
   {% endif %}
 
   {% if lead_projects %}
-  <div class="ui-card p-4 mb-6 bg-arena-50 border border-arena-100">
-    <p class="text-base font-semibold text-arena-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 mb-6 bg-primary/10 border border-primary/15">
+    <p class="text-base font-semibold text-primary uppercase tracking-wide mb-2 flex items-center gap-1.5">
       {% include "partials/icon.html" with name="folder" cls="w-3.5 h-3.5" %}
       Proyectos en los que participas — referencia para esta evaluación
     </p>
     <div class="flex flex-wrap gap-1.5">
       {% for m in lead_projects %}
-        <span class="inline-flex items-center gap-1 text-base bg-white text-arena-800 border border-arena-200 rounded-full px-2.5 py-1">
+        <span class="inline-flex items-center gap-1 text-base bg-base-100 text-primary border border-primary/25 rounded-full px-2.5 py-1">
           {{ m.project.name }}{% if m.project.client %} · {{ m.project.client }}{% endif %}
         </span>
       {% endfor %}
@@ -186,44 +186,44 @@
   {% endif %}
 
   <!-- Barra de progreso fija -->
-  <div class="sticky top-16 z-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 bg-slate-50/95 backdrop-blur border-b border-slate-200 mb-8">
+  <div class="sticky top-16 z-20 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 bg-base-200/50 backdrop-blur border-b border-base-300 mb-8">
     <div class="flex items-center gap-4">
       <div class="flex-1">
         <div class="flex items-center justify-between text-base mb-1">
-          <span class="text-slate-600"><span x-text="answered"></span>/<span x-text="total"></span> respondidas</span>
+          <span class="text-base-content/70"><span x-text="answered"></span>/<span x-text="total"></span> respondidas</span>
           {% if answers_editable %}
-          <span class="text-slate-500" x-show="saving" x-cloak>Guardando…</span>
-          <span class="text-emerald-600" x-show="!saving && touched" x-cloak>Guardado</span>
+          <span class="text-base-content/60" x-show="saving" x-cloak>Guardando…</span>
+          <span class="text-success" x-show="!saving && touched" x-cloak>Guardado</span>
           {% endif %}
         </div>
-        <div class="h-2 rounded-full bg-slate-200 overflow-hidden">
-          <div class="h-full bg-arena-600 transition-all" :style="`width: ${total ? (answered/total*100) : 0}%`"></div>
+        <div class="h-2 rounded-full bg-base-300 overflow-hidden">
+          <div class="h-full bg-primary transition-all" :style="`width: ${total ? (answered/total*100) : 0}%`"></div>
         </div>
       </div>
       <div class="text-right">
-        <p class="text-base text-slate-500">Promedio en vivo</p>
-        <p class="text-lg font-semibold text-slate-900 tabular-nums" x-text="average ?? '—'"></p>
+        <p class="text-base text-base-content/60">Promedio en vivo</p>
+        <p class="text-lg font-semibold text-base-content tabular-nums" x-text="average ?? '—'"></p>
       </div>
     </div>
   </div>
 
   {% if evaluation.template.scale_note %}
-  <div class="ui-card p-4 mb-8"><p class="text-base text-slate-600">{{ evaluation.template.scale_note }}</p></div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 mb-8"><p class="text-base text-base-content/70">{{ evaluation.template.scale_note }}</p></div>
   {% endif %}
 
   <!-- Secciones y preguntas -->
   {% for section in sections %}
     <section class="mb-10">
-      <h3 class="font-semibold text-slate-900 mb-4">{{ section.title }}</h3>
+      <h3 class="font-semibold text-base-content mb-4">{{ section.title }}</h3>
       <div class="space-y-5">
         {% for question in section.questions.all %}
           {% with ans=answers|get_item:question.id %}
-          <div class="ui-card p-5">
+          <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
             <div class="flex items-start gap-3">
-              <span class="text-base font-semibold text-slate-400 tabular-nums mt-0.5">{{ forloop.counter }}.</span>
+              <span class="text-base font-semibold text-base-content/50 tabular-nums mt-0.5">{{ forloop.counter }}.</span>
               <div class="flex-1">
-                <p class="font-medium text-slate-900">{{ question.title }}</p>
-                {% if question.text %}<p class="mt-1.5 text-base text-slate-600 leading-relaxed">{{ question.text }}</p>{% endif %}
+                <p class="font-medium text-base-content">{{ question.title }}</p>
+                {% if question.text %}<p class="mt-1.5 text-base text-base-content/70 leading-relaxed">{{ question.text }}</p>{% endif %}
                 <div class="mt-4 flex flex-wrap gap-3">
                   {% for opt in scale %}
                     <label class="cursor-pointer">
@@ -231,7 +231,7 @@
                              {% if not answers_editable %}disabled{% endif %}
                              {% if opt.value is None and ans.is_na %}checked{% elif opt.value is not None and ans.value == opt.value %}checked{% endif %}
                              {% if answers_editable %}@change="save({{ question.id }}, {% if opt.value is None %}null, true{% else %}{{ opt.value }}, false{% endif %})"{% endif %}>
-                      <span class="ui-badge border border-slate-300 text-slate-600 px-3.5 py-2 peer-checked:bg-arena-600 peer-checked:text-white peer-checked:border-arena-600 transition"
+                      <span class="badge border border-base-300 text-base-content/70 px-3.5 py-2 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition"
                             title="{{ opt.description }}">
                         {% if opt.value is not None %}{{ opt.value }} · {% endif %}{{ opt.label }}
                       </span>
@@ -249,7 +249,7 @@
 
   <!-- Fortalezas / Oportunidades / Comentarios (los complementa el líder) -->
   {% if can_complement %}
-    <form method="post" action="{% url 'evaluations:ownership_save' pk=evaluation.pk %}" class="ui-card p-5 mt-8"
+    <form method="post" action="{% url 'evaluations:ownership_save' pk=evaluation.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mt-8"
           x-data="{
             strengths: `{{ evaluation.strengths|escapejs }}`,
             opportunities: `{{ evaluation.opportunities|escapejs }}`,
@@ -258,56 +258,56 @@
           }">
       {% csrf_token %}
       <input type="hidden" name="reason" x-model="reason">
-      <h3 class="font-semibold text-slate-900 mb-1">Retroalimentación del evaluador</h3>
+      <h3 class="font-semibold text-base-content mb-1">Retroalimentación del evaluador</h3>
       {% if can_correct_closed %}
-        <p class="text-base text-slate-600 mb-5">Estás corrigiendo una evaluación de un periodo Cerrado; captura el motivo arriba antes de guardar.</p>
+        <p class="text-base text-base-content/70 mb-5">Estás corrigiendo una evaluación de un periodo Cerrado; captura el motivo arriba antes de guardar.</p>
       {% else %}
-        <p class="text-base text-slate-600 mb-5">Complementa estos campos durante la sesión con la persona. Fortalezas y Oportunidades son obligatorias para cerrar.</p>
+        <p class="text-base text-base-content/70 mb-5">Complementa estos campos durante la sesión con la persona. Fortalezas y Oportunidades son obligatorias para cerrar.</p>
       {% endif %}
 
       <div class="space-y-5">
         <div>
-          <label class="ui-label" for="strengths">Fortalezas <span class="text-rose-500">*</span></label>
-          <textarea id="strengths" name="strengths" rows="3" class="ui-input" x-model="strengths" placeholder="Lo que la persona hizo especialmente bien.">{{ evaluation.strengths }}</textarea>
-          <p x-show="tried && !strengths.trim()" x-cloak class="mt-1 text-base text-rose-600">Captura las Fortalezas para poder cerrar.</p>
+          <label class="fieldset-legend" for="strengths">Fortalezas <span class="text-error">*</span></label>
+          <textarea id="strengths" name="strengths" rows="3" class="textarea w-full" x-model="strengths" placeholder="Lo que la persona hizo especialmente bien.">{{ evaluation.strengths }}</textarea>
+          <p x-show="tried && !strengths.trim()" x-cloak class="mt-1 text-base text-error">Captura las Fortalezas para poder cerrar.</p>
         </div>
         <div>
-          <label class="ui-label" for="opportunities">Oportunidades <span class="text-rose-500">*</span></label>
-          <textarea id="opportunities" name="opportunities" rows="3" class="ui-input" x-model="opportunities" placeholder="Lo que conviene mejorar el siguiente periodo.">{{ evaluation.opportunities }}</textarea>
-          <p x-show="tried && !opportunities.trim()" x-cloak class="mt-1 text-base text-rose-600">Captura las Oportunidades para poder cerrar.</p>
+          <label class="fieldset-legend" for="opportunities">Oportunidades <span class="text-error">*</span></label>
+          <textarea id="opportunities" name="opportunities" rows="3" class="textarea w-full" x-model="opportunities" placeholder="Lo que conviene mejorar el siguiente periodo.">{{ evaluation.opportunities }}</textarea>
+          <p x-show="tried && !opportunities.trim()" x-cloak class="mt-1 text-base text-error">Captura las Oportunidades para poder cerrar.</p>
         </div>
         <div>
-          <label class="ui-label" for="comments">Comentarios <span class="text-slate-400 font-normal">(opcional)</span></label>
-          <textarea id="comments" name="comments" rows="2" class="ui-input">{{ evaluation.comments }}</textarea>
+          <label class="fieldset-legend" for="comments">Comentarios <span class="text-base-content/50 font-normal">(opcional)</span></label>
+          <textarea id="comments" name="comments" rows="2" class="textarea w-full">{{ evaluation.comments }}</textarea>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-2 pt-1">
-          <button type="submit" name="action" value="save" class="ui-btn-secondary">{% include "partials/icon.html" with name="save" cls="w-4 h-4" %} {% if can_correct_closed %}Guardar corrección{% else %}Guardar{% endif %}</button>
+          <button type="submit" name="action" value="save" class="btn btn-outline btn-primary">{% include "partials/icon.html" with name="save" cls="w-4 h-4" %} {% if can_correct_closed %}Guardar corrección{% else %}Guardar{% endif %}</button>
           {% if not can_correct_closed %}
-            <button type="button" class="ui-btn-primary" :class="!ready && 'opacity-50'" @click="tried = true; if (ready) confirming = true">{% include "partials/icon.html" with name="lock" cls="w-4 h-4" %} Guardar y cerrar</button>
+            <button type="button" class="btn btn-primary" :class="!ready && 'opacity-50'" @click="tried = true; if (ready) confirming = true">{% include "partials/icon.html" with name="lock" cls="w-4 h-4" %} Guardar y cerrar</button>
           {% endif %}
         </div>
         {% if not can_correct_closed %}
-          <p class="text-base text-slate-500">Al cerrar, ni la persona ni el evaluador podrán volver a editar la evaluación.</p>
+          <p class="text-base text-base-content/60">Al cerrar, ni la persona ni el evaluador podrán volver a editar la evaluación.</p>
         {% endif %}
       </div>
 
       <!-- Confirmación de cierre -->
       {% if not can_correct_closed %}
       <div x-show="confirming" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-slate-900/50" @click="confirming = false"></div>
+        <div class="fixed inset-0 bg-neutral/50" @click="confirming = false"></div>
         <div x-show="confirming" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-             class="relative bg-white rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
+             class="relative bg-base-100 rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full">
           <div class="flex items-start gap-3">
-            <span class="grid place-items-center w-10 h-10 rounded-full bg-amber-50 text-amber-600 shrink-0">{% include "partials/icon.html" with name="lock" cls="w-5 h-5" %}</span>
+            <span class="grid place-items-center w-10 h-10 rounded-full bg-warning/10 text-warning shrink-0">{% include "partials/icon.html" with name="lock" cls="w-5 h-5" %}</span>
             <div>
-              <h4 class="font-semibold text-slate-900">¿Cerrar la evaluación?</h4>
-              <p class="mt-1 text-base text-slate-600">Una vez cerrada, ni la persona ni tú podrán volver a editarla. Se calculará y registrará la calificación.</p>
+              <h4 class="font-semibold text-base-content">¿Cerrar la evaluación?</h4>
+              <p class="mt-1 text-base text-base-content/70">Una vez cerrada, ni la persona ni tú podrán volver a editarla. Se calculará y registrará la calificación.</p>
             </div>
           </div>
           <div class="mt-5 flex justify-end gap-2">
-            <button type="button" class="ui-btn-secondary" @click="confirming = false">Cancelar</button>
-            <button type="submit" name="action" value="save_close" class="ui-btn-primary">Sí, cerrar</button>
+            <button type="button" class="btn btn-outline btn-primary" @click="confirming = false">Cancelar</button>
+            <button type="submit" name="action" value="save_close" class="btn btn-primary">Sí, cerrar</button>
           </div>
         </div>
       </div>

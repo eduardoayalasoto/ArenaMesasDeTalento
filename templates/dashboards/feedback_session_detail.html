@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-2">
-    <a href="{% url 'dashboards:feedback_session_list' %}{% if period.is_closed %}?periodo={{ period.pk }}{% endif %}" class="text-base text-arena-600 hover:text-arena-700">&larr; Retroalimentación</a>
+    <a href="{% url 'dashboards:feedback_session_list' %}{% if period.is_closed %}?periodo={{ period.pk }}{% endif %}" class="text-base text-primary hover:text-primary">&larr; Retroalimentación</a>
   </div>
 
-  <div class="ui-card overflow-hidden mb-5">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden mb-5">
     <div class="p-6 flex items-center gap-5 flex-wrap">
       {% include "partials/avatar.html" with subject=target size="w-20 h-20" icon="w-10 h-10" %}
       <div class="min-w-0">
-        <h2 class="text-2xl font-bold text-slate-900 truncate">{{ target.full_name }}</h2>
-        <p class="text-slate-600">{{ target.area.name|default:"Sin área" }}{% if target.level %} · {{ target.level.name }}{% endif %}</p>
-        <p class="text-base text-slate-500">Periodo {{ period.name }}</p>
+        <h2 class="text-2xl font-bold text-base-content truncate">{{ target.full_name }}</h2>
+        <p class="text-base-content/70">{{ target.area.name|default:"Sin área" }}{% if target.level %} · {{ target.level.name }}{% endif %}</p>
+        <p class="text-base text-base-content/60">Periodo {{ period.name }}</p>
       </div>
     </div>
   </div>
@@ -22,32 +22,32 @@
   </div>
 
   <div class="grid gap-4 sm:grid-cols-2 mb-6">
-    <div class="ui-card p-5">
-      <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2">Evaluadores de Ownership</h4>
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+      <h4 class="text-base font-semibold text-base-content/60 uppercase tracking-wide mb-2">Evaluadores de Ownership</h4>
       {% if evaluators %}
         <ul class="space-y-1">
           {% for ev in evaluators %}
-            <li class="text-base text-slate-700">{{ ev.user.full_name }} <span class="text-base text-slate-400">({% if ev.is_primary %}Principal{% else %}Secundario{% endif %})</span></li>
+            <li class="text-base text-base-content/80">{{ ev.user.full_name }} <span class="text-base text-base-content/50">({% if ev.is_primary %}Principal{% else %}Secundario{% endif %})</span></li>
           {% endfor %}
         </ul>
       {% else %}
-        <p class="text-base text-slate-400 italic">Sin evaluadores asignados todavía.</p>
+        <p class="text-base text-base-content/50 italic">Sin evaluadores asignados todavía.</p>
       {% endif %}
     </div>
-    <div class="ui-card p-5">
-      <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2">Escenario actual · Mesa de Talento</h4>
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+      <h4 class="text-base font-semibold text-base-content/60 uppercase tracking-wide mb-2">Escenario actual · Mesa de Talento</h4>
       {% if scenario_actual %}
         <ul class="space-y-1">
-          {% for opt in scenario_actual %}<li class="text-base text-slate-700">• {{ opt.name }}</li>{% endfor %}
+          {% for opt in scenario_actual %}<li class="text-base text-base-content/80">• {{ opt.name }}</li>{% endfor %}
         </ul>
       {% else %}
-        <p class="text-base text-slate-400 italic">Talento aún no definió un escenario actual.</p>
+        <p class="text-base text-base-content/50 italic">Talento aún no definió un escenario actual.</p>
       {% endif %}
     </div>
   </div>
 
   {% if note.feedback_agreed %}
-    <div class="rounded-lg bg-emerald-50 border border-emerald-200 px-4 py-3 mb-5 text-base text-emerald-800 flex items-center justify-between gap-3 flex-wrap">
+    <div class="rounded-lg bg-success/10 border border-success/25 px-4 py-3 mb-5 text-base text-success flex items-center justify-between gap-3 flex-wrap">
       <span>
         <strong>Acordada y cerrada</strong> el {{ note.feedback_agreed_at|date:"d/m/Y H:i" }}{% if note.feedback_agreed_by %} por {{ note.feedback_agreed_by.full_name }}{% endif %}. Ya no puede editarse.
       </span>
@@ -56,88 +56,88 @@
           {% csrf_token %}
           <input type="hidden" name="action" value="reopen">
           {% if can_correct_closed %}
-            <input type="text" name="reason" class="ui-input" placeholder="Motivo (queda auditado)" required>
+            <input type="text" name="reason" class="input w-full" placeholder="Motivo (queda auditado)" required>
           {% endif %}
-          <button type="submit" class="ui-btn-soft">Reabrir</button>
+          <button type="submit" class="btn btn-sm btn-soft btn-primary">Reabrir</button>
         </form>
       {% endif %}
     </div>
   {% endif %}
 
   {% if period.is_closed %}
-    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-5 text-base text-slate-700">
+    <div class="rounded-lg bg-base-200 border border-base-300 px-4 py-3 mb-5 text-base text-base-content/80">
       El periodo <b>{{ period.name }}</b> ya está Cerrado: esta retroalimentación es histórica, de solo lectura
       {% if can_correct_closed %}salvo la corrección excepcional de Talento (con motivo, quedará auditada){% endif %}.
     </div>
   {% elif not can_edit %}
-    <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-base text-arena-800">
+    <div class="rounded-lg bg-primary/10 border border-primary/25 px-4 py-3 mb-5 text-base text-primary">
       Esta es tu retroalimentación de Mesa de Talento del periodo {{ period.name }}. Solo puedes consultarla; la
       captura quien esté asignado como tu responsable de retroalimentación.
     </div>
   {% endif %}
 
-  <form method="post" class="ui-card p-5 space-y-5">
+  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 space-y-5">
     {% if can_edit %}
       {% csrf_token %}
       {% if can_correct_closed %}
         <div>
-          <label class="ui-label" for="reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
-          <input type="text" id="reason" name="reason" class="ui-input" maxlength="200" required>
+          <label class="fieldset-legend" for="reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
+          <input type="text" id="reason" name="reason" class="input w-full" maxlength="200" required>
         </div>
       {% endif %}
     {% endif %}
     <div>
-      <h3 class="font-semibold text-slate-900 mb-1">Sesión de retroalimentación</h3>
+      <h3 class="font-semibold text-base-content mb-1">Sesión de retroalimentación</h3>
       {% if can_edit %}
-        <p class="text-base text-slate-500">Lo que captures aquí queda visible para {{ target.full_name }} en su propio tablero, como su retroalimentación del periodo {{ period.name }}.</p>
+        <p class="text-base text-base-content/60">Lo que captures aquí queda visible para {{ target.full_name }} en su propio tablero, como su retroalimentación del periodo {{ period.name }}.</p>
       {% endif %}
     </div>
 
     <div>
-      <label class="ui-label" for="objetivo_desarrollo_1">Objetivo de desarrollo 1</label>
-      <textarea id="objetivo_desarrollo_1" name="objetivo_desarrollo_1" rows="3" class="ui-input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_1 }}</textarea>
+      <label class="fieldset-legend" for="objetivo_desarrollo_1">Objetivo de desarrollo 1</label>
+      <textarea id="objetivo_desarrollo_1" name="objetivo_desarrollo_1" rows="3" class="textarea w-full" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_1 }}</textarea>
     </div>
     <div>
-      <label class="ui-label" for="objetivo_desarrollo_2">Objetivo de desarrollo 2</label>
-      <textarea id="objetivo_desarrollo_2" name="objetivo_desarrollo_2" rows="3" class="ui-input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_2 }}</textarea>
+      <label class="fieldset-legend" for="objetivo_desarrollo_2">Objetivo de desarrollo 2</label>
+      <textarea id="objetivo_desarrollo_2" name="objetivo_desarrollo_2" rows="3" class="textarea w-full" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_2 }}</textarea>
     </div>
     <div>
-      <label class="ui-label" for="objetivo_desarrollo_3">Objetivo de desarrollo 3</label>
-      <textarea id="objetivo_desarrollo_3" name="objetivo_desarrollo_3" rows="3" class="ui-input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_3 }}</textarea>
+      <label class="fieldset-legend" for="objetivo_desarrollo_3">Objetivo de desarrollo 3</label>
+      <textarea id="objetivo_desarrollo_3" name="objetivo_desarrollo_3" rows="3" class="textarea w-full" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.objetivo_desarrollo_3 }}</textarea>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
       <div>
-        <label class="ui-label" for="expectativas_profesionales">Expectativas profesionales</label>
-        <textarea id="expectativas_profesionales" name="expectativas_profesionales" rows="3" class="ui-input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.expectativas_profesionales }}</textarea>
+        <label class="fieldset-legend" for="expectativas_profesionales">Expectativas profesionales</label>
+        <textarea id="expectativas_profesionales" name="expectativas_profesionales" rows="3" class="textarea w-full" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.expectativas_profesionales }}</textarea>
       </div>
       <div>
-        <label class="ui-label" for="expectativas_personales">Expectativas personales</label>
-        <textarea id="expectativas_personales" name="expectativas_personales" rows="3" class="ui-input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.expectativas_personales }}</textarea>
+        <label class="fieldset-legend" for="expectativas_personales">Expectativas personales</label>
+        <textarea id="expectativas_personales" name="expectativas_personales" rows="3" class="textarea w-full" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.expectativas_personales }}</textarea>
       </div>
     </div>
 
     <div>
-      <label class="ui-label" for="comentarios_adicionales">Comentarios adicionales</label>
-      <textarea id="comentarios_adicionales" name="comentarios_adicionales" rows="3" class="ui-input" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.comentarios_adicionales }}</textarea>
+      <label class="fieldset-legend" for="comentarios_adicionales">Comentarios adicionales</label>
+      <textarea id="comentarios_adicionales" name="comentarios_adicionales" rows="3" class="textarea w-full" {% if note.feedback_agreed or not can_edit %}disabled{% endif %}>{{ note.comentarios_adicionales }}</textarea>
     </div>
 
     {% if can_edit and not note.feedback_agreed %}
-      <button type="submit" class="ui-btn-primary">Guardar</button>
+      <button type="submit" class="btn btn-primary">Guardar</button>
     {% endif %}
   </form>
 
   {% if can_edit and not note.feedback_agreed %}
-    <div class="ui-card p-5 mt-5">
-      <h4 class="font-semibold text-slate-900 mb-1">Cerrar con acuerdo</h4>
-      <p class="text-base text-slate-500 mb-3">Cuando ya tuviste la sesión con {{ target.full_name }} y quedaron de acuerdo, marca esto para cerrarla. El texto quedará bloqueado y visible en su tablero.</p>
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mt-5">
+      <h4 class="font-semibold text-base-content mb-1">Cerrar con acuerdo</h4>
+      <p class="text-base text-base-content/60 mb-3">Cuando ya tuviste la sesión con {{ target.full_name }} y quedaron de acuerdo, marca esto para cerrarla. El texto quedará bloqueado y visible en su tablero.</p>
       <form method="post" class="flex items-center gap-2 flex-wrap">
         {% csrf_token %}
         <input type="hidden" name="action" value="agree">
         {% if can_correct_closed %}
-          <input type="text" name="reason" class="ui-input" placeholder="Motivo (queda auditado)" required>
+          <input type="text" name="reason" class="input w-full" placeholder="Motivo (queda auditado)" required>
         {% endif %}
-        <button type="submit" class="ui-btn-secondary">Marcar como acordado con el colaborador</button>
+        <button type="submit" class="btn btn-outline btn-primary">Marcar como acordado con el colaborador</button>
       </form>
     </div>
   {% endif %}

@@ -270,22 +270,22 @@ def project_delete(request, pk):
         if request.headers.get("HX-Request"):
             edit_url = f"/catalogo/proyectos/{pk}/"
             reactivar_url = f"/catalogo/proyectos/{pk}/reactivar/"
-            client_html = f'<p class="text-base text-slate-500">{project.client}</p>' if project.client else ""
+            client_html = f'<p class="text-base text-base-content/60">{project.client}</p>' if project.client else ""
             validador_html = (
                 project.validador.full_name if project.validador
-                else '<span class="text-slate-400 italic text-base">Sin asignar</span>'
+                else '<span class="text-base-content/50 italic text-base">Sin asignar</span>'
             )
             return HttpResponse(
                 f'<tr id="project-row-{pk}">'
-                f'<td class="px-4 py-3"><p class="font-medium text-slate-900">{project.name}</p>{client_html}</td>'
-                f'<td class="px-4 py-3 text-slate-600">{project.owner.full_name}</td>'
-                f'<td class="px-4 py-3 text-slate-600">{validador_html}</td>'
-                f'<td class="px-4 py-3 text-slate-600">{project.get_duration_type_display()}</td>'
+                f'<td class="px-4 py-3"><p class="font-medium text-base-content">{project.name}</p>{client_html}</td>'
+                f'<td class="px-4 py-3 text-base-content/70">{project.owner.full_name}</td>'
+                f'<td class="px-4 py-3 text-base-content/70">{validador_html}</td>'
+                f'<td class="px-4 py-3 text-base-content/70">{project.get_duration_type_display()}</td>'
                 f'<td class="px-4 py-3 text-center tabular-nums">—</td>'
-                f'<td class="px-4 py-3"><span class="ui-badge bg-slate-100 text-slate-500">Cerrado</span></td>'
+                f'<td class="px-4 py-3"><span class="badge bg-base-200 text-base-content/60">Cerrado</span></td>'
                 f'<td class="px-4 py-3 text-right flex items-center justify-end gap-1">'
-                f'<a href="{edit_url}" class="ui-btn-soft">Editar</a>'
-                f'<button type="button" hx-post="{reactivar_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Reabrir «{project.name}»? Volverá a aparecer para hacer evaluaciones en el periodo Abierto." class="ui-btn-soft">'
+                f'<a href="{edit_url}" class="btn btn-sm btn-soft btn-primary">Editar</a>'
+                f'<button type="button" hx-post="{reactivar_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Reabrir «{project.name}»? Volverá a aparecer para hacer evaluaciones en el periodo Abierto." class="btn btn-sm btn-soft btn-primary">'
                 f'<i data-lucide="rotate-ccw" class="w-3.5 h-3.5 inline mr-1"></i>Reabrir</button>'
                 f'</td></tr>'
             )
@@ -320,22 +320,22 @@ def project_reactivate(request, pk):
         members_count = ProjectMembership.objects.filter(project=project).count()
         edit_url = f"/catalogo/proyectos/{pk}/"
         delete_url = f"/catalogo/proyectos/{pk}/eliminar/"
-        client_html = f'<p class="text-base text-slate-500">{project.client}</p>' if project.client else ""
+        client_html = f'<p class="text-base text-base-content/60">{project.client}</p>' if project.client else ""
         validador_html = (
             project.validador.full_name if project.validador
-            else '<span class="text-slate-400 italic text-base">Sin asignar</span>'
+            else '<span class="text-base-content/50 italic text-base">Sin asignar</span>'
         )
         return HttpResponse(
             f'<tr id="project-row-{pk}">'
-            f'<td class="px-4 py-3"><p class="font-medium text-slate-900">{project.name}</p>{client_html}</td>'
-            f'<td class="px-4 py-3 text-slate-600">{project.owner.full_name}</td>'
-            f'<td class="px-4 py-3 text-slate-600">{validador_html}</td>'
-            f'<td class="px-4 py-3 text-slate-600">{project.get_duration_type_display()}</td>'
+            f'<td class="px-4 py-3"><p class="font-medium text-base-content">{project.name}</p>{client_html}</td>'
+            f'<td class="px-4 py-3 text-base-content/70">{project.owner.full_name}</td>'
+            f'<td class="px-4 py-3 text-base-content/70">{validador_html}</td>'
+            f'<td class="px-4 py-3 text-base-content/70">{project.get_duration_type_display()}</td>'
             f'<td class="px-4 py-3 text-center tabular-nums">{members_count}</td>'
-            f'<td class="px-4 py-3"><span class="ui-badge bg-emerald-50 text-emerald-700">Abierto</span></td>'
+            f'<td class="px-4 py-3"><span class="badge bg-success/10 text-success">Abierto</span></td>'
             f'<td class="px-4 py-3 text-right flex items-center justify-end gap-1">'
-            f'<a href="{edit_url}" class="ui-btn-soft mr-1">Editar</a>'
-            f'<button type="button" hx-post="{delete_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Cerrar «{project.name}»? Ya no aparecera para hacer evaluaciones del periodo Abierto. Puedes reabrirlo cuando quieras." class="ui-btn-soft">'
+            f'<a href="{edit_url}" class="btn btn-sm btn-soft btn-primary mr-1">Editar</a>'
+            f'<button type="button" hx-post="{delete_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Cerrar «{project.name}»? Ya no aparecera para hacer evaluaciones del periodo Abierto. Puedes reabrirlo cuando quieras." class="btn btn-sm btn-soft btn-primary">'
             f'<i data-lucide="lock" class="w-3.5 h-3.5 inline mr-1"></i>Cerrar proyecto</button>'
             f'</td></tr>'
         )

@@ -2,55 +2,55 @@
 {% block content %}
   <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
-      <h2 class="text-xl font-semibold text-slate-900">Escenarios</h2>
-      <p class="text-slate-600">Opciones de escenario que Talento selecciona en la sesión de Mesa de Talento.</p>
+      <h2 class="text-xl font-semibold text-base-content">Escenarios</h2>
+      <p class="text-base-content/70">Opciones de escenario que Talento selecciona en la sesión de Mesa de Talento.</p>
     </div>
-    <a href="{% url 'catalog:scenario_create' %}" class="ui-btn-primary">
+    <a href="{% url 'catalog:scenario_create' %}" class="btn btn-primary">
       {% include "partials/icon.html" with name="plus" cls="w-4 h-4" %} Nuevo escenario
     </a>
   </div>
 
-  <div class="ui-card divide-y divide-slate-100">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-200">
     {% for opt in options %}
       <div class="flex items-center justify-between gap-4 p-4">
         <div class="min-w-0">
-          <p class="font-medium text-slate-900">{{ opt.name }}</p>
+          <p class="font-medium text-base-content">{{ opt.name }}</p>
           {% if opt.description %}
-            <p class="text-base text-slate-500 mt-0.5">{{ opt.description }}</p>
+            <p class="text-base text-base-content/60 mt-0.5">{{ opt.description }}</p>
           {% endif %}
         </div>
         <div class="flex items-center gap-2 shrink-0">
           {% if opt.is_active %}
-            <span class="ui-badge bg-emerald-50 text-emerald-700">Activa</span>
+            <span class="badge bg-success/10 text-success">Activa</span>
           {% else %}
-            <span class="ui-badge bg-slate-100 text-slate-500">Inactiva</span>
+            <span class="badge bg-base-200 text-base-content/60">Inactiva</span>
           {% endif %}
           <form method="post" class="inline">
             {% csrf_token %}
             <input type="hidden" name="action" value="toggle">
             <input type="hidden" name="pk" value="{{ opt.pk }}">
-            <button type="submit" class="ui-btn-soft">
+            <button type="submit" class="btn btn-sm btn-soft btn-primary">
               {% if opt.is_active %}Desactivar{% else %}Activar{% endif %}
             </button>
           </form>
-          <a href="{% url 'catalog:scenario_edit' pk=opt.pk %}" class="ui-btn-soft">Editar</a>
+          <a href="{% url 'catalog:scenario_edit' pk=opt.pk %}" class="btn btn-sm btn-soft btn-primary">Editar</a>
           <span class="relative group/dtip">
             <form method="post" class="inline">
               {% csrf_token %}
               <input type="hidden" name="action" value="delete">
               <input type="hidden" name="pk" value="{{ opt.pk }}">
               <button type="submit"
-                class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer"
+                class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer"
                 onclick="return confirm('¿Eliminar «{{ opt.name }}»?')">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             </form>
-            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar escenario</span>
+            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar escenario</span>
           </span>
         </div>
       </div>
     {% empty %}
-      <div class="p-6 text-center text-slate-400">Sin escenarios. Agrega el primero.</div>
+      <div class="p-6 text-center text-base-content/50">Sin escenarios. Agrega el primero.</div>
     {% endfor %}
   </div>
 {% endblock %}

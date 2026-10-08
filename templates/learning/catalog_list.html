@@ -5,20 +5,20 @@
 <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
   <form method="get" class="flex flex-wrap items-end gap-2">
     <div class="relative">
-      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
-      <input type="search" name="q" value="{{ f.q }}" class="ui-input pl-9 w-56" placeholder="Curso, proveedor o tema…" aria-label="Buscar en el catálogo">
+      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none"></i>
+      <input type="search" name="q" value="{{ f.q }}" class="input w-full pl-9 w-56" placeholder="Curso, proveedor o tema…" aria-label="Buscar en el catálogo">
     </div>
-    <select name="area" class="ui-input w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
-    <select name="level" class="ui-input w-auto" aria-label="Nivel"><option value="">Todos los niveles</option>{% for l in levels %}<option value="{{ l.pk }}" {% if f.level == l.pk|stringformat:"s" %}selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
-    <select name="kind" class="ui-input w-auto" aria-label="Tipo"><option value="">Todos los tipos</option>{% for v, l in kinds %}<option value="{{ v }}" {% if f.kind == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
-    <select name="pillar" class="ui-input w-auto" aria-label="Pilar"><option value="">Todos los pilares</option>{% for v, l in pillars %}<option value="{{ v }}" {% if f.pillar == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
-    <button type="submit" class="ui-btn-secondary">Filtrar</button>
-    {% if f %}<a href="{% url 'learning:catalog_list' %}" class="ui-btn-ghost">Limpiar</a>{% endif %}
+    <select name="area" class="select w-full w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
+    <select name="level" class="select w-full w-auto" aria-label="Nivel"><option value="">Todos los niveles</option>{% for l in levels %}<option value="{{ l.pk }}" {% if f.level == l.pk|stringformat:"s" %}selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
+    <select name="kind" class="select w-full w-auto" aria-label="Tipo"><option value="">Todos los tipos</option>{% for v, l in kinds %}<option value="{{ v }}" {% if f.kind == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <select name="pillar" class="select w-full w-auto" aria-label="Pilar"><option value="">Todos los pilares</option>{% for v, l in pillars %}<option value="{{ v }}" {% if f.pillar == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <button type="submit" class="btn btn-outline btn-primary">Filtrar</button>
+    {% if f %}<a href="{% url 'learning:catalog_list' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
   </form>
   {% if can_manage %}
     <div class="flex gap-2">
-      <a href="?archivados={% if show_archived %}0{% else %}1{% endif %}" class="ui-btn-ghost">{% if show_archived %}Ver activos{% else %}Ver archivados{% endif %}</a>
-      <a href="{% url 'learning:catalog_create' %}" class="ui-btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo curso</a>
+      <a href="?archivados={% if show_archived %}0{% else %}1{% endif %}" class="btn btn-ghost">{% if show_archived %}Ver activos{% else %}Ver archivados{% endif %}</a>
+      <a href="{% url 'learning:catalog_create' %}" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo curso</a>
     </div>
   {% endif %}
 </div>
@@ -26,20 +26,20 @@
 {% if courses %}
   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for c in courses %}
-      <a href="{% url 'learning:catalog_detail' c.pk %}" class="ui-card p-5 flex flex-col gap-3 hover:border-arena-200 hover:shadow transition">
+      <a href="{% url 'learning:catalog_detail' c.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col gap-3 hover:border-primary/25 hover:shadow transition">
         <div class="flex items-start justify-between gap-2">
-          <span class="ui-badge bg-arena-50 text-arena-700">{{ c.get_kind_display }}</span>
-          {% if c.pillar %}<span class="ui-badge bg-slate-100 text-slate-600">{{ c.get_pillar_display }}</span>{% endif %}
+          <span class="badge bg-primary/10 text-primary">{{ c.get_kind_display }}</span>
+          {% if c.pillar %}<span class="badge bg-base-200 text-base-content/70">{{ c.get_pillar_display }}</span>{% endif %}
         </div>
         <div>
-          <p class="font-semibold text-slate-900">{{ c.name }}</p>
-          <p class="text-base text-slate-500">{{ c.provider }}{% if c.duration_hours %} · {{ c.duration_hours }} h{% endif %}</p>
+          <p class="font-semibold text-base-content">{{ c.name }}</p>
+          <p class="text-base text-base-content/60">{{ c.provider }}{% if c.duration_hours %} · {{ c.duration_hours }} h{% endif %}</p>
         </div>
         <div class="mt-auto flex items-center justify-between text-base">
           {% if c.avg_rating %}
-            <span class="inline-flex items-center gap-1.5">{% include "learning/_stars.html" with value=c.avg_rating size="w-3.5 h-3.5" %}<span class="text-slate-600">{{ c.avg_rating|floatformat:1 }}</span></span>
-          {% else %}<span class="text-slate-400 text-base">Sin reseñas aún</span>{% endif %}
-          <span class="text-slate-500 text-base">{{ c.completed_count }} persona{{ c.completed_count|pluralize }} lo tomó</span>
+            <span class="inline-flex items-center gap-1.5">{% include "learning/_stars.html" with value=c.avg_rating size="w-3.5 h-3.5" %}<span class="text-base-content/70">{{ c.avg_rating|floatformat:1 }}</span></span>
+          {% else %}<span class="text-base-content/50 text-base">Sin reseñas aún</span>{% endif %}
+          <span class="text-base-content/60 text-base">{{ c.completed_count }} persona{{ c.completed_count|pluralize }} lo tomó</span>
         </div>
       </a>
     {% endfor %}

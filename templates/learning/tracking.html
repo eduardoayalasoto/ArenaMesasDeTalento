@@ -4,39 +4,39 @@
 
 <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
   <form method="get" class="flex flex-wrap items-end gap-2">
-    <select name="area" class="ui-input w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
-    <select name="persona" class="ui-input w-auto" aria-label="Persona"><option value="">Todas las personas</option>{% for p in people %}<option value="{{ p.pk }}" {% if f.persona == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.full_name }}</option>{% endfor %}</select>
-    <select name="anio" class="ui-input w-auto" aria-label="Año"><option value="">Todos los años</option>{% for y in years %}<option value="{{ y }}" {% if f.anio == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>{% endfor %}</select>
-    <select name="estado" class="ui-input w-auto" aria-label="Estado"><option value="">Todos los estados</option>{% for v, l in statuses %}<option value="{{ v }}" {% if f.estado == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
-    <button type="submit" class="ui-btn-secondary">Filtrar</button>
-    {% if f %}<a href="{% url 'learning:tracking' %}" class="ui-btn-ghost">Limpiar</a>{% endif %}
+    <select name="area" class="select w-full w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
+    <select name="persona" class="select w-full w-auto" aria-label="Persona"><option value="">Todas las personas</option>{% for p in people %}<option value="{{ p.pk }}" {% if f.persona == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.full_name }}</option>{% endfor %}</select>
+    <select name="anio" class="select w-full w-auto" aria-label="Año"><option value="">Todos los años</option>{% for y in years %}<option value="{{ y }}" {% if f.anio == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>{% endfor %}</select>
+    <select name="estado" class="select w-full w-auto" aria-label="Estado"><option value="">Todos los estados</option>{% for v, l in statuses %}<option value="{{ v }}" {% if f.estado == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <button type="submit" class="btn btn-outline btn-primary">Filtrar</button>
+    {% if f %}<a href="{% url 'learning:tracking' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
   </form>
   <div class="flex flex-wrap gap-2">
-    {% if can_historic %}<a href="{% url 'learning:historic_create' %}" class="ui-btn-ghost"><i data-lucide="history" class="w-4 h-4"></i> Carga histórica</a>{% endif %}
-    {% if can_settings %}<a href="{% url 'learning:settings_edit' %}" class="ui-btn-ghost"><i data-lucide="settings" class="w-4 h-4"></i> Instrucciones fiscales</a>{% endif %}
-    <a href="{% url 'learning:tracking_export' %}?{{ export_query }}" class="ui-btn-secondary"><i data-lucide="download" class="w-4 h-4"></i> Exportar Excel</a>
+    {% if can_historic %}<a href="{% url 'learning:historic_create' %}" class="btn btn-ghost"><i data-lucide="history" class="w-4 h-4"></i> Carga histórica</a>{% endif %}
+    {% if can_settings %}<a href="{% url 'learning:settings_edit' %}" class="btn btn-ghost"><i data-lucide="settings" class="w-4 h-4"></i> Instrucciones fiscales</a>{% endif %}
+    <a href="{% url 'learning:tracking_export' %}?{{ export_query }}" class="btn btn-outline btn-primary"><i data-lucide="download" class="w-4 h-4"></i> Exportar Excel</a>
   </div>
 </div>
 
 <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-  <div class="ui-card p-4"><p class="text-base text-slate-500">Atascadas (&gt; 5 días hábiles)</p><p class="text-2xl font-semibold {% if data.stale_count %}text-amber-600{% else %}text-slate-900{% endif %}">{{ data.stale_count }}</p></div>
-  <div class="ui-card p-4"><p class="text-base text-slate-500">Vencidos sin evidencia (&gt; 30 días)</p><p class="text-2xl font-semibold {% if data.overdue_count %}text-rose-600{% else %}text-slate-900{% endif %}">{{ data.overdue_count }}</p></div>
-  <div class="ui-card p-4 sm:col-span-2">
-    <p class="text-base text-slate-500">Costo autorizado {{ data.year }} por área</p>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4"><p class="text-base text-base-content/60">Atascadas (&gt; 5 días hábiles)</p><p class="text-2xl font-semibold {% if data.stale_count %}text-warning{% else %}text-base-content{% endif %}">{{ data.stale_count }}</p></div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4"><p class="text-base text-base-content/60">Vencidos sin evidencia (&gt; 30 días)</p><p class="text-2xl font-semibold {% if data.overdue_count %}text-error{% else %}text-base-content{% endif %}">{{ data.overdue_count }}</p></div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 sm:col-span-2">
+    <p class="text-base text-base-content/60">Costo autorizado {{ data.year }} por área</p>
     {% if data.cost_by_area %}
-      <ul class="mt-1 text-base space-y-0.5">{% for c in data.cost_by_area %}<li class="flex justify-between gap-3"><span class="text-slate-600">{{ c.area }}</span><span class="font-medium text-slate-900 tabular-nums">${{ c.total|floatformat:"0g" }} {{ c.currency }}</span></li>{% endfor %}</ul>
-    {% else %}<p class="text-base text-slate-500 mt-1">Sin cursos autorizados este año.</p>{% endif %}
+      <ul class="mt-1 text-base space-y-0.5">{% for c in data.cost_by_area %}<li class="flex justify-between gap-3"><span class="text-base-content/70">{{ c.area }}</span><span class="font-medium text-base-content tabular-nums">${{ c.total|floatformat:"0g" }} {{ c.currency }}</span></li>{% endfor %}</ul>
+    {% else %}<p class="text-base text-base-content/60 mt-1">Sin cursos autorizados este año.</p>{% endif %}
   </div>
 </div>
 
 <div class="flex flex-wrap gap-2 mb-4">
-  {% for label, code, n in data.status_counts %}{% if n %}<a href="?{% if f.area %}area={{ f.area }}&{% endif %}{% if f.anio %}anio={{ f.anio }}&{% endif %}estado={{ code }}" class="ui-badge bg-slate-100 text-slate-700 hover:bg-slate-200">{{ label }} · {{ n }}</a>{% endif %}{% endfor %}
+  {% for label, code, n in data.status_counts %}{% if n %}<a href="?{% if f.area %}area={{ f.area }}&{% endif %}{% if f.anio %}anio={{ f.anio }}&{% endif %}estado={{ code }}" class="badge bg-base-200 text-base-content/80 hover:bg-base-300">{{ label }} · {{ n }}</a>{% endif %}{% endfor %}
 </div>
 
-<div class="ui-card overflow-hidden">
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
   <div class="overflow-x-auto">
     <table class="w-full text-base">
-      <thead class="bg-slate-50 text-slate-600 text-left">
+      <thead class="bg-base-200/50 text-base-content/70 text-left">
         <tr>
           <th class="px-4 py-3 font-medium">Colaborador</th>
           <th class="px-4 py-3 font-medium">Curso</th>
@@ -46,23 +46,23 @@
           <th class="px-4 py-3 font-medium">Alertas</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100">
+      <tbody class="divide-y divide-base-200">
         {% for row in data.rows %}{% with r=row.req %}
-          <tr class="hover:bg-slate-50">
-            <td class="px-4 py-2.5"><p class="font-medium text-slate-900">{{ r.user.full_name }}</p><p class="text-base text-slate-500">{{ r.user.area.name|default:"Sin área" }}</p></td>
-            <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-arena-700 hover:underline">{{ r.name }}</a><p class="text-base text-slate-500">{{ r.provider }} · {{ r.get_origin_display }}</p></td>
+          <tr class="hover:bg-base-200/50">
+            <td class="px-4 py-2.5"><p class="font-medium text-base-content">{{ r.user.full_name }}</p><p class="text-base text-base-content/60">{{ r.user.area.name|default:"Sin área" }}</p></td>
+            <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-primary hover:underline">{{ r.name }}</a><p class="text-base text-base-content/60">{{ r.provider }} · {{ r.get_origin_display }}</p></td>
             <td class="px-4 py-2.5">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}</td>
             <td class="px-4 py-2.5 text-right tabular-nums">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}—{% endif %}</td>
-            <td class="px-4 py-2.5 text-base text-slate-600">{{ r.get_payment_mode_display|default:"—" }}{% if r.payment_status %}<br>{{ r.get_payment_status_display }}{% endif %}</td>
+            <td class="px-4 py-2.5 text-base text-base-content/70">{{ r.get_payment_mode_display|default:"—" }}{% if r.payment_status %}<br>{{ r.get_payment_status_display }}{% endif %}</td>
             <td class="px-4 py-2.5 text-base">
-              {% if row.stale %}<span class="ui-badge bg-amber-50 text-amber-700">Atascada</span>{% endif %}
-              {% if row.overdue %}<span class="ui-badge bg-rose-50 text-rose-700">Vencido</span>{% endif %}
-              {% if row.cost_overrun %}<span class="ui-badge bg-amber-50 text-amber-700">Sobrecosto</span>{% endif %}
-              {% if r.missing_lead %}<span class="ui-badge bg-slate-100 text-slate-600">Sin Lead</span>{% endif %}
+              {% if row.stale %}<span class="badge bg-warning/10 text-warning">Atascada</span>{% endif %}
+              {% if row.overdue %}<span class="badge bg-error/10 text-error">Vencido</span>{% endif %}
+              {% if row.cost_overrun %}<span class="badge bg-warning/10 text-warning">Sobrecosto</span>{% endif %}
+              {% if r.missing_lead %}<span class="badge bg-base-200 text-base-content/70">Sin Lead</span>{% endif %}
             </td>
           </tr>
         {% endwith %}{% empty %}
-          <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">No hay solicitudes con estos filtros.</td></tr>
+          <tr><td colspan="6" class="px-4 py-8 text-center text-base-content/60">No hay solicitudes con estos filtros.</td></tr>
         {% endfor %}
       </tbody>
     </table>

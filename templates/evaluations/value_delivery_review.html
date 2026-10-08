@@ -2,8 +2,8 @@
 {% load dict_extras %}
 {% block content %}
   <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Validar Entrega de Valor</h2>
-    <p class="text-slate-600">Aquí aparecen los proyectos donde eres el <strong>Validador de Entrega de Valor</strong> asignado. Revisa que los tres criterios y el comentario reflejen el desempeño real del equipo antes de validar; una vez validada, la calificación es definitiva y se aplica a la Entrega de Valor de todas las personas del equipo del proyecto.</p>
+    <h2 class="text-xl font-semibold text-base-content">Validar Entrega de Valor</h2>
+    <p class="text-base-content/70">Aquí aparecen los proyectos donde eres el <strong>Validador de Entrega de Valor</strong> asignado. Revisa que los tres criterios y el comentario reflejen el desempeño real del equipo antes de validar; una vez validada, la calificación es definitiva y se aplica a la Entrega de Valor de todas las personas del equipo del proyecto.</p>
   </div>
 
   {% if not queue %}
@@ -11,57 +11,57 @@
   {% else %}
     <div class="space-y-4">
       {% for vd in queue %}
-        <div class="ui-card p-5" x-data="{ rejecting: false }">
+        <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5" x-data="{ rejecting: false }">
           <div class="flex items-start justify-between gap-3 flex-wrap">
             <div>
-              <h3 class="font-semibold text-slate-900">{{ vd.project.name }}</h3>
-              {% if vd.project.client %}<p class="text-base text-slate-400">{{ vd.project.client }}</p>{% endif %}
-              <p class="text-base text-slate-500 mt-1">
-                Capturada por <span class="font-medium text-slate-700">{{ vd.evaluator.full_name|default:"—" }}</span>
+              <h3 class="font-semibold text-base-content">{{ vd.project.name }}</h3>
+              {% if vd.project.client %}<p class="text-base text-base-content/50">{{ vd.project.client }}</p>{% endif %}
+              <p class="text-base text-base-content/60 mt-1">
+                Capturada por <span class="font-medium text-base-content/80">{{ vd.evaluator.full_name|default:"—" }}</span>
                 (Responsable) · {{ vd.project.get_duration_type_display }} · {{ vd.project.memberships.count }} persona{{ vd.project.memberships.count|pluralize }} en el equipo
               </p>
             </div>
             <div class="text-right">
-              <p class="text-base text-slate-500 uppercase tracking-wide">Promedio de los 3 criterios</p>
-              <span class="text-lg font-semibold text-slate-900 tabular-nums">{{ vd.score|default:"—" }}</span>
+              <p class="text-base text-base-content/60 uppercase tracking-wide">Promedio de los 3 criterios</p>
+              <span class="text-lg font-semibold text-base-content tabular-nums">{{ vd.score|default:"—" }}</span>
             </div>
           </div>
 
           <dl class="mt-4 grid gap-4 sm:grid-cols-3">
             {% for c in vd.criteria %}
               <div>
-                <dt class="font-medium text-slate-900 text-base">{{ c.label }}</dt>
-                <dd class="text-base text-slate-500 mb-1">{{ c.help }}</dd>
-                <dd class="font-semibold text-slate-900">
-                  {% if c.value %}{{ c.value }} · {{ c.value|scale_label }}{% else %}<span class="text-slate-400 font-normal">Sin capturar</span>{% endif %}
+                <dt class="font-medium text-base-content text-base">{{ c.label }}</dt>
+                <dd class="text-base text-base-content/60 mb-1">{{ c.help }}</dd>
+                <dd class="font-semibold text-base-content">
+                  {% if c.value %}{{ c.value }} · {{ c.value|scale_label }}{% else %}<span class="text-base-content/50 font-normal">Sin capturar</span>{% endif %}
                 </dd>
               </div>
             {% endfor %}
           </dl>
 
-          <div class="mt-4 rounded-lg bg-slate-50 border border-slate-100 px-4 py-3">
-            <p class="text-base font-medium text-slate-500 uppercase tracking-wide mb-1">Comentarios de la Entrega de Valor</p>
-            <p class="text-base text-slate-500 mb-2">Los captura el Responsable; se muestran también en la Mesa de Talento de cada integrante del equipo. Puedes leerlos y, si quieres, complementarlos sin afectar la calificación.</p>
+          <div class="mt-4 rounded-lg bg-base-200/50 border border-base-200 px-4 py-3">
+            <p class="text-base font-medium text-base-content/60 uppercase tracking-wide mb-1">Comentarios de la Entrega de Valor</p>
+            <p class="text-base text-base-content/60 mb-2">Los captura el Responsable; se muestran también en la Mesa de Talento de cada integrante del equipo. Puedes leerlos y, si quieres, complementarlos sin afectar la calificación.</p>
             <form method="post" class="space-y-2">
               {% csrf_token %}
               <input type="hidden" name="vd" value="{{ vd.pk }}">
               <input type="hidden" name="action" value="comment">
-              <textarea name="comments" rows="2" class="ui-input" placeholder="Sin comentarios todavía.">{{ vd.comments }}</textarea>
-              <button type="submit" class="ui-btn-secondary text-base">Guardar comentario</button>
+              <textarea name="comments" rows="2" class="textarea w-full" placeholder="Sin comentarios todavía.">{{ vd.comments }}</textarea>
+              <button type="submit" class="btn btn-outline btn-primary text-base">Guardar comentario</button>
             </form>
           </div>
 
-          <div class="mt-5 pt-4 border-t border-slate-100">
+          <div class="mt-5 pt-4 border-t border-base-200">
             <div class="flex items-center gap-2 flex-wrap">
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="vd" value="{{ vd.pk }}">
                 <input type="hidden" name="action" value="validate">
-                <button type="submit" class="ui-btn-primary">Validar</button>
+                <button type="submit" class="btn btn-primary">Validar</button>
               </form>
-              <button type="button" class="ui-btn-secondary" @click="rejecting = !rejecting">Regresar a borrador</button>
+              <button type="button" class="btn btn-outline btn-primary" @click="rejecting = !rejecting">Regresar a borrador</button>
             </div>
-            <p class="mt-2 text-base text-slate-500">
+            <p class="mt-2 text-base text-base-content/60">
               <strong>Validar</strong> deja esta calificación como definitiva: se aplica de inmediato a la Entrega de Valor de las {{ vd.project.memberships.count }} persona{{ vd.project.memberships.count|pluralize }} del equipo y ya no podrá editarse.
               <strong>Regresar a borrador</strong> la devuelve a {{ vd.evaluator.full_name|default:"el Responsable" }} para que la corrija y la reenvíe a validación.
             </p>
@@ -70,9 +70,9 @@
               {% csrf_token %}
               <input type="hidden" name="vd" value="{{ vd.pk }}">
               <input type="hidden" name="action" value="reject">
-              <label class="ui-label" for="comment-{{ vd.pk }}">Motivo del rechazo</label>
-              <textarea id="comment-{{ vd.pk }}" name="comment" rows="2" class="ui-input" required placeholder="Explica qué debe ajustar el Responsable."></textarea>
-              <button type="submit" class="ui-btn-danger mt-2">Confirmar regreso</button>
+              <label class="fieldset-legend" for="comment-{{ vd.pk }}">Motivo del rechazo</label>
+              <textarea id="comment-{{ vd.pk }}" name="comment" rows="2" class="textarea w-full" required placeholder="Explica qué debe ajustar el Responsable."></textarea>
+              <button type="submit" class="btn btn-error mt-2">Confirmar regreso</button>
             </form>
           </div>
         </div>

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django import forms
 
-from apps.core.forms import INPUT_CLASSES  # clases daisyUI canónicas (igual que arena-crm)
+from apps.core.forms import INPUT_CLASSES, SELECT_CLASSES  # clases daisyUI canónicas (igual que arena-crm)
 
 User = get_user_model()
 
@@ -28,11 +28,8 @@ def square_jpeg_bytes(upload, size: int = PHOTO_SIZE) -> bytes:
     return buf.getvalue()
 
 
-_INPUT = (
-    "w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 "
-    "shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 "
-    "focus:outline-none transition"
-)
+_INPUT = INPUT_CLASSES
+_SELECT = SELECT_CLASSES
 
 
 class EmailAuthenticationForm(AuthenticationForm):
@@ -79,7 +76,7 @@ class PhotoForm(forms.ModelForm):
             "required": "Sube una fotografía; es obligatoria.",
             "invalid_image": "El archivo no es una imagen válida. Usa JPG o PNG.",
         },
-        widget=forms.ClearableFileInput(attrs={"class": _INPUT, "accept": "image/*"}),
+        widget=forms.ClearableFileInput(attrs={"class": "file-input w-full", "accept": "image/*"}),
     )
 
     def save(self, commit=True):
@@ -152,9 +149,9 @@ class UserCreateForm(forms.ModelForm):
         widgets = {
             "full_name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Nombre y apellidos"}),
             "email": forms.EmailInput(attrs={"class": _INPUT, "placeholder": "nombre@arena-analytics.com"}),
-            "area": forms.Select(attrs={"class": _INPUT}),
-            "level": forms.Select(attrs={"class": _INPUT}),
-            "role": forms.Select(attrs={"class": _INPUT}),
+            "area": forms.Select(attrs={"class": _SELECT}),
+            "level": forms.Select(attrs={"class": _SELECT}),
+            "role": forms.Select(attrs={"class": _SELECT}),
         }
 
     def __init__(self, *args, **kwargs):

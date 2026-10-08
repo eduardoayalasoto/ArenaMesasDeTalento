@@ -223,7 +223,7 @@ def user_reset_password(request, pk):
     user.save(update_fields=["password", "must_change_password"])
     if request.headers.get("HX-Request"):
         return HttpResponse(
-            '<span class="inline-flex items-center gap-1 text-base font-medium text-emerald-600">'
+            '<span class="inline-flex items-center gap-1 text-base font-medium text-success">'
             '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i>Reseteada</span>'
         )
     messages.success(request, f"Contraseña de {user.full_name} restablecida a Arena2026!.")
@@ -248,7 +248,7 @@ def user_delete(request, pk):
         error_msg = "No puedes eliminarte a ti mismo."
         if request.headers.get("HX-Request"):
             return HttpResponse(
-                f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-base text-rose-600">'
+                f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-base text-error">'
                 f'{error_msg}</td></tr>'
             )
         messages.error(request, error_msg)
@@ -277,7 +277,7 @@ def user_delete(request, pk):
             error_msg = f"No se puede eliminar: hay registros vinculados ({detalle}…). Reasigna primero."
             if request.headers.get("HX-Request"):
                 return HttpResponse(
-                    f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-base text-rose-600">'
+                    f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-base text-error">'
                     f'{error_msg}</td></tr>'
                 )
             messages.error(request, error_msg)

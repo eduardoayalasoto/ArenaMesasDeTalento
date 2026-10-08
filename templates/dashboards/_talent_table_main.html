@@ -8,15 +8,15 @@
 
   <!-- Avance por equipo (proyecto) -->
   {% if project_progress %}
-  <div class="ui-card overflow-hidden mb-4">
-    <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2 flex-wrap">
-      <i data-lucide="folder-kanban" class="w-4 h-4 text-arena-600"></i>
-      <h3 class="text-base font-semibold text-slate-700">Avance por equipo</h3>
-      <span class="text-base text-slate-400">Clic en un equipo para ver a sus integrantes</span>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden mb-4">
+    <div class="px-4 py-3 border-b border-base-200 flex items-center gap-2 flex-wrap">
+      <i data-lucide="folder-kanban" class="w-4 h-4 text-primary"></i>
+      <h3 class="text-base font-semibold text-base-content/80">Avance por equipo</h3>
+      <span class="text-base text-base-content/50">Clic en un equipo para ver a sus integrantes</span>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-base">
-        <thead class="bg-slate-50 text-slate-500 text-left text-base">
+        <thead class="bg-base-200/50 text-base-content/60 text-left text-base">
           <tr>
             <th class="px-3 py-2 font-medium">Proyecto</th>
             <th class="px-3 py-2 font-medium text-center w-16">Equipo</th>
@@ -25,26 +25,26 @@
             <th class="px-3 py-2 font-medium w-48">Avance</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
+        <tbody class="divide-y divide-base-200">
           {% for p in project_progress %}
           <tr role="button"
               hx-get="{% url 'dashboards:talent_table' %}?proyecto={{ p.project.pk }}"
-              class="group transition cursor-pointer hover:bg-arena-50 {% if selected_project and selected_project.pk == p.project.pk %}bg-arena-50/70{% endif %}">
-            <td class="px-3 py-2 font-medium text-slate-800 group-hover:text-arena-700">
+              class="group transition cursor-pointer hover:bg-primary/10 {% if selected_project and selected_project.pk == p.project.pk %}bg-primary/70{% endif %}">
+            <td class="px-3 py-2 font-medium text-base-content group-hover:text-primary">
               <span class="inline-flex items-center gap-1.5">
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-arena-500 transition"></i>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-base-content/40 group-hover:text-primary transition"></i>
                 {{ p.project.name }}
               </span>
             </td>
-            <td class="px-3 py-2 text-center tabular-nums text-slate-600">{{ p.total }}</td>
-            <td class="px-3 py-2 text-center tabular-nums text-emerald-700 font-medium">{{ p.listos }}</td>
-            <td class="px-3 py-2 text-center tabular-nums {% if p.pendientes %}text-amber-700{% else %}text-slate-400{% endif %}">{{ p.pendientes }}</td>
+            <td class="px-3 py-2 text-center tabular-nums text-base-content/70">{{ p.total }}</td>
+            <td class="px-3 py-2 text-center tabular-nums text-success font-medium">{{ p.listos }}</td>
+            <td class="px-3 py-2 text-center tabular-nums {% if p.pendientes %}text-warning{% else %}text-base-content/50{% endif %}">{{ p.pendientes }}</td>
             <td class="px-3 py-2">
               <div class="flex items-center gap-2">
-                <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div class="h-full rounded-full {% if p.pct == 100 %}bg-emerald-500{% else %}bg-arena-500{% endif %}" style="width: {{ p.pct }}%"></div>
+                <div class="flex-1 h-2 rounded-full bg-base-200 overflow-hidden">
+                  <div class="h-full rounded-full {% if p.pct == 100 %}bg-success{% else %}bg-primary{% endif %}" style="width: {{ p.pct }}%"></div>
                 </div>
-                <span class="tabular-nums text-base text-slate-500 w-9 text-right">{{ p.pct }}%</span>
+                <span class="tabular-nums text-base text-base-content/60 w-9 text-right">{{ p.pct }}%</span>
               </div>
             </td>
           </tr>
@@ -58,11 +58,11 @@
   <!-- Filtros y búsqueda -->
   {% if selected_project %}
   <div class="flex items-center gap-2 mb-4">
-    <span class="inline-flex items-center gap-2 rounded-full bg-arena-50 text-arena-700 px-3 py-1.5 text-base font-medium">
+    <span class="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1.5 text-base font-medium">
       {% include "partials/icon.html" with name="users" cls="w-4 h-4" %}
       Equipo: {{ selected_project.name }}
       <a href="{% url 'dashboards:talent_table' %}" hx-get="{% url 'dashboards:talent_table' %}"
-         class="hover:text-arena-900 cursor-pointer" aria-label="Quitar filtro de equipo">
+         class="hover:text-primary cursor-pointer" aria-label="Quitar filtro de equipo">
         {% include "partials/icon.html" with name="close" cls="w-4 h-4" %}
       </a>
     </span>
@@ -70,26 +70,26 @@
   {% else %}
   <form method="get" hx-get="{% url 'dashboards:talent_table' %}" class="flex flex-wrap items-center gap-2 mb-4">
     <div class="relative">
-      {% include "partials/icon.html" with name="search" cls="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" %}
-      <input type="search" name="q" value="{{ q }}" placeholder="Buscar por nombre…" class="ui-input pl-9 max-w-xs py-1.5">
+      {% include "partials/icon.html" with name="search" cls="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" %}
+      <input type="search" name="q" value="{{ q }}" placeholder="Buscar por nombre…" class="input w-full pl-9 max-w-xs py-1.5">
     </div>
-    <select name="area" class="ui-input max-w-44 py-1.5" onchange="this.form.requestSubmit()">
+    <select name="area" class="select w-full max-w-44 py-1.5" onchange="this.form.requestSubmit()">
       <option value="">Todas las áreas</option>
       {% for a in areas %}<option value="{{ a.code }}" {% if area_filter == a.code %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
     </select>
-    <select name="level" class="ui-input max-w-40 py-1.5" onchange="this.form.requestSubmit()">
+    <select name="level" class="select w-full max-w-40 py-1.5" onchange="this.form.requestSubmit()">
       <option value="">Todos los niveles</option>
       {% for l in levels %}<option value="{{ l.code }}" {% if level_filter == l.code %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
     </select>
-    <button type="submit" class="ui-btn-secondary py-1.5">Buscar</button>
+    <button type="submit" class="btn btn-outline btn-primary py-1.5">Buscar</button>
   </form>
   {% endif %}
 
   <!-- Lista de colaboradores -->
-  <div class="ui-card overflow-hidden">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full text-base">
-        <thead class="bg-slate-50 text-slate-500 text-left text-base">
+        <thead class="bg-base-200/50 text-base-content/60 text-left text-base">
           <tr class="align-bottom">
             <th class="px-3 py-2 font-medium leading-tight">Colaborador</th>
             <th class="px-3 py-2 font-medium leading-tight text-center hidden sm:table-cell w-20">Proyectos</th>
@@ -99,27 +99,27 @@
             <th class="px-3 py-2 font-medium text-right w-16"></th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
+        <tbody class="divide-y divide-base-200">
           {% for row in rows %}
-            <tr class="hover:bg-slate-50/70 transition">
+            <tr class="hover:bg-base-200/50 transition">
               <td class="px-3 py-3">
                 <div class="flex items-center gap-3">
                   {% include "partials/avatar.html" with subject=row.user size="w-10 h-10" icon="w-5 h-5" %}
                   <div class="min-w-0">
                     <div class="flex items-center gap-1.5 min-w-0">
-                      <p class="font-medium text-slate-900 truncate">{{ row.user.full_name }}</p>
-                      {% if row.mesa_ready %}<span class="ui-badge bg-emerald-50 text-emerald-700 text-base shrink-0">Listo</span>{% endif %}
+                      <p class="font-medium text-base-content truncate">{{ row.user.full_name }}</p>
+                      {% if row.mesa_ready %}<span class="badge bg-success/10 text-success text-base shrink-0">Listo</span>{% endif %}
                     </div>
-                    <p class="text-base text-slate-500 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user.level.name|default:"Sin nivel" }}</p>
+                    <p class="text-base text-base-content/60 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user.level.name|default:"Sin nivel" }}</p>
                   </div>
                 </div>
               </td>
               <td class="px-3 py-3 text-center tabular-nums hidden sm:table-cell">
                 {% if row.lead_projects %}
                   <span x-data="{ open: false }" class="relative inline-block">
-                    <button @mouseenter="open=true" @mouseleave="open=false" class="underline decoration-dotted text-arena-600 tabular-nums focus:outline-none" type="button">{{ row.user.num_projects }}</button>
+                    <button @mouseenter="open=true" @mouseleave="open=false" class="underline decoration-dotted text-primary tabular-nums focus:outline-none" type="button">{{ row.user.num_projects }}</button>
                     <div x-show="open" x-cloak
-                         class="absolute z-10 left-1/2 -translate-x-1/2 bottom-full mb-1 w-48 rounded-lg shadow-lg bg-white border border-slate-200 p-2 text-left text-base text-slate-700 space-y-1">
+                         class="absolute z-10 left-1/2 -translate-x-1/2 bottom-full mb-1 w-48 rounded-lg shadow-lg bg-base-100 border border-base-300 p-2 text-left text-base text-base-content/80 space-y-1">
                       {% for name in row.lead_projects %}
                         <p class="truncate">{{ name }}</p>
                       {% endfor %}
@@ -129,31 +129,31 @@
                   {{ row.user.num_projects }}
                 {% endif %}
               </td>
-              <td class="px-3 py-3 text-slate-600 hidden lg:table-cell">
-                {% for name in row.evaluators %}<span class="block truncate text-base">{{ name }}</span>{% empty %}<span class="text-slate-400">—</span>{% endfor %}
+              <td class="px-3 py-3 text-base-content/70 hidden lg:table-cell">
+                {% for name in row.evaluators %}<span class="block truncate text-base">{{ name }}</span>{% empty %}<span class="text-base-content/50">—</span>{% endfor %}
               </td>
               <td class="px-3 py-3 text-center">
-                {% if row.final.is_complete %}<span class="font-semibold text-slate-900 tabular-nums">{{ row.final.final_score }}</span>{% else %}<span class="text-slate-400">—</span>{% endif %}
+                {% if row.final.is_complete %}<span class="font-semibold text-base-content tabular-nums">{{ row.final.final_score }}</span>{% else %}<span class="text-base-content/50">—</span>{% endif %}
               </td>
               <td class="px-3 py-3 hidden sm:table-cell">
                 {% if row.final.is_complete %}
-                  <span class="ui-badge
-                    {% if row.final.band == 'Excede' %}bg-emerald-50 text-emerald-700
-                    {% elif row.final.band == 'Cumple' %}bg-arena-50 text-arena-700
-                    {% elif row.final.band == 'Cumple parcial' %}bg-amber-50 text-amber-700
-                    {% else %}bg-rose-50 text-rose-700{% endif %}">{{ row.final.band }}</span>
+                  <span class="badge
+                    {% if row.final.band == 'Excede' %}bg-success/10 text-success
+                    {% elif row.final.band == 'Cumple' %}bg-primary/10 text-primary
+                    {% elif row.final.band == 'Cumple parcial' %}bg-warning/10 text-warning
+                    {% else %}bg-error/10 text-error{% endif %}">{{ row.final.band }}</span>
                 {% else %}
-                  <span class="ui-badge bg-slate-100 text-slate-500">En proceso</span>
+                  <span class="badge bg-base-200 text-base-content/60">En proceso</span>
                 {% endif %}
               </td>
               <td class="px-3 py-3 text-right">
-                <a href="{% url 'dashboards:talent_person' pk=row.user.pk %}" class="ui-btn-soft" aria-label="Ver informe de {{ row.user.full_name }}">
+                <a href="{% url 'dashboards:talent_person' pk=row.user.pk %}" class="btn btn-sm btn-soft btn-primary" aria-label="Ver informe de {{ row.user.full_name }}">
                   Ver {% include "partials/icon.html" with name="arrow-right" cls="w-3.5 h-3.5" %}
                 </a>
               </td>
             </tr>
           {% empty %}
-            <tr><td colspan="6" class="px-5 py-8 text-center text-slate-400">No hay colaboradores con esos filtros.</td></tr>
+            <tr><td colspan="6" class="px-5 py-8 text-center text-base-content/50">No hay colaboradores con esos filtros.</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -162,11 +162,11 @@
 
   {% if page_obj.paginator.num_pages > 1 %}
   <div class="flex items-center justify-between gap-3 mt-4 text-base">
-    <p class="text-slate-500">Mostrando {{ page_obj.start_index }}–{{ page_obj.end_index }} de {{ page_obj.paginator.count }}</p>
+    <p class="text-base-content/60">Mostrando {{ page_obj.start_index }}–{{ page_obj.end_index }} de {{ page_obj.paginator.count }}</p>
     <div class="flex items-center gap-2">
-      {% if page_obj.has_previous %}<a href="?{{ base_qs }}&page={{ page_obj.previous_page_number }}" hx-get="?{{ base_qs }}&page={{ page_obj.previous_page_number }}" class="ui-btn-secondary py-1.5 cursor-pointer">{% include "partials/icon.html" with name="chevron-left" cls="w-4 h-4" %} Anterior</a>{% endif %}
-      <span class="text-slate-600">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}<a href="?{{ base_qs }}&page={{ page_obj.next_page_number }}" hx-get="?{{ base_qs }}&page={{ page_obj.next_page_number }}" class="ui-btn-secondary py-1.5 cursor-pointer">Siguiente {% include "partials/icon.html" with name="chevron-right" cls="w-4 h-4" %}</a>{% endif %}
+      {% if page_obj.has_previous %}<a href="?{{ base_qs }}&page={{ page_obj.previous_page_number }}" hx-get="?{{ base_qs }}&page={{ page_obj.previous_page_number }}" class="btn btn-outline btn-primary py-1.5 cursor-pointer">{% include "partials/icon.html" with name="chevron-left" cls="w-4 h-4" %} Anterior</a>{% endif %}
+      <span class="text-base-content/70">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?{{ base_qs }}&page={{ page_obj.next_page_number }}" hx-get="?{{ base_qs }}&page={{ page_obj.next_page_number }}" class="btn btn-outline btn-primary py-1.5 cursor-pointer">Siguiente {% include "partials/icon.html" with name="chevron-right" cls="w-4 h-4" %}</a>{% endif %}
     </div>
   </div>
   {% endif %}

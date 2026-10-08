@@ -17,13 +17,15 @@ local de UI) + Lucide. Entrada: `static/src/input.css`; salida versionada: `stat
 - Tema **`arena`** (copia fiel del de arena-crm): `data-theme="arena"` en `<html>`.
 - **Solo tokens semánticos** en código nuevo: `bg-base-100/200/300`, `text-base-content(/60)`,
   `bg-neutral`/`text-neutral-content` (navy `#242D51`), `btn-primary`, `badge-success`, etc.
-  Prohibidos hex sueltos y la escala legada `arena-*` (solo vive en plantillas aún no migradas).
+  Prohibidos hex sueltos y la paleta cruda de Tailwind (`slate-*`, `gray-*`, `emerald-*`…): el
+  navy legado `arena-*` ya no existe (se migró a `primary` el 2026-10-08).
 - **Acento de producto: naranja «talento»** — `talento-300 #FFB45A` → `talento-600 #F2711C`
   (degradado). **Solo en la marca.** Todo lo demás (estado activo del menú = `bg-secondary/15
   text-secondary`, contadores = `badge-error`) es idéntico al CRM.
-- Modo oscuro (`business`) **activo**, con el mismo toggle del menú de usuario que el CRM
-  (`static/js/theme_toggle.js`, clave `arena_talento_theme`). Las plantillas legadas aún no
-  migradas pueden verse imperfectas en oscuro hasta su fase 3.
+- Modo oscuro (`business`) disponible con el mismo toggle del menú de usuario que el CRM
+  (`static/js/theme_toggle.js`, clave `arena_talento_theme`). **Por defecto SIEMPRE claro**
+  (2026-10-08): no se hereda la preferencia del sistema operativo; el oscuro solo si la persona
+  lo activa. Igual en arena-crm.
 
 ## 3. Tipografía
 Una sola familia: **Quicksand** self-hosted (`static/fonts/`) y **la misma escala del CRM**
@@ -56,6 +58,15 @@ fase 2: `_button`, `_icon_button`, `_form_field`, `_modal`, `_confirm`, `_table`
 `_breadcrumb`, `_empty_state`, `_toast_container`, `_spinner`, `_avatar`, más `_tabs`, `_stat`,
 `_page_header`, `_filters`, `_star_rating`). Antes de escribir markup, busca el componente.
 
+Clases canónicas (las mismas del CRM, sin equivalente legado):
+- **Card**: `bg-base-100 border border-base-300 rounded-2xl shadow-sm` (la `shadow-sm` es la
+  única adición sobre el CRM, aprobada 2026-10-08).
+- **Botones**: `btn btn-primary` · `btn btn-outline btn-primary` (secundario) · `btn btn-ghost` ·
+  `btn btn-error` · `btn btn-sm btn-soft btn-primary` (acción ligera en tablas).
+- **Formularios**: `input w-full` · `select w-full` · `textarea w-full` · `file-input w-full`;
+  label `fieldset-legend` (o el componente `_form_field`).
+- **Badges**: `badge` + `badge-soft badge-{success|warning|error|info}` (o `_badge`).
+
 ## 7. Reglas duras (heredadas del CRM)
 - Íconos: **solo `window.renderIcons(raíz)`** (`static/js/icons.js`); prohibido
   `lucide.createIcons()` global (ciclo infinito con Alpine).
@@ -66,10 +77,9 @@ fase 2: `_button`, `_icon_button`, `_form_field`, `_modal`, `_confirm`, `_table`
 - Accesibilidad AA: `aria-label` en botones de solo ícono, foco visible, contraste en ambos temas.
 - Permisos en plantillas: `{% load access_tags %}` y `request.user|can:"clave"`.
 
-## 8. Capa legada `ui-*` (temporal)
-Las clases artesanales previas se renombraron a `ui-btn-*`, `ui-card`, `ui-input`, `ui-label`,
-`ui-badge`, `ui-nav-link` (mismo aspecto). **Prohibidas en código nuevo.** Cada módulo migrado
-deja de usarlas; se eliminan en la fase 4. Script del renombre: `scripts/rename_legacy_classes.py`.
+## 8. Capa legada `ui-*` (eliminada)
+Retirada el 2026-10-08 (fases 3-4): las 553 clases `ui-*` y la paleta cruda se migraron a
+daisyUI y tokens con `scripts/migrate_to_daisyui.py`. `ui-*` ya no existe en `input.css`.
 
 ## 9. Verificación (sin Node)
 Pruebas de vista pytest compactas + revisión en navegador (1440 px y 390 px) cuando el cambio sea

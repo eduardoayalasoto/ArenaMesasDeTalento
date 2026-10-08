@@ -302,47 +302,10 @@
   --color-talento-300: #FFB45A;
   --color-talento-600: #F2711C;
 
-  /* Navy LEGADO de Mesa de Talento (plantillas aún no migradas, `arena-*`). Se elimina en la fase 4. */
-  --color-arena-50:  #eef3f8;
-  --color-arena-100: #d5e1ee;
-  --color-arena-200: #adc4dd;
-  --color-arena-300: #7ea0c5;
-  --color-arena-400: #5079a8;
-  --color-arena-500: #345d8c;
-  --color-arena-600: #1e3a5f;
-  --color-arena-700: #182f4d;
-  --color-arena-800: #14273e;
-  --color-arena-900: #101f31;
-  --color-arena-950: #0a1422;
   --font-display: var(--font-heading);
 }
 
 /* Utilidad legada: títulos con la fuente de marca. */
 .font-display { font-family: var(--font-display); }
-
-/* CAPA LEGADA `ui-*` (fase 0, docs/PLAN_MIGRACION_DISENO.md §4): clases artesanales previas,
-   renombradas para no chocar con daisyUI. PROHIBIDAS en código nuevo (usar components/ y
-   daisyUI). Con variantes `dark:` para que las pantallas no migradas sigan legibles en modo
-   oscuro. Se eliminan en la fase 4. */
-@layer components {
-  .ui-btn, .ui-btn-primary, .ui-btn-secondary, .ui-btn-ghost, .ui-btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-base font-semibold transition cursor-pointer;
-    @apply focus-visible:ring-2 focus-visible:ring-arena-500 focus-visible:ring-offset-2;
-    @apply disabled:opacity-50 disabled:pointer-events-none;
-  }
-  .ui-btn-primary { @apply bg-arena-600 text-white shadow-sm hover:bg-arena-700; }
-  .ui-btn-secondary { @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800; }
-  .ui-btn-ghost { @apply text-slate-600 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800; }
-  .ui-btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
-  .ui-btn-soft { @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-base font-medium bg-arena-50 text-arena-700 hover:bg-arena-100 transition cursor-pointer dark:bg-gray-800 dark:text-gray-200; }
-
-  .ui-card { @apply bg-white rounded-xl border border-slate-200 shadow-sm dark:bg-gray-900 dark:border-gray-800; }
-  .ui-input { @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 focus:outline-none transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700; }
-  .ui-label { @apply block text-base font-medium text-slate-700 mb-1 dark:text-gray-300; }
-  .ui-badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-base font-medium; }
-
-  .ui-nav-link { @apply flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition; }
-  .ui-nav-link-active { @apply bg-arena-50 text-arena-700; }
-}
 
 [x-cloak] { display: none !important; }

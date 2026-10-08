@@ -2,16 +2,16 @@
 de feedback_session_list.html (doy · principal, asisto · secundario, recibo, y
 —para Talento/superusuario— todas).
 Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{% endcomment %}
-<div class="ui-card p-4 flex flex-col gap-3">
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 flex flex-col gap-3">
   <div class="flex items-center gap-3">
     {% include "partials/avatar.html" with subject=card.target size="w-10 h-10" %}
     <div class="min-w-0 flex-1">
-      <p class="font-medium text-slate-900 truncate">{{ card.target.full_name }}</p>
-      <p class="text-base text-slate-500 truncate">{{ card.target.area.name|default:"Sin área" }}{% if card.target.level %} · {{ card.target.level.name }}{% endif %}</p>
+      <p class="font-medium text-base-content truncate">{{ card.target.full_name }}</p>
+      <p class="text-base text-base-content/60 truncate">{{ card.target.area.name|default:"Sin área" }}{% if card.target.level %} · {{ card.target.level.name }}{% endif %}</p>
     </div>
-    <span class="ui-badge text-base shrink-0
-      {% if ui-card.viewer_role == 'Principal' %}bg-arena-50 text-arena-700
-      {% elif ui-card.viewer_role == 'Secundario' %}bg-slate-100 text-slate-600
+    <span class="badge text-base shrink-0
+      {% if card.viewer_role == 'Principal' %}bg-primary/10 text-primary
+      {% elif card.viewer_role == 'Secundario' %}bg-base-200 text-base-content/70
       {% else %}bg-indigo-50 text-indigo-700{% endif %}">
       Tú: {{ card.viewer_role }}
     </span>
@@ -19,50 +19,50 @@ Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{
 
   <div class="flex items-center gap-2 text-base">
     {% if card.final.is_complete %}
-      <span class="font-semibold text-slate-900 tabular-nums">{{ card.final.final_score }}</span>
-      <span class="ui-badge text-base
-        {% if ui-card.final.band == 'Excede' %}bg-emerald-50 text-emerald-700
-        {% elif ui-card.final.band == 'Cumple' %}bg-arena-50 text-arena-700
-        {% elif ui-card.final.band == 'Cumple parcial' %}bg-amber-50 text-amber-700
-        {% else %}bg-rose-50 text-rose-700{% endif %}">{{ card.final.band }}</span>
+      <span class="font-semibold text-base-content tabular-nums">{{ card.final.final_score }}</span>
+      <span class="badge text-base
+        {% if card.final.band == 'Excede' %}bg-success/10 text-success
+        {% elif card.final.band == 'Cumple' %}bg-primary/10 text-primary
+        {% elif card.final.band == 'Cumple parcial' %}bg-warning/10 text-warning
+        {% else %}bg-error/10 text-error{% endif %}">{{ card.final.band }}</span>
     {% else %}
-      <span class="text-base text-slate-400">Puntaje aún no completo</span>
+      <span class="text-base text-base-content/50">Puntaje aún no completo</span>
     {% endif %}
   </div>
 
   <div>
-    <p class="text-base font-semibold text-slate-400 uppercase tracking-wide mb-1">Proyectos</p>
+    <p class="text-base font-semibold text-base-content/50 uppercase tracking-wide mb-1">Proyectos</p>
     {% if card.projects %}
-      <p class="text-base text-slate-700">{{ card.projects|join:", " }}</p>
+      <p class="text-base text-base-content/80">{{ card.projects|join:", " }}</p>
     {% else %}
-      <p class="text-base text-slate-400 italic">Sin proyectos activos.</p>
+      <p class="text-base text-base-content/50 italic">Sin proyectos activos.</p>
     {% endif %}
   </div>
 
   <div>
-    <p class="text-base font-semibold text-slate-400 uppercase tracking-wide mb-1">
+    <p class="text-base font-semibold text-base-content/50 uppercase tracking-wide mb-1">
       {% if card.viewer_role == 'Receptor' %}Quién te da retroalimentación{% else %}Responsables{% endif %}
     </p>
     <div class="flex flex-wrap gap-1.5">
       {% for g in card.givers %}
         {% if g.is_primary %}
-          <span class="ui-badge text-base font-semibold bg-arena-100 text-arena-800 ring-1 ring-arena-300 {% if g.user_id == request.user.pk %}ring-2 ring-arena-500{% endif %}">
+          <span class="badge text-base font-semibold bg-primary/15 text-primary ring-1 ring-primary/40 {% if g.user_id == request.user.pk %}ring-2 ring-primary{% endif %}">
             {% include "partials/icon.html" with name="star" cls="w-3 h-3 shrink-0" %}
             {{ g.user.full_name }} · Principal
           </span>
         {% else %}
-          <span class="ui-badge text-base bg-slate-100 text-slate-600 {% if g.user_id == request.user.pk %}ring-2 ring-arena-400{% endif %}">
+          <span class="badge text-base bg-base-200 text-base-content/70 {% if g.user_id == request.user.pk %}ring-2 ring-primary/70{% endif %}">
             {{ g.user.full_name }} · Secundario
           </span>
         {% endif %}
       {% empty %}
-        <span class="text-base text-slate-400 italic">Sin responsables asignados todavía.</span>
+        <span class="text-base text-base-content/50 italic">Sin responsables asignados todavía.</span>
       {% endfor %}
     </div>
   </div>
 
   {% if card.viewer_role == 'Receptor' and card.givers %}
-    <p class="text-base text-slate-600 bg-slate-50 rounded-lg px-3 py-2 flex items-start gap-1.5">
+    <p class="text-base text-base-content/70 bg-base-200/50 rounded-lg px-3 py-2 flex items-start gap-1.5">
       {% include "partials/icon.html" with name="calendar" cls="w-3.5 h-3.5 shrink-0 mt-0.5" %}
       <span>Busca a {{ card.givers|length }} colaborador{{ card.givers|pluralize }} de arriba para agendar tu sesión de retroalimentación.</span>
     </p>
@@ -70,13 +70,13 @@ Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{
 
   <div class="flex items-center justify-between gap-3 pt-1 mt-auto">
     {% if card.read_only %}
-      <span class="ui-badge bg-slate-100 text-slate-500 text-base">Histórico · solo lectura</span>
+      <span class="badge bg-base-200 text-base-content/60 text-base">Histórico · solo lectura</span>
     {% elif card.note.feedback_agreed %}
-      <span class="ui-badge bg-emerald-50 text-emerald-700 text-base">Acordada · cerrada</span>
+      <span class="badge bg-success/10 text-success text-base">Acordada · cerrada</span>
     {% elif card.note.has_feedback_session %}
-      <span class="ui-badge bg-amber-50 text-amber-700 text-base">Con avance</span>
+      <span class="badge bg-warning/10 text-warning text-base">Con avance</span>
     {% else %}
-      <span class="ui-badge bg-slate-100 text-slate-500 text-base">Sin iniciar</span>
+      <span class="badge bg-base-200 text-base-content/60 text-base">Sin iniciar</span>
     {% endif %}
     <div class="flex items-center gap-2">
       {% if card.note.feedback_agreed and card.can_reopen %}
@@ -84,10 +84,10 @@ Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{
           {% csrf_token %}
           <input type="hidden" name="action" value="reopen">
           <input type="hidden" name="next" value="{% url 'dashboards:feedback_session_list' %}{% if card.period %}?periodo={{ card.period.pk }}{% endif %}">
-          <button type="submit" class="ui-btn-soft">Reabrir</button>
+          <button type="submit" class="btn btn-sm btn-soft btn-primary">Reabrir</button>
         </form>
       {% endif %}
-      <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}{% if card.period %}?periodo={{ card.period.pk }}{% endif %}" class="ui-btn-soft">
+      <a href="{% url 'dashboards:feedback_session_detail' pk=card.target.pk %}{% if card.period %}?periodo={{ card.period.pk }}{% endif %}" class="btn btn-sm btn-soft btn-primary">
         {% include "partials/icon.html" with name="eye" cls="w-3.5 h-3.5" %} Ver
       </a>
     </div>

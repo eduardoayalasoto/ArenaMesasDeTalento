@@ -52,7 +52,7 @@
 
     {% block extra_head %}{% endblock %}
   </head>
-  <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen">
+  <body class="bg-base-100 text-base-content min-h-screen">
     <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-base-100 focus:px-4 focus:py-2 focus:rounded-lg focus:shadow">Saltar al contenido</a>
     {% if user.is_authenticated %}
     {% block body_content %}

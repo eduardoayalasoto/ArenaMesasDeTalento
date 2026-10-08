@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Hola, {{ user.get_short_name }}</h2>
-    <p class="text-slate-600">
+    <h2 class="text-xl font-semibold text-base-content">Hola, {{ user.get_short_name }}</h2>
+    <p class="text-base-content/70">
       {% if period %}Periodo <span class="font-medium">{{ period.name }}</span> en curso.{% else %}Sin periodo abierto por ahora.{% endif %}
     </p>
   </div>
@@ -13,21 +13,21 @@
     {% include "partials/empty_state.html" with icon="folder" title="Aún no tienes proyectos asignados" message="Cuando Talento te asigne a un proyecto en este periodo, verás aquí tus evaluaciones de Ownership." %}
   {% else %}
     <div class="grid gap-4 sm:grid-cols-3 mb-6">
-      <div class="ui-card p-5">
-        <p class="text-base text-slate-500">Mis proyectos</p>
-        <p class="mt-1 text-3xl font-semibold text-slate-900 tabular-nums">{{ my_projects }}</p>
+      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+        <p class="text-base text-base-content/60">Mis proyectos</p>
+        <p class="mt-1 text-3xl font-semibold text-base-content tabular-nums">{{ my_projects }}</p>
       </div>
-      <div class="ui-card p-5">
-        <p class="text-base text-slate-500">Evaluaciones enviadas</p>
-        <p class="mt-1 text-3xl font-semibold text-slate-900 tabular-nums">{{ my_submitted }}<span class="text-lg text-slate-400">/{{ my_projects }}</span></p>
+      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+        <p class="text-base text-base-content/60">Evaluaciones enviadas</p>
+        <p class="mt-1 text-3xl font-semibold text-base-content tabular-nums">{{ my_submitted }}<span class="text-lg text-base-content/50">/{{ my_projects }}</span></p>
       </div>
-      <div class="ui-card p-5 flex flex-col justify-between">
-        <p class="text-base text-slate-500">Acciones</p>
-        <a href="{% url 'evaluations:ownership_list' %}" class="ui-btn-primary mt-2">Ir a mis evaluaciones</a>
+      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col justify-between">
+        <p class="text-base text-base-content/60">Acciones</p>
+        <a href="{% url 'evaluations:ownership_list' %}" class="btn btn-primary mt-2">Ir a mis evaluaciones</a>
       </div>
     </div>
     <div class="flex gap-2">
-      <a href="{% url 'dashboards:my_results' %}" class="ui-btn-secondary">Ver mis resultados</a>
+      <a href="{% url 'dashboards:my_results' %}" class="btn btn-outline btn-primary">Ver mis resultados</a>
     </div>
   {% endif %}
 {% endblock %}

@@ -5,34 +5,34 @@
 <div>
   <div class="mb-5">
     {% if historic %}
-      <h3 class="text-lg font-semibold text-slate-900">Carga histórica de un curso</h3>
-      <p class="text-base text-slate-600">Registra un curso que la persona completó antes de Arena Learn (por ejemplo, desde SharePoint), con su evidencia y reseña.</p>
+      <h3 class="text-lg font-semibold text-base-content">Carga histórica de un curso</h3>
+      <p class="text-base text-base-content/70">Registra un curso que la persona completó antes de Arena Learn (por ejemplo, desde SharePoint), con su evidencia y reseña.</p>
     {% else %}
-      <h3 class="text-lg font-semibold text-slate-900">Registrar un curso ya tomado</h3>
-      <p class="text-base text-slate-600">Para cursos gratuitos o que pagaste por tu cuenta: no pasan por autorización, pero suman a tu Arena Learn y al conocimiento de todo el equipo. Si el curso tiene costo para Arena, mejor <a class="text-arena-700 font-medium hover:underline" href="{% url 'learning:request_start' %}">solicítalo</a>.</p>
+      <h3 class="text-lg font-semibold text-base-content">Registrar un curso ya tomado</h3>
+      <p class="text-base text-base-content/70">Para cursos gratuitos o que pagaste por tu cuenta: no pasan por autorización, pero suman a tu Arena Learn y al conocimiento de todo el equipo. Si el curso tiene costo para Arena, mejor <a class="text-primary font-medium hover:underline" href="{% url 'learning:request_start' %}">solicítalo</a>.</p>
     {% endif %}
   </div>
 
-  <form method="post" enctype="multipart/form-data" class="ui-card p-6 space-y-6" novalidate>
+  <form method="post" enctype="multipart/form-data" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 space-y-6" novalidate>
     {% csrf_token %}
     {% if catalog_course %}<input type="hidden" name="catalogo" value="{{ catalog_course.pk }}">{% endif %}
-    {% for e in form.non_field_errors %}<p class="text-base text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in form.non_field_errors %}<p class="text-base text-error">{{ e }}</p>{% endfor %}
     <div class="grid sm:grid-cols-2 gap-4">
       {% for field in form %}
         <div class="{% if field.name == 'name' or field.name == 'url' or field.name == 'person' %}sm:col-span-2{% endif %}">
-          <label class="ui-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="text-rose-600">*</span>{% endif %}</label>
+          <label class="fieldset-legend" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="text-error">*</span>{% endif %}</label>
           {{ field }}
-          {% for e in field.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
+          {% for e in field.errors %}<p class="mt-1 text-base text-error">{{ e }}</p>{% endfor %}
         </div>
       {% endfor %}
     </div>
-    <hr class="border-slate-100">
+    <hr class="border-base-200">
     {% include "learning/_evidence_upload.html" %}
-    <hr class="border-slate-100">
+    <hr class="border-base-200">
     {% include "learning/_review_fields.html" %}
     <div class="flex justify-end gap-2">
-      <a href="{% url 'learning:my_courses' %}" class="ui-btn-ghost">Cancelar</a>
-      <button type="submit" class="ui-btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Registrar curso</button>
+      <a href="{% url 'learning:my_courses' %}" class="btn btn-ghost">Cancelar</a>
+      <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Registrar curso</button>
     </div>
   </form>
 </div>

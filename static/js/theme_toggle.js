@@ -14,16 +14,9 @@
       return window.localStorage.getItem(STORAGE_KEY);
     } catch (e) {
       // localStorage puede no estar disponible (modo privado estricto,
-      // política del navegador) -- degrada a preferencia del sistema.
+      // política del navegador) -- degrada al tema claro.
       return null;
     }
-  }
-
-  function systemPrefersDark() {
-    return (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
   }
 
   function applyTheme(theme) {
@@ -42,7 +35,9 @@
     if (stored === "light" || stored === "dark") {
       return stored;
     }
-    return systemPrefersDark() ? "dark" : "light";
+    // Default SIEMPRE claro (2026-10-08, pedido explícito): no se hereda la
+    // preferencia del sistema operativo; el oscuro solo si la persona lo activa.
+    return "light";
   }
 
   // Aplicar de inmediato, antes de que Alpine/htmx terminen de cargar.

@@ -22,9 +22,9 @@ User = get_user_model()
 
 class ProfileNameForm(forms.Form):
     name = forms.CharField(label="Nombre del perfil", max_length=80,
-                           widget=forms.TextInput(attrs={"class": "ui-input", "placeholder": "p. ej. Lead extendido"}))
+                           widget=forms.TextInput(attrs={"class": "input w-full", "placeholder": "p. ej. Lead extendido"}))
     description = forms.CharField(label="Descripción", max_length=240, required=False,
-                                  widget=forms.TextInput(attrs={"class": "ui-input"}))
+                                  widget=forms.TextInput(attrs={"class": "input w-full"}))
 
 
 def _error(exc: ValidationError) -> str:

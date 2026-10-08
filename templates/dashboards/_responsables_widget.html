@@ -5,28 +5,28 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
      {% if request.user|can:"talent_table.assign_feedback" %}x-data="{ editingPrimary: false, addingSecondary: false }"{% endif %}>
 
   {# ── Principal ── #}
-  <p class="text-base font-semibold text-slate-400 uppercase tracking-wide mb-3">Principal</p>
+  <p class="text-base font-semibold text-base-content/50 uppercase tracking-wide mb-3">Principal</p>
 
   {% if primary %}
     <div class="flex items-center flex-wrap gap-2.5 mb-1">
-      <i data-lucide="user" class="w-4 h-4 text-arena-500 shrink-0"></i>
-      <span class="text-base font-medium text-slate-800">{{ primary.user.full_name }}</span>
+      <i data-lucide="user" class="w-4 h-4 text-primary shrink-0"></i>
+      <span class="text-base font-medium text-base-content">{{ primary.user.full_name }}</span>
       {% if primary.user.area %}
-        <span class="text-base text-slate-400">· {{ primary.user.area.name }}</span>
+        <span class="text-base text-base-content/50">· {{ primary.user.area.name }}</span>
       {% endif %}
       {% if request.user|can:"talent_table.assign_feedback" %}
         <button type="button" @click="editingPrimary = !editingPrimary"
-                class="text-base text-arena-600 hover:text-arena-700">cambiar</button>
+                class="text-base text-primary hover:text-primary">cambiar</button>
         <form class="inline" method="post"
               hx-post="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=primary.pk %}"
               hx-target="#responsables-widget" hx-swap="outerHTML">
           {% csrf_token %}
-          <button type="submit" class="text-base text-rose-500 hover:text-rose-700">quitar</button>
+          <button type="submit" class="text-base text-error hover:text-error">quitar</button>
         </form>
       {% endif %}
     </div>
   {% else %}
-    <p class="text-base text-slate-400 italic mb-1">Sin responsable principal.</p>
+    <p class="text-base text-base-content/50 italic mb-1">Sin responsable principal.</p>
   {% endif %}
 
   {% if request.user|can:"talent_table.assign_feedback" %}
@@ -40,7 +40,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
         hx-swap="outerHTML"
         hx-trigger="change[this.value !== '']"
         hx-include="closest form"
-        class="ui-input py-1.5 w-auto max-w-[16rem]" required>
+        class="select w-full py-1.5 w-auto max-w-[16rem]" required>
         <option value="">— Nuevo responsable principal —</option>
         {% for u in all_users %}
           <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
@@ -49,44 +49,44 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
           <option value="{{ primary.user.pk }}">{{ primary.user.full_name }} (actual)</option>
         {% endif %}
       </select>
-      <button type="button" class="ui-btn-soft py-1.5" @click="editingPrimary = false">Cancelar</button>
+      <button type="button" class="btn btn-sm btn-soft btn-primary py-1.5" @click="editingPrimary = false">Cancelar</button>
     </form>
 
     {% if not primary %}
       <button type="button" @click="editingPrimary = !editingPrimary"
-              class="text-base text-arena-600 hover:text-arena-700 flex items-center gap-1 mt-1">
+              class="text-base text-primary hover:text-primary flex items-center gap-1 mt-1">
         <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Asignar responsable principal
       </button>
     {% endif %}
   {% endif %}
 
   {# ── Secundarios ── #}
-  <p class="text-base font-semibold text-slate-400 uppercase tracking-wide mt-6 mb-3">Secundarios</p>
+  <p class="text-base font-semibold text-base-content/50 uppercase tracking-wide mt-6 mb-3">Secundarios</p>
 
   {% for r in secondaries %}
     <div class="flex items-center gap-2.5 mb-2">
-      <i data-lucide="user" class="w-4 h-4 text-slate-400 shrink-0"></i>
-      <span class="text-base font-medium text-slate-700">{{ r.user.full_name }}</span>
+      <i data-lucide="user" class="w-4 h-4 text-base-content/50 shrink-0"></i>
+      <span class="text-base font-medium text-base-content/80">{{ r.user.full_name }}</span>
       {% if r.user.area %}
-        <span class="text-base text-slate-400">· {{ r.user.area.name }}</span>
+        <span class="text-base text-base-content/50">· {{ r.user.area.name }}</span>
       {% endif %}
       {% if request.user|can:"talent_table.assign_feedback" %}
         <form method="post" class="inline"
               hx-post="{% url 'dashboards:talent_responsable_remove' pk=target.pk rid=r.pk %}"
               hx-target="#responsables-widget" hx-swap="outerHTML">
           {% csrf_token %}
-          <button type="submit" class="text-rose-500 hover:text-rose-700 text-base ml-1">quitar</button>
+          <button type="submit" class="text-error hover:text-error text-base ml-1">quitar</button>
         </form>
       {% endif %}
     </div>
   {% empty %}
-    <p class="text-base text-slate-400 italic mb-1">Sin responsables secundarios.</p>
+    <p class="text-base text-base-content/50 italic mb-1">Sin responsables secundarios.</p>
   {% endfor %}
 
   {% if request.user|can:"talent_table.assign_feedback" %}
     <div class="mt-3">
       <button type="button" @click="addingSecondary = !addingSecondary"
-              class="text-base text-arena-600 hover:text-arena-700 flex items-center gap-1">
+              class="text-base text-primary hover:text-primary flex items-center gap-1">
         <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Agregar secundario
       </button>
       <form x-show="addingSecondary" x-cloak method="post"
@@ -99,13 +99,13 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
           hx-swap="outerHTML"
           hx-trigger="change[this.value !== '']"
           hx-include="closest form"
-          class="ui-input py-1.5 w-auto max-w-[16rem]" required>
+          class="select w-full py-1.5 w-auto max-w-[16rem]" required>
           <option value="">— Elegir persona —</option>
           {% for u in all_users %}
             <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
           {% endfor %}
         </select>
-        <button type="button" class="ui-btn-soft py-1.5" @click="addingSecondary = false">Cancelar</button>
+        <button type="button" class="btn btn-sm btn-soft btn-primary py-1.5" @click="addingSecondary = false">Cancelar</button>
       </form>
     </div>
   {% endif %}

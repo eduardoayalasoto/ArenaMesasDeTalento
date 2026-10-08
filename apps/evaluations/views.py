@@ -539,7 +539,7 @@ def ownership_reset_user(request, user_pk):
     if request.headers.get("HX-Request"):
         label = f"{len(evals)} reiniciada{'s' if len(evals) != 1 else ''}" if evals else "sin evaluaciones"
         return HttpResponse(
-            f'<span class="text-emerald-600 text-base font-medium flex items-center gap-1">'
+            f'<span class="text-success text-base font-medium flex items-center gap-1">'
             f'<i data-lucide="check" class="w-3.5 h-3.5"></i>{label}</span>'
         )
 

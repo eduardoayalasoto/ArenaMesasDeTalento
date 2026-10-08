@@ -3,41 +3,41 @@
 {% block content %}
 
 <div class="mb-6">
-  <h2 class="text-xl font-semibold text-slate-900">Escenario Actual</h2>
-  <p class="text-slate-600">Arrastra a un colaborador entre columnas para actualizar su Escenario Actual.</p>
+  <h2 class="text-xl font-semibold text-base-content">Escenario Actual</h2>
+  <p class="text-base-content/70">Arrastra a un colaborador entre columnas para actualizar su Escenario Actual.</p>
 </div>
 
 {% if not period %}
-  <div class="ui-card p-8 text-center text-slate-400">No hay periodo abierto.</div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-8 text-center text-base-content/50">No hay periodo abierto.</div>
 {% else %}
 
-<div class="ui-card p-4 mb-6 flex flex-wrap items-center gap-3" x-data="{ area: 'todos', level: 'todos' }" x-init="
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 mb-6 flex flex-wrap items-center gap-3" x-data="{ area: 'todos', level: 'todos' }" x-init="
   $watch('area', v => applyScenarioFilters(v, level));
   $watch('level', v => applyScenarioFilters(area, v));
 ">
-  <label class="text-base text-slate-600 flex items-center gap-2">
+  <label class="text-base text-base-content/70 flex items-center gap-2">
     Área
-    <select x-model="area" class="ui-input">
+    <select x-model="area" class="select w-full">
       <option value="todos">Todas</option>
       {% for a in areas %}<option value="{{ a.code }}">{{ a.name }}</option>{% endfor %}
     </select>
   </label>
-  <label class="text-base text-slate-600 flex items-center gap-2">
+  <label class="text-base text-base-content/70 flex items-center gap-2">
     Nivel
-    <select x-model="level" class="ui-input">
+    <select x-model="level" class="select w-full">
       <option value="todos">Todos</option>
       {% for l in levels %}<option value="{{ l.code }}">{{ l.name }}</option>{% endfor %}
     </select>
   </label>
-  <span class="text-base text-slate-400 ml-auto">Los filtros solo afectan lo que ves; no cambian el escenario de nadie.</span>
+  <span class="text-base text-base-content/50 ml-auto">Los filtros solo afectan lo que ves; no cambian el escenario de nadie.</span>
 </div>
 
 <div id="scenario-board" data-move-url-template="{% url 'dashboards:current_scenario_move' pk=0 %}"
      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
   {% for col in columns %}
-  <div class="ui-card p-3 min-h-[16rem] flex flex-col">
-    <p class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-2">
-      {{ col.label }} <span class="text-slate-400 scenario-count">({{ col.cards|length }})</span>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-3 min-h-[16rem] flex flex-col">
+    <p class="text-base font-semibold text-base-content/60 uppercase tracking-wide mb-2">
+      {{ col.label }} <span class="text-base-content/50 scenario-count">({{ col.cards|length }})</span>
     </p>
     <div class="scenario-list flex-1 space-y-2 min-h-[4rem]"
          data-scenario-pk="{% if col.option %}{{ col.option.pk }}{% endif %}">
@@ -50,10 +50,10 @@
 </div>
 
 {% if critical_option %}
-<div class="ui-card p-3 mt-4 border-2 border-red-200 bg-red-50/40">
-  <p class="text-base font-semibold text-red-600 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-3 mt-4 border-2 border-error/25 bg-error/40">
+  <p class="text-base font-semibold text-error uppercase tracking-wide mb-2 flex items-center gap-1.5">
     <i data-lucide="alert-triangle" class="w-4 h-4"></i> {{ critical_option.name }}
-    <span class="text-red-400 font-normal scenario-count">({{ critical_cards|length }})</span>
+    <span class="text-error font-normal scenario-count">({{ critical_cards|length }})</span>
   </p>
   <div class="scenario-list flex flex-wrap gap-2 min-h-[4rem]" data-scenario-pk="{{ critical_option.pk }}">
     {% for card in critical_cards %}

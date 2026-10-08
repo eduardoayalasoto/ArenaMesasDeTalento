@@ -3,25 +3,25 @@
 {% block content %}
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
-      <h2 class="text-xl font-semibold text-slate-900">Usuarios</h2>
-      <p class="text-slate-600">Asigna área, nivel y rol a cada colaborador.</p>
+      <h2 class="text-xl font-semibold text-base-content">Usuarios</h2>
+      <p class="text-base-content/70">Asigna área, nivel y rol a cada colaborador.</p>
     </div>
-    <a href="{% url 'accounts:user_create' %}" class="ui-btn-primary">{% include "partials/icon.html" with name="user-plus" cls="w-4 h-4" %} Nuevo usuario</a>
+    <a href="{% url 'accounts:user_create' %}" class="btn btn-primary">{% include "partials/icon.html" with name="user-plus" cls="w-4 h-4" %} Nuevo usuario</a>
   </div>
   {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El nivel <strong>Lead</strong> habilita ver a toda su área. El <strong>Lead directo</strong> es quien aprueba primero sus solicitudes de curso en Arena Learn (si está vacío, aprueba cualquier Lead de su área). El rol <strong>Director</strong> habilita validar la Entrega de Valor; <strong>Talento</strong> administra todo. Los cambios se guardan al presionar «Guardar cambios».</p>" %}
 
   <form method="get" class="mb-4">
     <div class="relative max-w-sm">
-      {% include "partials/icon.html" with name="search" cls="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" %}
-      <input type="search" name="q" value="{{ q }}" class="ui-input pl-9" placeholder="Buscar por nombre…">
+      {% include "partials/icon.html" with name="search" cls="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" %}
+      <input type="search" name="q" value="{{ q }}" class="input w-full pl-9" placeholder="Buscar por nombre…">
     </div>
   </form>
 
-  <form method="post" class="ui-card overflow-hidden">
+  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
     {% csrf_token %}
     <div class="overflow-x-auto">
       <table class="w-full text-base">
-        <thead class="bg-slate-50 text-slate-600 text-left">
+        <thead class="bg-base-200/50 text-base-content/70 text-left">
           <tr>
             <th class="px-4 py-3 font-medium">Colaborador</th>
             <th class="px-4 py-3 font-medium w-44">Área</th>
@@ -32,57 +32,57 @@
             <th class="px-4 py-3 font-medium w-36">Acciones</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
+        <tbody class="divide-y divide-base-200">
           {% for u in users %}
-            <tr id="user-row-{{ u.id }}" class="hover:bg-slate-50 transition-colors">
+            <tr id="user-row-{{ u.id }}" class="hover:bg-base-200/50 transition-colors">
               <td class="px-4 py-2.5">
-                <p class="font-medium text-slate-900">{{ u.full_name }}</p>
-                <p class="text-base text-slate-400">{{ u.email }}</p>
+                <p class="font-medium text-base-content">{{ u.full_name }}</p>
+                <p class="text-base text-base-content/50">{{ u.email }}</p>
               </td>
 
               <td class="px-4 py-2.5">
                 <div class="relative">
-                  <select name="area-{{ u.id }}" class="ui-input py-1.5 appearance-none pr-8 text-base bg-white cursor-pointer">
+                  <select name="area-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
                     <option value="">— Sin área —</option>
                     {% for a in areas %}<option value="{{ a.code }}" {% if u.area_id == a.id %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
                   </div>
                 </div>
               </td>
 
               <td class="px-4 py-2.5">
                 <div class="relative">
-                  <select name="level-{{ u.id }}" class="ui-input py-1.5 appearance-none pr-8 text-base bg-white cursor-pointer">
+                  <select name="level-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
                     <option value="">— Sin nivel —</option>
                     {% for l in levels %}<option value="{{ l.code }}" {% if u.level_id == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
                   </div>
                 </div>
               </td>
 
               <td class="px-4 py-2.5">
                 <div class="relative">
-                  <select name="role-{{ u.id }}" class="ui-input py-1.5 appearance-none pr-8 text-base bg-white cursor-pointer">
+                  <select name="role-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
                     {% for value, label in roles %}<option value="{{ value }}" {% if u.role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
                   </div>
                 </div>
               </td>
 
               <td class="px-4 py-2.5">
                 <div class="relative">
-                  <select name="lead-{{ u.id }}" class="ui-input py-1.5 appearance-none pr-8 text-base bg-white cursor-pointer">
+                  <select name="lead-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
                     <option value="">— Lead del área —</option>
                     {% for c in lead_candidates %}{% if c.id != u.id %}<option value="{{ c.id }}" {% if u.direct_lead_id == c.id %}selected{% endif %}>{{ c.full_name }}{% if c.level and c.level.code == "LEAD" %} · Lead{% endif %}</option>{% endif %}{% endfor %}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
                   </div>
                 </div>
               </td>
@@ -90,15 +90,15 @@
               {% if can_assign_profiles %}
               <td class="px-4 py-2.5">
                 <div class="relative">
-                  <select name="profile-{{ u.id }}" class="ui-input py-1.5 appearance-none pr-8 text-base bg-white cursor-pointer" aria-label="Perfil de {{ u.full_name }}">
+                  <select name="profile-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer" aria-label="Perfil de {{ u.full_name }}">
                     {% if not u.profile_id %}<option value="">— Sugerido por rol —</option>{% endif %}
                     {% for p in profiles %}<option value="{{ p.pk }}" {% if u.profile_id == p.pk %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
                   </div>
                 </div>
-                <a href="{% url 'access:effective_access' u.pk %}" class="text-base text-arena-700 hover:underline">Ver acceso</a>
+                <a href="{% url 'access:effective_access' u.pk %}" class="text-base text-primary hover:underline">Ver acceso</a>
               </td>
               {% endif %}
 
@@ -111,10 +111,10 @@
                       hx-target="#reset-pwd-{{ u.id }}"
                       hx-swap="innerHTML"
                       hx-confirm="¿Resetear contraseña de {{ u.full_name }} a Arena2026!? Tendrá que cambiarla al iniciar sesión."
-                      class="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-200 transition cursor-pointer">
+                      class="p-1.5 rounded-lg text-warning hover:bg-warning/10 border border-transparent hover:border-warning/25 transition cursor-pointer">
                       <i data-lucide="key-round" class="w-4 h-4"></i>
                     </button>
-                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip:opacity-100 z-20">Resetear contraseña</span>
+                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip:opacity-100 z-20">Resetear contraseña</span>
                   </span>
                   {% endif %}
                   {% if request.user|can:"ownership.admin" %}
@@ -124,10 +124,10 @@
                       hx-target="#reset-eval-{{ u.id }}"
                       hx-swap="innerHTML"
                       hx-confirm="¿Reiniciar la evaluación de {{ u.full_name }}? Se borrarán todas sus respuestas y evaluador asignado del periodo actual."
-                      class="p-1.5 rounded-lg text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition cursor-pointer">
+                      class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer">
                       <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                     </button>
-                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip2:opacity-100 z-20">Reiniciar evaluación</span>
+                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip2:opacity-100 z-20">Reiniciar evaluación</span>
                   </span>
                   {% endif %}
                   {% if request.user|can:"users.delete" %}
@@ -137,10 +137,10 @@
                       hx-target="#user-row-{{ u.id }}"
                       hx-swap="outerHTML"
                       hx-confirm="¿Eliminar a {{ u.full_name }}? Esta acción no se puede deshacer."
-                      class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer">
+                      class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer">
                       <i data-lucide="trash-2" class="w-4 h-4"></i>
                     </button>
-                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip3:opacity-100 z-20">Eliminar usuario</span>
+                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip3:opacity-100 z-20">Eliminar usuario</span>
                   </span>
                   {% endif %}
                 </div>
@@ -150,8 +150,8 @@
         </tbody>
       </table>
     </div>
-    <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end sticky bottom-0">
-      <button type="submit" class="ui-btn-primary">
+    <div class="p-4 border-t border-base-300 bg-base-200/50 flex justify-end sticky bottom-0">
+      <button type="submit" class="btn btn-primary">
         {% include "partials/icon.html" with name="save" cls="w-4 h-4" %}
         Guardar cambios
       </button>

@@ -1,7 +1,7 @@
 {% comment %}Estrellas de solo lectura. Params: value (0–5, puede ser decimal), size.{% endcomment %}
-<span class="inline-flex items-center gap-0.5 text-amber-500" aria-label="{{ value|floatformat:1 }} de 5">
+<span class="inline-flex items-center gap-0.5 text-warning" aria-label="{{ value|floatformat:1 }} de 5">
   {% for i in "12345" %}
     {% if value >= forloop.counter %}<i data-lucide="star" class="{{ size|default:'w-4 h-4' }} fill-current"></i>
-    {% else %}<i data-lucide="star" class="{{ size|default:'w-4 h-4' }} text-slate-300"></i>{% endif %}
+    {% else %}<i data-lucide="star" class="{{ size|default:'w-4 h-4' }} text-base-content/40"></i>{% endif %}
   {% endfor %}
 </span>

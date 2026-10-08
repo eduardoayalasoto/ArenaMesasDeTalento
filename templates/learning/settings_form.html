@@ -2,14 +2,14 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 <div>
-  <h3 class="text-lg font-semibold text-slate-900">Instrucciones fiscales</h3>
-  <p class="text-base text-slate-600 mb-4">Se muestran al colaborador cuando su curso queda autorizado, junto al registro de compra y pago.</p>
-  <form method="post" class="ui-card p-6 space-y-4">
+  <h3 class="text-lg font-semibold text-base-content">Instrucciones fiscales</h3>
+  <p class="text-base text-base-content/70 mb-4">Se muestran al colaborador cuando su curso queda autorizado, junto al registro de compra y pago.</p>
+  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 space-y-4">
     {% csrf_token %}
-    <label class="ui-label" for="{{ form.fiscal_instructions.id_for_label }}">Texto</label>
+    <label class="fieldset-legend" for="{{ form.fiscal_instructions.id_for_label }}">Texto</label>
     {{ form.fiscal_instructions }}
-    {% for e in form.fiscal_instructions.errors %}<p class="text-base text-rose-600">{{ e }}</p>{% endfor %}
-    <div class="flex justify-end"><button type="submit" class="ui-btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button></div>
+    {% for e in form.fiscal_instructions.errors %}<p class="text-base text-error">{{ e }}</p>{% endfor %}
+    <div class="flex justify-end"><button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button></div>
   </form>
 </div>
 {% endblock %}

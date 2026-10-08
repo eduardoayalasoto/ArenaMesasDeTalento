@@ -9,9 +9,10 @@ from .models import CatalogCourse, CourseEvidence, CourseRequest, CourseReview, 
 
 User = get_user_model()
 
-INPUT = {"class": "ui-input"}
-TEXTAREA = {"class": "ui-input", "rows": 3}
-DATE = {"class": "ui-input", "type": "date"}
+INPUT = {"class": "input w-full"}
+TEXTAREA = {"class": "textarea w-full", "rows": 3}
+DATE = {"class": "input w-full", "type": "date"}
+SELECT = {"class": "select w-full"}
 
 
 def _whole(value):
@@ -48,19 +49,19 @@ class RequestForm(forms.Form):
     url = forms.URLField(label="Liga del curso", required=False,
                          widget=forms.URLInput(attrs={**INPUT, "placeholder": "https://"}))
     kind = forms.ChoiceField(label="Tipo", choices=CourseRequest._meta.get_field("kind").choices,
-                             widget=forms.Select(attrs=INPUT))
+                             widget=forms.Select(attrs=SELECT))
     duration_hours = forms.IntegerField(label="Duración estimada (horas)", required=False, min_value=1,
                                         widget=forms.NumberInput(attrs=INPUT))
     pillar = forms.ChoiceField(label="Pilar que fortalece", required=False,
                                choices=CourseRequest._meta.get_field("pillar").choices,
-                               widget=forms.Select(attrs=INPUT))
+                               widget=forms.Select(attrs=SELECT))
     tags = forms.CharField(label="Etiquetas temáticas", max_length=200, required=False,
                            widget=forms.TextInput(attrs={**INPUT, "placeholder": "power bi, mlops, liderazgo"}))
     estimated_cost = forms.DecimalField(label="Costo", required=False, min_value=0, max_digits=10,
                                         decimal_places=0,
                                         error_messages={"max_decimal_places": "Captura el costo sin decimales."}, widget=forms.NumberInput(attrs={**INPUT, "step": "1"}))
     currency = forms.ChoiceField(label="Moneda", choices=CourseRequest._meta.get_field("currency").choices,
-                                 widget=forms.Select(attrs=INPUT))
+                                 widget=forms.Select(attrs=SELECT))
     start_date_planned = forms.DateField(label="Inicio tentativo", required=False, widget=forms.DateInput(attrs=DATE))
     end_date_planned = forms.DateField(label="Fin tentativo", required=False, widget=forms.DateInput(attrs=DATE))
     justification = forms.CharField(
@@ -70,7 +71,7 @@ class RequestForm(forms.Form):
     )
     payment_mode = forms.ChoiceField(label="Modalidad de pago propuesta", required=False,
                                      choices=CourseRequest._meta.get_field("payment_mode").choices,
-                                     widget=forms.Select(attrs=INPUT))
+                                     widget=forms.Select(attrs=SELECT))
 
     def __init__(self, *args, catalog_course=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -120,7 +121,7 @@ class DirectCourseForm(RequestForm):
 class HistoricCourseForm(DirectCourseForm):
     person = forms.ModelChoiceField(
         label="Colaborador", queryset=User.objects.filter(deleted_at__isnull=True).order_by("full_name"),
-        widget=forms.Select(attrs=INPUT),
+        widget=forms.Select(attrs=SELECT),
     )
 
 
@@ -208,7 +209,7 @@ class ReassignForm(forms.Form):
     approver = forms.ModelChoiceField(
         label="Nuevo aprobador",
         queryset=User.objects.none(),
-        widget=forms.Select(attrs=INPUT),
+        widget=forms.Select(attrs=SELECT),
     )
     comment = forms.CharField(label="Motivo", widget=forms.Textarea(attrs={**TEXTAREA, "rows": 2}))
 
@@ -236,10 +237,10 @@ class PaymentForm(WholeCostMixin, forms.ModelForm):
         model = CourseRequest
         fields = ["payment_mode", "payment_status", "final_cost", "receipt_type"]
         widgets = {
-            "payment_mode": forms.Select(attrs=INPUT),
-            "payment_status": forms.Select(attrs=INPUT),
+            "payment_mode": forms.Select(attrs=SELECT),
+            "payment_status": forms.Select(attrs=SELECT),
             "final_cost": forms.NumberInput(attrs={**INPUT, "step": "1", "min": "0"}),
-            "receipt_type": forms.Select(attrs=INPUT),
+            "receipt_type": forms.Select(attrs=SELECT),
         }
 
 
@@ -254,11 +255,11 @@ class CatalogCourseForm(WholeCostMixin, forms.ModelForm):
             "name": forms.TextInput(attrs=INPUT),
             "provider": forms.TextInput(attrs=INPUT),
             "url": forms.URLInput(attrs=INPUT),
-            "kind": forms.Select(attrs=INPUT),
+            "kind": forms.Select(attrs=SELECT),
             "reference_cost": forms.NumberInput(attrs={**INPUT, "step": "1", "min": "0"}),
-            "currency": forms.Select(attrs=INPUT),
+            "currency": forms.Select(attrs=SELECT),
             "duration_hours": forms.NumberInput(attrs=INPUT),
-            "pillar": forms.Select(attrs=INPUT),
+            "pillar": forms.Select(attrs=SELECT),
             "tags": forms.TextInput(attrs=INPUT),
             "areas": forms.CheckboxSelectMultiple,
             "levels": forms.CheckboxSelectMultiple,

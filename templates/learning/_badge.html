@@ -1,6 +1,6 @@
 {% comment %}Badge de estado de Arena Learn. Params: tone (success/info/warning/danger/neutral), label.{% endcomment %}
-{% if tone == "success" %}<span class="ui-badge bg-emerald-50 text-emerald-700">{{ label }}</span>
-{% elif tone == "info" %}<span class="ui-badge bg-sky-50 text-sky-700">{{ label }}</span>
-{% elif tone == "warning" %}<span class="ui-badge bg-amber-50 text-amber-700">{{ label }}</span>
-{% elif tone == "danger" %}<span class="ui-badge bg-rose-50 text-rose-700">{{ label }}</span>
-{% else %}<span class="ui-badge bg-slate-100 text-slate-600">{{ label }}</span>{% endif %}
+{% if tone == "success" %}<span class="badge bg-success/10 text-success">{{ label }}</span>
+{% elif tone == "info" %}<span class="badge bg-info/10 text-info">{{ label }}</span>
+{% elif tone == "warning" %}<span class="badge bg-warning/10 text-warning">{{ label }}</span>
+{% elif tone == "danger" %}<span class="badge bg-error/10 text-error">{{ label }}</span>
+{% else %}<span class="badge bg-base-200 text-base-content/70">{{ label }}</span>{% endif %}

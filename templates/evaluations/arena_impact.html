@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="mb-6">
-    <h2 class="text-xl font-semibold text-slate-900">Impacto Arena</h2>
-    {% if period %}<p class="text-slate-600">Captura por periodo <span class="font-medium">{{ period.name }}</span> (escala 1–4).</p>{% endif %}
+    <h2 class="text-xl font-semibold text-base-content">Impacto Arena</h2>
+    {% if period %}<p class="text-base-content/70">Captura por periodo <span class="font-medium">{{ period.name }}</span> (escala 1–4).</p>{% endif %}
   </div>
 
   {% if not period %}
@@ -11,7 +11,7 @@
     {% include "partials/info_panel.html" with title="Cómo capturar" text="<p>Escribe la calificación de cada persona del 1 al 4 (admite decimales, p. ej. 3.5). Las notas son opcionales.</p><p><strong>Cada campo se guarda automáticamente</strong> al salir de él: puedes capturar en varias sesiones y nada se pierde. Al guardar, se recalcula la calificación final de la persona.</p>" %}
 
     {{ saved_ids|json_script:"arena-saved-ids" }}
-    <div class="ui-card overflow-hidden"
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden"
          x-data="arenaImpact({
            url: '{% url 'evaluations:arena_impact_autosave' %}',
            csrf: '{{ csrf_token }}',
@@ -19,7 +19,7 @@
          })">
       <div class="overflow-x-auto">
         <table class="w-full text-base">
-          <thead class="bg-slate-50 text-slate-600 text-left">
+          <thead class="bg-base-200/50 text-base-content/70 text-left">
             <tr>
               <th class="px-4 py-3 font-medium">Colaborador</th>
               <th class="px-4 py-3 font-medium w-28">Calificación</th>
@@ -27,34 +27,34 @@
               <th class="px-4 py-3 font-medium w-32">Estado</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-100">
+          <tbody class="divide-y divide-base-200">
             {% for row in rows %}
               <tr>
                 <td class="px-4 py-2">
-                  <p class="font-medium text-slate-900">{{ row.user.full_name }}</p>
-                  <p class="text-base text-slate-500">{{ row.user.email }}</p>
+                  <p class="font-medium text-base-content">{{ row.user.full_name }}</p>
+                  <p class="text-base text-base-content/60">{{ row.user.email }}</p>
                 </td>
                 <td class="px-4 py-2">
                   <input type="number" name="score-{{ row.user.id }}" min="1" max="4" step="0.01"
-                         value="{{ row.impact.score|default_if_none:'' }}" class="ui-input py-1.5" placeholder="1–4"
+                         value="{{ row.impact.score|default_if_none:'' }}" class="input w-full py-1.5" placeholder="1–4"
                          @change="save({{ row.user.id }})">
                 </td>
                 <td class="px-4 py-2">
                   <input type="text" name="notes-{{ row.user.id }}" value="{{ row.impact.notes|default:'' }}"
-                         class="ui-input py-1.5" placeholder="Opcional"
+                         class="input w-full py-1.5" placeholder="Opcional"
                          @change="save({{ row.user.id }})">
                 </td>
                 <td class="px-4 py-2 text-base">
-                  <span x-show="state[{{ row.user.id }}] === 'saving'" class="text-slate-400">Guardando…</span>
-                  <span x-show="state[{{ row.user.id }}] === 'saved'" x-cloak class="text-emerald-600 inline-flex items-center gap-1">{% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %} Guardado</span>
-                  <span x-show="state[{{ row.user.id }}] === 'error'" x-cloak class="text-rose-600 inline-flex items-center gap-1">{% include "partials/icon.html" with name="info" cls="w-3.5 h-3.5" %} Revisa</span>
+                  <span x-show="state[{{ row.user.id }}] === 'saving'" class="text-base-content/50">Guardando…</span>
+                  <span x-show="state[{{ row.user.id }}] === 'saved'" x-cloak class="text-success inline-flex items-center gap-1">{% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %} Guardado</span>
+                  <span x-show="state[{{ row.user.id }}] === 'error'" x-cloak class="text-error inline-flex items-center gap-1">{% include "partials/icon.html" with name="info" cls="w-3.5 h-3.5" %} Revisa</span>
                 </td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-      <div class="p-3 border-t border-slate-200 bg-slate-50 text-base text-slate-500 flex items-center gap-1.5">
+      <div class="p-3 border-t border-base-300 bg-base-200/50 text-base text-base-content/60 flex items-center gap-1.5">
         {% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %}
         Los cambios se guardan automáticamente al salir de cada campo.
       </div>

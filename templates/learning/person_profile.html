@@ -2,48 +2,48 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 
-<section class="ui-card p-6 mb-6 flex flex-wrap items-center gap-5">
+<section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 mb-6 flex flex-wrap items-center gap-5">
   {% include "partials/avatar.html" with subject=person size="w-20 h-20" icon="w-9 h-9" %}
   <div class="min-w-0">
-    <h3 class="text-xl font-semibold text-slate-900 font-display">{{ person.full_name }}</h3>
-    <p class="text-base text-slate-600">{{ person.area.name|default:"Sin área" }}{% if person.level %} · {{ person.level.name }}{% endif %}</p>
-    {% if person.deleted_at %}<p class="text-base text-slate-500 mt-1">Ya no colabora en Arena · historial de solo lectura</p>{% endif %}
+    <h3 class="text-xl font-semibold text-base-content font-display">{{ person.full_name }}</h3>
+    <p class="text-base text-base-content/70">{{ person.area.name|default:"Sin área" }}{% if person.level %} · {{ person.level.name }}{% endif %}</p>
+    {% if person.deleted_at %}<p class="text-base text-base-content/60 mt-1">Ya no colabora en Arena · historial de solo lectura</p>{% endif %}
   </div>
   <dl class="ml-auto flex gap-6 text-center">
-    <div><dt class="text-base text-slate-500">Completados</dt><dd class="text-2xl font-semibold text-slate-900">{{ completed|length }}</dd></div>
-    <div><dt class="text-base text-slate-500">En progreso</dt><dd class="text-2xl font-semibold text-slate-900">{{ in_progress|length }}</dd></div>
+    <div><dt class="text-base text-base-content/60">Completados</dt><dd class="text-2xl font-semibold text-base-content">{{ completed|length }}</dd></div>
+    <div><dt class="text-base text-base-content/60">En progreso</dt><dd class="text-2xl font-semibold text-base-content">{{ in_progress|length }}</dd></div>
   </dl>
 </section>
 
-<h4 class="font-semibold text-slate-900 mb-3">Cursos completados</h4>
+<h4 class="font-semibold text-base-content mb-3">Cursos completados</h4>
 {% if completed %}
   <div class="grid sm:grid-cols-2 gap-4 mb-8">
     {% for c in completed %}
-      <a href="{% url 'learning:course_public' c.pk %}" class="ui-card p-5 flex flex-col gap-2 hover:border-arena-200 hover:shadow transition">
+      <a href="{% url 'learning:course_public' c.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col gap-2 hover:border-primary/25 hover:shadow transition">
         <div class="flex items-start justify-between gap-2">
-          <p class="font-semibold text-slate-900">{{ c.name }}</p>
+          <p class="font-semibold text-base-content">{{ c.name }}</p>
           {% if c.review %}{% include "learning/_stars.html" with value=c.review.rating size="w-3.5 h-3.5" %}{% endif %}
         </div>
-        <p class="text-base text-slate-500">{{ c.provider }} · {{ c.kind }}{% if c.closed_at %} · {{ c.closed_at|date:"M Y" }}{% endif %}</p>
-        {% if c.review %}<p class="text-base text-slate-700 line-clamp-3">{{ c.review.opinion }}</p>{% endif %}
-        <div class="mt-auto flex items-center gap-2 text-base text-slate-500">
+        <p class="text-base text-base-content/60">{{ c.provider }} · {{ c.kind }}{% if c.closed_at %} · {{ c.closed_at|date:"M Y" }}{% endif %}</p>
+        {% if c.review %}<p class="text-base text-base-content/80 line-clamp-3">{{ c.review.opinion }}</p>{% endif %}
+        <div class="mt-auto flex items-center gap-2 text-base text-base-content/60">
           {% if c.certificates %}<span class="inline-flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i>Con certificado</span>{% endif %}
-          {% if c.status == "VALIDADA" %}<span class="inline-flex items-center gap-1 text-emerald-600"><i data-lucide="badge-check" class="w-3.5 h-3.5"></i>Validado por Talento</span>{% endif %}
+          {% if c.status == "VALIDADA" %}<span class="inline-flex items-center gap-1 text-success"><i data-lucide="badge-check" class="w-3.5 h-3.5"></i>Validado por Talento</span>{% endif %}
         </div>
       </a>
     {% endfor %}
   </div>
 {% else %}
-  <p class="text-base text-slate-500 mb-8">{% if is_me %}Aún no registras cursos completados. <a href="{% url 'learning:direct_create' %}" class="text-arena-700 font-medium hover:underline">Registra uno</a>.{% else %}Aún no hay cursos completados.{% endif %}</p>
+  <p class="text-base text-base-content/60 mb-8">{% if is_me %}Aún no registras cursos completados. <a href="{% url 'learning:direct_create' %}" class="text-primary font-medium hover:underline">Registra uno</a>.{% else %}Aún no hay cursos completados.{% endif %}</p>
 {% endif %}
 
 {% if in_progress %}
-  <h4 class="font-semibold text-slate-900 mb-3">En progreso</h4>
+  <h4 class="font-semibold text-base-content mb-3">En progreso</h4>
   <div class="grid sm:grid-cols-2 gap-3">
     {% for c in in_progress %}
-      <a href="{% url 'learning:course_public' c.pk %}" class="ui-card p-4 hover:border-arena-200 transition">
-        <p class="font-medium text-slate-900">{{ c.name }}</p>
-        <p class="text-base text-slate-500">{{ c.provider }}{% if c.end_date %} · termina aprox. {{ c.end_date|date:"M Y" }}{% endif %}</p>
+      <a href="{% url 'learning:course_public' c.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 hover:border-primary/25 transition">
+        <p class="font-medium text-base-content">{{ c.name }}</p>
+        <p class="text-base text-base-content/60">{{ c.provider }}{% if c.end_date %} · termina aprox. {{ c.end_date|date:"M Y" }}{% endif %}</p>
       </a>
     {% endfor %}
   </div>
