@@ -1,7 +1,7 @@
 # Contexto del Sistema — Mesa de Talento (Arena Analytics)
 
 > Documento de referencia rápida para retomar el proyecto sin leer todo el código.
-> Última actualización: 2026-08-10. Ver `docs/contexto-2026-08-10.md` para el detalle de la
+> Última actualización: 2026-08-10. Ver `docs/historico/contexto-2026-08-10.md` para el detalle de la
 > sesión más reciente (folder Catálogos, valor invertido de Escenarios, tablero drag-and-drop
 > "Escenario Actual", Retroalimentación en 3 secciones, exporte a Excel).
 
@@ -115,4 +115,4 @@ Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.
 - **Bug crítico corregido (2026-06-17):** la vista masiva de usuarios (`/cuenta/usuarios/`) borraba área y nivel de todos los usuarios si se guardaba con un filtro activo (porque el loop del POST cubría todos los usuarios, no solo los visibles). Fix: el loop ahora omite usuarios cuyo campo no llegó en el POST.
 - **Reset de contraseña desde Usuarios (2026-06-17):** botón "Resetear" por fila en `/cuenta/usuarios/`; restablece a `Arena2026!` y activa `must_change_password`; responde como fragment htmx (sin recarga).
 - **Pendiente/opcional:** compilar Tailwind en el build de Vercel (hoy se versiona el CSS); recordatorios agendados (Cron); migrar fotos a almacenamiento de objetos si crecen mucho (hoy en BD).
-- **Sesión 2026-08-10:** folder "Catálogos" en el sidebar; valor de `ScenarioOption.order` invertido (mayor = mejor); tablero drag-and-drop "Escenario Actual" (Talento+Director, SortableJS vendorizado); `TalentSessionNote.scenario_actual` migrado de M2M a FK (selección única; S+1/S+2 siguen M2M); miniaturas de foto (64×64, `photo_thumb_data`) para que el tablero cargue rápido; Retroalimentación rediseñada en 3 secciones dinámicas con permiso de solo-lectura para quien recibe la retro; exporte de calificaciones migrado de CSV a `.xlsx` real (openpyxl) con columnas numéricas de Escenario Actual/S+1/S+2. Detalle completo en `docs/contexto-2026-08-10.md`.
+- **Sesión 2026-08-10:** folder "Catálogos" en el sidebar; valor de `ScenarioOption.order` invertido (mayor = mejor); tablero drag-and-drop "Escenario Actual" (Talento+Director, SortableJS vendorizado); `TalentSessionNote.scenario_actual` migrado de M2M a FK (selección única; S+1/S+2 siguen M2M); miniaturas de foto (64×64, `photo_thumb_data`) para que el tablero cargue rápido; Retroalimentación rediseñada en 3 secciones dinámicas con permiso de solo-lectura para quien recibe la retro; exporte de calificaciones migrado de CSV a `.xlsx` real (openpyxl) con columnas numéricas de Escenario Actual/S+1/S+2. Detalle completo en `docs/historico/contexto-2026-08-10.md`.
