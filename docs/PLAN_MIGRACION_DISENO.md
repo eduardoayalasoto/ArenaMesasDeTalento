@@ -71,24 +71,27 @@ Además, Talento debe tener un **menú escalable**: agrupado por intención, der
 
 **Se agrega** `/dev/componentes/`, el showcase (solo con DEBUG o con el permiso `access.manage`), para que el agente y las personas vean la referencia viva.
 
-### 3.3 Navegación (resuelve "el menú se sale de control")
-- **Registro de menú en Python** (`apps/core/navigation.py`), con el mismo patrón que el registro de permisos. Cada ítem se declara como datos: `label, url_name, icon, section, permission_key(s), also_active, badge_fn`. La visibilidad sale **solo** de la matriz (spec 005). Ya no hay condiciones sueltas en el context processor.
-- **Secciones por intención.** En lugar de una lista plana, el menú se agrupa así:
+### 3.3 Navegación — navbar de arena-crm adaptado (decisión del usuario 2026-10-07)
 
-| Sección | Ítems |
+**Sin sidebar.** Se trae el **navbar superior completo de arena-crm** (`templates/_navbar.html`): barra `navbar bg-neutral` (navy `#242D51`), botón hamburguesa con `dropdown` → `menu` de **categorías plegables tipo acordeón** (una abierta a la vez), campana de pendientes cargada con htmx y menú de usuario (avatar, nombre/correo, toggle de modo oscuro, Mi perfil, Cerrar sesión). Se adapta así:
+
+- **Marca**: lockup **«arenatalento»** igual al de arena-crm (`components/_brand_mark.html`): ícono de Arena + «arena» en `#EAEAEE` + **«talento» en degradado naranja** (p. ej. `#FFB45A → #F2711C`), Quicksand 700. Sustituye el GIF actual + «Mesa de Talento».
+- **4 categorías** (en este orden):
+
+| Categoría | Ítems |
 |---|---|
-| **Inicio** | Mi tablero |
-| **Mi desarrollo** | Mis evaluaciones · Mi retroalimentación · Arena Learn |
-| **Pendientes** (bandejas con contador) | Validar Ownership · Capturar Entrega de Valor · Validar Entrega de Valor · Aprobar cursos |
-| **Comité de Talento** | Mi área · Mesa de Talento · Escenario Actual · Avance del periodo · Impacto Arena |
+| **Inicio** | Mi tablero (acceso directo) |
+| **Arena Learn** | Mis cursos · **Aprobar cursos** (contador) · Catálogo · Personas · Seguimiento |
+| **Mesa de Talento** | *Mi evaluación*: Mis evaluaciones · Mi retroalimentación — *Por validar*: Validar Ownership (contador) · Entrega de Valor (contador) · Validar Entrega de Valor — *Comité*: Mi área · Mesa de Talento · Escenario Actual · Avance del periodo · Impacto Arena |
 | **Administración** | Usuarios · Perfiles y permisos · Proyectos · Periodos · Áreas · Escenarios · Cuestionarios |
 
-- **Layout**: `drawer` de daisyUI, fijo en escritorio (`lg:drawer-open`) y deslizable en móvil.
-  - Secciones plegables, con la sección activa abierta automáticamente.
-  - Estado activo correcto en todos los niveles.
-  - Contadores de pendientes en los ítems de "Pendientes".
-- **Buscador de pantallas (Ctrl/⌘ + K)**: una lista filtrable que se alimenta del mismo registro, así que solo muestra lo que la persona puede abrir. Con eso, el tamaño del menú deja de ser un problema de usabilidad.
-- **Prueba de cobertura del menú**: todo ítem debe apuntar a una ruta con permiso registrado, y no puede haber ítems con condiciones fuera del registro.
+- **Lo que se corrige del navbar del CRM** al portarlo:
+  - **Menú como datos**: registro en Python (`apps/core/navigation.py`) con `label, url_name, icon, category, subgroup, permission_key(s), also_active, badge_fn`; la plantilla solo itera. Visibilidad **solo** por la matriz de permisos (spec 005); una categoría sin ítems visibles no se pinta.
+  - **Estado activo en todos los ítems** y la categoría del ítem activo se abre sola.
+  - **HTML válido** (sin `<div>` hijos de `<ul>`), `aria-expanded`/`aria-current`.
+  - **Contadores** en los ítems con pendientes (mismo cálculo que la campana).
+- **Buscador de pantallas (Ctrl/⌘+K)** opcional en la barra, alimentado por el mismo registro (el CRM lo retiró; aquí ayuda porque el menú crece).
+- **Prueba**: todo ítem del registro apunta a una ruta con permiso registrado (extiende `test_access_coverage.py`).
 
 ### 3.4 Tema e identidad (requiere decisión, ver §6)
 **Recomendación:** adoptar el tema `arena` del CRM y el dark mode `business` para que ArenaOS se vea como una sola suite, conservando una escala tipográfica legible (base 14, sm 12–13).
@@ -96,9 +99,9 @@ Además, Talento debe tener un **menú escalable**: agrupado por intención, der
 ### 3.5 Gobierno con IA (portado del CRM y adaptado)
 - **`arena-talento/CLAUDE.md`, propio.** Declara que el proyecto es independiente del `CLAUDE.md` de ArenaOps y enlaza a `DESIGN_SYSTEM.md`, la spec 005 y la convención `apps/core/services/`.
 - **`DESIGN_SYSTEM.md`.** Es la ley de diseño de Talento: el contenido del CRM más las secciones propias de navegación y permisos.
-- **`.claude/skills/daisyui/`** y `skills-lock.json`, la skill oficial fijada.
-- **`.claude/agents/frontend-web-engineer.md`** y **`frontend-auditor.md`**, adaptados. El auditor verifica además que cada pantalla nueva use `@requires` y que sus acciones respeten la matriz. Es el primer paso del **agente auditor de permisos** pendiente.
-- **`.claude/hooks/design_kit_reminder.py`**, que recuerda `DESIGN_SYSTEM.md` al editar plantillas o CSS.
+- **`.claude/skills/daisyui/`** y `skills-lock.json`, la skill oficial fijada. ✅ Traídos el 2026-10-07 junto con `design-system`, `django-architecture` y `django-patterns` (sin `flowbite-ui`, obsoleta).
+- **`.claude/agents/frontend-web-engineer.md`**, **`frontend-auditor.md`** y **`django-backend-engineer.md`**, adaptados. ✅ Traídos y adaptados el 2026-10-07 (convención `apps/core/services/`, matriz de permisos, verificación sin Node). El auditor verifica además que cada pantalla nueva use `@requires` y que sus acciones respeten la matriz. Es el primer paso del **agente auditor de permisos** pendiente.
+- **`.claude/hooks/design_kit_reminder.py`**, que recuerda `DESIGN_SYSTEM.md` al editar plantillas o CSS. ✅ Registrado en `.claude/settings.json` (pendiente: crear `DESIGN_SYSTEM.md` en la fase 0).
 - **Lint de plantillas en pytest** (rápido, sin Node). Falla si una plantilla nueva o migrada tiene:
   - `style=`, emojis, `confirm()` o `alert()`;
   - hex sueltos en clases;
@@ -118,7 +121,7 @@ Además, Talento debe tener un **menú escalable**: agrupado por intención, der
 | Fase | Entregable | Riesgo | Esfuerzo |
 |---|---|---|---|
 | **0. Fundación** | `CLAUDE.md` y `DESIGN_SYSTEM.md` propios, skill daisyui, agentes, hook, `vendor_daisyui.ps1`, renombre a `ui-*`, daisyUI activo con tema `arena`, JS base (`icons.js`, `modals.js`, `theme_toggle.js`), `static_v`, lint de plantillas en modo informe | Bajo: sin cambio visual | 1–2 días |
-| **1. Shell y navegación** | `base.html` sobre `drawer`, registro de menú con secciones, buscador Ctrl+K, topbar (campana y usuario con toggle de tema), toasts nuevos | Medio: todos lo ven | 2–3 días |
+| **1. Shell y navegación** | `base.html` + navbar de arena-crm adaptado (4 categorías, marca arenatalento), registro de menú, buscador Ctrl+K, campana y menú de usuario con toggle de tema, toasts nuevos | Medio: todos lo ven | 2–3 días |
 | **2. Componentes** | Los 12 portados más los 5 nuevos, showcase, `field_classes()`, prueba de cada componente | Bajo | 2 días |
 | **3. Migración por módulo** | En este orden, de más nuevo a más crítico: **Perfiles y permisos → Arena Learn → Catálogos → Retroalimentación → Mesa de Talento y Escenario Actual → Evaluaciones (Ownership y Entrega de Valor) → Tableros y ayuda**. Cada módulo sale con el auditor en CUMPLE y su lint activo en modo estricto | Medio, acotado por módulo | 1–2 días por módulo (~10 días) |
 | **4. Cierre** | Borrar `ui-*` y `partials/icon.html`, lint estricto global, dark mode verificado, revisión de accesibilidad AA y a 375 px | Bajo | 1 día |
@@ -127,11 +130,9 @@ Además, Talento debe tener un **menú escalable**: agrupado por intención, der
 
 ## 6. Decisiones que necesito del usuario
 
-1. **Identidad visual.**
-   - **A (recomendada):** tema `arena` del CRM (navy `#242D51` y Quicksand), para una sola suite.
+1. **Identidad visual.** ✅ Implícito en la decisión de marca: tema `arena` del CRM (navy `#242D51` y Quicksand), «talento» en naranja.
+   - **A (aplicada):** tema `arena` del CRM (navy `#242D51` y Quicksand), para una sola suite.
    - **B:** conservar el navy `#1e3a5f` y Lato/Ubuntu de Talento sobre daisyUI.
-2. **Navegación.**
-   - **A (recomendada):** sidebar `drawer` con secciones y buscador Ctrl+K.
-   - **B:** el navbar con hamburguesa del CRM.
+2. **Navegación.** ✅ Decidido: navbar superior de arena-crm adaptado (§3.3), sin sidebar; marca «arenatalento».
 3. **Dark mode desde la fase 1.** Recomendado: sí, porque con tokens semánticos cuesta poco.
 4. **¿Arranco con la fase 0** como spec 006 (specify → plan → tasks), con el mismo flujo de las specs anteriores?
