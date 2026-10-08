@@ -72,6 +72,23 @@ El as-is ruta por ruta está en `research-permisos-actuales.md`. Aquí van las d
 - Asignación: columna "Perfil" en Usuarios (mismo patrón que "Lead directo", respetando el fix de filtro) y en el alta de usuario.
 - Acceso efectivo: `/catalogo/perfiles/acceso/<user_pk>/`.
 
+## R10b. Reutilización del CRUD de perfiles de arena-crm (decisión del usuario 2026-10-07: "un perfil a la vez")
+
+- **Se toma de arena-crm** (`templates/accounts/profiles/list.html`, `matrix.html`; `apps/accounts/services.py` `get/save_permission_matrix`, `delete_profile`, `ProfileAuditLog`):
+  - Lista de perfiles en `divide-y` con nombre y "N usuarios", y un formulario inline para crear (al crear, lleva a su matriz).
+  - Editor de **un perfil a la vez**: tabla con filas por pantalla y columnas por acción, guardado con POST clásico y mensaje.
+  - Regla de "Ver" forzado con Alpine por fila.
+  - Card "Usuarios con este perfil" con Asignar.
+  - Auditoría por diff y borrado bloqueado si tiene usuarios.
+- **Se adapta**:
+  - Selector de alcance por celda en vez de checkbox.
+  - Filas agrupadas por módulo con un encabezado de sección.
+  - **Duplicar** y **renombrar**.
+  - Borrado con **modal de confirmación** (patrón de `ownership_fill.html`).
+  - "Asignar" **mueve** a la persona porque tiene un solo perfil.
+  - Clases traducidas de daisyUI a los componentes propios (`btn-*`, `card`, `input`, `badge`).
+- **No se toma**: `Group`/`Permission` nativos (sin alcance, ligados a modelos), el menú sin filtrar y la ausencia de prueba de cobertura.
+
 ## R11. Ponderaciones
 
 - **Decision**: se registra `catalog.weights` con estado **pendiente**: aparece en la matriz deshabilitada y la prueba de cobertura la exime de tener ruta. Se elimina del menú el enlace roto a `catalog:weight_admin`. Construir la pantalla queda fuera de alcance.
