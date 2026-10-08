@@ -7,8 +7,8 @@
     </div>
     {% if periods %}
       <form method="get" class="flex items-center gap-2">
-        <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
-        <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+        <label class="text-base text-slate-500" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="ui-input" onchange="this.form.submit()">
           {% for p in periods %}
             <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
               {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
@@ -19,7 +19,7 @@
     {% endif %}
   </div>
   {% if period and period.is_closed %}
-    <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-sm text-arena-800">
+    <div class="rounded-lg bg-arena-50 border border-arena-200 px-4 py-3 mb-5 text-base text-arena-800">
       Estás viendo el periodo <b>{{ period.name }}</b>, ya Cerrado: histórico, de solo lectura.
     </div>
   {% endif %}
@@ -30,7 +30,7 @@
 
     {% if primary_cards %}
       <div class="mb-8">
-        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Doy retroalimentación · Principal</h3>
+        <h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">Doy retroalimentación · Principal</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% for card in primary_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
         </div>
@@ -39,7 +39,7 @@
 
     {% if secondary_cards %}
       <div class="mb-8">
-        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Asisto · Secundario</h3>
+        <h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">Asisto · Secundario</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% for card in secondary_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
         </div>
@@ -48,7 +48,7 @@
 
     {% if own_cards %}
       <div class="mb-8">
-        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Recibo retroalimentación</h3>
+        <h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">Recibo retroalimentación</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% for card in own_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
         </div>
@@ -57,7 +57,7 @@
 
     {% if all_cards %}
       <div class="mb-8">
-        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Todas · vista de Talento</h3>
+        <h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">Todas · vista de Talento</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% for card in all_cards %}{% include "dashboards/_feedback_session_card.html" %}{% endfor %}
         </div>

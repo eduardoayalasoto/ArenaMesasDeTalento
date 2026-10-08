@@ -1,0 +1,48 @@
+{% comment %}
+Drawer / off-canvas derecho -- diálogo de contenido por default
+(DESIGN_SYSTEM.md § 5). Mismo `<dialog>` nativo que _modal.html, con el
+`modal-box` reposicionado a panel de altura completa pegado a la derecha
+(daisyUI no tiene un "drawer modal" dedicado -- su componente `drawer` es
+un layout de sidebar persistente, un caso de uso distinto a este "panel
+que aparece encima de todo, disparado desde cualquier botón").
+
+Un solo drawer por instancia de este include, colocado UNA VEZ en la
+plantilla que lo usa. Se abre/cierra con eventos `window`:
+
+    <button @click="$dispatch('{{ open_event }}')"
+            hx-get="..." hx-target="#{{ body_id }}" hx-swap="innerHTML">
+        Editar
+    </button>
+
+Uso: {% include "components/_drawer.html" with id="deal-drawer" title="Editar Deal" open_event="open-deal-drawer" close_event="close-deal-drawer" body_id="deal-drawer-body" %}
+
+`body_template` (opcional): ruta de un template a incluir en el body en
+vez del spinner por default, para contenido estático/Alpine-driven que
+no necesita `hx-get`.
+{% endcomment %}
+<div x-data
+     @{{ open_event }}.window="$refs.dialog.showModal()"
+     @{{ close_event }}.window="$refs.dialog.close()">
+  <dialog x-ref="dialog" id="{{ id }}" class="modal modal-end" aria-label="{{ title }}">
+    <div class="modal-box max-w-lg h-screen max-h-screen w-full rounded-none flex flex-col p-0">
+      <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-base-300 shrink-0">
+        <h2 class="text-lg font-semibold font-heading">{{ title }}</h2>
+        <form method="dialog">
+          <button type="submit" class="btn btn-sm btn-circle btn-ghost" aria-label="Cerrar">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+      <div id="{{ body_id }}" class="flex-1 overflow-y-auto p-5">
+        {% if body_template %}
+          {% include body_template %}
+        {% else %}
+          <div class="flex items-center justify-center py-10 text-base-content/40">
+            {% include "components/_spinner.html" with size="md" %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button type="submit">Cerrar</button></form>
+  </dialog>
+</div>

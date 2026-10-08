@@ -12,17 +12,12 @@ import json
 import sys
 
 REMINDER = (
-    "Recordatorio DESIGN_SYSTEM (no bloqueante): estas por escribir/editar un "
-    "archivo visual ({path}).\n"
-    "1) Revisa DESIGN_SYSTEM.md (y docs/PLAN_MIGRACION_DISENO.md) antes de introducir layout, tarjetas o "
-    "composicion nueva -- es ley para todo cambio visual.\n"
-    "2) Busca primero en templates/components/ y en los patrones ya "
-    "establecidos (p.ej. _daily_objective.html / _daily_deliverable_card.html "
-    "para cards anidadas) antes de inventar un estilo nuevo; si ya existe un "
-    "componente o patron equivalente, reusalo en vez de crear uno paralelo.\n"
-    "3) Si esto toca navbar, fondo de pagina, cards o cualquier composicion "
-    "de layout nueva, invoca los skills `ui-ux-pro-max` y `frontend-design` "
-    "antes de finalizar -- no opcional."
+    "Recordatorio DESIGN_SYSTEM (no bloqueante): estas por escribir/editar un archivo visual ({path}).\n"
+    "1) DESIGN_SYSTEM.md es ley (daisyUI 5 + tema arena, tokens semanticos, marca arenatalento); plan y fase vigente en docs/PLAN_MIGRACION_DISENO.md.\n"
+    "2) Busca primero en templates/components/ antes de inventar markup; nada de clases legadas ui-* ni de la escala arena-* en codigo nuevo.\n"
+    "3) Menu = apps/core/navigation.py (nunca condiciones de menu en plantillas); permisos con request.user|can:'clave' (spec 005).\n"
+    "4) Iconos solo con window.renderIcons(); sin style= inline, emojis ni confirm()/alert().\n"
+    "5) Si tocas navbar, layout o cards, invoca los skills daisyui y frontend-design; corre build_css.ps1 tras cambiar clases."
 )
 
 # Rutas (relativas a la raiz del repo) que disparan el recordatorio.
@@ -55,8 +50,6 @@ def main() -> int:
     output = {
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",
-            "permissionDecision": "allow",
-            "permissionDecisionReason": "Recordatorio informativo, no bloquea la escritura.",
             "additionalContext": REMINDER.format(path=file_path),
         }
     }

@@ -1,0 +1,160 @@
+{% load static nice_avatar_tags %}
+{% comment %}
+Navbar -- COPIA del de arena-crm (templates/_navbar.html, daisyUI `navbar`/`dropdown`/`menu`
+con `<details>` en acordeón, campana con `indicator`, menú de usuario con modo oscuro): mismas
+clases, anchos, colores (activo = `bg-secondary/15 text-secondary`), separadores y comportamiento
+(una categoría abierta a la vez, sin auto-expandir), incluidas sus correcciones de contraste
+(`text-neutral-content` explícito en cada `btn-ghost`, separadores `border-neutral-content/10`,
+`navbar-end w-auto`, `class="contents"` en el wrapper del contador de la campana).
+
+Únicas diferencias con arena-crm:
+- Contenido: el menú se arma desde `nav_categories` (apps/core/navigation.py, filtrado por la
+  matriz de permisos de la spec 005). "Inicio" va como acceso directo (igual que "Deals"/
+  "Actividades" en el CRM) y luego las categorías Arena Learn · Mesa de Talento ·
+  Administración; Mesa de Talento usa `menu-title` para sus subgrupos.
+- Avatar: foto real de la persona (`nice_avatar` de arena-talento) en lugar del ilustrado.
+- Campana: pendientes de Talento (context processor `notifications`) en el mismo panel.
+- Cerrar sesión es POST (Django 5+): `<button form="logout-form">` directo en el `<li>`, form oculto fuera del menú.
+- "Centro de ayuda" en el menú de usuario.
+{% endcomment %}
+<nav class='navbar bg-neutral text-neutral-content border-b border-neutral-content/10 px-4 sm:px-6'
+     x-data='{
+        darkMode: window.arenaTheme.get() === "dark",
+        toggleTheme() {
+            this.darkMode = window.arenaTheme.toggle() === "dark";
+        }
+    }'>
+    <div class='max-w-6xl mx-auto flex items-center justify-between w-full'>
+    <div class='navbar-start gap-4 w-auto'>
+        {% if user.is_authenticated %}
+        <div class='dropdown'
+             :class="{ 'dropdown-open': menuOpen }"
+             x-data='{ menuOpen: false, openCategory: null,
+                        toggleCategory(name) { this.openCategory = (this.openCategory === name ? null : name) } }'
+             @keydown.escape.window='menuOpen = false'
+             @click.outside='menuOpen = false'>
+            <button type='button' @click='menuOpen = !menuOpen' :aria-expanded='menuOpen.toString()' aria-label='Abrir menu de navegacion'
+                    class='btn btn-ghost btn-circle btn-sm text-neutral-content'>
+                <i data-lucide='menu' class='w-5 h-5'></i>
+            </button>
+
+            <ul tabindex='0' class='dropdown-content menu flex-nowrap bg-neutral text-neutral-content rounded-box w-64 max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shadow-lg mt-2 p-2 text-base'>
+                {% for cat in nav_categories %}
+                  {% if cat.key == "inicio" %}
+                    {% for item in cat.items %}
+                    <li><a href='{{ item.url }}' @click='menuOpen = false'
+                           class='{% if item.active %}bg-secondary/15 text-secondary{% endif %}'>{{ item.label }}</a></li>
+                    {% endfor %}
+                    <li class='my-1 border-t border-neutral-content/10' aria-hidden='true'></li>
+                  {% else %}
+                    <li>
+                        <details :open='openCategory === "{{ cat.key }}"'>
+                            <summary @click.prevent='toggleCategory("{{ cat.key }}")'>{{ cat.label }}</summary>
+                            <ul>
+                                {% for item in cat.items %}
+                                  {% ifchanged item.group %}{% if item.group %}<li class='menu-title text-neutral-content/50'>{{ item.group }}</li>{% endif %}{% endifchanged %}
+                                  <li><a href='{{ item.url }}' @click='menuOpen = false'
+                                         class='{% if item.active %}bg-secondary/15 text-secondary{% endif %}'>{{ item.label }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </details>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <a href='{% url "dashboards:home" %}' class='rounded focus-visible:outline-2'>
+            {% include "components/_brand_mark.html" %}
+        </a>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class='navbar-end gap-3 w-auto'>
+        <div class='dropdown dropdown-end'
+             :class="{ 'dropdown-open': open }"
+             x-data='{ open: false }'
+             @keydown.escape.window='open = false'
+             @click.outside='open = false'>
+            <button type='button' @click='open = !open' aria-label='Notificaciones'
+                    class='btn btn-ghost btn-circle btn-sm text-neutral-content indicator'>
+                <span id='notification-badge' class='contents'>
+                    {% if pending_count %}<span class="indicator-item badge badge-error badge-xs">{{ pending_count }}</span>{% endif %}
+                </span>
+                <i data-lucide='bell' class='w-5 h-5'></i>
+            </button>
+            <div tabindex='0'
+                 id='notification-panel-body'
+                 class='dropdown-content bg-base-100 text-base-content border border-base-300 rounded-box shadow-lg w-80 max-h-96 overflow-y-auto mt-2 p-2 text-base text-base-content/60'>
+                <div class="flex items-center justify-between px-2 py-1">
+                    <span class="text-base font-semibold text-gray-900 dark:text-white">Notificaciones</span>
+                </div>
+                <ul class="divide-y divide-gray-100 dark:divide-gray-800">
+                    {% for item in pending_items %}
+                      <li>
+                        <a href="{{ item.url }}" class="flex items-start gap-2 px-2 py-2 hover:bg-primary-700/8">
+                          <i data-lucide="circle-dot" class="w-2.5 h-2.5 mt-1 text-primary-700 dark:text-primary-100 flex-shrink-0"></i>
+                          <span class="flex-1 text-base text-gray-900 dark:text-white font-medium">
+                            {{ item.text }}
+                            <span class="block text-gray-400 font-normal">{{ item.project }}</span>
+                          </span>
+                        </a>
+                      </li>
+                    {% empty %}
+                      <li class="px-2 py-4 text-base text-gray-400 text-center">Sin notificaciones.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <span class='w-px h-6 bg-neutral-content/10'></span>
+
+        <div class='dropdown dropdown-end'
+             :class="{ 'dropdown-open': userMenuOpen }"
+             x-data='{ userMenuOpen: false }'
+             @keydown.escape.window='userMenuOpen = false'
+             @click.outside='userMenuOpen = false'>
+            <button type='button' @click='userMenuOpen = !userMenuOpen' :aria-expanded='userMenuOpen.toString()' aria-label='Menu de usuario'
+                    class='flex items-center gap-2.5 rounded-lg cursor-pointer p-1'>
+                <span class='ring-2 ring-neutral-content/15 rounded-full shrink-0 leading-none'>
+                    {% nice_avatar user size=32 %}
+                </span>
+                <span class='hidden lg:flex flex-col items-start leading-tight'>
+                    <span class='text-base font-semibold text-neutral-content truncate max-w-[140px]'>{{ user.get_full_name|default:user.email }}</span>
+                    <span class='text-base text-neutral-content/50 truncate max-w-[140px]'>{{ user.email }}</span>
+                </span>
+            </button>
+            <ul tabindex='0' class='dropdown-content menu bg-neutral text-neutral-content rounded-box w-64 shadow-lg mt-2 p-2 text-base'>
+                <li class='menu-title'>
+                    <div class='text-base font-semibold text-neutral-content truncate normal-case'>{{ user.get_full_name|default:user.email }}</div>
+                    <div class='text-base text-neutral-content/50 truncate normal-case'>{{ user.email }}</div>
+                </li>
+                <li>
+                    <label class='flex items-center justify-between gap-2.5 cursor-pointer'>
+                        <span class='flex items-center gap-2.5'>
+                            <i data-lucide='moon' class='w-4 h-4' x-show='darkMode' x-cloak></i>
+                            <i data-lucide='sun' class='w-4 h-4' x-show='!darkMode' x-cloak></i>
+                            Modo oscuro
+                        </span>
+                        <input type='checkbox' class='toggle toggle-sm [--input-color:var(--color-neutral-content)]' :checked='darkMode' @change='toggleTheme()'>
+                    </label>
+                </li>
+                <li><a href='{% url "accounts:profile" %}'>
+                    <i data-lucide='user-cog' class='w-4 h-4'></i> Mi perfil
+                </a></li>
+                <li><a href='{% url "dashboards:help" %}'>
+                    <i data-lucide='circle-help' class='w-4 h-4'></i> Centro de ayuda
+                </a></li>
+                <li class='my-1 border-t border-neutral-content/10' aria-hidden='true'></li>
+                <li><button type='submit' form='logout-form'>
+                    <i data-lucide='log-out' class='w-4 h-4'></i> Cerrar sesión
+                </button></li>
+            </ul>
+            {# Logout de Django es POST: el form vive fuera del menú para que el botón quede como hijo directo del <li> (estilo daisyUI intacto). #}
+            <form id='logout-form' method='post' action='{% url "accounts:logout" %}' class='hidden'>{% csrf_token %}</form>
+        </div>
+    </div>
+    {% endif %}
+    </div>
+</nav>

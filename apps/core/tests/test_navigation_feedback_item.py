@@ -33,7 +33,7 @@ def test_retroalimentacion_aparece_con_nota_solo_en_periodo_cerrado(client, coll
     client.force_login(collaborator)
     resp = client.get(reverse("dashboards:home"))
     labels = [item["label"] for item in resp.context["nav_items"]]
-    assert "Retroalimentación" in labels
+    assert "Mi retroalimentación" in labels
 
 
 @pytest.mark.django_db
@@ -41,4 +41,4 @@ def test_retroalimentacion_no_aparece_sin_ningun_rol(client, collaborator, perio
     client.force_login(collaborator)
     resp = client.get(reverse("dashboards:home"))
     labels = [item["label"] for item in resp.context["nav_items"]]
-    assert "Retroalimentación" not in labels
+    assert "Mi retroalimentación" not in labels

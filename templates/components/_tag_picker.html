@@ -1,0 +1,97 @@
+{% load core_extras %}
+{% comment %}
+Card "Etiquetas" reutilizable (Organization, Person y Deal) -- 2026-09-29
+reemplaza las 3 copias casi idénticas de *_tags_section.html.
+
+- Chips: `badge badge-soft` + color semántico del tema (Tag.COLOR_BADGE_CLASSES
+  vía el filtro `tag_badge_class`), theme-aware en claro/oscuro.
+- Panel "+": buscador, lista con checkbox (cada clic aplica/quita de inmediato
+  por htmx) y alta inline. El color se elige con CÍRCULOS (radios nativos
+  accesibles: nombre en sr-only + title), no con un <select> de nombres
+  (pedido explícito 2026-09-29). 8 colores, todos tokens del tema.
+- Espaciado uniforme del panel: p-3 + gap-3 entre bloques, controles -sm.
+
+Contexto:
+  section_id    id HTML de la card (target del hx-swap outerHTML)
+  tags          etiquetas aplicadas (queryset/lista)
+  all_tags      catálogo ofrecido en el panel
+  toggle_url / create_url
+  toggle_field  nombre del campo del POST de toggle ("tag_id" | "tag")
+  can_manage    muestra el "+" y el panel
+{% endcomment %}
+<div id="{{ section_id }}" x-data="{ open: false, term: '' }" @keydown.escape.window="open = false">
+  <div class="flex items-center justify-between gap-2 mb-3">
+    <h3 class="text-base font-semibold text-base-content flex items-center gap-2">
+      <i data-lucide="tag" class="w-4 h-4 text-primary" aria-hidden="true"></i>
+      Etiquetas
+    </h3>
+    {% if can_manage %}
+      <div class="tooltip tooltip-left relative z-20" data-tip="Añadir etiquetas">
+        <button type="button" class="btn btn-circle btn-sm btn-ghost" aria-label="Añadir etiquetas"
+                :aria-expanded="open.toString()" @click="open = !open">
+          <i data-lucide="plus" class="w-[18px] h-[18px]" aria-hidden="true"></i>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="flex flex-wrap gap-1.5">
+    {% for tag in tags %}
+      <span class="badge badge-soft {{ tag.color|tag_badge_class }}">{{ tag.name }}</span>
+    {% empty %}
+      <span class="text-base text-base-content/60">Sin etiquetas todavía.</span>
+    {% endfor %}
+  </div>
+
+  {% if can_manage %}
+    <div class="relative z-30" x-show="open" x-cloak @click.outside="open = false">
+      <div class="absolute left-0 top-2 w-72 max-w-[calc(100vw-2rem)] bg-base-100 border border-base-300 rounded-box shadow-lg p-3 space-y-3">
+        <label class="input input-sm w-full">
+          <i data-lucide="search" class="w-4 h-4 opacity-60" aria-hidden="true"></i>
+          <input type="search" x-model="term" placeholder="Buscar etiquetas..." aria-label="Buscar etiquetas" class="grow">
+        </label>
+
+        <ul class="max-h-48 overflow-y-auto space-y-0.5">
+          {% for tag in all_tags %}
+            <li x-show="term === '' || '{{ tag.name|lower|escapejs }}'.includes(term.toLowerCase())">
+              <form hx-post="{{ toggle_url }}" hx-target="#{{ section_id }}" hx-swap="outerHTML">
+                {% csrf_token %}
+                <input type="hidden" name="{{ toggle_field }}" value="{{ tag.id }}">
+                <button type="submit" class="w-full flex items-center gap-2 text-left px-2 py-1.5 rounded-field hover:bg-base-200">
+                  <input type="checkbox" class="checkbox checkbox-sm pointer-events-none" tabindex="-1" aria-hidden="true" {% if tag in tags %}checked{% endif %}>
+                  <span class="badge badge-soft {{ tag.color|tag_badge_class }}">{{ tag.name }}</span>
+                  <span class="sr-only">{% if tag in tags %}(aplicada, clic para quitar){% else %}(clic para aplicar){% endif %}</span>
+                </button>
+              </form>
+            </li>
+          {% empty %}
+            <li class="text-base text-base-content/60 px-2">Todavía no hay etiquetas. Crea la primera abajo.</li>
+          {% endfor %}
+        </ul>
+
+        <form hx-post="{{ create_url }}" hx-target="#{{ section_id }}" hx-swap="outerHTML"
+              class="border-t border-base-300 pt-3 space-y-3">
+          {% csrf_token %}
+          <input type="text" name="name" placeholder="Nueva etiqueta..." required maxlength="100"
+                 aria-label="Nombre de la nueva etiqueta" class="input input-sm w-full">
+          <fieldset>
+            <legend class="text-sm text-base-content/60 mb-2">Color</legend>
+            <div class="flex flex-wrap gap-2">
+              {% tag_color_swatches as swatches %}
+              {% for value, label, swatch_class in swatches %}
+                <label class="cursor-pointer" title="{{ label }}">
+                  <input type="radio" name="color" value="{{ value }}" class="peer sr-only" {% if forloop.first %}checked{% endif %}>
+                  <span class="block size-6 rounded-full {{ swatch_class }} ring-offset-2 ring-offset-base-100 peer-checked:ring-2 peer-checked:ring-base-content peer-focus-visible:ring-2 peer-focus-visible:ring-primary" aria-hidden="true"></span>
+                  <span class="sr-only">{{ label }}</span>
+                </label>
+              {% endfor %}
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-primary btn-sm w-full">
+            <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Crear etiqueta
+          </button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>

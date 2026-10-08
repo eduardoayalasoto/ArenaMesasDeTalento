@@ -1,0 +1,24 @@
+{% comment %}
+Badge de estado -- un solo mapa estado->color, siempre ícono + texto.
+Uso: {% include "components/_badge.html" with label="Ganado" variant="success" %}
+
+`badge_icon` (opcional): ícono Lucide que reemplaza al de la variante (ej.
+prioridad: signal-high/medium/low). Nombre propio y no `icon` para no
+heredar por accidente un `icon` del contexto del template que lo incluye.
+
+Variantes: gray (default, conteo neutro) | informative | success | warning | danger
+-- daisyUI `badge-soft` + color semántico (DESIGN_SYSTEM.md § 5). El neutro
+(gray/default) es `badge-ghost text-base-content` (2026-09-30): `badge-soft
+badge-neutral` quedaba a 1.09:1 en el tema oscuro `business` (texto neutral
+sobre fondo neutral), invisible; ghost = base-200 + base-content, AA en
+ambos temas.
+{% endcomment %}
+<span class="badge {% if variant == "informative" %}badge-soft badge-info{% elif variant == "success" %}badge-soft badge-success{% elif variant == "warning" %}badge-soft badge-warning{% elif variant == "danger" %}badge-soft badge-error{% else %}badge-ghost text-base-content{% endif %} gap-1">
+  {% if badge_icon %}<i data-lucide="{{ badge_icon }}" class="w-3 h-3" aria-hidden="true"></i>
+  {% elif variant == "informative" %}<i data-lucide="info" class="w-3 h-3"></i>
+  {% elif variant == "success" %}<i data-lucide="check-circle" class="w-3 h-3"></i>
+  {% elif variant == "warning" %}<i data-lucide="alert-triangle" class="w-3 h-3"></i>
+  {% elif variant == "danger" %}<i data-lucide="x-circle" class="w-3 h-3"></i>
+  {% endif %}
+  {{ label }}
+</span>

@@ -1,13 +1,308 @@
-@import "tailwindcss";
+/* ==========================================================================================
+   arena-talento — COPIA ÍNTEGRA de arena-crm/styles/tailwind_input.css (mismo sistema visual:
+   daisyUI 5, tema `arena` + `business` oscuro, Quicksand, escala tipográfica, tokens de marca).
+   Solo cambian las rutas relativas (este archivo vive en static/src/). Al actualizar el CRM,
+   re-copiar y conservar el bloque "PROPIO DE ARENA-TALENTO" del final.
+   Compilar con .uild_css.ps1 (tailwindcss.exe standalone, sin Node).
+   ========================================================================================== */
+/* Tailwind v4 entry point — config vive aquí (CSS-first), no en un
+   archivo JS. Ver DESIGN_SYSTEM.md Secciones 1-2 para el razonamiento
+   detrás de cada token.
 
-/* Fuentes a escanear para generar solo las utilidades usadas */
+   A diferencia de arena-os, este archivo NO declara un layer "legacy"
+   ni importa CSS artesanal previo — arena-crm es un proyecto Django
+   recién creado (001-django-project-skeleton) sin CSS heredado que
+   deba convivir con Tailwind (ver specs/002-design-system-import/
+   research.md punto 1). */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss";
+@import "../fonts/fonts.css";
+
+/* Fuentes explícitas de contenido (además del auto-detect de v4) —
+   templates viven en la raíz del repo, no dentro de cada app (ver
+   CLAUDE.md). */
 @source "../../templates";
 @source "../../apps";
 
+/* daisyUI 5 (2026-09-22) -- reemplaza @material/web, ver DESIGN_SYSTEM.md
+   Sección 1. Vendorizado como .mjs pre-compilado (scripts/vendor_daisyui.sh),
+   sin build de Node/npm en tiempo de ejecución -- la CLI standalone de
+   Tailwind ya sabe resolver @plugin de un archivo local. No escanear los
+   .mjs en busca de clases de contenido (no son templates). */
+@source not "../vendor/daisyui";
+@plugin "../vendor/daisyui/5.7.43/daisyui.mjs" {
+  themes: business --prefersdark;
+}
+
+/* Tema de marca "arena" (actualizado 2026-09-23) -- generado con el theme
+   generator oficial de daisyUI (https://daisyui.com/theme-generator/).
+   Valores de color/radio/tamaño aplicados verbatim del generador, con
+   UNA excepción deliberada: --color-neutral/--color-neutral-content NO
+   son los del generador (que traía negro puro) -- son el azul real del
+   navbar de arena-os (`primary-900` = #242D51 en su propio
+   styles/tailwind_input.css, confirmado ahí, no inventado aquí), para
+   que el navbar de arena-crm (bg-neutral/text-neutral-content, ver
+   Sección 6) que hoy YA es theme-aware por construcción, herede
+   automáticamente ese azul sin tocar templates/_navbar.html. `name`
+   también se preserva como "arena" entre regeneraciones (identificador
+   propio de este repo, no el que trae cada export del generador) para
+   que `templates/base.html`/`theme_toggle.js` no necesiten cambiar.
+   Reemplaza al tema built-in `corporate` como default claro --
+   `business` (oscuro, ver arriba) sigue siendo el segundo tema del
+   toggle de theme_toggle.js, sin cambios. */
+@plugin "../vendor/daisyui/5.7.43/daisyui-theme.mjs" {
+  name: "arena";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(93% 0 0);
+  --color-base-300: oklch(86% 0 0);
+  --color-base-content: oklch(35.519% 0.032 262.988);
+  --color-primary: oklch(76.662% 0.135 153.45);
+  --color-primary-content: oklch(33.387% 0.04 162.24);
+  --color-secondary: oklch(61.302% 0.202 261.294);
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(72.772% 0.149 33.2);
+  --color-accent-content: oklch(0% 0 0);
+  --color-neutral: #242d51; /* azul navbar de arena-os (primary-900), no del generador -- ver comentario arriba */
+  --color-neutral-content: oklch(98.462% 0.001 247.838);
+  --color-info: oklch(72.06% 0.191 231.6);
+  --color-info-content: oklch(0% 0 0);
+  --color-success: oklch(64.8% 0.15 160);
+  --color-success-content: oklch(0% 0 0);
+  --color-warning: oklch(84.71% 0.199 83.87);
+  --color-warning-content: oklch(0% 0 0);
+  --color-error: oklch(71.76% 0.221 22.18);
+  --color-error-content: oklch(0% 0 0);
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* `business` (oscuro, built-in de daisyUI) trae su propio
+   --radius-selector: 0 (esquinas cuadradas) -- decisión propia de ESE
+   tema, sin relación con `arena`. Sin este override, cualquier
+   selector/checkbox/toggle/radio se ve cuadrado en modo oscuro y
+   redondo en modo claro -- inconsistente (bug real reportado
+   2026-09-23). Se igualan solo las variables de FORMA a las de `arena`
+   -- nunca color, `business` conserva su propia paleta oscura. */
+[data-theme="business"] {
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+}
+
+/* Variante `dark:` heredada -- se mantiene funcionando en paralelo a
+   daisyUI mientras dura la migración incremental de componentes viejos
+   (mismo criterio que el resto de esta migración, ver DESIGN_SYSTEM.md
+   Sección 7). daisyUI no usa `dark:` -- sus colores semánticos
+   (`bg-primary`, `text-base-content`, etc.) cambian solos con el atributo
+   `data-theme` del <html>, que `theme_toggle.js` fija en paralelo a la
+   clase `.dark`. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-  --font-sans: "Lato", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Ubuntu", "Lato", ui-sans-serif, sans-serif;
-  /* Tema azul marino (navy) sobre fondos blancos */
+  /* Un solo font-family en toda la app (2026-09-23, a pedido explícito:
+     "quiero que todos los fonts sean el mismo... asi como dice el
+     Bienvenido a arenaCRM" -- ese H1 usa font-heading/Quicksand).
+     `--font-sans` y `--font-heading` quedan en el mismo valor -- se
+     conservan como dos variables separadas (no una sola) por si se
+     vuelve a diferenciar cuerpo/títulos más adelante, pero hoy son
+     idénticas a propósito. PT Sans se deja vendorizada sin referenciar
+     (ver static/vendor/VERSIONS.md) por si se revierte esta decisión. */
+  --font-heading: "Quicksand", "Nunito", sans-serif;
+  --font-sans: "Quicksand", "Nunito", sans-serif;
+
+  /* Escala tipográfica (DESIGN_SYSTEM.md Sección 2). `--text-sm` vuelve a
+     11px (2026-09-23, a pedido explícito: "el menú y el paragraph...
+     bájalo a 11") -- es el tamaño real que usa la mayoría del texto de
+     UI (menús, párrafos, celdas de tabla) en todas las pantallas, así
+     que un solo cambio aquí basta para "toda la app", sin tocar cada
+     template. NOTA para el futuro: este mismo valor (11px) ya se había
+     probado antes y se subió a 13px por feedback de que era ilegible
+     (ver historial de este archivo) -- si vuelve a reportarse eso,
+     revisar aquí primero antes de tocar templates sueltos. `--text-xs`
+     (10px, subtítulos/texto descriptivo/badges) no cambia a propósito
+     -- el usuario pidió consistencia salvo en esos casos. */
+  --text-xs: 0.625rem;        /* 10px */
+  --text-xs--line-height: 0.875rem;
+  --text-sm: 0.6875rem;       /* 11px */
+  --text-sm--line-height: 1rem;
+  --text-base: 0.875rem;      /* 14px */
+  --text-base--line-height: 1.375rem;
+  --text-lg: 1rem;            /* 16px */
+  --text-lg--line-height: 1.5rem;
+  --text-xl: 1.125rem;        /* 18px */
+  --text-xl--line-height: 1.5rem;
+  --text-2xl: 1.375rem;       /* 22px */
+  --text-2xl--line-height: 1.75rem;
+  --text-3xl: 1.625rem;       /* 26px */
+  --text-3xl--line-height: 2rem;
+
+  /* Primary — navy. Franja/nav/CTA principal. */
+  --color-primary-100: #EAEAEE;
+  --color-primary-700: #505774;
+  --color-primary-800: #3A4263;
+  --color-primary-900: #242D51;
+
+  /* Secondary — morado/magenta. Usar con moderación. */
+  --color-secondary-100: #F0E9EE;
+  --color-secondary-700: #804971;
+  --color-secondary-800: #70325F;
+  --color-secondary-900: #601B4D;
+
+  /* Accents — alto impacto, guiar atención. */
+  --color-accent-teal-100: #BEC9C6;
+  --color-accent-teal-700: #6AB6A1;
+  --color-accent-teal-800: #71DEC1;
+  --color-accent-teal-900: #60DBB9;
+
+  --color-accent-pink-100: #FAEEF8;
+  --color-accent-pink-700: #D984CE;
+  --color-accent-pink-800: #D372C7;
+  --color-accent-pink-900: #CE61C1;
+
+  --color-accent-blue-100: #EBF3FE;
+  --color-accent-blue-700: #6EA7F3;
+  --color-accent-blue-800: #5999F1;
+  --color-accent-blue-900: #448DEF;
+
+  /* Semántico — siempre con ícono/texto, nunca solo color. */
+  --color-success-100: #EDFDF8;
+  --color-success-700: #08875D;
+  --color-success-800: #04724D;
+  --color-success-900: #066042;
+
+  --color-warning-100: #FFF8EA;
+  --color-warning-700: #F5C15B;
+  --color-warning-800: #F3B843;
+  --color-warning-900: #F2B02C;
+
+  --color-danger-100: #FEF1F2;
+  --color-danger-700: #E02D3C;
+  --color-danger-800: #BA2532;
+  --color-danger-900: #981B25;
+
+  --color-informative-100: #E9F0F5;
+  --color-informative-700: #4883AC;
+  --color-informative-800: #3274A3;
+  --color-informative-900: #1B6498;
+
+  /* Neutral: intencionalmente NO se sobreescribe --color-gray-* — se
+     usa la escala gray por defecto de Tailwind. */
+
+  /* Elevación — tokens propios (independientes de daisyUI), usados por
+     componentes que necesitan más sombra que shadow-sm. */
+  --shadow-elevation-2:
+    0 2px 4px -1px rgb(36 45 81 / 0.08),
+    0 4px 12px -2px rgb(36 45 81 / 0.10),
+    0 0 0 1px rgb(36 45 81 / 0.02);
+  --shadow-elevation-3:
+    0 4px 8px -2px rgb(36 45 81 / 0.10),
+    0 12px 28px -4px rgb(36 45 81 / 0.16),
+    0 0 0 1px rgb(36 45 81 / 0.03);
+
+  /* Motion — curvas de easing propias, independientes de daisyUI. */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+
+@layer base {
+  /* Foco visible obligatorio (DESIGN_SYSTEM.md Sección 8). */
+  :focus-visible {
+    outline: 2px solid var(--color-primary-700);
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar de la PÁGINA oculta (2026-10-08, pedido explícito): con `scrollbar-gutter` daisyUI 5
+     la anulaba en `:root` y el hueco se pintaba blanco junto al navbar; con `overflow-y: scroll` la
+     página seguía "brincando". Se oculta la barra del documento (se sigue desplazando con rueda,
+     touchpad y teclado) -- solución de forum.bubble.io/t/361999. Solo `html`: tablas, modales y
+     paneles con scroll propio conservan su barra. */
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Tipografía global -- default real de toda la app, no una
+     excepción que cada plantilla deba declarar. */
+  body {
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer utilities {
+  /* daisyUI define `.label` con `white-space: nowrap` (pensado para una
+     etiqueta corta al lado de un input) -- un texto de ayuda largo
+     (`components/_form_field.html`, `<p class="label">{{ help }}</p>`)
+     se desborda fuera de su columna en un grid de 2+ columnas en vez de
+     hacer wrap, encimándose con el campo vecino. Bug real encontrado al
+     agregar el help de Person.phone junto al de Person.email (ambos en
+     la misma fila de crm/people/form.html). VA en `@layer utilities` --
+     no en `base` -- porque `utilities` siempre gana sobre el `components`
+     de daisyUI en el orden de cascada declarado arriba (mismo criterio ya
+     documentado para el font-size de `.menu-sm`/`.menu-md`, ver
+     _navbar.html). Nunca toca el `.label` usado como legend/caption
+     corto (sigue en una sola línea ahí, solo cambia cuando el contenido
+     es más largo que su columna). */
+  .fieldset .label {
+    white-space: normal;
+  }
+
+  /* Foco de campos = color primario del tema (2026-09-25, pedido explícito:
+     "unifica el borde a verde en todos los inputs"). daisyUI fija
+     `--input-color: var(--color-base-content)` (navy neutro) DENTRO de las
+     propias reglas `.input`/`.input:focus` (idem select/textarea/file-input)
+     -- es una variable local del componente, no un token heredable, así que
+     redefinirla en el tema (`:root`/`@plugin daisyui-theme`) no tendría
+     efecto (el componente la vuelve a fijar sobre sí mismo), y además esa
+     misma variable pinta el borde en reposo (al 20%), que debe seguir
+     neutro. Por eso se redefine SOLO en el estado de foco: borde + sombra +
+     anillo (`outline`) salen de `--input-color` y quedan todos en
+     `--color-primary` de una vez, en toda la app, sin tocar
+     `field_classes()` ni ningún template. `@layer utilities` gana sobre
+     daisyUI (que vive en sub-capas `utilities.daisyui.*`, ver comentario de
+     `.fieldset .label` arriba) -- por eso se excluyen explícitamente los
+     modificadores `-error` que agrega `field_classes()`: un campo inválido
+     conserva su foco rojo. Checkbox/radio/toggle no usan `--input-color`
+     para su anillo de forma uniforme (radio/toggle lo toman de
+     `currentColor`, que ES su color de relleno) -- ahí se fija solo
+     `outline-color`, sin tocar su relleno ni borde. Excepción documentada
+     en DESIGN_SYSTEM.md Sección 1 (ajuste de token de tema, no CSS de
+     componente). */
+  :is(.input, .select, .textarea, .file-input):not(.input-error, .select-error, .textarea-error, .file-input-error):is(:focus, :focus-within),
+  .select:not(.select-error):open {
+    --input-color: var(--color-primary);
+  }
+  :is(.checkbox, .radio, .toggle):not(.checkbox-error, .radio-error, .toggle-error):focus-visible,
+  .toggle:not(.toggle-error):has(:focus-visible) {
+    outline-color: var(--color-primary);
+  }
+}
+
+
+/* ==========================================================================================
+   PROPIO DE ARENA-TALENTO
+   ========================================================================================== */
+@theme {
+  /* Acento de producto: «talento» del lockup (degradado naranja). Solo para la marca. */
+  --color-talento-300: #FFB45A;
+  --color-talento-600: #F2711C;
+
+  /* Navy LEGADO de Mesa de Talento (plantillas aún no migradas, `arena-*`). Se elimina en la fase 4. */
   --color-arena-50:  #eef3f8;
   --color-arena-100: #d5e1ee;
   --color-arena-200: #adc4dd;
@@ -19,38 +314,35 @@
   --color-arena-800: #14273e;
   --color-arena-900: #101f31;
   --color-arena-950: #0a1422;
+  --font-display: var(--font-heading);
 }
 
-@layer base {
-  body { @apply bg-slate-50 text-slate-800 font-sans antialiased; }
-  h1, h2, h3 { @apply text-slate-900 font-semibold tracking-tight; font-family: var(--font-display); }
-}
-
-/* Títulos con la fuente display (Ubuntu) */
+/* Utilidad legada: títulos con la fuente de marca. */
 .font-display { font-family: var(--font-display); }
 
+/* CAPA LEGADA `ui-*` (fase 0, docs/PLAN_MIGRACION_DISENO.md §4): clases artesanales previas,
+   renombradas para no chocar con daisyUI. PROHIBIDAS en código nuevo (usar components/ y
+   daisyUI). Con variantes `dark:` para que las pantallas no migradas sigan legibles en modo
+   oscuro. Se eliminan en la fase 4. */
 @layer components {
-  /* Base compartida de botones (sin @apply de clases propias) */
-  .btn, .btn-primary, .btn-secondary, .btn-ghost, .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition cursor-pointer;
+  .ui-btn, .ui-btn-primary, .ui-btn-secondary, .ui-btn-ghost, .ui-btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-base font-semibold transition cursor-pointer;
     @apply focus-visible:ring-2 focus-visible:ring-arena-500 focus-visible:ring-offset-2;
     @apply disabled:opacity-50 disabled:pointer-events-none;
   }
-  .btn-primary { @apply bg-arena-600 text-white shadow-sm hover:bg-arena-700; }
-  .btn-secondary { @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50; }
-  .btn-ghost { @apply text-slate-600 hover:bg-slate-100; }
-  .btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
-  /* Botón chico y distintivo para acciones dentro de tablas/cards */
-  .btn-soft { @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium bg-arena-50 text-arena-700 hover:bg-arena-100 transition cursor-pointer; }
+  .ui-btn-primary { @apply bg-arena-600 text-white shadow-sm hover:bg-arena-700; }
+  .ui-btn-secondary { @apply bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800; }
+  .ui-btn-ghost { @apply text-slate-600 hover:bg-slate-100 dark:text-gray-300 dark:hover:bg-gray-800; }
+  .ui-btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
+  .ui-btn-soft { @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-base font-medium bg-arena-50 text-arena-700 hover:bg-arena-100 transition cursor-pointer dark:bg-gray-800 dark:text-gray-200; }
 
-  .card { @apply bg-white rounded-xl border border-slate-200 shadow-sm; }
-  .input { @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 focus:outline-none transition; }
-  .label { @apply block text-sm font-medium text-slate-700 mb-1; }
-  .badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .ui-card { @apply bg-white rounded-xl border border-slate-200 shadow-sm dark:bg-gray-900 dark:border-gray-800; }
+  .ui-input { @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 shadow-sm focus:border-arena-600 focus:ring-2 focus:ring-arena-200 focus:outline-none transition dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700; }
+  .ui-label { @apply block text-base font-medium text-slate-700 mb-1 dark:text-gray-300; }
+  .ui-badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-base font-medium; }
 
-  .nav-link { @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition; }
-  .nav-link-active { @apply bg-arena-50 text-arena-700; }
+  .ui-nav-link { @apply flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition; }
+  .ui-nav-link-active { @apply bg-arena-50 text-arena-700; }
 }
 
-/* Utilidad para x-cloak de Alpine (evita parpadeo de elementos ocultos) */
 [x-cloak] { display: none !important; }

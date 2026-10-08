@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   {% with locked=vd.status|stringformat:"s" %}
-  <div class="mb-2"><a href="{% url 'evaluations:value_delivery_list' %}{% if period %}?periodo={{ period.pk }}{% endif %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Entrega de Valor</a></div>
+  <div class="mb-2"><a href="{% url 'evaluations:value_delivery_list' %}{% if period %}?periodo={{ period.pk }}{% endif %}" class="text-base text-arena-600 hover:text-arena-700">&larr; Entrega de Valor</a></div>
   <div class="flex items-start justify-between gap-3 mb-4">
     <div>
       <h2 class="text-xl font-semibold text-slate-900">{{ project.name }}</h2>
@@ -10,33 +10,33 @@
     {% include "partials/status_badge.html" with status=vd.status label=vd.get_status_display %}
   </div>
 
-  <div class="rounded-lg bg-arena-50 border border-arena-100 px-4 py-3 mb-6 text-sm text-arena-800">
+  <div class="rounded-lg bg-arena-50 border border-arena-100 px-4 py-3 mb-6 text-base text-arena-800">
     Esta calificación se aplicará a las <span class="font-semibold">{{ members_count }}</span> personas del equipo del proyecto.
   </div>
 
   {% if period.is_closed %}
-    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-6 text-sm text-slate-700">
+    <div class="rounded-lg bg-slate-100 border border-slate-200 px-4 py-3 mb-6 text-base text-slate-700">
       El periodo <b>{{ period.name }}</b> ya está Cerrado: esta Entrega de Valor es histórica, de solo lectura
       {% if can_correct_closed %}salvo la corrección excepcional de Talento (con motivo, queda auditada){% endif %}.
     </div>
   {% endif %}
 
   {% if vd.rejection_comment %}
-  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6 text-sm text-amber-800">
+  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6 text-base text-amber-800">
     El director regresó esta evaluación: “{{ vd.rejection_comment }}”
   </div>
   {% endif %}
 
-  <form method="post" class="card p-5 space-y-6">
+  <form method="post" class="ui-card p-5 space-y-6">
     {% csrf_token %}
     {% if vd.status == 'VALIDADA' %}
-      <p class="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">Validada. Calificación: <span class="font-semibold">{{ vd.score }}</span>.</p>
+      <p class="text-base text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">Validada. Calificación: <span class="font-semibold">{{ vd.score }}</span>.</p>
     {% endif %}
 
     {% if can_correct_closed %}
       <div>
-        <label class="label" for="reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
-        <input type="text" id="reason" name="reason" class="input" maxlength="200" required>
+        <label class="ui-label" for="reason">Motivo de la corrección (periodo Cerrado, queda auditado)</label>
+        <input type="text" id="reason" name="reason" class="ui-input" maxlength="200" required>
       </div>
     {% endif %}
 
@@ -50,15 +50,15 @@
     {% endif %}
 
     <div>
-      <label class="label" for="comments">Comentarios</label>
-      <p class="text-sm text-slate-600 mb-2">Contexto opcional sobre esta Entrega de Valor: hitos, riesgos o aclaraciones. Lo podrá leer —y complementar si lo desea— quien la valide, y se mostrará también en la Mesa de Talento de cada integrante del equipo.</p>
-      <textarea id="comments" name="comments" rows="3" class="input" {% if vd.status == 'VALIDADA' and not can_correct_closed %}disabled{% endif %}>{{ vd.comments }}</textarea>
+      <label class="ui-label" for="comments">Comentarios</label>
+      <p class="text-base text-slate-600 mb-2">Contexto opcional sobre esta Entrega de Valor: hitos, riesgos o aclaraciones. Lo podrá leer —y complementar si lo desea— quien la valide, y se mostrará también en la Mesa de Talento de cada integrante del equipo.</p>
+      <textarea id="comments" name="comments" rows="3" class="ui-input" {% if vd.status == 'VALIDADA' and not can_correct_closed %}disabled{% endif %}>{{ vd.comments }}</textarea>
     </div>
 
     {% if vd.status != 'VALIDADA' %}
-      <button type="submit" class="btn-primary w-full">Enviar a validación del director</button>
+      <button type="submit" class="ui-btn-primary w-full">Enviar a validación del director</button>
     {% elif can_correct_closed %}
-      <button type="submit" class="btn-primary w-full">Guardar corrección</button>
+      <button type="submit" class="ui-btn-primary w-full">Guardar corrección</button>
     {% endif %}
   </form>
   {% endwith %}

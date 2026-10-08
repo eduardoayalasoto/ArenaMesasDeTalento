@@ -1,0 +1,60 @@
+{% load nice_avatar_tags %}
+{% comment %}
+Columna de acciones de una fila de lista (2026-09-29, pedido explícito:
+"el icono de ver y abajo el avatar... mismos tamaños, misma alineación, para
+que el usuario empiece a entender la estructura de un componente
+reusable"). SIEMPRE a la derecha de la fila, con la misma estructura en
+Actividades (ver), Documentos (descargar) y Referencias (abrir link):
+
+    ┌──────────── contenido de la fila ────────────┐ ┌──┐
+    │ título · fecha · metadatos                   │ │⬇ │  <- acción (btn-circle btn-sm)
+    │                                              │ │👤│  <- owner (avatar 24px)
+    └──────────────────────────────────────────────┘ └──┘
+
+- Ancho fijo (w-9) y centrado: la acción y el avatar quedan en la misma
+  vertical en TODAS las listas.
+- Ambos con tooltip a la IZQUIERDA (las listas tienen scroll y recortan un
+  tooltip hacia arriba -- DESIGN_SYSTEM.md § 5.1).
+- La fila que lo usa debe ser `flex items-start gap-3` con el contenido en
+  `flex-1 min-w-0`.
+
+Props:
+  action_icon    ícono Lucide del botón (eye | download | external-link ...)
+  action_tip     texto del tooltip ("Ver detalle", "Descargar", "Abrir link")
+  action_label   aria-label completo (p.ej. "Descargar Contrato")
+  action_href    si viene: el botón es un <a> (descargar/abrir)
+  action_new_tab True: abre en otra pestaña (rel noopener noreferrer)
+  action_attrs   si NO hay href: atributos crudos del <button> (p.ej. el
+                 onclick="openModal(...)" + data-modal-open). Solo strings de
+                 este codebase, nunca datos de usuario.
+  owner          User -- se omite el avatar si no viene
+  owner_role     texto sr-only antes del nombre (default "Owner")
+  show_owner     False = omite el avatar (p.ej. historial con show_owner=False)
+  Sin `action_icon` se omite el botón y queda solo el avatar (p.ej. fila del
+  Centro de Actividades que el usuario no puede editar, spec 026).
+{% endcomment %}
+<div class="flex flex-col items-center gap-2 w-9 shrink-0">
+  {% if action_icon %}
+  <span class="tooltip tooltip-left relative z-20" data-tip="{{ action_tip }}">
+    {% if action_href %}
+      <a href="{{ action_href }}" class="btn btn-circle btn-sm btn-ghost" aria-label="{{ action_label }}"
+         {% if action_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+        <i data-lucide="{{ action_icon }}" class="w-[18px] h-[18px]" aria-hidden="true"></i>
+      </a>
+    {% else %}
+      <button type="button" class="btn btn-circle btn-sm btn-ghost" aria-label="{{ action_label }}" {{ action_attrs|safe }}>
+        <i data-lucide="{{ action_icon }}" class="w-[18px] h-[18px]" aria-hidden="true"></i>
+      </button>
+    {% endif %}
+  </span>
+  {% else %}
+  {# Sin acción (fila de solo lectura): mismo alto que el botón para que las filas alineen (regla 10). #}
+  <span class="w-8 h-8" aria-hidden="true"></span>
+  {% endif %}
+  {% if owner and show_owner is not False %}
+    <span class="tooltip tooltip-left leading-none" data-tip="{{ owner.get_full_name|default:owner.username }}">
+      <span class="sr-only">{{ owner_role|default:"Owner" }}: {{ owner.get_full_name|default:owner.username }}</span>
+      {% nice_avatar owner size=24 %}
+    </span>
+  {% endif %}
+</div>

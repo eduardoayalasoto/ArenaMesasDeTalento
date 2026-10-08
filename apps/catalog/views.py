@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import ProtectedError
-from django.db.models import Count
+from django.db.models import Count, Exists, OuterRef
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -20,6 +20,17 @@ from apps.access.decorators import requires
 User = get_user_model()
 
 
+def _project_has_evals(project) -> bool:
+    """True si ya se capturó alguna evaluación de este proyecto (Ownership o Entrega
+    de Valor): distingue "Cerrar proyecto" (reversible) de "Eliminar" (definitivo)."""
+    from apps.evaluations.models import OwnershipEvaluation, ValueDeliveryEvaluation
+
+    return (
+        OwnershipEvaluation.objects.filter(project=project).exists()
+        or ValueDeliveryEvaluation.objects.filter(project=project).exists()
+    )
+
+
 @login_required
 @requires("projects.edit")
 def project_admin(request):
@@ -29,9 +40,17 @@ def project_admin(request):
             "titulo": "No tienes acceso a Proyectos",
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
         }, status=403)
+    from apps.evaluations.models import OwnershipEvaluation, ValueDeliveryEvaluation
+
     projects = (
         Project.objects.select_related("owner", "validador")
-        .annotate(members=Count("memberships"))
+        .annotate(
+            members=Count("memberships"),
+            has_evals=(
+                Exists(OwnershipEvaluation.objects.filter(project=OuterRef("pk")))
+                | Exists(ValueDeliveryEvaluation.objects.filter(project=OuterRef("pk")))
+            ),
+        )
         .order_by("name")
     )
     return render(request, "catalog/project_admin.html", {
@@ -243,12 +262,7 @@ def project_delete(request, pk):
         return HttpResponseNotAllowed(["POST"])
 
     project = get_object_or_404(Project, pk=pk)
-
-    from apps.evaluations.models import OwnershipEvaluation, ValueDeliveryEvaluation
-    has_evals = (
-        OwnershipEvaluation.objects.filter(project=project).exists()
-        or ValueDeliveryEvaluation.objects.filter(project=project).exists()
-    )
+    has_evals = _project_has_evals(project)
 
     if has_evals:
         project.is_active = False
@@ -256,10 +270,10 @@ def project_delete(request, pk):
         if request.headers.get("HX-Request"):
             edit_url = f"/catalogo/proyectos/{pk}/"
             reactivar_url = f"/catalogo/proyectos/{pk}/reactivar/"
-            client_html = f'<p class="text-xs text-slate-500">{project.client}</p>' if project.client else ""
+            client_html = f'<p class="text-base text-slate-500">{project.client}</p>' if project.client else ""
             validador_html = (
                 project.validador.full_name if project.validador
-                else '<span class="text-slate-400 italic text-xs">Sin asignar</span>'
+                else '<span class="text-slate-400 italic text-base">Sin asignar</span>'
             )
             return HttpResponse(
                 f'<tr id="project-row-{pk}">'
@@ -268,14 +282,14 @@ def project_delete(request, pk):
                 f'<td class="px-4 py-3 text-slate-600">{validador_html}</td>'
                 f'<td class="px-4 py-3 text-slate-600">{project.get_duration_type_display()}</td>'
                 f'<td class="px-4 py-3 text-center tabular-nums">—</td>'
-                f'<td class="px-4 py-3"><span class="badge bg-slate-100 text-slate-500">Inactivo</span></td>'
+                f'<td class="px-4 py-3"><span class="ui-badge bg-slate-100 text-slate-500">Cerrado</span></td>'
                 f'<td class="px-4 py-3 text-right flex items-center justify-end gap-1">'
-                f'<a href="{edit_url}" class="btn-soft">Editar</a>'
-                f'<button type="button" hx-post="{reactivar_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Reactivar «{project.name}»?" class="btn-soft">'
-                f'<i data-lucide="rotate-ccw" class="w-3.5 h-3.5 inline mr-1"></i>Reactivar</button>'
+                f'<a href="{edit_url}" class="ui-btn-soft">Editar</a>'
+                f'<button type="button" hx-post="{reactivar_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Reabrir «{project.name}»? Volverá a aparecer para hacer evaluaciones en el periodo Abierto." class="ui-btn-soft">'
+                f'<i data-lucide="rotate-ccw" class="w-3.5 h-3.5 inline mr-1"></i>Reabrir</button>'
                 f'</td></tr>'
             )
-        messages.info(request, f"Proyecto «{project.name}» desactivado. Puedes reactivarlo desde la lista.")
+        messages.info(request, f"Proyecto «{project.name}» cerrado: ya no aparece para hacer evaluaciones del periodo Abierto. Puedes reabrirlo desde la lista.")
     else:
         nombre = project.name
         project.delete()
@@ -306,10 +320,10 @@ def project_reactivate(request, pk):
         members_count = ProjectMembership.objects.filter(project=project).count()
         edit_url = f"/catalogo/proyectos/{pk}/"
         delete_url = f"/catalogo/proyectos/{pk}/eliminar/"
-        client_html = f'<p class="text-xs text-slate-500">{project.client}</p>' if project.client else ""
+        client_html = f'<p class="text-base text-slate-500">{project.client}</p>' if project.client else ""
         validador_html = (
             project.validador.full_name if project.validador
-            else '<span class="text-slate-400 italic text-xs">Sin asignar</span>'
+            else '<span class="text-slate-400 italic text-base">Sin asignar</span>'
         )
         return HttpResponse(
             f'<tr id="project-row-{pk}">'
@@ -318,16 +332,14 @@ def project_reactivate(request, pk):
             f'<td class="px-4 py-3 text-slate-600">{validador_html}</td>'
             f'<td class="px-4 py-3 text-slate-600">{project.get_duration_type_display()}</td>'
             f'<td class="px-4 py-3 text-center tabular-nums">{members_count}</td>'
-            f'<td class="px-4 py-3"><span class="badge bg-emerald-50 text-emerald-700">Activo</span></td>'
+            f'<td class="px-4 py-3"><span class="ui-badge bg-emerald-50 text-emerald-700">Abierto</span></td>'
             f'<td class="px-4 py-3 text-right flex items-center justify-end gap-1">'
-            f'<a href="{edit_url}" class="btn-soft mr-1">Editar</a>'
-            f'<span class="relative group/ptip">'
-            f'<button type="button" hx-post="{delete_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Eliminar «{project.name}»? Esta acción no se puede deshacer." class="p-1.5 rounded-lg text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition cursor-pointer">'
-            f'<i data-lucide="trash-2" class="w-4 h-4 inline"></i></button>'
-            f'<span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/ptip:opacity-100 z-20">Eliminar proyecto</span>'
-            f'</span></td></tr>'
+            f'<a href="{edit_url}" class="ui-btn-soft mr-1">Editar</a>'
+            f'<button type="button" hx-post="{delete_url}" hx-target="#project-row-{pk}" hx-swap="outerHTML" hx-confirm="¿Cerrar «{project.name}»? Ya no aparecera para hacer evaluaciones del periodo Abierto. Puedes reabrirlo cuando quieras." class="ui-btn-soft">'
+            f'<i data-lucide="lock" class="w-3.5 h-3.5 inline mr-1"></i>Cerrar proyecto</button>'
+            f'</td></tr>'
         )
-    messages.success(request, f"Proyecto «{project.name}» reactivado.")
+    messages.success(request, f"Proyecto «{project.name}» reabierto: vuelve a aparecer para hacer evaluaciones del periodo Abierto.")
     return redirect("catalog:project_admin")
 
 

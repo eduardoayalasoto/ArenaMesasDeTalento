@@ -2,33 +2,33 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 
-{% if others is not None %}<h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Te toca decidir <span class="text-slate-400">· {{ items|length }}</span></h3>{% endif %}
+{% if others is not None %}<h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">Te toca decidir <span class="text-slate-400">· {{ items|length }}</span></h3>{% endif %}
 {% if items %}
   <div class="space-y-4">
     {% for it in items %}
       {% with r=it.req %}
-      <article class="card p-5" x-data="{ mode: null }">
+      <article class="ui-card p-5" x-data="{ mode: null }">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div class="flex items-start gap-3 min-w-0">
             {% include "partials/avatar.html" with subject=r.user size="w-10 h-10" mini=True %}
             <div class="min-w-0">
               <a href="{% url 'learning:request_detail' r.pk %}" class="font-semibold text-slate-900 hover:underline">{{ r.name }}</a>
-              <p class="text-sm text-slate-600">{{ r.user.full_name }} · {{ r.user.area.name|default:"Sin área" }}{% if r.user.level %} · {{ r.user.level.name }}{% endif %}</p>
-              <p class="text-sm text-slate-500">{{ r.provider }} · {% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}sin costo{% endif %} · {{ r.start_date_planned|date:"d/m/Y" }} – {{ r.end_date_planned|date:"d/m/Y" }}</p>
+              <p class="text-base text-slate-600">{{ r.user.full_name }} · {{ r.user.area.name|default:"Sin área" }}{% if r.user.level %} · {{ r.user.level.name }}{% endif %}</p>
+              <p class="text-base text-slate-500">{{ r.provider }} · {% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}sin costo{% endif %} · {{ r.start_date_planned|date:"d/m/Y" }} – {{ r.end_date_planned|date:"d/m/Y" }}</p>
             </div>
           </div>
           {% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}
         </div>
-        <p class="mt-3 text-sm text-slate-700 whitespace-pre-line line-clamp-4">{{ r.justification }}</p>
-        <p class="mt-2 text-xs text-slate-500">Historial: {{ it.ctx.counts.completed }} completado(s) · {{ it.ctx.counts.in_progress }} en curso · {{ it.ctx.counts.not_completed }} no concluido(s) · autorizado este año: {% for cur, total in it.ctx.cost_year.items %}${{ total|floatformat:"0g" }} {{ cur }}{% if not forloop.last %}, {% endif %}{% empty %}$0{% endfor %}</p>
+        <p class="mt-3 text-base text-slate-700 whitespace-pre-line line-clamp-4">{{ r.justification }}</p>
+        <p class="mt-2 text-base text-slate-500">Historial: {{ it.ctx.counts.completed }} completado(s) · {{ it.ctx.counts.in_progress }} en progreso · {{ it.ctx.counts.not_completed }} no concluido(s) · autorizado este año: {% for cur, total in it.ctx.cost_year.items %}${{ total|floatformat:"0g" }} {{ cur }}{% if not forloop.last %}, {% endif %}{% empty %}$0{% endfor %}</p>
         <div class="mt-4 flex flex-wrap gap-2">
           <form method="post" action="{% url 'learning:request_decide' r.pk %}">
             {% csrf_token %}<input type="hidden" name="action" value="approve"><input type="hidden" name="next" value="{% url 'learning:approvals_inbox' %}">
-            <button type="submit" class="btn-primary"><i data-lucide="check" class="w-4 h-4"></i> Aprobar</button>
+            <button type="submit" class="ui-btn-primary"><i data-lucide="check" class="w-4 h-4"></i> Aprobar</button>
           </form>
-          <button type="button" class="btn-secondary" @click="mode = 'return'">Regresar</button>
-          <button type="button" class="btn-secondary text-rose-600 border-rose-200 hover:bg-rose-50" @click="mode = 'reject'">Rechazar</button>
-          <a href="{% url 'learning:request_detail' r.pk %}" class="btn-ghost ml-auto">Ver detalle</a>
+          <button type="button" class="ui-btn-secondary" @click="mode = 'return'">Regresar</button>
+          <button type="button" class="ui-btn-secondary text-rose-600 border-rose-200 hover:bg-rose-50" @click="mode = 'reject'">Rechazar</button>
+          <a href="{% url 'learning:request_detail' r.pk %}" class="ui-btn-ghost ml-auto">Ver detalle</a>
         </div>
         <div x-show="mode" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true" @keydown.escape.window="mode = null">
           <div class="fixed inset-0 bg-slate-900/50" @click="mode = null"></div>
@@ -36,11 +36,11 @@
             {% csrf_token %}
             <input type="hidden" name="action" :value="mode"><input type="hidden" name="next" value="{% url 'learning:approvals_inbox' %}">
             <h4 class="font-semibold text-slate-900" x-text="mode === 'reject' ? '¿Rechazar «{{ r.name|escapejs }}»?' : 'Regresar «{{ r.name|escapejs }}»'"></h4>
-            <label class="label mt-4" for="c-{{ r.pk }}">Comentario para {{ r.user.get_short_name }} <span class="text-rose-600">*</span></label>
-            <textarea id="c-{{ r.pk }}" name="comment" rows="4" class="input" required></textarea>
+            <label class="ui-label mt-4" for="c-{{ r.pk }}">Comentario para {{ r.user.get_short_name }} <span class="text-rose-600">*</span></label>
+            <textarea id="c-{{ r.pk }}" name="comment" rows="4" class="ui-input" required></textarea>
             <div class="mt-5 flex justify-end gap-2">
-              <button type="button" class="btn-secondary" @click="mode = null">Cancelar</button>
-              <button type="submit" :class="mode === 'reject' ? 'btn-danger' : 'btn-primary'" x-text="mode === 'reject' ? 'Sí, rechazar' : 'Regresar'"></button>
+              <button type="button" class="ui-btn-secondary" @click="mode = null">Cancelar</button>
+              <button type="submit" :class="mode === 'reject' ? 'ui-btn-danger' : 'ui-btn-primary'" x-text="mode === 'reject' ? 'Sí, rechazar' : 'Regresar'"></button>
             </div>
           </form>
         </div>
@@ -50,7 +50,7 @@
   </div>
 {% else %}
   {% if others is not None %}
-    <p class="text-sm text-slate-500 card p-4">No tienes solicitudes en tu etapa.</p>
+    <p class="text-base text-slate-500 ui-card p-4">No tienes solicitudes en tu etapa.</p>
   {% else %}
     {% include "partials/empty_state.html" with icon="check" title="No tienes solicitudes por aprobar" message="Cuando alguien te necesite para autorizar un curso, aparecerá aquí y en la campana." %}
   {% endif %}
@@ -59,12 +59,12 @@
 {% if others is not None %}
   {# Talento ve todo: solicitudes en revisión en cualquier etapa (solo lectura + reasignar desde el detalle). #}
   <section class="mt-8">
-    <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-1">Todas las solicitudes en revisión <span class="text-slate-400">· {{ others|length }}</span></h3>
-    <p class="text-xs text-slate-500 mb-3">Visibles para Talento. Si una se atora, ábrela y usa «Reasignar aprobador».</p>
+    <h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-1">Todas las solicitudes en revisión <span class="text-slate-400">· {{ others|length }}</span></h3>
+    <p class="text-base text-slate-500 mb-3">Visibles para Talento. Si una se atora, ábrela y usa «Reasignar aprobador».</p>
     {% if others %}
-      <div class="card overflow-hidden">
+      <div class="ui-card overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table class="w-full text-base">
             <thead class="bg-slate-50 text-slate-600 text-left">
               <tr>
                 <th class="px-4 py-3 font-medium">Colaborador</th>
@@ -77,11 +77,11 @@
             <tbody class="divide-y divide-slate-100">
               {% for row in others %}{% with r=row.req %}
                 <tr class="hover:bg-slate-50">
-                  <td class="px-4 py-2.5"><p class="font-medium text-slate-900">{{ r.user.full_name }}</p><p class="text-xs text-slate-500">{{ r.user.area.name|default:"Sin área" }}{% if r.user.level %} · {{ r.user.level.name }}{% endif %}</p></td>
-                  <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-arena-700 hover:underline">{{ r.name }}</a><p class="text-xs text-slate-500">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}Sin costo{% endif %}</p></td>
-                  <td class="px-4 py-2.5">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}{% if r.missing_lead %} <span class="badge bg-slate-100 text-slate-600">Sin Lead</span>{% endif %}</td>
-                  <td class="px-4 py-2.5 text-xs text-slate-600">{% for u in row.approvers %}{{ u.full_name }}{% if not forloop.last %}, {% endif %}{% empty %}<span class="text-rose-600">Sin aprobador</span>{% endfor %}</td>
-                  <td class="px-4 py-2.5 text-right tabular-nums">{% if row.stale %}<span class="badge bg-amber-50 text-amber-700">{{ row.days }} · atascada</span>{% else %}{{ row.days }}{% endif %}</td>
+                  <td class="px-4 py-2.5"><p class="font-medium text-slate-900">{{ r.user.full_name }}</p><p class="text-base text-slate-500">{{ r.user.area.name|default:"Sin área" }}{% if r.user.level %} · {{ r.user.level.name }}{% endif %}</p></td>
+                  <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-arena-700 hover:underline">{{ r.name }}</a><p class="text-base text-slate-500">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}Sin costo{% endif %}</p></td>
+                  <td class="px-4 py-2.5">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}{% if r.missing_lead %} <span class="ui-badge bg-slate-100 text-slate-600">Sin Lead</span>{% endif %}</td>
+                  <td class="px-4 py-2.5 text-base text-slate-600">{% for u in row.approvers %}{{ u.full_name }}{% if not forloop.last %}, {% endif %}{% empty %}<span class="text-rose-600">Sin aprobador</span>{% endfor %}</td>
+                  <td class="px-4 py-2.5 text-right tabular-nums">{% if row.stale %}<span class="ui-badge bg-amber-50 text-amber-700">{{ row.days }} · atascada</span>{% else %}{{ row.days }}{% endif %}</td>
                 </tr>
               {% endwith %}{% endfor %}
             </tbody>
@@ -89,7 +89,7 @@
         </div>
       </div>
     {% else %}
-      <p class="text-sm text-slate-500">No hay otras solicitudes en revisión.</p>
+      <p class="text-base text-slate-500">No hay otras solicitudes en revisión.</p>
     {% endif %}
   </section>
 {% endif %}

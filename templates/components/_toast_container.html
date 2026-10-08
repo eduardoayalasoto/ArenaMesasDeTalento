@@ -1,0 +1,49 @@
+{% comment %}
+Toast/Alert global -- se incluye UNA SOLA VEZ en base.html. Cualquier
+vista dispara uno con el header HX-Trigger:
+  response["HX-Trigger"] = json.dumps({"toast": {"message": "...", "variant": "success"}})
+daisyUI `toast toast-bottom toast-end` (contenedor fijo bottom-right,
+decisión explícita del usuario) + `alert alert-<variant>` por mensaje
+(DESIGN_SYSTEM.md § 5), apilable, auto-dismiss 3.5s.
+{% endcomment %}
+<div
+  x-data="{
+    toasts: [],
+    variants: {
+      success: { alert: 'alert-success', icon: 'check-circle', role: 'status' },
+      error:   { alert: 'alert-error',   icon: 'x-circle',     role: 'alert'  },
+      warning: { alert: 'alert-warning', icon: 'alert-triangle', role: 'status' },
+      info:    { alert: 'alert-info',    icon: 'info',         role: 'status' },
+    },
+    add(detail) {
+      const id = Date.now() + Math.random();
+      const v = this.variants[detail.variant] || this.variants.info;
+      this.toasts.push({ id, message: detail.message, ...v });
+      setTimeout(() => this.remove(id), 3500);
+    },
+    remove(id) { this.toasts = this.toasts.filter(t => t.id !== id); },
+  }"
+  @toast.window="add($event.detail)"
+  class="toast toast-bottom toast-end z-50"
+>
+  <template x-for="toast in toasts" :key="toast.id">
+    <div
+      :class="toast.alert"
+      :role="toast.role"
+      aria-live="polite"
+      class="alert text-base"
+      x-transition:enter="transition ease-emphasized duration-200"
+      x-transition:enter-start="opacity-0 translate-y-2"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-standard duration-150"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+    >
+      <i :data-lucide="toast.icon" class="w-4 h-4 shrink-0" x-init="$nextTick(() => window.renderIcons($el.parentNode))"></i>
+      <span x-text="toast.message"></span>
+      <button type="button" @click="remove(toast.id)" aria-label="Cerrar notificación" class="btn btn-circle btn-ghost btn-xs">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+  </template>
+</div>

@@ -1,0 +1,46 @@
+{% comment %}
+Campo de formulario canónico -- desde 2026-09-22 usa el patrón `fieldset`
+de daisyUI (DESIGN_SYSTEM.md § 4): `<fieldset class="fieldset">` +
+`fieldset-legend` como label + control nativo (con su clase daisyUI ya
+puesta por el Form, ver apps/core/forms.py::field_classes) + `<p class="label">`
+para ayuda/error. Espera que el Form ya haya fijado la clase daisyUI del
+widget en su `__init__`:
+
+    self.fields["name"].widget.attrs["class"] = field_classes(self["name"], "input")
+
+Uso: {% include "components/_form_field.html" with field=form.name %}
+     {% include "components/_form_field.html" with field=form.notes help="Texto de ayuda opcional" %}
+
+Checkbox/radio/toggle (widget sin label propio en la caja, el texto va al
+lado del control) usan un layout distinto -- se detecta por
+`field.field.widget.input_type` (Django ya lo expone en CheckboxInput/
+RadioSelect nativos, sin necesidad de un widget custom).
+{% endcomment %}
+{% if field.field.widget.input_type == "checkbox" %}
+  <fieldset class="fieldset mb-3">
+    {% comment %}
+    Legend invisible (2026-09-23, pedido explícito): un checkbox no
+    tiene un label propio ARRIBA del control como los demás campos (su
+    label va al LADO), así que sin esto queda más alto en su fila de
+    grid que sus vecinos -- este legend reserva el mismo espacio que el
+    de un campo normal, sin mostrar texto, para que ambos alineen igual
+    que si fuera un row más.
+    {% endcomment %}
+    <legend class="fieldset-legend invisible" aria-hidden="true">&nbsp;</legend>
+    <label class="label cursor-pointer justify-start gap-2">
+      {{ field }}
+      <span>{{ field.label }}{% if field.field.required %}<span class="text-error">&nbsp;*</span>{% endif %}</span>
+    </label>
+    {% if help %}<p class="label">{{ help }}</p>{% endif %}
+    {% if field.errors %}<p class="label text-error">{{ field.errors|join:", " }}</p>{% endif %}
+  </fieldset>
+{% else %}
+  <fieldset class="fieldset mb-3">
+    <legend class="fieldset-legend">
+      {{ field.label }}{% if field.field.required %}<span class="text-error">&nbsp;*</span>{% endif %}
+    </legend>
+    {{ field }}
+    {% if help %}<p class="label">{{ help }}</p>{% endif %}
+    {% if field.errors %}<p class="label text-error">{{ field.errors|join:", " }}</p>{% endif %}
+  </fieldset>
+{% endif %}

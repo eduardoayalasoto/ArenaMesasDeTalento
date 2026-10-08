@@ -96,7 +96,7 @@ class CourseRequest(models.Model):
         REQUIERE_AJUSTES = "REQUIERE_AJUSTES", "Requiere ajustes"
         RECHAZADA = "RECHAZADA", "Rechazada"
         CANCELADA = "CANCELADA", "Cancelada"
-        AUTORIZADA = "AUTORIZADA", "En curso"
+        AUTORIZADA = "AUTORIZADA", "En progreso"
         COMPLETADA = "COMPLETADA", "Completado · por validar"
         VALIDADA = "VALIDADA", "Completado"
         NO_CONCLUIDA = "NO_CONCLUIDA", "No concluido"

@@ -107,7 +107,7 @@ def my_courses(request):
     groups = [
         ("Acción requerida", [r for r in reqs if r.status in (St.REQUIERE_AJUSTES, St.BORRADOR)]),
         ("En autorización", [r for r in reqs if r.status == St.EN_REVISION]),
-        ("En curso", [r for r in reqs if r.status == St.AUTORIZADA]),
+        ("En progreso", [r for r in reqs if r.status == St.AUTORIZADA]),
         ("Completados", [r for r in reqs if r.status in (St.COMPLETADA, St.VALIDADA)]),
         ("Cerrados sin completar", [r for r in reqs if r.status in (St.RECHAZADA, St.CANCELADA, St.NO_CONCLUIDA)]),
     ]
@@ -402,7 +402,7 @@ def request_complete(request, pk):
     if req.user_id != request.user.pk:
         return _forbidden(request, "Solo el dueño puede cerrar su curso.")
     if req.status != CourseRequest.Status.AUTORIZADA:
-        messages.info(request, "Este curso no está en curso; no se puede cerrar.")
+        messages.info(request, "Este curso no está en progreso; no se puede cerrar.")
         return redirect("learning:request_detail", pk=pk)
     review_form = ReviewForm(request.POST or None, prefix="r")
     files_form = EvidenceUploadForm(request.POST or None, request.FILES or None)

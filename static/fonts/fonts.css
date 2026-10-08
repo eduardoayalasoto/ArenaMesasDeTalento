@@ -1,0 +1,111 @@
+/* Self-hosted brand fonts — see static/vendor/VERSIONS.md for source/update instructions. */
+
+/* Nexa — YA NO se usa (ni font-sans ni font-heading). Se dejó vendorizada
+   por si se revierte; ver PT Sans abajo, la fuente real de font-sans hoy. */
+@font-face {
+  font-family: 'Nexa';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/nexa/nexa-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nexa';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/nexa/nexa-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nexa';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../fonts/nexa/nexa-800.woff2') format('woff2');
+}
+
+/* PT Sans — font-sans (cuerpo/UI de toda la app). Google Font
+   auto-hospedada (subset "latin" del CSS2 API — cubre acentos del
+   español, verificado con fontTools). Solo trae 400/700 — no hay peso
+   intermedio, un `font-medium` cae al 400 más cercano. */
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/ptsans/ptsans-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/ptsans/ptsans-700.woff2') format('woff2');
+}
+
+/* Pluto — ya NO se usa como font-sans (ver nota en static/vendor/VERSIONS.md: el
+   subset vendorizado no trae acentos del español). @font-face se deja
+   vendorizada por si se necesita puntualmente, pero fonts.css ya no la
+   referencia desde --font-sans/--font-heading. */
+@font-face {
+  font-family: 'Pluto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/pluto/pluto-400.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Pluto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/pluto/pluto-500.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Pluto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/pluto/pluto-700.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Pluto';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../fonts/pluto/pluto-800.otf') format('opentype');
+}
+
+/* Quicksand — SOLO títulos/encabezados (font-heading). Google Font,
+   auto-hospedada (subset "latin" del CSS2 API — U+0000-00FF, cubre todo
+   Latin-1 Supplement/acentos del español, sin necesitar latin-ext ni
+   vietnamese). Reemplaza a Nexa en font-heading; Nexa pasa a font-sans
+   (ver nota abajo y en static/vendor/VERSIONS.md). */
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/quicksand/quicksand-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/quicksand/quicksand-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/quicksand/quicksand-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/quicksand/quicksand-700.woff2') format('woff2');
+}

@@ -1,8 +1,10 @@
 """Formularios de cuenta, con etiquetas y mensajes en español."""
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django import forms
+
+from apps.core.forms import INPUT_CLASSES  # clases daisyUI canónicas (igual que arena-crm)
 
 User = get_user_model()
 
@@ -43,7 +45,7 @@ class EmailAuthenticationForm(AuthenticationForm):
                 "autofocus": True,
                 "autocomplete": "email",
                 "placeholder": "nombre@arena-analytics.com",
-                "class": _INPUT,
+                "class": INPUT_CLASSES,
             }
         ),
     )
@@ -58,7 +60,7 @@ class EmailAuthenticationForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.fields["password"].label = "Contraseña"
         self.fields["password"].widget.attrs.update(
-            {"class": _INPUT, "autocomplete": "current-password",
+            {"class": INPUT_CLASSES, "autocomplete": "current-password",
              "placeholder": "Tu contraseña"}
         )
 
@@ -187,4 +189,15 @@ class SpanishPasswordChangeForm(PasswordChangeForm):
         }
         for name, field in self.fields.items():
             field.label = labels.get(name, field.label)
-            field.widget.attrs.update({"class": _INPUT, "autocomplete": "new-password"})
+            field.widget.attrs.update({"class": INPUT_CLASSES, "autocomplete": "new-password"})
+
+
+class SpanishSetPasswordForm(SetPasswordForm):
+    """Nueva contraseña desde el enlace de restablecimiento, con widgets daisyUI."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["new_password1"].label = "Nueva contraseña"
+        self.fields["new_password2"].label = "Confirma la contraseña"
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": INPUT_CLASSES, "autocomplete": "new-password"})

@@ -1,0 +1,8 @@
+{% comment %}
+Spinner -- size='sm'|'md' (API nueva) o numérico en px (legacy).
+daisyUI `loading loading-spinner` (DESIGN_SYSTEM.md § 5), hereda color de
+currentColor.
+{% endcomment %}
+<span class="loading loading-spinner {% if size == 'sm' %}loading-sm{% elif size == 'md' or not size %}loading-md{% endif %}"
+      {% if size and size != "sm" and size != "md" %}style="width: {{ size }}px; height: {{ size }}px;"{% endif %}
+      role="status" aria-label="Cargando"></span>

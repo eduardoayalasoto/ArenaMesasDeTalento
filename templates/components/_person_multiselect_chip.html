@@ -1,0 +1,20 @@
+{% comment %}
+Chip de una Persona elegida en components/_person_multiselect.html (parcial
+interno, no usar suelto: depende del `remove()` del x-data de ese
+componente). Se separa solo para no duplicar el markup entre la rama
+`x-show` (elegida al renderizar) y la rama `<template x-if>` (elegida
+después en el cliente). El tooltip (`data-tip`) lo pone el wrapper del
+componente.
+
+Props: pk, name
+{% endcomment %}
+<button type="button"
+        @click="remove('{{ pk }}')"
+        @keydown.delete.prevent="remove('{{ pk }}')"
+        @keydown.backspace.prevent="remove('{{ pk }}')"
+        aria-label="Quitar {{ name }}"
+        class="inline-flex items-center gap-0.5 rounded-full border border-base-300 bg-base-200 py-0.5 pl-0.5 pr-1.5 text-base-content/60 cursor-pointer transition-colors hover:border-error/40 hover:text-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+  {% include "components/_avatar.html" with name=name size=24 user=None id="" %}
+  {# x-init: el chip de la rama <template x-if> entra al DOM después del lucide.createIcons() de base.html -- mismo patrón que _toast_container.html. #}
+  <i data-lucide="x" class="size-3.5 shrink-0" aria-hidden="true" x-init="$nextTick(() => window.renderIcons($el.parentNode))"></i>
+</button>

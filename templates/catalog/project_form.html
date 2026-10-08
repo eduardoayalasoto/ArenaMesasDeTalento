@@ -1,82 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-2"><a href="{% url 'catalog:project_admin' %}" class="text-sm text-arena-600 hover:text-arena-700">&larr; Proyectos</a></div>
+  <div class="mb-2"><a href="{% url 'catalog:project_admin' %}" class="text-base text-arena-600 hover:text-arena-700">&larr; Proyectos</a></div>
   <h2 class="text-xl font-semibold text-slate-900 mb-6">{% if project %}{{ project.name }}{% else %}Nuevo proyecto{% endif %}</h2>
 
   <div class="grid gap-6 lg:grid-cols-3">
     <!-- Datos del proyecto -->
-    <form method="post" class="card p-5 lg:col-span-2 space-y-4">
+    <form method="post" class="ui-card p-5 lg:col-span-2 space-y-4">
       {% csrf_token %}
       <input type="hidden" name="action" value="save">
 
       <div>
-        <label class="label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+        <label class="ui-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
         {{ form.name }}
-        {% for e in form.name.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+        {% for e in form.name.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
       </div>
       <div>
-        <label class="label" for="{{ form.client.id_for_label }}">{{ form.client.label }}</label>
+        <label class="ui-label" for="{{ form.client.id_for_label }}">{{ form.client.label }}</label>
         {{ form.client }}
       </div>
       <div>
-        <label class="label" for="{{ form.owner.id_for_label }}">{{ form.owner.label }}</label>
+        <label class="ui-label" for="{{ form.owner.id_for_label }}">{{ form.owner.label }}</label>
         {{ form.owner }}
-        {% for e in form.owner.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+        {% for e in form.owner.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
       </div>
       <div>
-        <label class="label" for="{{ form.responsable.id_for_label }}">{{ form.responsable.label }}</label>
+        <label class="ui-label" for="{{ form.responsable.id_for_label }}">{{ form.responsable.label }}</label>
         {{ form.responsable }}
-        {% for e in form.responsable.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
-        <p class="mt-1 text-xs text-slate-500">Captura los 3 criterios de la Entrega de Valor del proyecto y la envía a validación.</p>
+        {% for e in form.responsable.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
+        <p class="mt-1 text-base text-slate-500">Captura los 3 criterios de la Entrega de Valor del proyecto y la envía a validación.</p>
       </div>
       <div>
-        <label class="label" for="{{ form.validador.id_for_label }}">{{ form.validador.label }}</label>
+        <label class="ui-label" for="{{ form.validador.id_for_label }}">{{ form.validador.label }}</label>
         {{ form.validador }}
-        {% for e in form.validador.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
-        <p class="mt-1 text-xs text-slate-500">Revisa y valida (o regresa) la Entrega de Valor capturada por el Responsable. Puede ser cualquier colaborador, sin importar su nivel o perfil; solo esa persona (además de Talento) podrá validar este proyecto.</p>
+        {% for e in form.validador.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
+        <p class="mt-1 text-base text-slate-500">Revisa y valida (o regresa) la Entrega de Valor capturada por el Responsable. Puede ser cualquier colaborador, sin importar su nivel o perfil; solo esa persona (además de Talento) podrá validar este proyecto.</p>
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="label" for="{{ form.kickoff.id_for_label }}">{{ form.kickoff.label }}</label>
+          <label class="ui-label" for="{{ form.kickoff.id_for_label }}">{{ form.kickoff.label }}</label>
           {{ form.kickoff }}
         </div>
         <div>
-          <label class="label" for="{{ form.target_close.id_for_label }}">{{ form.target_close.label }}</label>
+          <label class="ui-label" for="{{ form.target_close.id_for_label }}">{{ form.target_close.label }}</label>
           {{ form.target_close }}
         </div>
       </div>
       <div>
-        <label class="label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+        <label class="ui-label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
         {{ form.status }}
       </div>
       <div>
-        <span class="label">{{ form.duration_type.label }}</span>
+        <span class="ui-label">{{ form.duration_type.label }}</span>
         <div class="space-y-2">
           {% for radio in form.duration_type %}
             <label class="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 cursor-pointer hover:bg-slate-50">
-              {{ radio.tag }}<span class="text-sm text-slate-700">{{ radio.choice_label }}</span>
+              {{ radio.tag }}<span class="text-base text-slate-700">{{ radio.choice_label }}</span>
             </label>
           {% endfor %}
         </div>
-        <p class="mt-1 text-xs text-slate-500">Define qué criterio de tiempo se evalúa en la Entrega de Valor.</p>
+        <p class="mt-1 text-base text-slate-500">Define qué criterio de tiempo se evalúa en la Entrega de Valor.</p>
       </div>
       <label class="flex items-center gap-2 cursor-pointer">
-        {{ form.is_active }}<span class="text-sm text-slate-700">{{ form.is_active.label }}</span>
+        {{ form.is_active }}<span class="text-base text-slate-700">{{ form.is_active.label }}</span>
       </label>
 
-      <button type="submit" class="btn-primary">{% if project %}Guardar cambios{% else %}Crear proyecto{% endif %}</button>
+      <button type="submit" class="ui-btn-primary">{% if project %}Guardar cambios{% else %}Crear proyecto{% endif %}</button>
     </form>
 
     <!-- Equipo -->
-    <div class="card p-5">
+    <div class="ui-card p-5">
       <h3 class="font-semibold text-slate-900 mb-1">Equipo</h3>
       {% if not project %}
-        <p class="text-sm text-slate-500">Guarda el proyecto primero para asignar a su equipo.</p>
+        <p class="text-base text-slate-500">Guarda el proyecto primero para asignar a su equipo.</p>
       {% else %}
-        <p class="text-sm text-slate-500 mb-3">Las evaluaciones de Ownership se habilitan para cada miembro.</p>
+        <p class="text-base text-slate-500 mb-3">Las evaluaciones de Ownership se habilitan para cada miembro.</p>
         <ul class="space-y-2 mb-4">
           {% for m in members %}
-            <li class="flex items-center justify-between gap-2 text-sm">
+            <li class="flex items-center justify-between gap-2 text-base">
               <span class="text-slate-700">{{ m.user.full_name }}</span>
               <form method="post">{% csrf_token %}
                 <input type="hidden" name="action" value="remove_member">
@@ -85,17 +85,17 @@
               </form>
             </li>
           {% empty %}
-            <li class="text-sm text-slate-400">Sin miembros aún.</li>
+            <li class="text-base text-slate-400">Sin miembros aún.</li>
           {% endfor %}
         </ul>
         <form method="post" class="flex gap-2">
           {% csrf_token %}
           <input type="hidden" name="action" value="add_member">
-          <select name="user" class="input py-1.5" required>
+          <select name="user" class="ui-input py-1.5" required>
             <option value="">Agregar persona…</option>
             {% for u in available %}<option value="{{ u.id }}">{{ u.full_name }}</option>{% endfor %}
           </select>
-          <button type="submit" class="btn-secondary shrink-0">Agregar</button>
+          <button type="submit" class="ui-btn-secondary shrink-0">Agregar</button>
         </form>
       {% endif %}
     </div>

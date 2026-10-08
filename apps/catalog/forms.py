@@ -4,7 +4,7 @@ from django import forms
 
 from .models import EvaluationPeriod, Project
 
-_INPUT = "input"
+_INPUT = "ui-input"
 
 
 class PeriodForm(forms.ModelForm):

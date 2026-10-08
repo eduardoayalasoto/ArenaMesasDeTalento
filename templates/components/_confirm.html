@@ -1,0 +1,62 @@
+{% comment %}
+Confirmación de acción destructiva -- botón disparador + <dialog> nativo
+(daisyUI `modal`), autocontenido: un include por uso, sin compartir
+estado entre filas (a diferencia de _modal.html/_drawer.html, pensados
+para un único diálogo por página abierto desde varios sitios). Nunca
+`confirm()` nativo (DESIGN_SYSTEM.md § 0/§ 5).
+
+Apertura (DESIGN_SYSTEM § 5.1 regla 1, 2026-09-30): el disparador lleva
+`data-modal-open="<confirm_id>"` y llama `openModal(this.dataset.modalOpen)`
+(static/js/modals.js, `showModal()` directo) -- así scripts/e2e/modals.mjs
+también verifica estos diálogos. El disparador es el componente canónico:
+`_icon_button.html` (solo ícono) o `_button.html` (con `trigger_label`). Los
+atributos se arman con `|add:` entre STRINGS (un `{{ }}` dentro del string de
+un `{% include ... with %}` no se sustituye).
+
+Uso (fila de tabla, ver components/_table.html): el `confirm_id`/`message` se
+calculan en la VISTA (ej. `org.delete_confirm_id = f"delete-organization-{org.pk}"`),
+nunca con filtros de template (`|add:` entre string e int falla en
+silencio -- `int("x")` lanza, y Django intenta sumar antes que concatenar);
+si el id sale de un pk en la plantilla, conviértelo antes con
+`|stringformat:"s"`.
+{% include "components/_confirm.html" with confirm_id=row.delete_confirm_id title="Eliminar" message=row.delete_confirm_message confirm_url=row.delete_url %}
+
+Props:
+  confirm_id: string único en la página (obligatorio) -- id real del <dialog>.
+  title / message: contenido del diálogo.
+  confirm_url: URL a la que hace POST el botón de confirmar (plain POST,
+    sin htmx -- la vista redirige de vuelta al listado con un toast vía
+    `messages`, mismo patrón que saved_view_delete).
+  trigger_icon (default "trash-2") / trigger_label (opcional, sin label
+    por default -- pensado para una fila de tabla densa). Con
+    `trigger_label` el disparador es `_button.html` ghost chico (ícono +
+    texto, contraste normal del tema); sin él, `_icon_button.html` circular.
+  trigger_aria: nombre accesible del disparador de solo ícono (default:
+    `title`, p. ej. "Eliminar"); con `trigger_label` el nombre es el texto.
+  confirm_label (default "Eliminar") / cancel_label (default "Cancelar").
+{% endcomment %}
+<div>
+  {% with trigger_attrs='data-modal-open="'|add:confirm_id|add:'" onclick="openModal(this.dataset.modalOpen)"' %}
+    {% if trigger_label %}
+      {% include "components/_button.html" with variant="ghost" size="sm" label=trigger_label icon=trigger_icon|default:"trash-2" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" full_width=False %}
+    {% else %}
+      {% include "components/_icon_button.html" with icon=trigger_icon|default:"trash-2" label=trigger_aria|default:title|default:"Eliminar" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" variant="" size="" %}
+    {% endif %}
+  {% endwith %}
+  <dialog id="{{ confirm_id }}" class="modal" aria-label="{{ title }}">
+    <div class="modal-box max-w-sm">
+      <h3 class="font-heading text-lg font-semibold">{{ title }}</h3>
+      <p class="py-3 text-base text-base-content/70">{{ message }}</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <button type="submit" class="btn btn-ghost btn-sm">{{ cancel_label|default:"Cancelar" }}</button>
+        </form>
+        <form method="post" action="{{ confirm_url }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-error btn-sm">{{ confirm_label|default:"Eliminar" }}</button>
+        </form>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button type="submit">Cerrar</button></form>
+  </dialog>
+</div>

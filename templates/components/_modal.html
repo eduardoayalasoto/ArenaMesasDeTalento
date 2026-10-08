@@ -1,0 +1,78 @@
+{% comment %}
+Modal centrado -- on-demand para confirmaciones/detalle de solo lectura
+(DESIGN_SYSTEM.md § 5). Usa `<dialog>` nativo + daisyUI `modal` -- foco
+atrapado, cierre con Escape y bloqueo de scroll de fondo son gratis del
+navegador (HTML5 <dialog>), sin JS de trap-focus propio como en el
+enfoque anterior.
+
+Uso: {% include "components/_modal.html" with id="confirm-delete-modal" title="Eliminar Deal" open_event="open-confirm-delete-modal" close_event="close-confirm-delete-modal" body_id="confirm-delete-modal-body" %}
+
+`max_width` (opcional, default `max-w-lg`). `body_template` (opcional):
+ruta de un template a incluir en el body en vez del spinner por default,
+para contenido estático/Alpine-driven que no necesita `hx-get`.
+
+Título dinámico (2026-09-25, retrocompatible): si quien abre el modal
+despacha `open_event` CON detalle -- `$dispatch('open-x', {title: '...'})`
+-- el título se reemplaza por `detail.title`; sin detalle se queda con
+`{{ title }}` de siempre. El detalle completo queda en `modalDetail` (scope
+Alpine de este wrapper), legible por el `body_template` para ajustarse
+según quién lo abrió (ej. crm/_activity_quick_form_body.html lee
+`modalDetail.activityType` para fijar el Tipo desde el FAB de
+components/_activity_fab.html).
+
+Ícono en el título (2026-09-25, pedido explícito: "usa los iconos también
+en el título del modal para que no se vea tan plano", retrocompatible): si
+el detalle trae `icon` (nombre Lucide), se pinta un tile con ese ícono
+antes del texto. Sin `icon` (los demás usos de este componente) no se
+renderiza nada -- el título se ve igual que siempre. Se usa `x-for` sobre
+una lista de 0-1 elementos con `:key="icon"` (no `x-if`) para que el nodo
+se RECREE cuando el ícono cambia entre aperturas (Llamada -> Correo): el
+`<i data-lucide>` nuevo se convierte a SVG en su `x-init` (mismo patrón que
+components/_person_multiselect_chip.html / _toast_container.html, Lucide
+solo corre solo en carga de página y tras swaps de htmx). El `<i>` va
+DENTRO de un `<span>` raíz porque Lucide reemplaza el `<i>` por un `<svg>`
+y Alpine necesita conservar la referencia al nodo raíz para retirarlo.
+
+APERTURA (2026-09-28, patrón oficial de daisyUI -- ver static/js/modals.js):
+el disparador llama `openModal('<id>', {title, icon, ...})`, que abre el
+<dialog> directo con `showModal()` y avisa el detalle con el evento
+`modal-detail` (burbujea hasta este wrapper). Todo disparador lleva
+`data-modal-open="<id>"` para que scripts/e2e/modals.mjs lo verifique.
+`open_event` a `window` se conserva solo por compatibilidad (crm_board.js,
+HX-Trigger del backend) y también pasa por openModal.
+{% endcomment %}
+<div x-data="{ modalTitle: '{{ title|escapejs }}', modalDetail: {} }"
+     @modal-detail="modalDetail = $event.detail || {}; modalTitle = modalDetail.title || '{{ title|escapejs }}'"
+     @{{ open_event }}.window="window.openModal('{{ id }}', $event.detail)"
+     @{{ close_event }}.window="$refs.dialog.close()">
+  <dialog x-ref="dialog" id="{{ id }}" class="modal" aria-label="{{ title }}" :aria-label="modalTitle">
+    <div class="modal-box {{ max_width|default:'max-w-lg' }} max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between gap-3 mb-3 shrink-0">
+        <h2 class="text-lg font-semibold font-heading flex items-center gap-3 min-w-0">
+          <template x-for="icon in (modalDetail.icon ? [modalDetail.icon] : [])" :key="icon">
+            <span class="inline-flex items-center justify-center size-9 rounded-field bg-primary/10 text-primary shrink-0" aria-hidden="true">
+              <i :data-lucide="icon" class="size-5" x-init="$nextTick(() => window.renderIcons($el.parentNode))"></i>
+            </span>
+          </template>
+          <span x-text="modalTitle">{{ title }}</span>
+        </h2>
+        <form method="dialog">
+          <button type="submit" class="btn btn-sm btn-circle btn-ghost" aria-label="Cerrar">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+      {# -mx-2 px-2 (2026-09-28): overflow-y-auto también recorta en X -- sin este colchón el borde y el anillo de foco de los campos a lo ancho (file-input, input w-full) se veían cortados en TODOS los modales. #}
+      <div id="{{ body_id }}" class="overflow-y-auto -mx-2 px-2 pt-1">
+        {% if body_template %}
+          {% include body_template %}
+        {% else %}
+          <div class="flex items-center justify-center py-10 text-base-content/40">
+            {% include "components/_spinner.html" with size="md" %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop"><button type="submit">Cerrar</button></form>
+  </dialog>
+</div>

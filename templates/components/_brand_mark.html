@@ -1,0 +1,22 @@
+{% load static %}
+{% comment %}
+Marca "arenatalento" -- mismo lockup que arena-crm (components/_brand_mark.html, réplica del
+lockup real de arena-os): ícono static/img/arena-mark.png + "arena" en primary-100 + segunda
+palabra en degradado. Variación propia de este producto: "talento" en degradado NARANJA
+(talento-300 -> talento-600), igual que arena-crm usa teal para "CRM".
+
+Solo pensado para fondos oscuros (navbar bg-neutral, panel de login).
+
+Uso: {% include "components/_brand_mark.html" %}
+     {% include "components/_brand_mark.html" with icon_class="h-10" text_class="text-2xl" %}
+
+Props:
+  icon_class: clases de tamaño del ícono (default "h-7")
+  text_class: clases de tamaño del texto (default "text-lg")
+{% endcomment %}
+<span class="inline-flex items-center gap-2">
+  <img src="{% static 'img/arena-mark.png' %}" alt="" class="{{ icon_class|default:'h-7' }} w-auto">
+  <span class="font-heading font-bold {{ text_class|default:'text-lg' }} leading-none tracking-tight whitespace-nowrap">
+    <span class="text-primary-100">arena</span><span class="bg-gradient-to-r from-talento-300 to-talento-600 bg-clip-text text-transparent">talento</span>
+  </span>
+</span>

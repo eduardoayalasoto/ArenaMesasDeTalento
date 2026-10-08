@@ -1,0 +1,33 @@
+{% comment %}
+Breadcrumb único del proyecto -- prohibido codificar uno a mano en una vista.
+Uso: {% include "components/_breadcrumb.html" with trail=trail current="Componentes" %}
+  trail: lista de {"label", "url", "icon"} para niveles intermedios
+    (opcional) -- "icon" es opcional por item, nombre de ícono lucide
+    (ver DESIGN_SYSTEM.md § 4, prohibido emoji).
+  current: label de la página actual (obligatorio)
+  current_icon: ícono lucide opcional para el nivel actual
+daisyUI `breadcrumbs` con íconos (DESIGN_SYSTEM.md § 5, patrón oficial
+https://daisyui.com/components/breadcrumbs/ -- "breadcrumbs with icons"),
+pedido explícito del usuario, 2026-09-23.
+{% endcomment %}
+<div class="breadcrumbs text-base text-base-content/60">
+  <ul>
+    <li>
+      <a href="{% url 'dashboards:home' %}" aria-label="Inicio">
+        <i data-lucide="home" class="w-4 h-4"></i>
+      </a>
+    </li>
+    {% for item in trail %}
+      <li>
+        <a href="{{ item.url }}">
+          {% if item.icon %}<i data-lucide="{{ item.icon }}" class="w-4 h-4"></i>{% endif %}
+          {{ item.label }}
+        </a>
+      </li>
+    {% endfor %}
+    <li class="text-secondary font-medium">
+      {% if current_icon %}<i data-lucide="{{ current_icon }}" class="w-4 h-4"></i>{% endif %}
+      {{ current }}
+    </li>
+  </ul>
+</div>

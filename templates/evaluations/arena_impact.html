@@ -11,14 +11,14 @@
     {% include "partials/info_panel.html" with title="Cómo capturar" text="<p>Escribe la calificación de cada persona del 1 al 4 (admite decimales, p. ej. 3.5). Las notas son opcionales.</p><p><strong>Cada campo se guarda automáticamente</strong> al salir de él: puedes capturar en varias sesiones y nada se pierde. Al guardar, se recalcula la calificación final de la persona.</p>" %}
 
     {{ saved_ids|json_script:"arena-saved-ids" }}
-    <div class="card overflow-hidden"
+    <div class="ui-card overflow-hidden"
          x-data="arenaImpact({
            url: '{% url 'evaluations:arena_impact_autosave' %}',
            csrf: '{{ csrf_token }}',
            saved: JSON.parse(document.getElementById('arena-saved-ids').textContent)
          })">
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-base">
           <thead class="bg-slate-50 text-slate-600 text-left">
             <tr>
               <th class="px-4 py-3 font-medium">Colaborador</th>
@@ -32,19 +32,19 @@
               <tr>
                 <td class="px-4 py-2">
                   <p class="font-medium text-slate-900">{{ row.user.full_name }}</p>
-                  <p class="text-xs text-slate-500">{{ row.user.email }}</p>
+                  <p class="text-base text-slate-500">{{ row.user.email }}</p>
                 </td>
                 <td class="px-4 py-2">
                   <input type="number" name="score-{{ row.user.id }}" min="1" max="4" step="0.01"
-                         value="{{ row.impact.score|default_if_none:'' }}" class="input py-1.5" placeholder="1–4"
+                         value="{{ row.impact.score|default_if_none:'' }}" class="ui-input py-1.5" placeholder="1–4"
                          @change="save({{ row.user.id }})">
                 </td>
                 <td class="px-4 py-2">
                   <input type="text" name="notes-{{ row.user.id }}" value="{{ row.impact.notes|default:'' }}"
-                         class="input py-1.5" placeholder="Opcional"
+                         class="ui-input py-1.5" placeholder="Opcional"
                          @change="save({{ row.user.id }})">
                 </td>
-                <td class="px-4 py-2 text-xs">
+                <td class="px-4 py-2 text-base">
                   <span x-show="state[{{ row.user.id }}] === 'saving'" class="text-slate-400">Guardando…</span>
                   <span x-show="state[{{ row.user.id }}] === 'saved'" x-cloak class="text-emerald-600 inline-flex items-center gap-1">{% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %} Guardado</span>
                   <span x-show="state[{{ row.user.id }}] === 'error'" x-cloak class="text-rose-600 inline-flex items-center gap-1">{% include "partials/icon.html" with name="info" cls="w-3.5 h-3.5" %} Revisa</span>
@@ -54,7 +54,7 @@
           </tbody>
         </table>
       </div>
-      <div class="p-3 border-t border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-1.5">
+      <div class="p-3 border-t border-slate-200 bg-slate-50 text-base text-slate-500 flex items-center gap-1.5">
         {% include "partials/icon.html" with name="check-small" cls="w-3.5 h-3.5" %}
         Los cambios se guardan automáticamente al salir de cada campo.
       </div>

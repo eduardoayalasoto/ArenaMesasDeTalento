@@ -1,14 +1,57 @@
 {% extends "base.html" %}
+{% comment %}
+Pantallas de acceso (login, restablecer/cambiar contraseña) -- COPIA del login de arena-crm
+(templates/accounts/login.html): pantalla partida con panel de marca navy a la izquierda y el
+formulario a la derecha. Cada pantalla llena solo el bloque `card`.
+{% endcomment %}
 {% block auth_content %}
-<main class="min-h-dvh grid place-items-center px-4 py-12">
-  <div class="w-full max-w-sm">
-    <div class="flex items-center gap-2.5 mb-8 justify-center">
-      <span class="grid place-items-center w-9 h-9 rounded-lg bg-arena-600 text-white font-bold text-lg">A</span>
-      <span class="font-semibold text-slate-900">Arena Evaluaciones</span>
+<div class="min-h-screen flex flex-col lg:flex-row">
+  <div class="relative overflow-hidden bg-primary-900 flex flex-col justify-between px-6 py-8 sm:px-10 sm:py-10 lg:w-[46%] lg:px-14 lg:py-12">
+    <div
+      class="pointer-events-none absolute inset-0"
+      style="background:
+        radial-gradient(ellipse 80% 60% at 15% 65%, rgb(112 50 95 / 0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 55% 45% at 85% 15%, rgb(68 141 239 / 0.22) 0%, transparent 60%);"
+    ></div>
+
+    <div class="relative flex items-center gap-3">
+      {% include "components/_brand_mark.html" with icon_class="h-9" text_class="text-2xl" %}
     </div>
-    <div class="card p-6">
-      {% block card %}{% endblock %}
+
+    <div class="relative mt-10 lg:mt-0">
+      <h1 class="font-heading text-3xl sm:text-4xl font-bold text-white leading-tight tracking-tight">
+        Impulsa el talento<br>
+        <span class="bg-gradient-to-r from-accent-blue-700 to-secondary-700 bg-clip-text text-transparent">de cada persona.</span>
+      </h1>
+      <p class="mt-4 max-w-sm text-base text-white/50 leading-relaxed hidden lg:block">
+        Evalúa el desempeño con el modelo de Arena, da retroalimentación que se queda y haz
+        crecer a tu equipo con Arena Learn.
+      </p>
+    </div>
+
+    <div class="relative hidden lg:flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 text-base text-white/45">
+        <span class="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-accent-blue-700 to-secondary-700 shrink-0"></span>
+        Ownership, Entrega de Valor e Impacto Arena en un solo lugar
+      </div>
+      <div class="flex items-center gap-2.5 text-base text-white/45">
+        <span class="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-accent-blue-700 to-secondary-700 shrink-0"></span>
+        Mesa de Talento con escenarios y retroalimentación
+      </div>
+      <div class="flex items-center gap-2.5 text-base text-white/45">
+        <span class="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-accent-blue-700 to-secondary-700 shrink-0"></span>
+        Tu información es confidencial: solo tú, tu evaluador y Talento la ven
+      </div>
     </div>
   </div>
-</main>
+
+  <div class="flex-1 flex items-center justify-center bg-base-100 text-base-content px-6 py-10 sm:px-10">
+    <div class="w-full max-w-sm">
+      {% block card %}{% endblock %}
+      <p class="mt-8 pt-6 border-t border-base-300 text-center text-base text-base-content/40">
+        arenatalento · Arena Analytics
+      </p>
+    </div>
+  </div>
+</div>
 {% endblock %}

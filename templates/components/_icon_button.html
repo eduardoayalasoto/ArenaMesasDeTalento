@@ -1,0 +1,53 @@
+{% comment %}
+Botón de solo-ícono canónico -- daisyUI `btn btn-ghost btn-circle` (variant
+default, bajo énfasis) o `btn btn-circle` sin ghost (variant="filled",
+mayor énfasis). Ver DESIGN_SYSTEM.md § 3.
+
+Uso: {% include "components/_icon_button.html" with icon="pencil" label="Editar" hx_get=url hx_target="#x" %}
+     {% include "components/_icon_button.html" with icon="trash-2" label="Eliminar" variant="filled" extra_attrs='@click="$dispatch(...)"' %}
+     {% include "components/_icon_button.html" with icon="pencil" label="Editar" href=row.edit_url %}
+
+Props:
+  icon: nombre de ícono Lucide (requerido)
+  label: texto accesible (aria-label) -- SIEMPRE requerido, el botón no
+    tiene texto visible. Combinar con un `tooltip` de daisyUI si se quiere
+    también un tooltip visual (`<div class="tooltip" data-tip="...">`).
+  variant: default (btn-ghost, bajo énfasis) | "filled" (sin btn-ghost, más énfasis)
+    | "primary" (btn-primary -- acción principal de una sección, ej. el "+"
+    de components/_activity_fab.html, 2026-09-25)
+  size: "sm" (default, btn-sm -- filas/encabezados densos) | "lg" (btn-lg,
+    ícono 20px -- acciones del speed-dial de components/_activity_fab.html,
+    2026-09-25; touch target >= 44px)
+  href: si se pasa, renderiza un `<a>` en vez de un `<button>` (ver
+    _button.html -- mismo criterio, para navegar a una pantalla real en
+    vez de disparar una acción). Incompatible con hx_post/hx_get/type.
+  type: "button" (default) | "submit" -- "submit" para un icon-button que
+    envía un <form> propio (ej. eliminar), sin htmx.
+  hx_post / hx_get / hx_target / hx_swap: atributos htmx opcionales
+  extra_attrs: atributos HTML crudos adicionales, sin escapar (ver
+    _button.html -- nunca contenido derivado de usuario final aquí)
+{% endcomment %}
+{% if href %}
+<a
+  href="{{ href }}"
+  aria-label="{{ label }}"
+  {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
+  class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %}"
+>
+  <i data-lucide="{{ icon }}" class="{% if size == 'lg' %}w-5 h-5{% else %}w-[18px] h-[18px]{% endif %}"></i>
+</a>
+{% else %}
+<button
+  type="{{ type|default:'button' }}"
+  aria-label="{{ label }}"
+  {% if hx_post %}hx-post="{{ hx_post }}"{% endif %}
+  {% if hx_get %}hx-get="{{ hx_get }}"{% endif %}
+  {% if hx_target %}hx-target="{{ hx_target }}"{% endif %}
+  {% if hx_swap %}hx-swap="{{ hx_swap }}"{% endif %}
+  {% if hx_post or hx_get %}hx-indicator="closest button" hx-disabled-elt="this"{% endif %}
+  {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
+  class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %}"
+>
+  <i data-lucide="{{ icon }}" class="{% if size == 'lg' %}w-5 h-5{% else %}w-[18px] h-[18px]{% endif %}"></i>
+</button>
+{% endif %}

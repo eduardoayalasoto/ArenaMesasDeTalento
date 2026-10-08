@@ -5,15 +5,15 @@
       <h2 class="text-xl font-semibold text-slate-900">Periodos</h2>
       <p class="text-slate-600">Abre o cierra periodos de evaluación. Al cerrar, la captura queda en solo lectura.</p>
     </div>
-    <a href="{% url 'catalog:period_create' %}" class="btn-primary">{% include "partials/icon.html" with name="calendar" cls="w-4 h-4" %} Nuevo periodo</a>
+    <a href="{% url 'catalog:period_create' %}" class="ui-btn-primary">{% include "partials/icon.html" with name="calendar" cls="w-4 h-4" %} Nuevo periodo</a>
   </div>
 
-  <div class="card divide-y divide-slate-100">
+  <div class="ui-card divide-y divide-slate-100">
     {% for p in periods %}
       <div class="flex items-center justify-between gap-4 p-4">
         <div>
           <p class="font-medium text-slate-900">{{ p.name }}</p>
-          <p class="text-sm text-slate-500">{{ p.start_date|date:"d/m/Y" }} – {{ p.end_date|date:"d/m/Y" }} · {{ p.get_kind_display }}</p>
+          <p class="text-base text-slate-500">{{ p.start_date|date:"d/m/Y" }} – {{ p.end_date|date:"d/m/Y" }} · {{ p.get_kind_display }}</p>
         </div>
         <div class="flex items-center gap-2">
           {% include "partials/status_badge.html" with status=p.status label=p.get_status_display %}
@@ -22,13 +22,13 @@
             <input type="hidden" name="period" value="{{ p.pk }}">
             {% if p.status == 'ABIERTO' %}
               <input type="hidden" name="action" value="close">
-              <button type="submit" class="btn-soft" onclick="return confirm('{{ close_confirm_message|escapejs }}');">Cerrar</button>
+              <button type="submit" class="ui-btn-soft" onclick="return confirm('{{ close_confirm_message|escapejs }}');">Cerrar</button>
             {% else %}
               <input type="hidden" name="action" value="open">
-              <button type="submit" class="btn-soft" onclick="return confirm('¿Abrir el periodo «{{ p.name|escapejs }}»?');">Abrir</button>
+              <button type="submit" class="ui-btn-soft" onclick="return confirm('¿Abrir el periodo «{{ p.name|escapejs }}»?');">Abrir</button>
             {% endif %}
           </form>
-          <a href="{% url 'catalog:period_edit' pk=p.pk %}" class="btn-soft">Editar</a>
+          <a href="{% url 'catalog:period_edit' pk=p.pk %}" class="ui-btn-soft">Editar</a>
           <span class="relative group/dtip">
             <form method="post" action="{% url 'catalog:period_delete' pk=p.pk %}" class="inline">
               {% csrf_token %}
@@ -38,7 +38,7 @@
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             </form>
-            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar periodo</span>
+            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar periodo</span>
           </span>
         </div>
       </div>

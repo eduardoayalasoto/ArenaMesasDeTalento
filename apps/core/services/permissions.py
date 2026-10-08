@@ -28,8 +28,12 @@ def can_view_evaluation(viewer, evaluation) -> bool:
 
 
 def projects_led_by(viewer) -> QuerySet:
-    """Proyectos activos donde el usuario es responsable (captura Entrega de Valor)."""
-    return viewer.responsible_projects.all()
+    """Proyectos activos donde el usuario es responsable (captura Entrega de Valor).
+
+    Un proyecto Cerrado (`is_active=False`) deja de ofrecerse para capturar
+    Entrega de Valor del periodo Abierto — ya no es "evaluable".
+    """
+    return viewer.responsible_projects.filter(is_active=True)
 
 
 def projects_validated_by(viewer) -> QuerySet:

@@ -5,15 +5,15 @@
 <form method="get" class="mb-4 flex flex-wrap items-end gap-2">
   <div class="relative">
     <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
-    <input type="search" name="q" value="{{ q }}" class="input pl-9 w-64" placeholder="Buscar persona…" aria-label="Buscar persona">
+    <input type="search" name="q" value="{{ q }}" class="ui-input pl-9 w-64" placeholder="Buscar persona…" aria-label="Buscar persona">
   </div>
-  <select name="area" class="input w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
-  <button type="submit" class="btn-secondary">Buscar</button>
+  <select name="area" class="ui-input w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
+  <button type="submit" class="ui-btn-secondary">Buscar</button>
 </form>
 
 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
   {% for p in page %}
-    <a href="{% url 'learning:person_profile' p.pk %}" class="card p-4 flex items-center gap-3 hover:border-arena-200 hover:shadow transition">
+    <a href="{% url 'learning:person_profile' p.pk %}" class="ui-card p-4 flex items-center gap-3 hover:border-arena-200 hover:shadow transition">
       {% if p.photo_mime %}
         <img src="{% url 'accounts:user_photo' p.pk %}?mini=1" alt="Foto de {{ p.full_name }}" class="w-11 h-11 rounded-full object-cover ring-1 ring-slate-200 shrink-0" loading="lazy">
       {% else %}
@@ -21,20 +21,20 @@
       {% endif %}
       <div class="min-w-0">
         <p class="font-medium text-slate-900 truncate">{{ p.full_name }}</p>
-        <p class="text-xs text-slate-500 truncate">{{ p.area.name|default:"Sin área" }}{% if p.level %} · {{ p.level.name }}{% endif %}</p>
+        <p class="text-base text-slate-500 truncate">{{ p.area.name|default:"Sin área" }}{% if p.level %} · {{ p.level.name }}{% endif %}</p>
       </div>
-      <span class="ml-auto text-xs text-slate-500 shrink-0 inline-flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i>{{ p.courses_done }}</span>
+      <span class="ml-auto text-base text-slate-500 shrink-0 inline-flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i>{{ p.courses_done }}</span>
     </a>
   {% empty %}
-    <p class="text-sm text-slate-500">No encontramos a nadie con esa búsqueda.</p>
+    <p class="text-base text-slate-500">No encontramos a nadie con esa búsqueda.</p>
   {% endfor %}
 </div>
 
 {% if page.has_other_pages %}
   <nav class="mt-6 flex items-center justify-center gap-2" aria-label="Paginación">
-    {% if page.has_previous %}<a class="btn-ghost" href="?q={{ q|urlencode }}&area={{ area }}&page={{ page.previous_page_number }}">Anterior</a>{% endif %}
-    <span class="text-sm text-slate-500">Página {{ page.number }} de {{ page.paginator.num_pages }}</span>
-    {% if page.has_next %}<a class="btn-ghost" href="?q={{ q|urlencode }}&area={{ area }}&page={{ page.next_page_number }}">Siguiente</a>{% endif %}
+    {% if page.has_previous %}<a class="ui-btn-ghost" href="?q={{ q|urlencode }}&area={{ area }}&page={{ page.previous_page_number }}">Anterior</a>{% endif %}
+    <span class="text-base text-slate-500">Página {{ page.number }} de {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a class="ui-btn-ghost" href="?q={{ q|urlencode }}&area={{ area }}&page={{ page.next_page_number }}">Siguiente</a>{% endif %}
   </nav>
 {% endif %}
 {% endblock %}

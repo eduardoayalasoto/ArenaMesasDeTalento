@@ -3,26 +3,26 @@
 {% include "learning/_subnav.html" %}
 {% comment %}Vista pública (FR-024): el contexto `course` solo trae campos públicos — sin costo, pago, justificación ni bitácora.{% endcomment %}
 
-<div class="max-w-3xl space-y-6">
-  <section class="card p-6">
-    <a href="{% url 'learning:person_profile' course.user.pk %}" class="flex items-center gap-2 text-sm text-slate-600 hover:underline mb-4">
+<div class="space-y-6">
+  <section class="ui-card p-6">
+    <a href="{% url 'learning:person_profile' course.user.pk %}" class="flex items-center gap-2 text-base text-slate-600 hover:underline mb-4">
       {% include "partials/avatar.html" with subject=course.user size="w-8 h-8" mini=True %} {{ course.user.full_name }}
     </a>
     <div class="flex flex-wrap items-center gap-2">
       <h3 class="text-lg font-semibold text-slate-900">{{ course.name }}</h3>
       {% include "learning/_badge.html" with tone=course.status_tone label=course.status_display %}
     </div>
-    <p class="text-sm text-slate-600">{{ course.provider }} · {{ course.kind }}{% if course.duration_hours %} · {{ course.duration_hours }} h{% endif %}{% if course.pillar %} · {{ course.pillar }}{% endif %}</p>
+    <p class="text-base text-slate-600">{{ course.provider }} · {{ course.kind }}{% if course.duration_hours %} · {{ course.duration_hours }} h{% endif %}{% if course.pillar %} · {{ course.pillar }}{% endif %}</p>
     <div class="mt-3 flex flex-wrap gap-2">
-      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="btn-soft"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Ver el curso</a>{% endif %}
-      {% if course.catalog_course_id %}<a href="{% url 'learning:catalog_detail' course.catalog_course_id %}" class="btn-soft"><i data-lucide="bookmark" class="w-3.5 h-3.5"></i> En el catálogo</a>{% endif %}
-      {% if can_see_private %}<a href="{% url 'learning:request_detail' course.pk %}" class="btn-soft"><i data-lucide="lock" class="w-3.5 h-3.5"></i> Detalle completo</a>{% endif %}
+      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="ui-btn-soft"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Ver el curso</a>{% endif %}
+      {% if course.catalog_course_id %}<a href="{% url 'learning:catalog_detail' course.catalog_course_id %}" class="ui-btn-soft"><i data-lucide="bookmark" class="w-3.5 h-3.5"></i> En el catálogo</a>{% endif %}
+      {% if can_see_private %}<a href="{% url 'learning:request_detail' course.pk %}" class="ui-btn-soft"><i data-lucide="lock" class="w-3.5 h-3.5"></i> Detalle completo</a>{% endif %}
     </div>
-    {% if course.tags %}<div class="mt-3 flex flex-wrap gap-1">{% for t in course.tags %}<span class="badge bg-white border border-slate-200 text-slate-500">#{{ t }}</span>{% endfor %}</div>{% endif %}
+    {% if course.tags %}<div class="mt-3 flex flex-wrap gap-1">{% for t in course.tags %}<span class="ui-badge bg-white border border-slate-200 text-slate-500">#{{ t }}</span>{% endfor %}</div>{% endif %}
   </section>
 
   {% if course.review %}
-    <section class="card p-6 space-y-4">
+    <section class="ui-card p-6 space-y-4">
       <div class="flex items-center justify-between">
         <h4 class="font-semibold text-slate-900">Reseña</h4>
         {% include "learning/_stars.html" with value=course.review.rating size="w-5 h-5" %}
@@ -30,24 +30,24 @@
       <p class="text-slate-800 whitespace-pre-line">{{ course.review.opinion }}</p>
       <div class="rounded-lg p-4 {% if course.review.recommends_code == 'SI' %}bg-emerald-50{% elif course.review.recommends_code == 'NO' %}bg-rose-50{% else %}bg-amber-50{% endif %}">
         <p class="font-medium text-slate-900">{{ course.review.recommends }}</p>
-        <p class="text-sm text-slate-700 whitespace-pre-line mt-1">{{ course.review.recommend_why }}</p>
+        <p class="text-base text-slate-700 whitespace-pre-line mt-1">{{ course.review.recommend_why }}</p>
         {% if course.review.audience_areas or course.review.audience_levels or course.review.audience_notes %}
-          <p class="text-sm text-slate-600 mt-2"><span class="font-medium">Para:</span>
+          <p class="text-base text-slate-600 mt-2"><span class="font-medium">Para:</span>
             {{ course.review.audience_areas|join:", " }}{% if course.review.audience_levels %}{% if course.review.audience_areas %} · {% endif %}{{ course.review.audience_levels|join:", " }}{% endif %}{% if course.review.audience_notes %} · {{ course.review.audience_notes }}{% endif %}
           </p>
         {% endif %}
       </div>
       <div>
-        <p class="text-sm text-slate-500">Aprendizajes y cómo los aplicó</p>
+        <p class="text-base text-slate-500">Aprendizajes y cómo los aplicó</p>
         <p class="text-slate-800 whitespace-pre-line mt-1">{{ course.review.learnings }}</p>
       </div>
     </section>
   {% elif course.status == "AUTORIZADA" %}
-    <p class="text-sm text-slate-500">{{ course.user.get_short_name }} está tomando este curso; su reseña aparecerá cuando lo termine.</p>
+    <p class="text-base text-slate-500">{{ course.user.get_short_name }} está tomando este curso; su reseña aparecerá cuando lo termine.</p>
   {% endif %}
 
   {% if course.certificates %}
-    <section class="card p-6">
+    <section class="ui-card p-6">
       <h4 class="font-semibold text-slate-900 mb-3">Evidencia</h4>
       <div class="grid sm:grid-cols-2 gap-3">
         {% for cert in course.certificates %}
@@ -57,7 +57,7 @@
             {% else %}
               <div class="h-40 grid place-items-center bg-slate-50 text-slate-500"><i data-lucide="file-text" class="w-10 h-10"></i></div>
             {% endif %}
-            <p class="px-3 py-2 text-sm text-slate-700 truncate">{{ cert.filename }}</p>
+            <p class="px-3 py-2 text-base text-slate-700 truncate">{{ cert.filename }}</p>
           </a>
         {% endfor %}
       </div>

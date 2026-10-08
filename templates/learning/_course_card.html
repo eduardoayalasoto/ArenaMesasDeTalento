@@ -1,9 +1,9 @@
 {% comment %}Tarjeta de curso propio. Param: r (CourseRequest).{% endcomment %}
-<a href="{% url 'learning:request_detail' r.pk %}" class="card p-4 flex items-start justify-between gap-4 hover:border-arena-200 hover:shadow transition">
+<a href="{% url 'learning:request_detail' r.pk %}" class="ui-card p-4 flex items-start justify-between gap-4 hover:border-arena-200 hover:shadow transition">
   <div class="min-w-0">
     <p class="font-medium text-slate-900 truncate">{{ r.name }}</p>
-    <p class="text-sm text-slate-500 truncate">{{ r.provider }} · {{ r.get_kind_display }}{% if r.origin != "SOLICITUD" %} · {{ r.get_origin_display }}{% endif %}</p>
-    {% if r.end_date_planned and r.status == "AUTORIZADA" %}<p class="text-xs text-slate-400 mt-1">Fin estimado: {{ r.end_date_planned|date:"d/m/Y" }}</p>{% endif %}
+    <p class="text-base text-slate-500 truncate">{{ r.provider }} · {{ r.get_kind_display }}{% if r.origin != "SOLICITUD" %} · {{ r.get_origin_display }}{% endif %}</p>
+    {% if r.end_date_planned and r.status == "AUTORIZADA" %}<p class="text-base text-slate-400 mt-1">Fin estimado: {{ r.end_date_planned|date:"d/m/Y" }}</p>{% endif %}
   </div>
   <div class="shrink-0">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}</div>
 </a>

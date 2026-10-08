@@ -1,6 +1,14 @@
 # Plan de migración del frontend de Mesa de Talento al sistema de diseño de Arena (arena-crm)
 
-**Fecha:** 2026-10-07 · **Estado:** propuesta para aprobación · **Referencia:** `../arena-crm/DESIGN_SYSTEM.md` (ley vigente en arena-crm, daisyUI 5 desde 2026-09-22).
+**Fecha:** 2026-10-07 · **Estado:** fases 0 y 1 implementadas · **Referencia:** `../arena-crm/DESIGN_SYSTEM.md` (ley vigente en arena-crm, daisyUI 5 desde 2026-09-22).
+
+> **Actualización 2026-10-08 — copia exacta.** Por decisión del usuario («quiero que los sistemas se
+> vean exactamente igual»), se descartan las excepciones propuestas abajo (escala `text-sm` propia,
+> dark mode diferido, activo naranja, buscador Ctrl+K, contadores en el menú, `max-w-7xl`). El shell,
+> el navbar, el login, el tema, la escala tipográfica, el modo oscuro, los vendors (mismas versiones,
+> `static/vendor/VERSIONS.md`) y los componentes son copia literal de arena-crm. Solo difieren la
+> palabra «talento» en naranja y el contenido del menú. Donde este plan diga otra cosa, manda esta nota
+> y `DESIGN_SYSTEM.md`.
 
 ## 1. Diagnóstico
 

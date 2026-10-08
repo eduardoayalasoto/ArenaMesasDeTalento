@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load learning_tags %}
 {% block content %}
-<div x-data="{ tab: '{{ active_tab }}' }" class="max-w-3xl">
+<div x-data="{ tab: '{{ active_tab }}' }">
   <div class="mb-5">
     <h2 class="text-xl font-semibold text-slate-900">Mi perfil</h2>
     <p class="text-slate-600">Actualiza tu información y tu contraseña.</p>
@@ -9,17 +9,17 @@
 
   <!-- Tabs -->
   <div class="flex gap-1 mb-6 border-b border-slate-200">
-    <button @click="tab='info'" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition"
+    <button @click="tab='info'" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px transition"
             :class="tab==='info' ? 'border-arena-600 text-arena-700' : 'border-transparent text-slate-500 hover:text-slate-800'">Información personal</button>
-    <button @click="tab='password'" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition"
+    <button @click="tab='password'" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px transition"
             :class="tab==='password' ? 'border-arena-600 text-arena-700' : 'border-transparent text-slate-500 hover:text-slate-800'">Contraseña</button>
-    <button @click="tab='learn'" class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition"
+    <button @click="tab='learn'" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px transition"
             :class="tab==='learn' ? 'border-arena-600 text-arena-700' : 'border-transparent text-slate-500 hover:text-slate-800'">Arena Learn</button>
   </div>
 
   <!-- Información personal -->
   <div x-show="tab==='info'" x-data="{ preview: null }">
-    <form method="post" enctype="multipart/form-data" class="card p-6">
+    <form method="post" enctype="multipart/form-data" class="ui-card p-6">
       {% csrf_token %}
       <input type="hidden" name="action" value="info">
 
@@ -38,32 +38,32 @@
               {% endif %}
             </div>
           </template>
-          <label class="btn-secondary py-1.5 cursor-pointer">
+          <label class="ui-btn-secondary py-1.5 cursor-pointer">
             {% include "partials/icon.html" with name="camera" cls="w-4 h-4" %} Cambiar foto
             <input type="file" name="photo" accept="image/*" class="sr-only"
                    @change="const f=$event.target.files[0]; preview = f ? URL.createObjectURL(f) : null">
           </label>
-          {% if not user.has_photo %}<p class="text-xs text-rose-600 text-center">Foto obligatoria</p>{% endif %}
-          {% for e in info_form.photo.errors %}<p class="text-xs text-rose-600 text-center">{{ e }}</p>{% endfor %}
+          {% if not user.has_photo %}<p class="text-base text-rose-600 text-center">Foto obligatoria</p>{% endif %}
+          {% for e in info_form.photo.errors %}<p class="text-base text-rose-600 text-center">{{ e }}</p>{% endfor %}
         </div>
 
         <!-- Datos -->
         <div class="space-y-4">
           <div>
-            <label class="label" for="{{ info_form.full_name.id_for_label }}">Nombre para mostrar</label>
+            <label class="ui-label" for="{{ info_form.full_name.id_for_label }}">Nombre para mostrar</label>
             {{ info_form.full_name }}
-            {% for e in info_form.full_name.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
-            <p class="mt-1 text-xs text-slate-500">Así aparecerá tu nombre en la app (puedes usar tu nombre corto).</p>
+            {% for e in info_form.full_name.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
+            <p class="mt-1 text-base text-slate-500">Así aparecerá tu nombre en la app (puedes usar tu nombre corto).</p>
           </div>
 
           <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <div><dt class="text-xs text-slate-500">Correo</dt><dd class="text-sm font-medium text-slate-800 truncate">{{ user.email }}</dd></div>
-            <div><dt class="text-xs text-slate-500">Área</dt><dd class="text-sm font-medium text-slate-800">{{ user.area.name|default:"—" }}</dd></div>
-            <div><dt class="text-xs text-slate-500">Nivel</dt><dd class="text-sm font-medium text-slate-800">{{ user.level.name|default:"—" }}</dd></div>
+            <div><dt class="text-base text-slate-500">Correo</dt><dd class="text-base font-medium text-slate-800 truncate">{{ user.email }}</dd></div>
+            <div><dt class="text-base text-slate-500">Área</dt><dd class="text-base font-medium text-slate-800">{{ user.area.name|default:"—" }}</dd></div>
+            <div><dt class="text-base text-slate-500">Nivel</dt><dd class="text-base font-medium text-slate-800">{{ user.level.name|default:"—" }}</dd></div>
           </dl>
 
           <div class="pt-2">
-            <button type="submit" class="btn-primary">Guardar cambios</button>
+            <button type="submit" class="ui-btn-primary">Guardar cambios</button>
           </div>
         </div>
       </div>
@@ -72,29 +72,29 @@
 
   <!-- Arena Learn (spec 004): visible para todo Arena en tu perfil público -->
   <div x-show="tab==='learn'" x-cloak class="space-y-3">
-    <p class="text-sm text-slate-600">Tus cursos completados y en curso son visibles para todo Arena (sin costos ni datos de pago).</p>
+    <p class="text-base text-slate-600">Tus cursos completados y en progreso son visibles para todo Arena (sin costos ni datos de pago).</p>
     {% arena_learn_summary user title="Mis cursos" %}
     <div class="flex gap-2">
-      <a href="{% url 'learning:my_courses' %}" class="btn-secondary">Ir a Arena Learn</a>
-      <a href="{% url 'learning:person_profile' user.pk %}" class="btn-ghost">Ver mi perfil público</a>
+      <a href="{% url 'learning:my_courses' %}" class="ui-btn-secondary">Ir a Arena Learn</a>
+      <a href="{% url 'learning:person_profile' user.pk %}" class="ui-btn-ghost">Ver mi perfil público</a>
     </div>
   </div>
 
   <!-- Contraseña -->
   <div x-show="tab==='password'" x-cloak>
-    <form method="post" class="card p-6 max-w-md">
+    <form method="post" class="ui-card p-6 max-w-md">
       {% csrf_token %}
       <input type="hidden" name="action" value="password">
       <div class="space-y-4">
         {% for field in password_form %}
           <div>
-            <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <label class="ui-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
             {{ field }}
-            {% for e in field.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
-            {% if field.help_text %}<p class="mt-1 text-xs text-slate-500">{{ field.help_text|safe }}</p>{% endif %}
+            {% for e in field.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
+            {% if field.help_text %}<p class="mt-1 text-base text-slate-500">{{ field.help_text|safe }}</p>{% endif %}
           </div>
         {% endfor %}
-        <button type="submit" class="btn-primary">Actualizar contraseña</button>
+        <button type="submit" class="ui-btn-primary">Actualizar contraseña</button>
       </div>
     </form>
   </div>

@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="max-w-5xl" x-data="{ renaming: false, duplicating: false, deleting: false }">
-  <a href="{% url 'access:profile_list' %}" class="text-sm text-arena-700 hover:underline inline-flex items-center gap-1 mb-2"><i data-lucide="chevron-left" class="w-4 h-4"></i> Perfiles y permisos</a>
+<div x-data="{ renaming: false, duplicating: false, deleting: false }">
+  <a href="{% url 'access:profile_list' %}" class="text-base text-arena-700 hover:underline inline-flex items-center gap-1 mb-2"><i data-lucide="chevron-left" class="w-4 h-4"></i> Perfiles y permisos</a>
 
   <div class="mb-5 flex flex-wrap items-start justify-between gap-3">
     <div class="min-w-0">
       <h2 class="text-xl font-semibold text-slate-900 font-display">{{ profile.name }}</h2>
-      {% if profile.description %}<p class="text-sm text-slate-600">{{ profile.description }}</p>{% endif %}
-      <p class="text-xs text-slate-500 mt-1">{{ members|length }} persona{{ members|length|pluralize }} con este perfil</p>
+      {% if profile.description %}<p class="text-base text-slate-600">{{ profile.description }}</p>{% endif %}
+      <p class="text-base text-slate-500 mt-1">{{ members|length }} persona{{ members|length|pluralize }} con este perfil</p>
     </div>
     <div class="flex flex-wrap gap-2">
-      <button type="button" class="btn-secondary" @click="renaming = true"><i data-lucide="pencil" class="w-4 h-4"></i> Renombrar</button>
-      <button type="button" class="btn-secondary" @click="duplicating = true"><i data-lucide="copy" class="w-4 h-4"></i> Duplicar</button>
-      <button type="button" class="btn-secondary text-rose-600 border-rose-200 hover:bg-rose-50" @click="deleting = true"><i data-lucide="trash-2" class="w-4 h-4"></i> Eliminar</button>
+      <button type="button" class="ui-btn-secondary" @click="renaming = true"><i data-lucide="pencil" class="w-4 h-4"></i> Renombrar</button>
+      <button type="button" class="ui-btn-secondary" @click="duplicating = true"><i data-lucide="copy" class="w-4 h-4"></i> Duplicar</button>
+      <button type="button" class="ui-btn-secondary text-rose-600 border-rose-200 hover:bg-rose-50" @click="deleting = true"><i data-lucide="trash-2" class="w-4 h-4"></i> Eliminar</button>
     </div>
   </div>
 
@@ -20,34 +20,34 @@
   <form method="post" class="space-y-5">
     {% csrf_token %}
     <input type="hidden" name="action" value="matrix">
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-base text-slate-500">
       <span class="font-medium text-slate-600">Alcance:</span>
-      {% for short, label in scope_legend %}<span><span class="badge bg-slate-100 text-slate-700">{{ short }}</span> {{ label }}</span>{% endfor %}
+      {% for short, label in scope_legend %}<span><span class="ui-badge bg-slate-100 text-slate-700">{{ short }}</span> {{ label }}</span>{% endfor %}
       <span>· cada alcance incluye a los anteriores.</span>
     </div>
 
     {% for m in modules %}
-      <section class="card overflow-hidden" x-data="{ open: true }">
+      <section class="ui-card overflow-hidden" x-data="{ open: true }">
         <button type="button" @click="open = !open" class="w-full flex items-center justify-between gap-3 px-5 py-3 bg-slate-50 border-b border-slate-200">
           <span class="font-semibold text-slate-900">{{ m.module }}</span>
-          <span class="flex items-center gap-3 text-xs text-slate-500">{{ m.granted }} de {{ m.rows|length }} con acceso
+          <span class="flex items-center gap-3 text-base text-slate-500">{{ m.granted }} de {{ m.rows|length }} con acceso
             <i data-lucide="chevron-down" class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''"></i></span>
         </button>
-        <table class="w-full text-sm" x-show="open">
+        <table class="w-full text-base" x-show="open">
           <tbody class="divide-y divide-slate-100">
             {% for r in m.rows %}
               <tr class="{% if r.perm.status == 'pending' %}opacity-60{% endif %}">
                 <td class="px-5 py-2.5">
                   <p class="text-slate-900">{{ r.perm.screen }}</p>
-                  <p class="text-xs text-slate-400"><code>{{ r.perm.key }}</code>{% if r.perm.help %} · {{ r.perm.help }}{% endif %}</p>
+                  <p class="text-base text-slate-400"><code>{{ r.perm.key }}</code>{% if r.perm.help %} · {{ r.perm.help }}{% endif %}</p>
                 </td>
-                <td class="px-3 py-2.5 w-28"><span class="badge bg-slate-100 text-slate-600">{{ r.perm.action }}</span></td>
+                <td class="px-3 py-2.5 w-28"><span class="ui-badge bg-slate-100 text-slate-600">{{ r.perm.action }}</span></td>
                 <td class="px-5 py-2.5 w-48">
                   {% if r.perm.status == "pending" %}
-                    <span class="text-xs text-slate-400" title="La pantalla aún no existe">Pendiente</span>
+                    <span class="text-base text-slate-400" title="La pantalla aún no existe">Pendiente</span>
                   {% else %}
                     <label class="sr-only" for="perm-{{ r.perm.key }}">Alcance de {{ r.perm.screen }}</label>
-                    <select id="perm-{{ r.perm.key }}" name="perm-{{ r.perm.key }}" class="input py-1.5 text-sm {% if r.value %}border-arena-300 bg-arena-50{% endif %}">
+                    <select id="perm-{{ r.perm.key }}" name="perm-{{ r.perm.key }}" class="ui-input py-1.5 text-base {% if r.value %}border-arena-300 bg-arena-50{% endif %}">
                       {% for value, label in r.options %}<option value="{{ value }}" {% if value == r.value %}selected{% endif %}>{{ label }}</option>{% endfor %}
                     </select>
                   {% endif %}
@@ -60,37 +60,37 @@
     {% endfor %}
 
     <div class="sticky bottom-0 bg-white/90 backdrop-blur border-t border-slate-200 -mx-4 px-4 py-3 flex justify-end">
-      <button type="submit" class="btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar matriz</button>
+      <button type="submit" class="ui-btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar matriz</button>
     </div>
   </form>
 
   {# Personas con este perfil (patrón arena-crm). Un perfil por persona: asignar = mover. #}
-  <section class="card p-5 mt-6">
+  <section class="ui-card p-5 mt-6">
     <h3 class="font-semibold text-slate-900 mb-3">Personas con este perfil</h3>
     {% if members %}
       <ul class="divide-y divide-slate-100 mb-4">
         {% for u in members %}
-          <li class="py-2 flex items-center justify-between gap-3 text-sm">
-            <span class="flex items-center gap-2 min-w-0">{% include "partials/avatar.html" with subject=u size="w-7 h-7" mini=True %}<span class="truncate">{{ u.full_name }}</span><span class="text-xs text-slate-400 truncate">{{ u.area.name|default:"" }}{% if u.level %} · {{ u.level.name }}{% endif %}</span></span>
-            <a href="{% url 'access:effective_access' u.pk %}" class="btn-soft">Ver acceso</a>
+          <li class="py-2 flex items-center justify-between gap-3 text-base">
+            <span class="flex items-center gap-2 min-w-0">{% include "partials/avatar.html" with subject=u size="w-7 h-7" mini=True %}<span class="truncate">{{ u.full_name }}</span><span class="text-base text-slate-400 truncate">{{ u.area.name|default:"" }}{% if u.level %} · {{ u.level.name }}{% endif %}</span></span>
+            <a href="{% url 'access:effective_access' u.pk %}" class="ui-btn-soft">Ver acceso</a>
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p class="text-sm text-slate-500 mb-4">Nadie tiene este perfil todavía.</p>
+      <p class="text-base text-slate-500 mb-4">Nadie tiene este perfil todavía.</p>
     {% endif %}
     <form method="post" action="{% url 'access:profile_assign' profile.slug %}" class="flex flex-wrap items-end gap-2">
       {% csrf_token %}
       <div class="flex-1 min-w-64">
-        <label class="label" for="assign-user">Asignar a una persona</label>
-        <select id="assign-user" name="user" class="input" required>
+        <label class="ui-label" for="assign-user">Asignar a una persona</label>
+        <select id="assign-user" name="user" class="ui-input" required>
           <option value="">— Elige a alguien —</option>
           {% for c in candidates %}<option value="{{ c.pk }}">{{ c.full_name }}{% if c.profile %} (hoy: {{ c.profile.name }}){% endif %}</option>{% endfor %}
         </select>
       </div>
-      <button type="submit" class="btn-secondary"><i data-lucide="user-plus" class="w-4 h-4"></i> Asignar</button>
+      <button type="submit" class="ui-btn-secondary"><i data-lucide="user-plus" class="w-4 h-4"></i> Asignar</button>
     </form>
-    <p class="mt-2 text-xs text-slate-500">Cada persona tiene un solo perfil: al asignarla aquí deja su perfil anterior.</p>
+    <p class="mt-2 text-base text-slate-500">Cada persona tiene un solo perfil: al asignarla aquí deja su perfil anterior.</p>
   </section>
 
   {# Modales: renombrar, duplicar y eliminar (patrón de modal de ownership_fill.html). #}
@@ -100,9 +100,9 @@
       {% csrf_token %}
       <input type="hidden" name="action" value="rename">
       <h4 class="font-semibold text-slate-900">Renombrar perfil</h4>
-      <div><label class="label" for="{{ name_form.name.id_for_label }}">Nombre</label>{{ name_form.name }}</div>
-      <div><label class="label" for="{{ name_form.description.id_for_label }}">Descripción</label>{{ name_form.description }}</div>
-      <div class="flex justify-end gap-2 pt-2"><button type="button" class="btn-secondary" @click="renaming = false">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div>
+      <div><label class="ui-label" for="{{ name_form.name.id_for_label }}">Nombre</label>{{ name_form.name }}</div>
+      <div><label class="ui-label" for="{{ name_form.description.id_for_label }}">Descripción</label>{{ name_form.description }}</div>
+      <div class="flex justify-end gap-2 pt-2"><button type="button" class="ui-btn-secondary" @click="renaming = false">Cancelar</button><button type="submit" class="ui-btn-primary">Guardar</button></div>
     </form>
   </div>
   <div x-show="duplicating" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true" @keydown.escape.window="duplicating = false">
@@ -110,9 +110,9 @@
     <form method="post" action="{% url 'access:profile_duplicate' profile.slug %}" class="relative bg-white rounded-xl shadow-xl ring-1 ring-black/5 p-6 max-w-md w-full space-y-3">
       {% csrf_token %}
       <h4 class="font-semibold text-slate-900">Duplicar «{{ profile.name }}»</h4>
-      <p class="text-sm text-slate-600">El perfil nuevo empieza con los mismos permisos; luego ajústalo.</p>
-      <div><label class="label" for="dup-name">Nombre del perfil nuevo</label><input id="dup-name" name="name" class="input" value="{{ profile.name }} (copia)" required></div>
-      <div class="flex justify-end gap-2 pt-2"><button type="button" class="btn-secondary" @click="duplicating = false">Cancelar</button><button type="submit" class="btn-primary">Duplicar</button></div>
+      <p class="text-base text-slate-600">El perfil nuevo empieza con los mismos permisos; luego ajústalo.</p>
+      <div><label class="ui-label" for="dup-name">Nombre del perfil nuevo</label><input id="dup-name" name="name" class="ui-input" value="{{ profile.name }} (copia)" required></div>
+      <div class="flex justify-end gap-2 pt-2"><button type="button" class="ui-btn-secondary" @click="duplicating = false">Cancelar</button><button type="submit" class="ui-btn-primary">Duplicar</button></div>
     </form>
   </div>
   <div x-show="deleting" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true" @keydown.escape.window="deleting = false">
@@ -121,11 +121,11 @@
       {% csrf_token %}
       <h4 class="font-semibold text-slate-900">¿Eliminar «{{ profile.name }}»?</h4>
       {% if members %}
-        <p class="mt-1 text-sm text-rose-700">No se puede: {{ members|length }} persona{{ members|length|pluralize }} lo tiene{{ members|length|pluralize:"n" }}. Reasígnalas primero.</p>
-        <div class="mt-5 flex justify-end"><button type="button" class="btn-secondary" @click="deleting = false">Entendido</button></div>
+        <p class="mt-1 text-base text-rose-700">No se puede: {{ members|length }} persona{{ members|length|pluralize }} lo tiene{{ members|length|pluralize:"n" }}. Reasígnalas primero.</p>
+        <div class="mt-5 flex justify-end"><button type="button" class="ui-btn-secondary" @click="deleting = false">Entendido</button></div>
       {% else %}
-        <p class="mt-1 text-sm text-slate-600">No se puede deshacer. Quedará registrado en la bitácora.</p>
-        <div class="mt-5 flex justify-end gap-2"><button type="button" class="btn-secondary" @click="deleting = false">Cancelar</button><button type="submit" class="btn-danger">Sí, eliminar</button></div>
+        <p class="mt-1 text-base text-slate-600">No se puede deshacer. Quedará registrado en la bitácora.</p>
+        <div class="mt-5 flex justify-end gap-2"><button type="button" class="ui-btn-secondary" @click="deleting = false">Cancelar</button><button type="submit" class="ui-btn-danger">Sí, eliminar</button></div>
       {% endif %}
     </form>
   </div>

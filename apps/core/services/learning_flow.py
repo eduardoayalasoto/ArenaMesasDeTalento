@@ -590,7 +590,7 @@ def complete(req, actor, review_data: dict, files=()):
     if req.user_id != actor.pk:
         raise PermissionDenied("Solo el dueño puede cerrar su curso.")
     if req.status != St.AUTORIZADA:
-        raise ValidationError("Solo se cierra un curso en curso (autorizado).")
+        raise ValidationError("Solo se cierra un curso en progreso (autorizado).")
     for f in files or ():
         _create_evidence(req, actor, f, Kind.CERTIFICADO)
     if not req.evidences.filter(kind=Kind.CERTIFICADO).exists():
@@ -626,7 +626,7 @@ def mark_not_completed(req, actor, reason: str):
     if req.user_id != actor.pk:
         raise PermissionDenied("Solo el dueño puede marcar su curso como no concluido.")
     if req.status != St.AUTORIZADA:
-        raise ValidationError("Solo un curso en curso puede marcarse como no concluido.")
+        raise ValidationError("Solo un curso en progreso puede marcarse como no concluido.")
     reason = (reason or "").strip()
     if not reason:
         raise ValidationError("Escribe el motivo por el que no concluiste el curso.")

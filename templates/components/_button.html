@@ -1,0 +1,81 @@
+{% comment %}
+Botón canónico -- variantes primary/secondary/danger/success/ghost, tamaños sm/md.
+Desde 2026-09-22 usa clases de daisyUI sobre un <button> nativo (ver
+DESIGN_SYSTEM.md § 3): primary=btn-primary, secondary=btn-outline
+btn-primary, success=btn-success, danger=btn-error, ghost=btn-ghost. Sin
+Shadow DOM ni Web Components -- hereda fuente/tamaño del resto de la app
+por cascada normal de CSS.
+
+Uso: {% include "components/_button.html" with variant="primary" label="Guardar" icon="save" %}
+     {% include "components/_button.html" with variant="secondary" size="sm" label="Editar" icon="pencil" %}
+     {% include "components/_button.html" with href=organization_edit_url variant="secondary" size="sm" label="Editar" icon="pencil" %}
+
+Props:
+  variant: primary (default) | secondary | danger | success | ghost --
+    "success" es para aprobar/confirmar una acción NO destructiva (ej.
+    aprobar el texto editado de una sugerencia de IA); "danger" se
+    reserva para lo destructivo o para aprobar algo que SÍ lo es (ej.
+    ejecutar una automatización que borra un registro).
+  size: md (default) | sm -- "sm" es para barras de herramientas/filas de
+    acciones densas (2+ botones en la misma línea: filtros, acciones por
+    fila, encabezados de panel); "md" se reserva para la acción primaria
+    de la página (la que el usuario busca primero).
+  label: texto del botón (voz activa, ver DESIGN_SYSTEM.md Sección 8)
+  icon: nombre de ícono Lucide (opcional)
+  full_width: True para ancho completo (opcional, agrega btn-block)
+  type: "button" (default) | "submit" -- ignorado si se pasa `href`.
+  href: si se pasa, renderiza un `<a>` en vez de un `<button>` (daisyUI
+    `.btn` funciona igual en ambos) -- para navegar a una pantalla real
+    (ej. "Editar"/"Nueva Organización" ya no abren un drawer, DESIGN_SYSTEM.md
+    § 5). Incompatible con hx_post/hx_get/type -- un botón es una acción O
+    una navegación, nunca ambas en el mismo elemento.
+  hx_post / hx_get / hx_target / hx_swap: atributos htmx opcionales
+  extra_attrs: string con atributos HTML crudos adicionales (opcional) --
+    p.ej. `@click="$dispatch('open-x-drawer')"` para abrir un _drawer.html
+    junto con un hx_get que llena su body. Se inserta tal cual, sin
+    escapar -- nunca pasar aquí contenido derivado de usuario final.
+
+Todo botón que envía algo por htmx muestra su propio spinner como
+htmx-indicator y se deshabilita durante el request (hx-disabled-elt).
+{% endcomment %}
+{% if href %}
+<a
+  href="{{ href }}"
+  {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
+  class="btn
+    {% if size == 'sm' %}btn-sm{% endif %}
+    {% if variant == 'secondary' %}btn-outline btn-primary
+    {% elif variant == 'danger' %}btn-error
+    {% elif variant == 'success' %}btn-success
+    {% elif variant == 'ghost' %}btn-ghost
+    {% else %}btn-primary{% endif %}
+    {% if full_width %}btn-block{% endif %}"
+>
+  {% if icon %}<i data-lucide="{{ icon }}" class="{% if size == 'sm' %}w-3.5 h-3.5{% else %}w-4 h-4{% endif %}"></i>{% endif %}
+  <span>{{ label }}</span>
+</a>
+{% else %}
+<button
+  type="{{ type|default:'button' }}"
+  {% if hx_post %}hx-post="{{ hx_post }}"{% endif %}
+  {% if hx_get %}hx-get="{{ hx_get }}"{% endif %}
+  {% if hx_target %}hx-target="{{ hx_target }}"{% endif %}
+  {% if hx_swap %}hx-swap="{{ hx_swap }}"{% endif %}
+  {% if hx_post or hx_get %}hx-indicator="closest button" hx-disabled-elt="this"{% endif %}
+  {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
+  class="btn
+    {% if size == 'sm' %}btn-sm{% endif %}
+    {% if variant == 'secondary' %}btn-outline btn-primary
+    {% elif variant == 'danger' %}btn-error
+    {% elif variant == 'success' %}btn-success
+    {% elif variant == 'ghost' %}btn-ghost
+    {% else %}btn-primary{% endif %}
+    {% if full_width %}btn-block{% endif %}"
+>
+  {% if icon %}<i data-lucide="{{ icon }}" class="{% if size == 'sm' %}w-3.5 h-3.5{% else %}w-4 h-4{% endif %}"></i>{% endif %}
+  <span>{{ label }}</span>
+  {% if hx_post or hx_get %}
+    <span class="htmx-indicator">{% include "components/_spinner.html" with size="sm" %}</span>
+  {% endif %}
+</button>
+{% endif %}

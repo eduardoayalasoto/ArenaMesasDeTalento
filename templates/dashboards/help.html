@@ -18,7 +18,7 @@
         {k:'learn', l:'Arena Learn', i:'book'}
       ]" :key="t.k">
       <button @click="tab = t.k"
-              class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition"
+              class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px transition"
               :class="tab === t.k ? 'border-arena-600 text-arena-700' : 'border-transparent text-slate-500 hover:text-slate-800'"
               x-text="t.l"></button>
     </template>
@@ -26,7 +26,7 @@
 
   <!-- El modelo -->
   <div x-show="tab === 'modelo'" class="space-y-6">
-    <div class="card p-6">
+    <div class="ui-card p-6">
       <h3 class="text-lg font-semibold text-slate-900 mb-2">¿Qué es el Modelo de Desempeño Analítica 2026?</h3>
       <p class="text-slate-600 leading-relaxed">Cada colaborador se evalúa de forma <b>semestral</b> mediante <b>tres pilares</b>, todos en escala <b>1 a 4</b> (4 es lo más alto). La <b>calificación final</b> es el promedio <b>ponderado</b> de los tres pilares, y los pesos dependen del <b>nivel de seniority</b> de la persona.</p>
     </div>
@@ -34,16 +34,16 @@
     <div>
       <h3 class="font-semibold text-slate-900 mb-3">Los 3 pilares</h3>
       <div class="grid gap-4 sm:grid-cols-3">
-        <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="clipboard" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Ownership</h4></div><p class="text-sm text-slate-600">Autoevaluación por proyecto con un <b>checklist</b> de actividades según tu área y nivel. El promedio excluye los ítems marcados N/A.</p></div>
-        <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="package" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Entrega de Valor</h4></div><p class="text-sm text-slate-600">Por proyecto: satisfacción del cliente, entregables y el criterio de <b>tiempo</b> según el tipo de proyecto. La captura el Lead y la valida Dirección.</p></div>
-        <div class="card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="star" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Impacto Arena</h4></div><p class="text-sm text-slate-600">Contribución a la cultura y la organización, capturada por Talento y Cultura.</p></div>
+        <div class="ui-card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="clipboard" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Ownership</h4></div><p class="text-base text-slate-600">Autoevaluación por proyecto con un <b>checklist</b> de actividades según tu área y nivel. El promedio excluye los ítems marcados N/A.</p></div>
+        <div class="ui-card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="package" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Entrega de Valor</h4></div><p class="text-base text-slate-600">Por proyecto: satisfacción del cliente, entregables y el criterio de <b>tiempo</b> según el tipo de proyecto. La captura el Lead y la valida Dirección.</p></div>
+        <div class="ui-card p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="star" cls="w-5 h-5 text-arena-600" %}<h4 class="font-semibold text-slate-900">Impacto Arena</h4></div><p class="text-base text-slate-600">Contribución a la cultura y la organización, capturada por Talento y Cultura.</p></div>
       </div>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-2">
-      <div class="card p-5">
+      <div class="ui-card p-5">
         <h4 class="font-semibold text-slate-900 mb-3">Escala de calificación</h4>
-        <ul class="space-y-1.5 text-sm text-slate-600">
+        <ul class="space-y-1.5 text-base text-slate-600">
           <li><b class="text-slate-900">1 · No cumple</b> — no se ejecutó o con deficiencias importantes.</li>
           <li><b class="text-slate-900">2 · Cumple parcial</b> — con omisiones o por debajo del estándar.</li>
           <li><b class="text-slate-900">3 · Cumple</b> — conforme al estándar del nivel.</li>
@@ -51,9 +51,9 @@
           <li><b class="text-slate-900">N/A</b> — no aplicó; <b>se excluye</b> del promedio.</li>
         </ul>
       </div>
-      <div class="card p-5">
+      <div class="ui-card p-5">
         <h4 class="font-semibold text-slate-900 mb-3">Ponderación por nivel</h4>
-        <table class="w-full text-sm">
+        <table class="w-full text-base">
           <thead class="text-slate-500 text-left"><tr><th class="py-1 font-medium">Nivel</th><th class="py-1 font-medium text-center">Ownership</th><th class="py-1 font-medium text-center">E. Valor</th><th class="py-1 font-medium text-center">Impacto</th></tr></thead>
           <tbody class="divide-y divide-slate-100">
             <tr><td class="py-1.5">Junior</td><td class="text-center tabular-nums">60%</td><td class="text-center tabular-nums">20%</td><td class="text-center tabular-nums">20%</td></tr>
@@ -66,30 +66,30 @@
     </div>
 
     <div class="grid gap-4 lg:grid-cols-2">
-      <div class="card p-5">
+      <div class="ui-card p-5">
         <h4 class="font-semibold text-slate-900 mb-3">Áreas</h4>
-        <div class="flex flex-wrap gap-2 text-sm">
-          <span class="badge bg-arena-50 text-arena-700">ID · Ingeniería de Datos</span>
-          <span class="badge bg-arena-50 text-arena-700">CD · Ciencia de Datos</span>
-          <span class="badge bg-arena-50 text-arena-700">PM · Gestión de Proyectos</span>
-          <span class="badge bg-arena-50 text-arena-700">UXUI · UX/UI</span>
+        <div class="flex flex-wrap gap-2 text-base">
+          <span class="ui-badge bg-arena-50 text-arena-700">ID · Ingeniería de Datos</span>
+          <span class="ui-badge bg-arena-50 text-arena-700">CD · Ciencia de Datos</span>
+          <span class="ui-badge bg-arena-50 text-arena-700">PM · Gestión de Proyectos</span>
+          <span class="ui-badge bg-arena-50 text-arena-700">UXUI · UX/UI</span>
         </div>
-        <p class="mt-3 text-sm text-slate-600">Cada área tiene 4 niveles: Junior, Mid, Senior y Lead.</p>
+        <p class="mt-3 text-base text-slate-600">Cada área tiene 4 niveles: Junior, Mid, Senior y Lead.</p>
       </div>
-      <div class="card p-5">
+      <div class="ui-card p-5">
         <h4 class="font-semibold text-slate-900 mb-3">Bandas de interpretación</h4>
-        <ul class="space-y-1.5 text-sm">
-          <li><span class="badge bg-emerald-50 text-emerald-700">≥ 3.50 Excede</span></li>
-          <li><span class="badge bg-arena-50 text-arena-700">3.00–3.49 Cumple</span></li>
-          <li><span class="badge bg-amber-50 text-amber-700">2.00–2.99 Cumple parcial</span></li>
-          <li><span class="badge bg-rose-50 text-rose-700">&lt; 2.00 No cumple</span></li>
+        <ul class="space-y-1.5 text-base">
+          <li><span class="ui-badge bg-emerald-50 text-emerald-700">≥ 3.50 Excede</span></li>
+          <li><span class="ui-badge bg-arena-50 text-arena-700">3.00–3.49 Cumple</span></li>
+          <li><span class="ui-badge bg-amber-50 text-amber-700">2.00–2.99 Cumple parcial</span></li>
+          <li><span class="ui-badge bg-rose-50 text-rose-700">&lt; 2.00 No cumple</span></li>
         </ul>
       </div>
     </div>
 
-    <div class="card p-5">
+    <div class="ui-card p-5">
       <h4 class="font-semibold text-slate-900 mb-3">El proceso, paso a paso</h4>
-      <ol class="space-y-2 text-sm text-slate-600 list-decimal list-inside">
+      <ol class="space-y-2 text-base text-slate-600 list-decimal list-inside">
         <li>Talento asigna área, nivel y proyectos.</li>
         <li>El colaborador hace su autoevaluación de Ownership por proyecto y elige a su evaluador.</li>
         <li>El evaluador revisa con la persona, complementa Fortalezas/Oportunidades y cierra.</li>

@@ -1,0 +1,147 @@
+{% comment %}
+Selector MÚLTIPLE de Personas con avatar-chips (2026-09-25, pedido explícito
+del usuario sobre el modal "Agregar actividad": "aunque selecciones una, si
+se selecciona otra más o agregar persona, quiero que se vayan agregando como
+avatares con un tooltip del nombre completo").
+
+Reemplaza el `<select multiple>` nativo de un `ModelMultipleChoiceField`
+(ej. `Activity.people`, M2M). Hermano multi de `_user_select.html` -- mismo
+patrón (daisyUI `dropdown` controlado por Alpine, botón que abre un panel
+`listbox`, `z-50`, `dropdown-open`/`dropdown-close` ligados a `open`) y la
+misma corrección ya aprendida allá: el control SIEMPRE se ve como un campo
+de form real (`rounded-lg border border-base-300 bg-base-100`), NUNCA como
+una badge/pill sin borde.
+
+Uso:
+  {% include "components/_person_multiselect.html" with field=activity_form.people size="sm" %}
+  {% include "components/_person_multiselect.html" with field=form.people %}
+
+Props:
+- `field` (obligatorio): BoundField de un ModelMultipleChoiceField cuyas
+  opciones son Personas (`str(person) == person.full_name`). Las opciones
+  salen de iterar el propio BoundField (`{% for opt in field %}`), así que:
+  (a) respetan el `queryset` ya acotado por el Form (Organización/Deal) sin
+  que el caller pase una lista aparte, y (b) `opt.data.selected` ya resuelve
+  el estado inicial correcto tanto para `initial` (form nuevo, ej.
+  `[default_person.pk]`) como para los datos POST de un form ligado con
+  errores -- sin comparar pks int vs str en el template.
+- `placeholder`: texto del botón de agregar -- default "Agregar persona".
+- `select_id`: prefijo de ids únicos -- default `field.auto_id`.
+- `size`: "sm" (para forms con inputs `*-sm`, ej. el modal de quick-add:
+  altura mínima y avatares más chicos para alinear con sus vecinos de fila)
+  o vacío (default).
+
+POST: por CADA opción se renderiza un `<input type="hidden" name=field.html_name
+value=pk>`, deshabilitado (`disabled`) cuando esa Persona NO está elegida --
+un input deshabilitado no se envía, así el navegador serializa exactamente
+`people=<pk>&people=<pk>...`, igual que un `<select multiple>` nativo. El
+estado inicial de `disabled` viene del servidor (sin depender de Alpine).
+
+Chips: avatar de iniciales (`_avatar.html`, Person no tiene nice_avatar) +
+icono `x` visible, dentro de un botón con tooltip daisyUI (`tooltip` +
+`data-tip` = nombre completo, se muestra en hover y en focus de teclado) y
+`aria-label="Quitar <nombre>"`. Click / Enter / Espacio / Supr / Retroceso
+sobre el chip lo quita. Las opciones ya elegidas al renderizar son
+elementos reales con `x-show`; las demás, `<template x-if>` (mismo truco que
+`_user_select.html` para que el primer paint coincida con el servidor).
+
+Panel: `aria-multiselectable="true"`; cada opción ALTERNA (agrega/quita) y
+el panel queda abierto para elegir varias seguidas. Teclado: flecha abajo /
+Enter / Espacio en "Agregar persona" abre y enfoca la primera opción;
+flechas recorren; Enter/Espacio alterna (botones nativos); Escape cierra y
+devuelve el foco al botón; Tab cierra.
+{% endcomment %}
+{% with uid=select_id|default:field.auto_id|default:"person-multiselect" %}
+<fieldset class="fieldset mb-3">
+  <legend class="fieldset-legend" id="{{ uid }}-label">
+    {{ field.label }}{% if field.field.required %}<span class="text-error">&nbsp;*</span>{% endif %}
+  </legend>
+  <div class="dropdown block w-full"
+       :class="{ 'dropdown-open': open, 'dropdown-close': !open }"
+       x-data="{
+          open: false,
+          selected: [{% for opt in field %}{% if opt.data.selected %}'{{ opt.data.value }}',{% endif %}{% endfor %}],
+          has(pk) { return this.selected.includes(pk); },
+          toggle(pk) {
+            this.selected = this.has(pk) ? this.selected.filter(p => p !== pk) : [...this.selected, pk];
+          },
+          remove(pk) {
+            this.selected = this.selected.filter(p => p !== pk);
+            this.$nextTick(() => this.$refs.trigger.focus());
+          },
+          openPanel() {
+            this.open = true;
+            this.$nextTick(() => this.$refs.panel.querySelector('[role=option]')?.focus());
+          },
+          close(refocus) {
+            this.open = false;
+            if (refocus) this.$refs.trigger.focus();
+          },
+          move(delta) {
+            const opts = [...this.$refs.panel.querySelectorAll('[role=option]')];
+            if (!opts.length) return;
+            const i = opts.indexOf(document.activeElement);
+            opts[(i + delta + opts.length) % opts.length].focus();
+          }
+       }"
+       @keydown.escape.window="if (open) close(true)"
+       @click.outside="open = false">
+    {% for opt in field %}
+    <input type="hidden" name="{{ field.html_name }}" value="{{ opt.data.value }}"
+           :disabled="!has('{{ opt.data.value }}')"{% if not opt.data.selected %} disabled{% endif %}>
+    {% endfor %}
+
+    <div role="group" aria-labelledby="{{ uid }}-label"
+         class="flex w-full flex-wrap items-center gap-1.5 rounded-lg border border-base-300 bg-base-100 text-base text-base-content transition-colors hover:border-base-content/30 {% if size == 'sm' %}min-h-8 px-1.5 py-1{% else %}min-h-10 px-2 py-1.5{% endif %}"
+         {% if field.errors %}aria-invalid="true"{% endif %}>
+      {% for opt in field %}
+      {% if opt.data.selected %}
+      <span x-show="has('{{ opt.data.value }}')" class="tooltip" data-tip="{{ opt.choice_label }}">
+        {% include "components/_person_multiselect_chip.html" with pk=opt.data.value name=opt.choice_label %}
+      </span>
+      {% else %}
+      <template x-if="has('{{ opt.data.value }}')">
+        <span class="tooltip" data-tip="{{ opt.choice_label }}">
+          {% include "components/_person_multiselect_chip.html" with pk=opt.data.value name=opt.choice_label %}
+        </span>
+      </template>
+      {% endif %}
+      {% endfor %}
+
+      <button type="button" id="{{ uid }}-trigger" x-ref="trigger"
+              @click="open ? close(false) : openPanel()"
+              @keydown.down.prevent="openPanel()"
+              aria-haspopup="listbox" :aria-expanded="open.toString()"
+              aria-controls="{{ uid }}-listbox"
+              aria-labelledby="{{ uid }}-label {{ uid }}-trigger"
+              class="inline-flex flex-1 items-center gap-1.5 rounded-field px-1.5 text-left text-base text-base-content/60 cursor-pointer hover:text-base-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary {% if size == 'sm' %}min-h-6{% else %}min-h-7{% endif %}">
+        <i data-lucide="user-plus" class="size-4 shrink-0" aria-hidden="true"></i>
+        <span class="truncate">{{ placeholder|default:"Agregar persona" }}</span>
+        <i data-lucide="chevron-down" class="ml-auto size-4 shrink-0 transition-transform" :class="open && 'rotate-180'" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <ul id="{{ uid }}-listbox" x-ref="panel" role="listbox" tabindex="-1"
+        aria-multiselectable="true" aria-labelledby="{{ uid }}-label"
+        @keydown.down.prevent="move(1)" @keydown.up.prevent="move(-1)"
+        @keydown.tab="open = false"
+        class="dropdown-content z-50 mt-1 w-full min-w-72 max-h-72 overflow-y-auto rounded-lg border border-base-300 bg-base-100 p-1 text-base text-base-content shadow-lg">
+      {% for opt in field %}
+      <li>
+        <button type="button" role="option" :aria-selected="has('{{ opt.data.value }}').toString()"
+                @click="toggle('{{ opt.data.value }}')"
+                :class="has('{{ opt.data.value }}') ? 'bg-secondary/15 text-secondary font-semibold' : 'hover:bg-base-200'"
+                class="flex min-h-11 w-full items-center gap-2 rounded-field px-3 text-left text-base cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
+          {% include "components/_avatar.html" with name=opt.choice_label size=28 user=None id="" %}
+          <span class="truncate" title="{{ opt.choice_label }}">{{ opt.choice_label }}</span>
+          <i data-lucide="check" class="ml-auto size-4 shrink-0" x-show="has('{{ opt.data.value }}')" aria-hidden="true"></i>
+        </button>
+      </li>
+      {% empty %}
+      <li class="px-3 py-2 text-base text-base-content/60">No hay personas disponibles.</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% if field.errors %}<p class="label text-error">{{ field.errors|join:", " }}</p>{% endif %}
+</fieldset>
+{% endwith %}

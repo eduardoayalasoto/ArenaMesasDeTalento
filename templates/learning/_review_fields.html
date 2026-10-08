@@ -3,7 +3,7 @@
   {# Calificación: estrellas clicables; los radios reales quedan ocultos (accesibles por teclado). #}
   <div x-data="{ r: Number('{{ review_form.rating.value|default:0 }}') || 0, h: 0,
                  names: ['', 'No me aportó', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'] }">
-    <span class="label" id="rating-label">Calificación general <span class="text-rose-600">*</span></span>
+    <span class="ui-label" id="rating-label">Calificación general <span class="text-rose-600">*</span></span>
     <div class="flex items-center gap-3">
       <div class="flex items-center gap-1" role="radiogroup" aria-labelledby="rating-label" @mouseleave="h = 0">
         {% for radio in review_form.rating %}
@@ -19,18 +19,18 @@
           </label>
         {% endfor %}
       </div>
-      <span class="text-sm font-medium" :class="(h || r) ? 'text-slate-700' : 'text-slate-400'"
+      <span class="text-base font-medium" :class="(h || r) ? 'text-slate-700' : 'text-slate-400'"
             x-text="(h || r) ? names[h || r] : 'Elige de 1 a 5 estrellas'"></span>
     </div>
-    {% for e in review_form.rating.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in review_form.rating.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
   </div>
   <div>
-    <label class="label" for="{{ review_form.opinion.id_for_label }}">Tu opinión del curso <span class="text-rose-600">*</span></label>
+    <label class="ui-label" for="{{ review_form.opinion.id_for_label }}">Tu opinión del curso <span class="text-rose-600">*</span></label>
     {{ review_form.opinion }}
-    {% for e in review_form.opinion.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in review_form.opinion.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
   </div>
   <div>
-    <span class="label" id="recommends-label">¿Lo recomiendas? <span class="text-rose-600">*</span></span>
+    <span class="ui-label" id="recommends-label">¿Lo recomiendas? <span class="text-rose-600">*</span></span>
     {# Tarjetas seleccionables: el estilo vive en el <label> que contiene al radio (has-[:checked]). #}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" role="radiogroup" aria-labelledby="recommends-label">
       {% for radio in review_form.recommends %}
@@ -46,34 +46,34 @@
                        {% if radio.data.value == 'SI' %}bg-emerald-100 text-emerald-600{% elif radio.data.value == 'NO' %}bg-rose-100 text-rose-600{% else %}bg-amber-100 text-amber-600{% endif %}">
             <i data-lucide="{% if radio.data.value == 'SI' %}thumbs-up{% elif radio.data.value == 'NO' %}thumbs-down{% else %}hand{% endif %}" class="w-4 h-4"></i>
           </span>
-          <span class="text-sm font-medium text-slate-800">{{ radio.choice_label }}</span>
+          <span class="text-base font-medium text-slate-800">{{ radio.choice_label }}</span>
         </label>
       {% endfor %}
     </div>
-    {% for e in review_form.recommends.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in review_form.recommends.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
   </div>
   <div>
-    <label class="label" for="{{ review_form.recommend_why.id_for_label }}">¿Por qué? <span class="text-rose-600">*</span></label>
+    <label class="ui-label" for="{{ review_form.recommend_why.id_for_label }}">¿Por qué? <span class="text-rose-600">*</span></label>
     {{ review_form.recommend_why }}
-    {% for e in review_form.recommend_why.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in review_form.recommend_why.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
   </div>
   <div class="grid sm:grid-cols-2 gap-4">
     <fieldset>
-      <legend class="label">¿A qué áreas se lo recomiendas?</legend>
-      <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in review_form.audience_areas %}<label class="inline-flex items-center gap-1.5 text-sm text-slate-700">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
+      <legend class="ui-label">¿A qué áreas se lo recomiendas?</legend>
+      <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in review_form.audience_areas %}<label class="inline-flex items-center gap-1.5 text-base text-slate-700">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
     </fieldset>
     <fieldset>
-      <legend class="label">¿A qué niveles?</legend>
-      <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in review_form.audience_levels %}<label class="inline-flex items-center gap-1.5 text-sm text-slate-700">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
+      <legend class="ui-label">¿A qué niveles?</legend>
+      <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in review_form.audience_levels %}<label class="inline-flex items-center gap-1.5 text-base text-slate-700">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
     </fieldset>
   </div>
   <div>
-    <label class="label" for="{{ review_form.audience_notes.id_for_label }}">¿A quién más se lo recomiendas?</label>
+    <label class="ui-label" for="{{ review_form.audience_notes.id_for_label }}">¿A quién más se lo recomiendas?</label>
     {{ review_form.audience_notes }}
   </div>
   <div>
-    <label class="label" for="{{ review_form.learnings.id_for_label }}">Aprendizajes clave y cómo los aplicaste <span class="text-rose-600">*</span></label>
+    <label class="ui-label" for="{{ review_form.learnings.id_for_label }}">Aprendizajes clave y cómo los aplicaste <span class="text-rose-600">*</span></label>
     {{ review_form.learnings }}
-    {% for e in review_form.learnings.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in review_form.learnings.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
   </div>
 </div>

@@ -3,10 +3,10 @@
 {% include "learning/_subnav.html" %}
 
 {% if pending %}
-  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6 text-sm text-amber-800 flex flex-wrap items-center gap-2">
+  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-6 text-base text-amber-800 flex flex-wrap items-center gap-2">
     <i data-lucide="alert-triangle" class="w-4 h-4"></i>
     <span>Para solicitar otro curso, primero cierra <strong>{{ pending.name }}</strong> con tu evidencia y reseña.</span>
-    <a href="{% url 'learning:request_complete' pending.pk %}" class="btn-soft ml-auto">Cerrar curso</a>
+    <a href="{% url 'learning:request_complete' pending.pk %}" class="ui-btn-soft ml-auto">Cerrar curso</a>
   </div>
 {% endif %}
 
@@ -14,7 +14,7 @@
   <div class="space-y-8">
     {% for title, items in groups %}
       <section>
-        <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ title }} <span class="text-slate-400">· {{ items|length }}</span></h3>
+        <h3 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">{{ title }} <span class="text-slate-400">· {{ items|length }}</span></h3>
         <div class="grid sm:grid-cols-2 gap-3">
           {% for r in items %}{% include "learning/_course_card.html" %}{% endfor %}
         </div>

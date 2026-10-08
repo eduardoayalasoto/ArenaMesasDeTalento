@@ -1,79 +1,105 @@
-{% load static %}
+{% load static core_extras %}
 <!doctype html>
-<html lang="es-MX" class="h-full">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <title>{% block title %}{{ page_title|default:"Evaluaciones" }} · Arena{% endblock %}</title>
-  <meta name="description" content="Modelo de Desempeño Analítica 2026 · Arena Analytics">
-  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+<html lang="es-mx" dir="ltr" data-theme="arena">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ page_title|default:"Inicio" }} · arenatalento{% endblock %}</title>
+    <meta name="description" content="Mesa de Talento · Arena Analytics">
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    {# Tema claro/oscuro -- se corre lo antes posible para evitar FOUC (igual que arena-crm) #}
+    <script src="{% static_v 'js/theme_toggle.js' %}"></script>
+    <script src="{% static_v 'js/modals.js' %}"></script>
 
-  <!-- CSS de Tailwind compilado localmente (sin CDN ni Node) -->
-  <link rel="stylesheet" href="{% static 'css/app.css' %}?v={{ asset_version }}">
+    {# Tailwind + daisyUI compilados (.\build_css.ps1) #}
+    <link rel="stylesheet" href="{% static_v 'css/app.css' %}">
 
-  <script defer src="{% static 'vendor/lucide.min.js' %}"></script>
-  <script defer src="{% static 'vendor/htmx.min.js' %}"></script>
-  <script defer src="{% static 'vendor/alpine.min.js' %}"></script>
-  <script>
-    // Renderiza los iconos Lucide al cargar y tras cada actualización de htmx.
-    function renderIcons() { if (window.lucide) lucide.createIcons(); }
-    document.addEventListener('DOMContentLoaded', renderIcons);
-    document.addEventListener('htmx:afterSwap', renderIcons);
+    {# Librerías vendorizadas -- static/vendor/, sin CDN (ver VERSIONS.md); mismas versiones que arena-crm #}
+    <link rel="stylesheet" href="{% static 'vendor/flatpickr/4.6.13/flatpickr.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/frappe-gantt/1.2.2/frappe-gantt.css' %}">
 
-    // Evita doble envío: deshabilita el botón tras enviar (sin perder su name/value).
-    document.addEventListener('submit', function (e) {
-      const btn = e.submitter;
-      if (!btn || btn.dataset.noLock) return;
-      setTimeout(function () {
-        btn.disabled = true;
-        btn.classList.add('opacity-70', 'pointer-events-none');
-      }, 0);
-    });
-  </script>
-  <script>
-    // Store global de notificaciones (toasts) y estado de la barra lateral.
-    document.addEventListener('alpine:init', () => {
-      Alpine.store('ui', {
-        sidebarOpen: false,
-        toasts: [],
-        notify(message, level = 'info') {
-          const id = Date.now() + Math.floor(Math.random() * 1000);
-          this.toasts.push({ id, message, level });
-          setTimeout(() => this.dismiss(id), 4500);
-        },
-        dismiss(id) { this.toasts = this.toasts.filter(t => t.id !== id); },
+    <script type="module" src="{% static 'vendor/cally/0.9.2/cally.js' %}"></script>
+    <script defer src="{% static 'vendor/alpinejs-collapse/3.15.12/alpine-collapse.min.js' %}"></script>
+    <script defer src="{% static 'vendor/alpinejs/3.15.12/alpine.min.js' %}"></script>
+    <script src="{% static 'vendor/htmx/2.0.8/htmx.min.js' %}"></script>
+    <script src="{% static 'vendor/lucide/1.25.0/lucide.min.js' %}"></script>
+    <script src="{% static_v 'js/icons.js' %}"></script>
+    <script src="{% static 'vendor/flatpickr/4.6.13/flatpickr.min.js' %}"></script>
+    <script src="{% static 'vendor/flatpickr/4.6.13/l10n/es.js' %}"></script>
+    <script src="{% static 'vendor/chartjs/4.5.1/chart.umd.min.js' %}"></script>
+    <script src="{% static 'vendor/frappe-gantt/1.2.2/frappe-gantt.umd.js' %}"></script>
+    <script src="{% static 'vendor/sortablejs/1.15.7/Sortable.min.js' %}"></script>
+
+    <script>
+      // Puente de compatibilidad (pantallas legadas de Talento): `$store.ui.notify(msg, nivel)`
+      // ahora dispara el mismo evento `toast` que usa components/_toast_container.html.
+      document.addEventListener('alpine:init', () => {
+        Alpine.store('ui', {
+          notify(message, level = 'info') {
+            const variant = level === 'error' ? 'error' : level === 'warning' ? 'warning' : level === 'success' ? 'success' : 'info';
+            window.dispatchEvent(new CustomEvent('toast', { detail: { message, variant } }));
+          },
+        });
       });
-    });
-    // Errores de red en htmx → toast amigable (flujo nunca bloqueado).
-    document.body && document.body.addEventListener('htmx:sendError', () => {
-      window.Alpine && Alpine.store('ui').notify('Sin conexión. Reintentando…', 'warning');
-    });
-  </script>
-</head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-  <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow">Saltar al contenido</a>
+      // Evita doble envío: deshabilita el botón tras enviar (sin perder su name/value).
+      document.addEventListener('submit', function (e) {
+        const btn = e.submitter;
+        if (!btn || btn.dataset.noLock) return;
+        setTimeout(function () { btn.disabled = true; btn.classList.add('opacity-70', 'pointer-events-none'); }, 0);
+      });
+    </script>
 
-  {% if user.is_authenticated %}
-  <div class="min-h-dvh lg:flex" x-data>
-    {% include "partials/sidebar.html" %}
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen">
+    <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-base-100 focus:px-4 focus:py-2 focus:rounded-lg focus:shadow">Saltar al contenido</a>
+    {% if user.is_authenticated %}
+    {% block body_content %}
+    {% include "_navbar.html" %}
 
-    <div class="flex-1 min-w-0 lg:pl-0">
-      {% include "partials/topbar.html" %}
+    <main id="contenido" class="max-w-6xl mx-auto px-4 py-6">
+      {% if messages %}
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+              window.dispatchEvent(new CustomEvent("toast", { detail: { message: "{{ message.message|escapejs }}", variant: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}" } }));
+            {% endfor %}
+          });
+        </script>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+    {% endblock %}
+    {% else %}
+      {% if messages %}
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+              window.dispatchEvent(new CustomEvent("toast", { detail: { message: "{{ message.message|escapejs }}", variant: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %}" } }));
+            {% endfor %}
+          });
+        </script>
+      {% endif %}
+      {% block auth_content %}{% endblock %}
+    {% endif %}
 
-      <main id="contenido" class="px-4 sm:px-6 lg:px-8 py-6 max-w-6xl mx-auto w-full">
-        {% block content %}{% endblock %}
-      </main>
-    </div>
-  </div>
-  {% else %}
-    {% block auth_content %}{% endblock %}
-  {% endif %}
+    {% include "components/_toast_container.html" %}
 
-  {% include "partials/toasts.html" %}
-</body>
+    <script src="{% static_v 'js/htmx_csrf.js' %}"></script>
+    <script src="{% static_v 'js/flatpickr_init.js' %}"></script>
+    <script>
+      // renderIcons (static/js/icons.js): solo <i data-lucide> pendientes, nunca
+      // re-dibuja los <svg> ya existentes -- ver el bug de ciclo infinito ahí.
+      document.addEventListener("DOMContentLoaded", function () { window.renderIcons(document); });
+      document.body.addEventListener("htmx:afterSwap", function (evt) { window.renderIcons(evt.detail.target || document); });
+      document.body.addEventListener("htmx:oobAfterSwap", function (evt) { window.renderIcons(evt.detail.target || document); });
+      document.body.addEventListener("htmx:load", function (evt) { window.renderIcons(evt.detail.elt || document); });
+      // Errores de red en htmx → toast amigable (flujo nunca bloqueado).
+      document.body.addEventListener("htmx:sendError", function () {
+        window.dispatchEvent(new CustomEvent("toast", { detail: { message: "Sin conexión. Reintentando…", variant: "warning" } }));
+      });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+  </body>
 </html>

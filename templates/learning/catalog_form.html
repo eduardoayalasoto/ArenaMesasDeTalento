@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
 {% include "learning/_subnav.html" %}
-<div class="max-w-3xl">
+<div>
   <h3 class="text-lg font-semibold text-slate-900 mb-4">{% if course %}Editar curso del catálogo{% else %}Nuevo curso del catálogo{% endif %}</h3>
-  <form method="post" class="card p-6 space-y-5" novalidate>
+  <form method="post" class="ui-card p-6 space-y-5" novalidate>
     {% csrf_token %}
-    {% for e in form.non_field_errors %}<p class="text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in form.non_field_errors %}<p class="text-base text-rose-600">{{ e }}</p>{% endfor %}
     <div class="grid sm:grid-cols-2 gap-4">
       {% for field in form %}
         <div class="{% if field.name in 'name url description areas levels tags' %}sm:col-span-2{% endif %}">
           {% if field.name == "areas" or field.name == "levels" %}
-            <span class="label">{{ field.label|capfirst }}</span>
-            <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in field %}<label class="inline-flex items-center gap-1.5 text-sm text-slate-700">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
+            <span class="ui-label">{{ field.label|capfirst }}</span>
+            <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in field %}<label class="inline-flex items-center gap-1.5 text-base text-slate-700">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
           {% else %}
-            <label class="label" for="{{ field.id_for_label }}">{{ field.label|capfirst }}{% if field.field.required %} <span class="text-rose-600">*</span>{% endif %}</label>
+            <label class="ui-label" for="{{ field.id_for_label }}">{{ field.label|capfirst }}{% if field.field.required %} <span class="text-rose-600">*</span>{% endif %}</label>
             {{ field }}
           {% endif %}
-          {% if field.help_text %}<p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>{% endif %}
-          {% for e in field.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+          {% if field.help_text %}<p class="mt-1 text-base text-slate-500">{{ field.help_text }}</p>{% endif %}
+          {% for e in field.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
         </div>
       {% endfor %}
     </div>
     <div class="flex justify-end gap-2">
-      <a href="{% if course %}{% url 'learning:catalog_detail' course.pk %}{% else %}{% url 'learning:catalog_list' %}{% endif %}" class="btn-ghost">Cancelar</a>
-      <button type="submit" class="btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button>
+      <a href="{% if course %}{% url 'learning:catalog_detail' course.pk %}{% else %}{% url 'learning:catalog_list' %}{% endif %}" class="ui-btn-ghost">Cancelar</a>
+      <button type="submit" class="ui-btn-primary"><i data-lucide="save" class="w-4 h-4"></i> Guardar</button>
     </div>
   </form>
 </div>

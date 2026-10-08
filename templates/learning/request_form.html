@@ -2,37 +2,37 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 
-<div class="max-w-3xl">
+<div>
   <div class="mb-5">
-    {% if not editing %}<a href="{% url 'learning:request_start' %}" class="text-sm text-arena-700 hover:underline inline-flex items-center gap-1 mb-1"><i data-lucide="chevron-left" class="w-4 h-4"></i> Elegir otro curso</a>{% endif %}
+    {% if not editing %}<a href="{% url 'learning:request_start' %}" class="text-base text-arena-700 hover:underline inline-flex items-center gap-1 mb-1"><i data-lucide="chevron-left" class="w-4 h-4"></i> Elegir otro curso</a>{% endif %}
     <h3 class="text-lg font-semibold text-slate-900">{% if editing %}Editar solicitud{% elif catalog_course or template_req %}Solicitar curso{% else %}Solicitar un curso nuevo{% endif %}</h3>
-    <p class="text-sm text-slate-600">Tu solicitud pasa por tu Lead, Dirección y Talento. Talento confirma fondos y te avisa cuando quede autorizada.</p>
+    <p class="text-base text-slate-600">Tu solicitud pasa por tu Lead, Dirección y Talento. Talento confirma fondos y te avisa cuando quede autorizada.</p>
   </div>
 
   {% if last_return and editing.status == "REQUIERE_AJUSTES" %}
-    <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-5 text-sm text-amber-900">
+    <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-5 text-base text-amber-900">
       <p class="font-medium">{{ last_return.actor.full_name }} te pidió ajustes:</p>
       <p class="mt-1 whitespace-pre-line">{{ last_return.comment }}</p>
-      <p class="mt-1 text-xs text-amber-700">Al reenviarla, regresa directo a {{ last_return.get_stage_display }}.</p>
+      <p class="mt-1 text-base text-amber-700">Al reenviarla, regresa directo a {{ last_return.get_stage_display }}.</p>
     </div>
   {% endif %}
 
   {% if pending and not editing %}
-    <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-5 text-sm text-amber-800">
+    <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-5 text-base text-amber-800">
       Puedes guardar esta solicitud como borrador, pero para enviarla primero cierra <a class="font-semibold underline" href="{% url 'learning:request_complete' pending.pk %}">{{ pending.name }}</a>.
     </div>
   {% endif %}
 
   {% if duplicate %}
-    <div class="rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 mb-5 text-sm text-rose-800">
+    <div class="rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 mb-5 text-base text-rose-800">
       Ya tienes este curso pedido ({{ duplicate.status_display|lower }}). <a class="font-semibold underline" href="{% url 'learning:request_detail' duplicate.pk %}">Ver tu solicitud</a>.
     </div>
   {% endif %}
 
   {% if template_req %}
-    <div class="card p-4 mb-5 flex items-start gap-3 bg-emerald-50 border-emerald-100">
+    <div class="ui-card p-4 mb-5 flex items-start gap-3 bg-emerald-50 border-emerald-100">
       <i data-lucide="badge-check" class="w-5 h-5 text-emerald-600 mt-0.5"></i>
-      <div class="text-sm">
+      <div class="text-base">
         <p class="font-medium text-slate-900">Curso ya autorizado en Arena: {{ template_req.name }}</p>
         <p class="text-slate-600">Precargamos sus datos; ajústalos si tu caso cambia y completa fechas y justificación.</p>
       </div>
@@ -40,47 +40,47 @@
   {% endif %}
 
   {% if catalog_course %}
-    <div class="card p-4 mb-5 flex items-start gap-3 bg-arena-50 border-arena-100">
+    <div class="ui-card p-4 mb-5 flex items-start gap-3 bg-arena-50 border-arena-100">
       <i data-lucide="bookmark" class="w-5 h-5 text-arena-600 mt-0.5"></i>
-      <div class="text-sm">
+      <div class="text-base">
         <p class="font-medium text-slate-900">Curso del catálogo: {{ catalog_course.name }}</p>
         <p class="text-slate-600">Los datos del curso vienen del catálogo; solo completa fechas, costo y tu justificación.</p>
       </div>
     </div>
   {% elif not template_req and not editing %}
-    <p class="text-sm text-slate-500 mb-4">¿Ya existe en el catálogo? <a href="{% url 'learning:request_start' %}" class="text-arena-700 font-medium hover:underline">Búscalo entre los cursos de Arena</a> y verás las reseñas de quienes ya lo tomaron.</p>
+    <p class="text-base text-slate-500 mb-4">¿Ya existe en el catálogo? <a href="{% url 'learning:request_start' %}" class="text-arena-700 font-medium hover:underline">Búscalo entre los cursos de Arena</a> y verás las reseñas de quienes ya lo tomaron.</p>
   {% endif %}
 
-  <form method="post" class="card p-6 space-y-5" novalidate>
+  <form method="post" class="ui-card p-6 space-y-5" novalidate>
     {% csrf_token %}
     {% if catalog_course and not editing %}<input type="hidden" name="catalogo" value="{{ catalog_course.pk }}">{% endif %}
     {% if template_req and not editing %}<input type="hidden" name="desde" value="{{ template_req.pk }}">{% endif %}
-    {% for e in form.non_field_errors %}<p class="text-sm text-rose-600">{{ e }}</p>{% endfor %}
+    {% for e in form.non_field_errors %}<p class="text-base text-rose-600">{{ e }}</p>{% endfor %}
 
     <div class="grid sm:grid-cols-2 gap-4">
       {% for field in form %}
         {% if field.name != "justification" %}
         <div class="{% if field.name == 'name' or field.name == 'url' %}sm:col-span-2{% endif %}">
-          <label class="label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.name in "name provider url start_date_planned end_date_planned" %} <span class="text-rose-600">*</span>{% endif %}</label>
+          <label class="ui-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.name in "name provider url start_date_planned end_date_planned" %} <span class="text-rose-600">*</span>{% endif %}</label>
           {{ field }}
-          {% if field.name == "tags" %}<p class="mt-1 text-xs text-slate-500">Sepáralas por coma; ayudan a que otros encuentren el curso.</p>{% endif %}
-          {% if field.name == "url" and not catalog_course %}<p class="mt-1 text-xs text-slate-500">{{ field.help_text }}</p>{% endif %}
-          {% for e in field.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+          {% if field.name == "tags" %}<p class="mt-1 text-base text-slate-500">Sepáralas por coma; ayudan a que otros encuentren el curso.</p>{% endif %}
+          {% if field.name == "url" and not catalog_course %}<p class="mt-1 text-base text-slate-500">{{ field.help_text }}</p>{% endif %}
+          {% for e in field.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
         </div>
         {% endif %}
       {% endfor %}
     </div>
 
     <div>
-      <label class="label" for="{{ form.justification.id_for_label }}">Justificación <span class="text-rose-600">*</span></label>
+      <label class="ui-label" for="{{ form.justification.id_for_label }}">Justificación <span class="text-rose-600">*</span></label>
       {{ form.justification }}
-      {% for e in form.justification.errors %}<p class="mt-1 text-sm text-rose-600">{{ e }}</p>{% endfor %}
+      {% for e in form.justification.errors %}<p class="mt-1 text-base text-rose-600">{{ e }}</p>{% endfor %}
     </div>
 
     <div class="flex flex-wrap justify-end gap-2 pt-2">
-      <a href="{% if editing %}{% url 'learning:request_detail' editing.pk %}{% else %}{% url 'learning:my_courses' %}{% endif %}" class="btn-ghost">Cancelar</a>
-      <button type="submit" name="action" value="draft" class="btn-secondary"><i data-lucide="save" class="w-4 h-4"></i> Guardar borrador</button>
-      <button type="submit" name="action" value="submit" class="btn-primary"><i data-lucide="send" class="w-4 h-4"></i> {% if editing.status == "REQUIERE_AJUSTES" %}Reenviar{% else %}Enviar a autorización{% endif %}</button>
+      <a href="{% if editing %}{% url 'learning:request_detail' editing.pk %}{% else %}{% url 'learning:my_courses' %}{% endif %}" class="ui-btn-ghost">Cancelar</a>
+      <button type="submit" name="action" value="draft" class="ui-btn-secondary"><i data-lucide="save" class="w-4 h-4"></i> Guardar borrador</button>
+      <button type="submit" name="action" value="submit" class="ui-btn-primary"><i data-lucide="send" class="w-4 h-4"></i> {% if editing.status == "REQUIERE_AJUSTES" %}Reenviar{% else %}Enviar a autorización{% endif %}</button>
     </div>
   </form>
 </div>

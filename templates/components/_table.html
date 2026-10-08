@@ -1,0 +1,105 @@
+{% load core_extras %}
+{% comment %}
+Tabla canónica -- encabezado sticky, orden por columna (htmx GET
+?sort=, con aria-sort), paginación estándar, slot de filtros, columna de
+acciones CRUD opcional al final. daisyUI `table` (DESIGN_SYSTEM.md § 5).
+
+Props:
+  columns: lista de {"key", "label", "sortable" (bool), "format" (opcional:
+    "money" para valores monetarios -- signo de $, separador de miles y
+    la moneda real del registro (row.currency); sin "format", se muestra
+    el valor crudo)
+  rows: lista de dicts. Si un row trae `detail_url` (spec 022) aparece un
+    botón "Ver" (ícono `eye`) en Acciones -- 2026-09-23: la fila YA NO
+    envuelve la primera columna en un link (regla de UI: una fila de
+    tabla no navega desde el texto, solo desde un botón de Acciones
+    explícito, igual que Editar/Eliminar).
+  current_sort: string, ej. "-etapa" (prefijo "-" = descendente)
+  sort_url: URL base para el GET de ordenamiento (opcional, default request.path)
+  show_row_actions: bool (opcional) -- agrega una columna final "Acciones"
+    con Ver (row.detail_url), Editar (row.edit_url) y Eliminar
+    (row.delete_url, vía components/_confirm.html), cada uno solo si el
+    row trae ese atributo -- un row sin alguno (ej. Deal, que no usa este
+    patrón todavía) simplemente no muestra el botón correspondiente, no
+    es un error.
+{% endcomment %}
+<div class="overflow-x-auto border border-base-300 rounded-2xl">
+  <table class="table">
+    <thead class="sticky top-0 bg-base-200 z-10">
+      <tr>
+        {% for column in columns %}
+          <th
+            scope="col"
+            {% if column.sortable %}
+              {% if current_sort == column.key %}aria-sort="ascending"
+              {% elif current_sort == "-"|add:column.key %}aria-sort="descending"
+              {% else %}aria-sort="none"{% endif %}
+            {% endif %}
+          >
+            {% if column.sortable %}
+              <button
+                type="button"
+                hx-get="{{ sort_url|default:request.path }}?sort={% if current_sort == column.key %}-{{ column.key }}{% else %}{{ column.key }}{% endif %}"
+                hx-target="closest table"
+                hx-swap="outerHTML"
+                class="inline-flex items-center gap-1 hover:text-base-content"
+              >
+                {{ column.label }}
+                <i data-lucide="chevrons-up-down" class="w-3 h-3"></i>
+              </button>
+            {% else %}
+              {{ column.label }}
+            {% endif %}
+          </th>
+        {% endfor %}
+        {% if show_row_actions %}<th scope="col" class="text-right">Acciones</th>{% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr class="hover">
+          {% for column in columns %}
+            <td>
+              {% if column.format == "money" %}{{ row|get_item:column.key|money:row.currency }}{% else %}{{ row|get_item:column.key }}{% endif %}
+            </td>
+          {% endfor %}
+          {% if show_row_actions %}
+            <td class="text-right whitespace-nowrap">
+              <div class="flex justify-end gap-1">
+                {% if row.detail_url %}
+                  {% include "components/_icon_button.html" with href=row.detail_url icon="eye" label="Ver" %}
+                {% endif %}
+                {% if row.edit_url %}
+                  {% include "components/_icon_button.html" with href=row.edit_url icon="pencil" label="Editar" %}
+                {% endif %}
+                {% if row.delete_url %}
+                  {% include "components/_confirm.html" with confirm_id=row.delete_confirm_id title="Eliminar" message=row.delete_confirm_message|default:"Esta acción no se puede deshacer." confirm_url=row.delete_url %}
+                {% endif %}
+              </div>
+            </td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{% if show_row_actions %}{{ columns|length|add:1 }}{% else %}{{ columns|length }}{% endif %}">
+            {% include "components/_empty_state.html" with message="Sin registros todavía" %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page_obj %}
+<nav aria-label="Paginación" class="flex items-center justify-between mt-3 text-base text-base-content/60">
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+  <div class="flex gap-1">
+    {% if page_obj.has_previous %}
+      <button type="button" hx-get="{{ sort_url|default:request.path }}?page={{ page_obj.previous_page_number }}" hx-target="closest table" hx-swap="outerHTML" class="btn btn-ghost btn-sm">Anterior</button>
+    {% endif %}
+    {% if page_obj.has_next %}
+      <button type="button" hx-get="{{ sort_url|default:request.path }}?page={{ page_obj.next_page_number }}" hx-target="closest table" hx-swap="outerHTML" class="btn btn-ghost btn-sm">Siguiente</button>
+    {% endif %}
+  </div>
+</nav>
+{% endif %}

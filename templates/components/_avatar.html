@@ -1,0 +1,40 @@
+{% load core_extras %}
+{% comment %}
+Avatar de iniciales -- círculo con las iniciales sobre un fondo de marca.
+daisyUI `avatar avatar-placeholder` (DESIGN_SYSTEM.md § 5).
+
+Actualizado 2026-09-25: arena-crm SÍ compone avatares ilustrados ahora
+(`nice_avatar`, portado de arena-os -- ver DESIGN_SYSTEM.md § 5, "Reversión
+2026-09-25"), usado en el navbar (`{% nice_avatar user.profile.avatar_config_effective %}`)
+y en la pantalla de configuración de cuenta (`accounts/settings.html`). Este
+componente de iniciales queda como FALLBACK para el resto de la app -- ej.
+`Person` (que no tiene un `UserProfile`/avatar propio) o cualquier lugar
+donde el SVG compositado no calce (chips/badges muy chicos).
+
+Uso:
+  {% include "components/_avatar.html" with user=user size=30 %}
+    -- 1 letra, para un User real (get_full_name/username).
+  {% include "components/_avatar.html" with name=person.full_name size=28 %}
+    -- 2 letras, para cualquier otro nombre suelto (ej. Person, que no
+       tiene get_full_name()) -- pedido explícito del usuario, 2026-09-23:
+       "siempre que se seleccione una persona, usar avatar con dos letras".
+
+Props:
+  user: instancia de User (prioridad sobre `name` si ambos vienen)
+  name: string con el nombre completo -- se usan sus iniciales (2 letras)
+  size: tamaño en px del círculo (default 32)
+  id: id HTML opcional para el círculo interior (para actualizarlo vía JS/Alpine)
+
+GOTCHA (encontrado 2026-09-25, ficha de Deal): `{% include ... with name=... %}`
+SIN `only` sigue exponiendo el `user` de la request (context processor de
+auth) a este parcial -- `{% if user %}` lo toma aunque el caller solo haya
+pasado `name`, mostrando las iniciales de quien tiene la sesión abierta en
+vez de las de `name`. Si el caller no quiere mostrar al usuario logueado,
+pasa `user=None` explícito junto con `name=...`.
+{% endcomment %}
+<div class="avatar avatar-placeholder shrink-0 select-none">
+  <div id="{{ id }}" class="bg-secondary text-secondary-content rounded-full ring-2 ring-white/15"
+       style="width: {{ size|default:32 }}px; height: {{ size|default:32 }}px;">
+    <span style="font-size: calc({{ size|default:32 }}px * 0.38);">{% if user %}{{ user.full_name|default:user.email|slice:":1"|upper }}{% else %}{{ name|initials }}{% endif %}</span>
+  </div>
+</div>

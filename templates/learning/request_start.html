@@ -5,40 +5,40 @@
 <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
   <div>
     <h3 class="text-lg font-semibold text-slate-900">¿Qué curso quieres solicitar?</h3>
-    <p class="text-sm text-slate-600">Primero revisa si alguien en Arena ya lo tomó: llegas con los datos listos (proveedor, costo, cómo se pagó) y con las reseñas de tus compañeros. Si no está, captúralo como curso nuevo.</p>
+    <p class="text-base text-slate-600">Primero revisa si alguien en Arena ya lo tomó: llegas con los datos listos (proveedor, costo, cómo se pagó) y con las reseñas de tus compañeros. Si no está, captúralo como curso nuevo.</p>
   </div>
-  <a href="{% url 'learning:request_create' %}" class="btn-primary shrink-0"><i data-lucide="plus" class="w-4 h-4"></i> Es un curso nuevo</a>
+  <a href="{% url 'learning:request_create' %}" class="ui-btn-primary shrink-0"><i data-lucide="plus" class="w-4 h-4"></i> Es un curso nuevo</a>
 </div>
 
 {% if pending %}
-  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-5 text-sm text-amber-800 flex flex-wrap items-center gap-2">
+  <div class="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 mb-5 text-base text-amber-800 flex flex-wrap items-center gap-2">
     <i data-lucide="alert-triangle" class="w-4 h-4"></i>
     <span>Antes de enviar otra solicitud, cierra <strong>{{ pending.name }}</strong> con tu evidencia y reseña.</span>
-    <a href="{% url 'learning:request_complete' pending.pk %}" class="btn-soft ml-auto">Cerrar curso</a>
+    <a href="{% url 'learning:request_complete' pending.pk %}" class="ui-btn-soft ml-auto">Cerrar curso</a>
   </div>
 {% endif %}
 
 <form method="get" class="mb-6">
   <div class="relative max-w-md">
     <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
-    <input type="search" name="q" value="{{ q }}" class="input pl-9" placeholder="Busca por curso, proveedor o tema…" aria-label="Buscar curso">
+    <input type="search" name="q" value="{{ q }}" class="ui-input pl-9" placeholder="Busca por curso, proveedor o tema…" aria-label="Buscar curso">
   </div>
 </form>
 
 <section class="mb-8">
-  <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Catálogo recomendado por Talento <span class="text-slate-400">· {{ catalog|length }}</span></h4>
+  <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-3">Catálogo recomendado por Talento <span class="text-slate-400">· {{ catalog|length }}</span></h4>
   {% if catalog %}
     <div class="grid sm:grid-cols-2 gap-3">
       {% for it in catalog %}{% with c=it.course %}
-        <div class="card p-4 flex flex-col gap-2 {% if it.mine %}opacity-80{% endif %}">
+        <div class="ui-card p-4 flex flex-col gap-2 {% if it.mine %}opacity-80{% endif %}">
           <div class="flex items-start justify-between gap-2">
             <div class="min-w-0">
               <a href="{% url 'learning:catalog_detail' c.pk %}" class="font-semibold text-slate-900 hover:underline">{{ c.name }}</a>
-              <p class="text-sm text-slate-500">{{ c.provider }} · {{ c.get_kind_display }}{% if c.duration_hours %} · {{ c.duration_hours }} h{% endif %}</p>
+              <p class="text-base text-slate-500">{{ c.provider }} · {{ c.get_kind_display }}{% if c.duration_hours %} · {{ c.duration_hours }} h{% endif %}</p>
             </div>
-            <span class="badge bg-arena-50 text-arena-700 shrink-0">Catálogo</span>
+            <span class="ui-badge bg-arena-50 text-arena-700 shrink-0">Catálogo</span>
           </div>
-          <dl class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+          <dl class="flex flex-wrap gap-x-4 gap-y-1 text-base text-slate-600">
             <div><dt class="sr-only">Costo</dt><dd>{% if c.reference_cost is not None %}${{ c.reference_cost|floatformat:"0g" }} {{ c.currency }}{% else %}Costo por definir{% endif %}</dd></div>
             {% if it.payment_mode %}<div><dt class="sr-only">Pago</dt><dd>Se ha pagado por: {{ it.payment_mode|lower }}</dd></div>{% endif %}
             <div><dd>Autorizado {{ it.authorized_count }} vez{{ it.authorized_count|pluralize:"es" }}</dd></div>
@@ -46,34 +46,34 @@
           </dl>
           <div class="mt-auto pt-1">
             {% if it.mine %}
-              <a href="{% url 'learning:request_detail' it.mine.pk %}" class="text-sm text-amber-700 font-medium hover:underline">Ya lo tienes: {{ it.mine.status_display|lower }}</a>
+              <a href="{% url 'learning:request_detail' it.mine.pk %}" class="text-base text-amber-700 font-medium hover:underline">Ya lo tienes: {{ it.mine.status_display|lower }}</a>
             {% else %}
-              <a href="{% url 'learning:request_create' %}?catalogo={{ c.pk }}" class="btn-soft"><i data-lucide="send" class="w-3.5 h-3.5"></i> Solicitar este</a>
+              <a href="{% url 'learning:request_create' %}?catalogo={{ c.pk }}" class="ui-btn-soft"><i data-lucide="send" class="w-3.5 h-3.5"></i> Solicitar este</a>
             {% endif %}
           </div>
         </div>
       {% endwith %}{% endfor %}
     </div>
   {% else %}
-    <p class="text-sm text-slate-500">{% if q %}Ningún curso del catálogo coincide con «{{ q }}».{% else %}Talento aún no ha cargado cursos al catálogo.{% endif %}</p>
+    <p class="text-base text-slate-500">{% if q %}Ningún curso del catálogo coincide con «{{ q }}».{% else %}Talento aún no ha cargado cursos al catálogo.{% endif %}</p>
   {% endif %}
 </section>
 
 <section class="mb-8">
-  <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-1">Ya autorizados en Arena <span class="text-slate-400">· {{ known|length }}</span></h4>
-  <p class="text-xs text-slate-500 mb-3">Cursos fuera del catálogo que tus compañeros ya tomaron con autorización de su Lead, Dirección y Talento.</p>
+  <h4 class="text-base font-semibold text-slate-500 uppercase tracking-wide mb-1">Ya autorizados en Arena <span class="text-slate-400">· {{ known|length }}</span></h4>
+  <p class="text-base text-slate-500 mb-3">Cursos fuera del catálogo que tus compañeros ya tomaron con autorización de su Lead, Dirección y Talento.</p>
   {% if known %}
     <div class="grid sm:grid-cols-2 gap-3">
       {% for it in known %}{% with t=it.template %}
-        <div class="card p-4 flex flex-col gap-2 {% if it.mine %}opacity-80{% endif %}">
+        <div class="ui-card p-4 flex flex-col gap-2 {% if it.mine %}opacity-80{% endif %}">
           <div class="flex items-start justify-between gap-2">
             <div class="min-w-0">
               <a href="{% url 'learning:course_public' t.pk %}" class="font-semibold text-slate-900 hover:underline">{{ t.name }}</a>
-              <p class="text-sm text-slate-500">{{ t.provider }} · {{ t.get_kind_display }}{% if t.duration_hours %} · {{ t.duration_hours }} h{% endif %}</p>
+              <p class="text-base text-slate-500">{{ t.provider }} · {{ t.get_kind_display }}{% if t.duration_hours %} · {{ t.duration_hours }} h{% endif %}</p>
             </div>
-            {% if it.validated %}<span class="badge bg-emerald-50 text-emerald-700 shrink-0"><i data-lucide="badge-check" class="w-3 h-3"></i> Avalado</span>{% endif %}
+            {% if it.validated %}<span class="ui-badge bg-emerald-50 text-emerald-700 shrink-0"><i data-lucide="badge-check" class="w-3 h-3"></i> Avalado</span>{% endif %}
           </div>
-          <dl class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+          <dl class="flex flex-wrap gap-x-4 gap-y-1 text-base text-slate-600">
             <div><dd>{% if t.estimated_cost is not None %}Aprox. ${{ t.estimated_cost|floatformat:"0g" }} {{ t.currency }}{% else %}Gratuito / sin costo indicado{% endif %}</dd></div>
             {% if it.payment_mode %}<div><dd>Se ha pagado por: {{ it.payment_mode|lower }}</dd></div>{% endif %}
             <div><dd>{{ it.count }} persona{{ it.count|pluralize }} lo tomó</dd></div>
@@ -81,24 +81,24 @@
           </dl>
           <div class="mt-auto pt-1">
             {% if it.mine %}
-              <a href="{% url 'learning:request_detail' it.mine.pk %}" class="text-sm text-amber-700 font-medium hover:underline">Ya lo tienes: {{ it.mine.status_display|lower }}</a>
+              <a href="{% url 'learning:request_detail' it.mine.pk %}" class="text-base text-amber-700 font-medium hover:underline">Ya lo tienes: {{ it.mine.status_display|lower }}</a>
             {% else %}
-              <a href="{% url 'learning:request_create' %}?desde={{ t.pk }}" class="btn-soft"><i data-lucide="send" class="w-3.5 h-3.5"></i> Solicitar este</a>
+              <a href="{% url 'learning:request_create' %}?desde={{ t.pk }}" class="ui-btn-soft"><i data-lucide="send" class="w-3.5 h-3.5"></i> Solicitar este</a>
             {% endif %}
           </div>
         </div>
       {% endwith %}{% endfor %}
     </div>
   {% else %}
-    <p class="text-sm text-slate-500">{% if q %}Nadie ha tomado un curso que coincida con «{{ q }}».{% else %}Aún no hay cursos autorizados fuera del catálogo.{% endif %}</p>
+    <p class="text-base text-slate-500">{% if q %}Nadie ha tomado un curso que coincida con «{{ q }}».{% else %}Aún no hay cursos autorizados fuera del catálogo.{% endif %}</p>
   {% endif %}
 </section>
 
-<div class="card p-5 flex flex-wrap items-center justify-between gap-3 bg-slate-50">
+<div class="ui-card p-5 flex flex-wrap items-center justify-between gap-3 bg-slate-50">
   <div>
     <p class="font-medium text-slate-900">¿No lo encontraste?</p>
-    <p class="text-sm text-slate-600">Captura los datos del curso nuevo. Si a ti te sirve, Talento puede sumarlo al catálogo.</p>
+    <p class="text-base text-slate-600">Captura los datos del curso nuevo. Si a ti te sirve, Talento puede sumarlo al catálogo.</p>
   </div>
-  <a href="{% url 'learning:request_create' %}" class="btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Solicitar un curso nuevo</a>
+  <a href="{% url 'learning:request_create' %}" class="ui-btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Solicitar un curso nuevo</a>
 </div>
 {% endblock %}

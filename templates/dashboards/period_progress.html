@@ -8,8 +8,8 @@
     <div class="flex items-center gap-3">
       {% if periods %}
         <form method="get" class="flex items-center gap-2">
-          <label class="text-sm text-slate-500" for="periodo-select">Periodo</label>
-          <select id="periodo-select" name="periodo" class="input" onchange="this.form.submit()">
+          <label class="text-base text-slate-500" for="periodo-select">Periodo</label>
+          <select id="periodo-select" name="periodo" class="ui-input" onchange="this.form.submit()">
             {% for p in periods %}
               <option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>
                 {{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}
@@ -19,7 +19,7 @@
         </form>
       {% endif %}
       {% if period %}
-        <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn-secondary">
+        <a href="{% url 'dashboards:export_scores_xlsx' %}" class="ui-btn-secondary">
           {% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar Excel
         </a>
       {% endif %}
@@ -34,7 +34,7 @@
       {% include "dashboards/_progress_card.html" with title="Entrega de Valor validadas" done=vd_validated total=vd_total icon="package" %}
       {% include "dashboards/_progress_card.html" with title="Calificaciones completas" done=finals_complete total=finals_total icon="trophy" %}
     </div>
-    <p class="mt-6 text-sm text-slate-500">El avance se actualiza conforme las personas envían sus evaluaciones, los Leads capturan la Entrega de Valor y Talento registra el Impacto Arena.</p>
+    <p class="mt-6 text-base text-slate-500">El avance se actualiza conforme las personas envían sus evaluaciones, los Leads capturan la Entrega de Valor y Talento registra el Impacto Arena.</p>
 
     {% include "dashboards/_pending_people_table.html" with pending_rows=pending_rows %}
   {% endif %}

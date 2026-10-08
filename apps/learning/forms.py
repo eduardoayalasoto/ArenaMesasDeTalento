@@ -9,9 +9,9 @@ from .models import CatalogCourse, CourseEvidence, CourseRequest, CourseReview, 
 
 User = get_user_model()
 
-INPUT = {"class": "input"}
-TEXTAREA = {"class": "input", "rows": 3}
-DATE = {"class": "input", "type": "date"}
+INPUT = {"class": "ui-input"}
+TEXTAREA = {"class": "ui-input", "rows": 3}
+DATE = {"class": "ui-input", "type": "date"}
 
 
 def _whole(value):
