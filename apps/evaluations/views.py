@@ -14,6 +14,9 @@ from django.views.decorators.http import require_POST
 
 from decimal import Decimal, InvalidOperation
 
+from apps.access import services as access
+from apps.access.decorators import requires
+from apps.access.registry import Scope
 from apps.catalog.models import EvaluationPeriod, Project
 from apps.core.services import (
     final_flow,
@@ -50,6 +53,7 @@ def _progress(evaluation):
 
 
 @login_required
+@requires("ownership.self.manage")
 def ownership_list(request):
     """Para Leads: una tarjeta transversal. Para el resto: una tarjeta por proyecto."""
     period = period_lifecycle.resolve_requested_period(request, fallback=_open_period)
@@ -71,7 +75,7 @@ def ownership_list(request):
         return render(request, "evaluations/ownership_list.html", {
             "page_title": "Mis evaluaciones",
             "period": period,
-            "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
+            "periods": EvaluationPeriod.objects.all() if permissions.sees_all_ownership(request.user) else None,
             "is_lead": True,
             "lead_eval": lead_eval,
             "lead_projects": lead_projects,
@@ -98,13 +102,14 @@ def ownership_list(request):
     return render(request, "evaluations/ownership_list.html", {
         "page_title": "Mis evaluaciones",
         "period": period,
-        "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
+        "periods": EvaluationPeriod.objects.all() if permissions.sees_all_ownership(request.user) else None,
         "is_lead": False,
         "cards": cards,
     })
 
 
 @login_required
+@requires("ownership.self.manage")
 def ownership_start(request, project_id):
     """Antes de iniciar, el evaluado elige su evaluador principal y opcionalmente secundarios."""
     from django.contrib.auth import get_user_model
@@ -150,7 +155,7 @@ def ownership_start(request, project_id):
             return redirect("evaluations:ownership_edit", pk=evaluation.pk)
 
     evaluators = (
-        User.objects.filter(is_active=True).exclude(pk=request.user.pk).order_by("full_name")
+        access.assignable_users("assign.ownership_evaluator").exclude(pk=request.user.pk).order_by("full_name")
     )
     return render(request, "evaluations/ownership_start.html", {
         "page_title": "Elegir evaluador",
@@ -160,6 +165,7 @@ def ownership_start(request, project_id):
 
 
 @login_required
+@requires("ownership.self.manage")
 def ownership_lead_start(request):
     """Lead elige su evaluador para la evaluación unificada (sin proyecto específico)."""
     from django.contrib.auth import get_user_model
@@ -206,7 +212,7 @@ def ownership_lead_start(request):
             return redirect("evaluations:ownership_edit", pk=evaluation.pk)
 
     evaluators = (
-        User.objects.filter(is_active=True).exclude(pk=request.user.pk).order_by("full_name")
+        access.assignable_users("assign.ownership_evaluator").exclude(pk=request.user.pk).order_by("full_name")
     )
     return render(request, "evaluations/ownership_start.html", {
         "page_title": "Elegir evaluador",
@@ -310,27 +316,30 @@ def _render_ownership(request, pk, *, editing):
         "all_users": all_users,
         "ev_records": ev_records,
         "can_edit_link": (can_edit_answers or can_complement),
-        "can_reopen": evaluation.is_submitted and request.user.is_admin,
+        "can_reopen": evaluation.is_submitted and permissions.can_admin_ownership(request.user),
         # "Reiniciar" elimina el registro por completo: nunca disponible sobre un
         # periodo Cerrado, ni con motivo (FR-011a de spec 003 — no es una corrección).
-        "can_reset": request.user.is_admin and not evaluation.period.is_closed,
+        "can_reset": permissions.can_admin_ownership(request.user) and not evaluation.period.is_closed,
         "can_correct_closed": can_correct_closed,
         "lead_projects": lead_projects,
     })
 
 
 @login_required
+@requires("ownership.view")
 def ownership_view(request, pk):
     return _render_ownership(request, pk, editing=False)
 
 
 @login_required
+@requires("ownership.view")
 def ownership_edit(request, pk):
     return _render_ownership(request, pk, editing=True)
 
 
 @login_required
 @require_POST
+@requires("ownership.self.manage")
 def ownership_set_evaluator(request, pk):
     """El evaluado cambia al evaluador principal, solo mientras la evaluación esté abierta."""
     from django.contrib.auth import get_user_model
@@ -354,6 +363,7 @@ def ownership_set_evaluator(request, pk):
 
 @login_required
 @require_POST
+@requires("ownership.self.manage")
 def ownership_add_evaluator(request, pk):
     """El evaluado agrega un evaluador secundario mientras la evaluación esté abierta."""
     from django.contrib.auth import get_user_model
@@ -379,6 +389,7 @@ def ownership_add_evaluator(request, pk):
 
 @login_required
 @require_POST
+@requires("ownership.self.manage")
 def ownership_remove_evaluator(request, pk, user_pk):
     """El evaluado elimina un evaluador secundario mientras la evaluación esté abierta."""
     from django.contrib.auth import get_user_model
@@ -397,6 +408,7 @@ def ownership_remove_evaluator(request, pk, user_pk):
 
 @login_required
 @require_POST
+@requires("ownership.view")
 def ownership_autosave(request, pk):
     """Guarda una respuesta (JSON). Permitido al evaluado o a cualquier evaluador mientras esté abierta."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
@@ -428,6 +440,7 @@ def ownership_autosave(request, pk):
 
 @login_required
 @require_POST
+@requires("ownership.validate", Scope.ASIGNADO)
 def ownership_save(request, pk):
     """Guardar (sigue abierta) o Guardar y cerrar. Cualquier evaluador/admin."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
@@ -475,10 +488,11 @@ def ownership_save(request, pk):
 
 @login_required
 @require_POST
+@requires("ownership.admin")
 def ownership_reopen(request, pk):
     """Reapertura de una evaluación cerrada (ENVIADA → BORRADOR). Solo Talento/admin (RN-06)."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
-    if not request.user.is_admin:
+    if not access.has(request.user, "ownership.admin"):
         messages.error(request, "Solo Talento y Cultura puede reabrir una evaluación cerrada.")
         return redirect("evaluations:ownership_view", pk=pk)
     if not evaluation.is_submitted:
@@ -503,13 +517,14 @@ def ownership_reopen(request, pk):
 
 @login_required
 @require_POST
+@requires("ownership.admin")
 def ownership_reset_user(request, user_pk):
     """Reinicia TODAS las evaluaciones de Ownership de un usuario en el periodo abierto. Solo Talento/admin."""
     from django.contrib.auth import get_user_model
     from django.http import HttpResponse
     User = get_user_model()
 
-    if not request.user.is_admin:
+    if not access.has(request.user, "ownership.admin"):
         return HttpResponse("No autorizado.", status=403)
 
     target = get_object_or_404(User, pk=user_pk)
@@ -534,10 +549,11 @@ def ownership_reset_user(request, user_pk):
 
 @login_required
 @require_POST
+@requires("ownership.admin")
 def ownership_reset(request, pk):
     """Reinicio completo de una evaluación (cualquier estado → eliminada). Solo Talento/admin."""
     evaluation = get_object_or_404(OwnershipEvaluation, pk=pk)
-    if not request.user.is_admin:
+    if not access.has(request.user, "ownership.admin"):
         messages.error(request, "Solo Talento y Cultura puede reiniciar una evaluación.")
         return redirect("evaluations:ownership_view", pk=pk)
 
@@ -567,6 +583,7 @@ def ownership_reset(request, pk):
 # --- Validación (evaluadores) --------------------------------------------------
 
 @login_required
+@requires("ownership.validate", Scope.ASIGNADO)
 def ownership_validation(request):
     """Evaluaciones donde el usuario es evaluador (primario o secundario).
 
@@ -578,7 +595,7 @@ def ownership_validation(request):
     period = period_lifecycle.resolve_requested_period(request, fallback=_open_period)
     if not period:
         ev_records = OwnershipEvaluator.objects.none()
-    elif request.user.is_admin and not period.is_open:
+    elif permissions.sees_all_ownership(request.user) and not period.is_open:
         seen_evaluation_ids = set()
         ev_records = []
         for rec in (
@@ -600,7 +617,7 @@ def ownership_validation(request):
         "page_title": "Validación de Ownership",
         "ev_records": ev_records,
         "period": period,
-        "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
+        "periods": EvaluationPeriod.objects.all() if permissions.sees_all_ownership(request.user) else None,
     })
 
 
@@ -618,6 +635,7 @@ def _validate_scale(raw):
 
 
 @login_required
+@requires("value_delivery.capture", Scope.ASIGNADO)
 def value_delivery_list(request):
     """Proyectos que lidera el usuario, con el estado de su Entrega de Valor.
 
@@ -627,7 +645,7 @@ def value_delivery_list(request):
     Valor de un periodo Cerrado (spec 003, US3).
     """
     period = period_lifecycle.resolve_requested_period(request, fallback=_open_period)
-    if period and request.user.is_admin and not period.is_open:
+    if period and permissions.sees_all_value_delivery(request.user) and not period.is_open:
         led = Project.objects.filter(is_active=True).order_by("name")
     else:
         led = permissions.projects_led_by(request.user)
@@ -641,11 +659,12 @@ def value_delivery_list(request):
         "page_title": "Entrega de Valor",
         "rows": rows,
         "period": period,
-        "periods": EvaluationPeriod.objects.all() if request.user.is_admin else None,
+        "periods": EvaluationPeriod.objects.all() if permissions.sees_all_value_delivery(request.user) else None,
     })
 
 
 @login_required
+@requires("value_delivery.capture", Scope.ASIGNADO)
 def value_delivery_capture(request, project_id):
     """Captura de los 3 criterios de Entrega de Valor por el líder del proyecto.
 
@@ -732,6 +751,7 @@ def value_delivery_capture(request, project_id):
 # --- Entrega de Valor (Validador) ------------------------------------------
 
 @login_required
+@requires("value_delivery.validate", Scope.ASIGNADO)
 def value_delivery_review(request):
     """Cola del Validador: validar o rechazar las Entregas de Valor de sus proyectos asignados."""
     if not permissions.has_value_delivery_validations(request.user):
@@ -773,7 +793,7 @@ def value_delivery_review(request):
     queue = ValueDeliveryEvaluation.objects.filter(
         period=period, status=ValueDeliveryEvaluation.Status.EN_VALIDACION
     ).select_related("project", "evaluator", "project__validador")
-    if not request.user.is_admin:
+    if not access.has(request.user, "value_delivery.validate", Scope.TODOS):
         queue = queue.filter(project__validador=request.user)
     for vd in queue:
         vd.criteria = value_delivery_flow.criteria_summary(vd)
@@ -787,9 +807,10 @@ def value_delivery_review(request):
 # --- Impacto Arena (Talento) ----------------------------------------------
 
 @login_required
+@requires("arena_impact.edit")
 def arena_impact(request):
     """Captura masiva del Impacto Arena por periodo (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "arena_impact.edit"):
         return render(request, "errors/403.html", {
             "titulo": "Captura reservada a Talento",
             "mensaje": "Solo Talento y Cultura captura el Impacto Arena.",
@@ -839,9 +860,10 @@ def arena_impact(request):
 
 @login_required
 @require_POST
+@requires("arena_impact.edit")
 def arena_impact_autosave(request):
     """Guarda la calificación/nota de una persona al instante (JSON). Solo Talento/admin."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "arena_impact.edit"):
         return JsonResponse({"ok": False, "error": "No autorizado."}, status=403)
 
     period = _open_period()

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load access_tags %}
 {% block content %}
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
@@ -27,6 +28,7 @@
             <th class="px-4 py-3 font-medium w-44">Nivel</th>
             <th class="px-4 py-3 font-medium w-48">Rol</th>
             <th class="px-4 py-3 font-medium w-52" title="Primer aprobador de sus solicitudes de curso en Arena Learn">Lead directo</th>
+            {% if can_assign_profiles %}<th class="px-4 py-3 font-medium w-44" title="Define qué puede ver y hacer en el sistema">Perfil</th>{% endif %}
             <th class="px-4 py-3 font-medium w-36">Acciones</th>
           </tr>
         </thead>
@@ -85,8 +87,24 @@
                 </div>
               </td>
 
+              {% if can_assign_profiles %}
+              <td class="px-4 py-2.5">
+                <div class="relative">
+                  <select name="profile-{{ u.id }}" class="input py-1.5 appearance-none pr-8 text-sm bg-white cursor-pointer" aria-label="Perfil de {{ u.full_name }}">
+                    {% if not u.profile_id %}<option value="">— Sugerido por rol —</option>{% endif %}
+                    {% for p in profiles %}<option value="{{ p.pk }}" {% if u.profile_id == p.pk %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                  </div>
+                </div>
+                <a href="{% url 'access:effective_access' u.pk %}" class="text-xs text-arena-700 hover:underline">Ver acceso</a>
+              </td>
+              {% endif %}
+
               <td class="px-4 py-2.5">
                 <div class="flex items-center gap-1">
+                  {% if request.user|can:"users.reset_password" %}
                   <span id="reset-pwd-{{ u.id }}" class="relative group/tip">
                     <button type="button"
                       hx-post="{% url 'accounts:user_reset_password' u.id %}"
@@ -98,6 +116,8 @@
                     </button>
                     <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/tip:opacity-100 z-20">Resetear contraseña</span>
                   </span>
+                  {% endif %}
+                  {% if request.user|can:"ownership.admin" %}
                   <span id="reset-eval-{{ u.id }}" class="relative group/tip2">
                     <button type="button"
                       hx-post="{% url 'evaluations:ownership_reset_user' u.id %}"
@@ -109,7 +129,8 @@
                     </button>
                     <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-slate-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity duration-150 group-hover/tip2:opacity-100 z-20">Reiniciar evaluación</span>
                   </span>
-                  {% if request.user.is_admin %}
+                  {% endif %}
+                  {% if request.user|can:"users.delete" %}
                   <span class="relative group/tip3">
                     <button type="button"
                       hx-post="{% url 'accounts:user_delete' u.id %}"

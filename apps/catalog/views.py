@@ -14,18 +14,17 @@ from apps.core.services import permissions as perm_service
 
 from .forms import PeriodForm, ProjectForm
 from .models import EvaluationPeriod, Project, ProjectMembership
+from apps.access import services as access
+from apps.access.decorators import requires
 
 User = get_user_model()
 
 
-def _require_admin(request):
-    return request.user.is_admin
-
-
 @login_required
+@requires("projects.edit")
 def project_admin(request):
     """Lista de proyectos (solo Talento/admin)."""
-    if not perm_service.can_edit_project(request.user):
+    if not access.has(request.user, "projects.edit"):
         return render(request, "errors/403.html", {
             "titulo": "No tienes acceso a Proyectos",
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
@@ -42,9 +41,10 @@ def project_admin(request):
 
 
 @login_required
+@requires("projects.edit")
 def project_edit(request, pk=None):
     """Crea o edita un proyecto y gestiona su equipo (solo Talento/admin)."""
-    if not perm_service.can_edit_project(request.user):
+    if not access.has(request.user, "projects.edit"):
         return render(request, "errors/403.html", {
             "titulo": "No tienes acceso a Proyectos",
             "mensaje": "Solo Talento, Leads y Directores administran los proyectos.",
@@ -80,7 +80,7 @@ def project_edit(request, pk=None):
     if project:
         members = project.memberships.select_related("user").order_by("user__full_name")
         member_ids = members.values_list("user_id", flat=True)
-        available = User.objects.filter(is_active=True).exclude(pk__in=member_ids).order_by("full_name")
+        available = access.assignable_users("assign.project_role").exclude(pk__in=member_ids).order_by("full_name")
 
     return render(request, "catalog/project_form.html", {
         "page_title": project.name if project else "Nuevo proyecto",
@@ -92,9 +92,10 @@ def project_edit(request, pk=None):
 
 
 @login_required
+@requires("periods.manage")
 def period_create(request):
     """Alta de un periodo (solo Talento/admin)."""
-    if not _require_admin(request):
+    if not access.has(request.user, "periods.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra los periodos.",
@@ -113,9 +114,10 @@ def period_create(request):
 
 
 @login_required
+@requires("periods.manage")
 def period_edit(request, pk):
     """Edita un periodo existente (solo Talento/admin)."""
-    if not _require_admin(request):
+    if not access.has(request.user, "periods.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra los periodos.",
@@ -136,9 +138,10 @@ def period_edit(request, pk):
 
 
 @login_required
+@requires("periods.manage")
 def period_delete(request, pk):
     """Borra un periodo si no tiene datos vinculados (solo Talento/admin)."""
-    if not _require_admin(request):
+    if not access.has(request.user, "periods.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra los periodos.",
@@ -160,9 +163,10 @@ def period_delete(request, pk):
 
 
 @login_required
+@requires("periods.manage")
 def period_admin(request):
     """Lista de periodos con apertura/cierre (solo Talento/admin) — RN-13."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "periods.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento y Cultura administra los periodos.",
@@ -224,12 +228,13 @@ def period_admin(request):
 
 
 @login_required
+@requires("projects.close")
 def project_delete(request, pk):
     """Borra o desactiva un proyecto (solo Talento/admin).
 
     Sin evaluaciones → hard delete. Con evaluaciones → is_active=False.
     """
-    if not request.user.is_admin:
+    if not access.has(request.user, "projects.close"):
         return render(request, "errors/403.html", {
             "titulo": "Acción reservada a Talento",
             "mensaje": "Solo Talento y Cultura puede eliminar proyectos.",
@@ -282,9 +287,10 @@ def project_delete(request, pk):
 
 
 @login_required
+@requires("projects.close")
 def project_reactivate(request, pk):
     """Reactiva un proyecto desactivado (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "projects.close"):
         return render(request, "errors/403.html", {
             "titulo": "Acción reservada a Talento",
             "mensaje": "Solo Talento y Cultura puede reactivar proyectos.",
@@ -326,9 +332,10 @@ def project_reactivate(request, pk):
 
 
 @login_required
+@requires("scenarios.manage")
 def scenario_admin(request):
     """Lista de escenarios con toggle/delete (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "scenarios.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra el catálogo de escenarios.",
@@ -360,9 +367,10 @@ def scenario_admin(request):
 
 
 @login_required
+@requires("scenarios.manage")
 def scenario_create(request):
     """Alta de un escenario nuevo (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "scenarios.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra el catálogo de escenarios.",
@@ -385,9 +393,10 @@ def scenario_create(request):
 
 
 @login_required
+@requires("scenarios.manage")
 def scenario_edit(request, pk):
     """Edita un escenario existente (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "scenarios.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra el catálogo de escenarios.",

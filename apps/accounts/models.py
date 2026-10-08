@@ -92,6 +92,16 @@ class User(AbstractUser):
         related_name="direct_reports",
         verbose_name="lead directo",
     )
+    # Perfil de permisos (spec 005): uno por persona, independiente del nivel. Sin perfil →
+    # se aplica "Colaborador" (falla cerrado). El superusuario lo ignora.
+    profile = models.ForeignKey(
+        "access.Profile",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="users",
+        verbose_name="perfil",
+    )
     must_change_password = models.BooleanField(
         "debe cambiar contraseña", default=False,
         help_text="Si está activo, se obliga a crear una nueva contraseña al ingresar.",

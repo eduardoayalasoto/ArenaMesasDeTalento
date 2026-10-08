@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load access_tags %}
 {% block content %}
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div>
@@ -47,7 +48,7 @@
                 <td class="px-4 py-3 text-right">
                   <div class="flex items-center justify-end gap-1">
                     <a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn-soft">Editar</a>
-                    {% if request.user.is_admin %}
+                    {% if request.user|can:"projects.close" %}
                       {% if not p.is_active %}
                         <button type="button"
                           hx-post="{% url 'catalog:project_reactivate' pk=p.pk %}"

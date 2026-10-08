@@ -12,10 +12,8 @@
     {% if f %}<a href="{% url 'learning:tracking' %}" class="btn-ghost">Limpiar</a>{% endif %}
   </form>
   <div class="flex flex-wrap gap-2">
-    {% if can_manage %}
-      <a href="{% url 'learning:historic_create' %}" class="btn-ghost"><i data-lucide="history" class="w-4 h-4"></i> Carga histórica</a>
-      <a href="{% url 'learning:settings_edit' %}" class="btn-ghost"><i data-lucide="settings" class="w-4 h-4"></i> Instrucciones fiscales</a>
-    {% endif %}
+    {% if can_historic %}<a href="{% url 'learning:historic_create' %}" class="btn-ghost"><i data-lucide="history" class="w-4 h-4"></i> Carga histórica</a>{% endif %}
+    {% if can_settings %}<a href="{% url 'learning:settings_edit' %}" class="btn-ghost"><i data-lucide="settings" class="w-4 h-4"></i> Instrucciones fiscales</a>{% endif %}
     <a href="{% url 'learning:tracking_export' %}?{{ export_query }}" class="btn-secondary"><i data-lucide="download" class="w-4 h-4"></i> Exportar Excel</a>
   </div>
 </div>

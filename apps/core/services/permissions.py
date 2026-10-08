@@ -1,41 +1,30 @@
-"""Segregación de visibilidad y capacidades por rol (RN-14/15, KB §9).
+"""Visibilidad y capacidades (RN-14/15, KB §9) — fachada sobre la matriz de perfiles (spec 005).
 
-El filtrado se aplica siempre a nivel queryset; las vistas nunca dependen solo de ocultar botones.
+Las funciones conservan su firma para no tocar a sus ~40 llamadores, pero ya no deciden por
+rol: consultan el perfil del usuario (`apps.access.services`) y, cuando aplica, la relación
+(evaluador, responsable, validador…). El filtrado sigue siendo a nivel queryset.
 """
 
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
 
+from apps.access import services as access
+from apps.access.registry import Scope
+
 User = get_user_model()
 
 
-def _is_admin(user) -> bool:
-    """Talento, Director o superusuario tienen visibilidad total."""
-    return bool(
-        user.is_superuser or getattr(user, "is_talento", False) or getattr(user, "is_director", False)
-    )
-
-
 def visible_users(viewer) -> QuerySet:
-    """Usuarios que el viewer puede ver: todos / su área / solo él (RN-14)."""
-    if _is_admin(viewer):
-        return User.objects.all()
-    if viewer.is_lead and viewer.area_id:
-        return User.objects.filter(area_id=viewer.area_id)
+    """Personas cuyos resultados puede ver: según `people.results.view` (su área / todos), o solo él."""
+    if access.has(viewer, "people.results.view", Scope.AREA):
+        return access.users_in_scope(viewer, "people.results.view")
     return User.objects.filter(pk=viewer.pk)
 
 
 def can_view_evaluation(viewer, evaluation) -> bool:
-    """Quién puede ver una evaluación de Ownership (RN-15)."""
-    if _is_admin(viewer):
-        return True
-    if evaluation.user_id == viewer.pk:
-        return True
-    if evaluation.evaluators.filter(user_id=viewer.pk).exists():
-        return True
-    if viewer.is_lead and viewer.area_id and evaluation.user.area_id == viewer.area_id:
-        return True
-    return False
+    """Quién puede ver una evaluación de Ownership (RN-15): por alcance de `ownership.view`."""
+    is_evaluator = evaluation.evaluators.filter(user_id=viewer.pk).exists()
+    return access.allows_person(viewer, "ownership.view", evaluation.user, assigned=is_evaluator)
 
 
 def projects_led_by(viewer) -> QuerySet:
@@ -49,38 +38,57 @@ def projects_validated_by(viewer) -> QuerySet:
 
 
 def can_validate_ownership(viewer, evaluation) -> bool:
-    """Cualquier evaluador asignado (primario o secundario) o un administrador."""
-    return _is_admin(viewer) or evaluation.evaluators.filter(user_id=viewer.pk).exists()
+    """Evaluador asignado (alcance Asignado) o alcance Todos en `ownership.validate`."""
+    if access.has(viewer, "ownership.validate", Scope.TODOS):
+        return True
+    return access.has(viewer, "ownership.validate", Scope.ASIGNADO) and evaluation.evaluators.filter(
+        user_id=viewer.pk
+    ).exists()
 
 
 def can_capture_value_delivery(viewer, project) -> bool:
-    """Solo el responsable del proyecto o un administrador captura la Entrega de Valor."""
-    return _is_admin(viewer) or project.responsable_id == viewer.pk
+    """Responsable del proyecto (Asignado) o alcance Todos en `value_delivery.capture`."""
+    if access.has(viewer, "value_delivery.capture", Scope.TODOS):
+        return True
+    return access.has(viewer, "value_delivery.capture", Scope.ASIGNADO) and project.responsable_id == viewer.pk
 
 
 def can_validate_value_delivery(viewer, vd) -> bool:
-    """Solo el Validador asignado al proyecto de esa Entrega de Valor, o Talento/superusuario.
-
-    A diferencia de `_is_admin`, aquí NO se incluye a los directores en general:
-    un Director solo valida los proyectos donde esté asignado como Validador.
-    """
-    return bool(viewer.is_admin) or vd.project.validador_id == viewer.pk
+    """Validador asignado al proyecto (Asignado) o alcance Todos en `value_delivery.validate`."""
+    if access.has(viewer, "value_delivery.validate", Scope.TODOS):
+        return True
+    return access.has(viewer, "value_delivery.validate", Scope.ASIGNADO) and vd.project.validador_id == viewer.pk
 
 
 def has_value_delivery_validations(viewer) -> bool:
-    """Puede entrar a la cola de validación: es Validador de al menos un proyecto, o Talento/superusuario."""
-    return bool(viewer.is_admin) or getattr(viewer, "validates_projects", False)
+    """Puede entrar a la cola de validación: alcance Todos, o es Validador de algún proyecto activo."""
+    if access.has(viewer, "value_delivery.validate", Scope.TODOS):
+        return True
+    return access.has(viewer, "value_delivery.validate", Scope.ASIGNADO) and getattr(
+        viewer, "validates_projects", False
+    )
 
 
 def can_edit_feedback_session(viewer, note) -> bool:
-    """Solo un responsable de retroalimentación asignado (primario o secundario) a esa nota, o Talento/superusuario."""
-    return bool(viewer.is_admin) or note.responsables.filter(user_id=viewer.pk).exists()
+    """Responsable asignado a esa nota (Asignado) o alcance Todos en `feedback.edit`."""
+    if access.has(viewer, "feedback.edit", Scope.TODOS):
+        return True
+    return access.has(viewer, "feedback.edit", Scope.ASIGNADO) and note.responsables.filter(
+        user_id=viewer.pk
+    ).exists()
 
 
 def can_view_feedback_session(viewer, note) -> bool:
-    """Ver (no necesariamente editar): quien puede editar, más el propio colaborador de la nota
-    (quien recibe la retroalimentación puede consultarla en solo lectura)."""
-    return can_edit_feedback_session(viewer, note) or note.user_id == viewer.pk
+    """Ver: quien puede editar, más el colaborador de la nota (la recibe), según `feedback.view`."""
+    if access.has(viewer, "feedback.view", Scope.TODOS):
+        return True
+    if not access.has(viewer, "feedback.view", Scope.ASIGNADO):
+        return False
+    return note.user_id == viewer.pk or note.responsables.filter(user_id=viewer.pk).exists()
+
+
+def sees_all_feedback(viewer) -> bool:
+    return access.has(viewer, "feedback.view", Scope.TODOS)
 
 
 def has_feedback_sessions(viewer) -> bool:
@@ -89,48 +97,81 @@ def has_feedback_sessions(viewer) -> bool:
 
 
 def can_edit_project(user) -> bool:
-    """Talento, Director o cualquier colaborador con nivel Lead pueden administrar proyectos."""
-    return _is_admin(user) or user.is_lead
+    """Ver, crear y editar proyectos y su equipo (`projects.edit`)."""
+    return access.has(user, "projects.edit")
+
+
+def can_close_project(user) -> bool:
+    """Cerrar, reabrir y eliminar proyectos (`projects.close`)."""
+    return access.has(user, "projects.close")
 
 
 def is_period_correction_allowed(user) -> bool:
-    """Solo Talento/superusuario puede corregir un registro de un periodo ya Cerrado (FR-006)."""
-    return bool(user.is_admin)
+    """Corregir un registro de un periodo ya Cerrado, con motivo (`period.closed.correct`)."""
+    return access.has(user, "period.closed.correct")
+
+
+def can_admin_ownership(user) -> bool:
+    """Reabrir y reiniciar evaluaciones de Ownership (`ownership.admin`)."""
+    return access.has(user, "ownership.admin")
+
+
+def sees_all_ownership(user) -> bool:
+    """Navegación histórica de Talento: todas las evaluaciones (`ownership.validate` = Todos)."""
+    return access.has(user, "ownership.validate", Scope.TODOS)
+
+
+def sees_all_value_delivery(user) -> bool:
+    """Navegación histórica: todas las Entregas de Valor (`value_delivery.capture` = Todos)."""
+    return access.has(user, "value_delivery.capture", Scope.TODOS)
+
+
+def can_view_talent_person(viewer, person) -> bool:
+    return access.allows_person(viewer, "talent_table.view", person)
+
+
+def can_edit_talent_person(viewer, person) -> bool:
+    return access.allows_person(viewer, "talent_table.edit", person)
 
 
 # --- Arena Learn (spec 004) ------------------------------------------------------
 # Excepción explícita y acotada a RN-14: la ficha pública y la sección Arena Learn de
-# cualquier persona son visibles para todo usuario autenticado. Calificaciones,
-# evaluaciones, escenarios y retroalimentación siguen con `visible_users`.
+# cualquier persona son visibles según `learn.public.view` (por defecto, todos). Los datos
+# privados de cada curso se rigen por `learn.private.view`.
 
 
 def can_view_learning_profile(viewer, person) -> bool:
-    """Cualquier usuario autenticado ve la ficha pública + Arena Learn de otra persona."""
-    return bool(viewer and viewer.is_authenticated)
+    return bool(viewer and viewer.is_authenticated) and access.has(viewer, "learn.public.view")
 
 
 def can_view_course_public(viewer, req) -> bool:
     """Vista pública de un curso: solo estados públicos (o siempre para quien ve lo privado)."""
     if not (viewer and viewer.is_authenticated):
         return False
-    return req.is_public or can_view_course_private(viewer, req)
+    return (req.is_public and access.has(viewer, "learn.public.view")) or can_view_course_private(viewer, req)
 
 
 def can_view_course_private(viewer, req) -> bool:
-    """Costo, pago, justificación, comprobante y bitácora: dueño, sus aprobadores,
-    Talento/superusuario y Dirección (FR-024/025)."""
+    """Costo, pago, justificación, comprobante y bitácora, según el alcance de `learn.private.view`:
+    Propio = los míos; Asignado = también donde actué o soy aprobador elegible; Su área; Todos."""
     if not (viewer and viewer.is_authenticated):
         return False
-    if req.user_id == viewer.pk or _is_admin(viewer):
+    s = access.scope(viewer, "learn.private.view")
+    if s >= Scope.TODOS:
         return True
-    from apps.core.services import learning_flow
+    if s >= Scope.AREA and access.same_area(viewer, req.user):
+        return True
+    if s >= Scope.PROPIO and req.user_id == viewer.pk:
+        return True
+    if s >= Scope.ASIGNADO:
+        from apps.core.services import learning_flow
 
-    if req.steps.filter(actor=viewer).exists():
-        return True
-    if req.current_stage and learning_flow.eligible_approvers(req, req.current_stage).filter(
-        pk=viewer.pk
-    ).exists():
-        return True
+        if req.steps.filter(actor=viewer).exists():
+            return True
+        if req.current_stage and learning_flow.eligible_approvers(req, req.current_stage).filter(
+            pk=viewer.pk
+        ).exists():
+            return True
     return False
 
 
@@ -141,9 +182,9 @@ def can_decide_course(viewer, req) -> bool:
 
 
 def can_manage_learning(viewer) -> bool:
-    """Catálogo, validación de evidencia, reasignación, histórico, configuración."""
-    return bool(viewer.is_admin)
+    """Catálogo de cursos (alta, edición, archivar, promover)."""
+    return access.has(viewer, "learn.catalog.manage")
 
 
 def can_view_learning_tracking(viewer) -> bool:
-    return bool(viewer.is_admin or viewer.is_director)
+    return access.has(viewer, "learn.tracking.view")

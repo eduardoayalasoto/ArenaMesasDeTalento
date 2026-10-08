@@ -106,7 +106,7 @@
                 {% if ev.validation == "VALIDADA" %}<span class="badge bg-emerald-50 text-emerald-700">Validada</span>
                 {% elif ev.validation == "REGRESADA" %}<span class="badge bg-amber-50 text-amber-700">Regresada</span>
                 {% else %}<span class="badge bg-slate-100 text-slate-600">Por validar</span>{% endif %}
-                {% if can_manage and req.status == "COMPLETADA" and ev.validation == "PENDIENTE" %}
+                {% if can_validate_evidence and req.status == "COMPLETADA" and ev.validation == "PENDIENTE" %}
                   <form method="post" action="{% url 'learning:evidence_validate' ev.pk %}">{% csrf_token %}<input type="hidden" name="action" value="validate"><button class="btn-soft" type="submit">Validar</button></form>
                   <button type="button" class="btn-soft" @click="returning = !returning">Regresar</button>
                   <form x-show="returning" x-cloak method="post" action="{% url 'learning:evidence_validate' ev.pk %}" class="w-full flex gap-2">

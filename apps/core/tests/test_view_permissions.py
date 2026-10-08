@@ -417,9 +417,7 @@ def test_vd_review_superuser_allowed(superuser, client_obj):
 @pytest.mark.django_db
 @pytest.mark.parametrize("url_name", [
     "dashboards:home",
-    "dashboards:my_area",
     "dashboards:help",
-    "evaluations:ownership_list",
     "evaluations:value_delivery_list",
     "evaluations:ownership_validation",
     "accounts:profile",
@@ -427,6 +425,19 @@ def test_vd_review_superuser_allowed(superuser, client_obj):
 def test_open_views_accessible_to_all_roles(url_name, colab, colab_lead, talento, director, superuser, client_obj):
     for user in (colab, colab_lead, talento, director, superuser):
         assert _get(client_obj, user, url_name) == 200, f"{user.email} debería poder acceder a {url_name}"
+
+
+@pytest.mark.django_db
+def test_deber_ser_cierra_accesos_solo_por_url(colab, colab_lead, talento, director, superuser, client_obj):
+    """Spec 005 (FR-011a): Mi área ya no la abre un Colaborador; Mis evaluaciones ya no la abren
+    Director ni Talento (no se autoevalúan). Antes solo se ocultaban en el menú."""
+    expected = {
+        "dashboards:my_area": {colab: 403, colab_lead: 200, talento: 200, director: 200, superuser: 200},
+        "evaluations:ownership_list": {colab: 200, colab_lead: 200, talento: 403, director: 403, superuser: 200},
+    }
+    for url_name, by_user in expected.items():
+        for user, code in by_user.items():
+            assert _get(client_obj, user, url_name) == code, f"{user.email} → {url_name}"
 
 
 # ---------------------------------------------------------------------------

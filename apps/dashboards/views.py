@@ -3,6 +3,7 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied, ValidationError
@@ -15,6 +16,9 @@ from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
 from apps.catalog.models import Area, EvaluationPeriod, Project, ProjectMembership, SeniorityLevel
+from apps.access import services as access
+from apps.access.decorators import requires, requires_any
+from apps.access.registry import Scope
 from apps.core.services import final_flow, period_lifecycle, permissions
 from apps.evaluations.models import (
     FeedbackResponsible,
@@ -143,6 +147,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
 
 @login_required
+@requires("people.results.view", Scope.AREA)
 def my_area(request):
     """Lista de colaboradores visibles con su avance y calificación (RN-14/15)."""
     period = _resolve_period(request)
@@ -177,6 +182,7 @@ def my_area(request):
 
 
 @login_required
+@requires_any("people.results.view", "dashboard.home.view")
 def user_results(request, pk):
     """Consulta de los resultados y evaluaciones de una persona (drill-down desde Mi área)."""
     target = get_object_or_404(
@@ -190,6 +196,14 @@ def user_results(request, pk):
     if period:
         ctx.update(build_results(target, period))
     return render(request, "dashboards/user_results.html", ctx)
+
+
+home = requires("dashboard.home.view")(HomeView.as_view())
+
+
+def _user_model():
+    # Alias de módulo: varias vistas importan get_user_model localmente (sombrearía el nombre).
+    return get_user_model()
 
 
 class HelpView(LoginRequiredMixin, TemplateView):
@@ -317,13 +331,9 @@ def _general_ready_ids(period, users):
 
 
 @login_required
+@requires("talent_table.view", Scope.AREA)
 def talent_table(request):
-    """Mesa de Talento: lista de todos los colaboradores con su calificación general."""
-    if not request.user.is_admin and not request.user.is_director:
-        return render(request, "errors/403.html", {
-            "titulo": "Panel reservado al comité de Talento",
-            "mensaje": "La Mesa de Talento es para Talento y Cultura y la Dirección.",
-        }, status=403)
+    """Mesa de Talento: colaboradores con su calificación general (todos, o su área según el perfil)."""
 
     from django.contrib.auth import get_user_model
     User = get_user_model()
@@ -332,7 +342,7 @@ def talent_table(request):
     from django.core.paginator import Paginator
 
     users = (
-        User.objects.filter(is_active=True, is_superuser=False)
+        access.users_in_scope(request.user, "talent_table.view").filter(is_active=True, is_superuser=False)
         .select_related("area", "level")
         .annotate(num_projects=Count("memberships", distinct=True))
         .order_by("full_name")
@@ -445,15 +455,11 @@ def talent_table(request):
 
 
 @login_required
+@requires("current_scenario.view", Scope.AREA)
 def current_scenario_board(request):
     """Tablero drag-and-drop de Escenario Actual (no es un catálogo, es un
     accionador): permite a Talento y Dirección mover colaboradores entre los
     valores de escenario actual, filtrando por área/nivel en el cliente."""
-    if not request.user.is_admin and not request.user.is_director:
-        return render(request, "errors/403.html", {
-            "titulo": "Panel reservado al comité de Talento",
-            "mensaje": "Escenario Actual es para Talento y Cultura y la Dirección.",
-        }, status=403)
 
     from django.contrib.auth import get_user_model
 
@@ -467,7 +473,7 @@ def current_scenario_board(request):
         return render(request, "dashboards/current_scenario_board.html", ctx)
 
     users = (
-        User.objects.filter(is_active=True, is_superuser=False)
+        access.users_in_scope(request.user, "current_scenario.view").filter(is_active=True, is_superuser=False)
         .select_related("area", "level").order_by("full_name")
     )
     scenario_by_user = dict(
@@ -497,17 +503,17 @@ def current_scenario_board(request):
         "columns": columns,
         "critical_option": critical_option,
         "critical_cards": critical_cards,
+        "can_move": access.has(request.user, "current_scenario.move", Scope.AREA),
     })
     return render(request, "dashboards/current_scenario_board.html", ctx)
 
 
 @login_required
 @require_POST
+@requires("current_scenario.move", Scope.AREA)
 def current_scenario_move(request, pk):
     """HTMX: mueve a una persona a otro valor de Escenario Actual (o a 'sin
-    asignar' si scenario_pk viene vacío). Talento y Dirección."""
-    if not request.user.is_admin and not request.user.is_director:
-        return HttpResponse(status=403)
+    asignar' si scenario_pk viene vacío). Según `current_scenario.move` (su área / todos)."""
 
     from django.contrib.auth import get_user_model
 
@@ -516,6 +522,8 @@ def current_scenario_move(request, pk):
 
     User = get_user_model()
     target = get_object_or_404(User, pk=pk, is_active=True, is_superuser=False)
+    if not access.allows_person(request.user, "current_scenario.move", target):
+        return HttpResponse(status=403)
     period = _open_period()
     if not period:
         return HttpResponse(status=400)
@@ -592,10 +600,11 @@ def _pending_people(period):
     def _detail(info):
         return "Con avance, falta enviar" if info and info["answered"] else "Sin iniciar"
 
+    self_eval_ids = set(access.users_with("ownership.self.manage").values_list("pk", flat=True))
     rows = []
     for u in users:
         ownership_missing = []
-        if not (u.is_talento or u.is_director):
+        if u.id in self_eval_ids:
             if u.is_lead:
                 info = lead_eval_info.get(u.id)
                 if not info or not info["submitted"]:
@@ -650,13 +659,9 @@ def _pending_people(period):
 
 
 @login_required
+@requires("period_progress.view")
 def period_progress(request):
     """Avance de llenado del periodo (solo Talento/admin)."""
-    if not request.user.is_admin:
-        return render(request, "errors/403.html", {
-            "titulo": "Panel reservado a Talento",
-            "mensaje": "El avance del periodo lo consulta Talento y Cultura.",
-        }, status=403)
 
     period = _resolve_period(request)
     ctx = {"page_title": "Avance del periodo", "period": period, "periods": EvaluationPeriod.objects.all()}
@@ -667,13 +672,9 @@ def period_progress(request):
 
 
 @login_required
+@requires("talent_table.view", Scope.AREA)
 def talent_person(request, pk):
-    """Vista de sesión de Mesa de Talento para una persona (Talento y Directores)."""
-    if not request.user.is_admin and not request.user.is_director:
-        return render(request, "errors/403.html", {
-            "titulo": "Panel reservado al comité de Talento",
-            "mensaje": "La Mesa de Talento es para Talento y Cultura y la Dirección.",
-        }, status=403)
+    """Vista de sesión de Mesa de Talento para una persona (según `talent_table.view`)."""
 
     from django.contrib.auth import get_user_model
     from apps.evaluations.models import TalentSessionNote
@@ -681,6 +682,11 @@ def talent_person(request, pk):
 
     User = get_user_model()
     target = get_object_or_404(User, pk=pk, is_active=True, is_superuser=False)
+    if not permissions.can_view_talent_person(request.user, target):
+        return render(request, "errors/403.html", {
+            "titulo": "Fuera de tu alcance",
+            "mensaje": "Tu perfil solo te permite ver la Mesa de Talento de tu área.",
+        }, status=403)
     period = _resolve_period(request)
 
     ctx = {
@@ -689,6 +695,8 @@ def talent_person(request, pk):
         "period": period,
         "periods": EvaluationPeriod.objects.all(),
         "read_only": bool(period and period.is_closed),
+        "can_edit_mesa": permissions.can_edit_talent_person(request.user, target),
+        "can_assign_feedback": access.allows_person(request.user, "talent_table.assign_feedback", target),
     }
     if period:
         ctx.update(build_results(target, period))
@@ -733,7 +741,7 @@ def talent_person(request, pk):
         responsables = list(note.responsables.select_related("user__area").order_by("-is_primary", "user__full_name"))
         primary = next((r for r in responsables if r.is_primary), None)
         secondaries = [r for r in responsables if not r.is_primary]
-        all_users = User.objects.filter(is_active=True, is_superuser=False).exclude(
+        all_users = access.assignable_users("assign.feedback_responsable").exclude(
             pk__in=[r.user_id for r in responsables]
         ).order_by("full_name")
         ctx.update({
@@ -754,9 +762,10 @@ def talent_person(request, pk):
 
 @login_required
 @require_POST
+@requires("talent_table.edit", Scope.AREA)
 def talent_note_autosave(request, pk):
     """Guarda fortalezas/oportunidades/comentarios de la nota de Mesa de Talento (JSON). Solo Talento."""
-    if not request.user.is_admin:
+    if not access.allows_person(request.user, "talent_table.edit", get_object_or_404(_user_model(), pk=pk)):
         return JsonResponse({"ok": False, "error": "No autorizado."}, status=403)
 
     from django.contrib.auth import get_user_model
@@ -791,9 +800,10 @@ def talent_note_autosave(request, pk):
 
 @login_required
 @require_POST
+@requires("talent_table.edit", Scope.AREA)
 def talent_scenario_toggle(request, pk, tipo):
     """Activa/desactiva una opción de escenario en la nota (HTMX). Solo Talento."""
-    if not request.user.is_admin:
+    if not access.allows_person(request.user, "talent_table.edit", get_object_or_404(_user_model(), pk=pk)):
         return HttpResponse(status=403)
 
     from django.contrib.auth import get_user_model
@@ -833,13 +843,14 @@ def talent_scenario_toggle(request, pk, tipo):
 
 @login_required
 @require_POST
+@requires("talent_table.edit", Scope.AREA)
 def talent_mesa_project_toggle(request, pk, project_id):
     """Marca/desmarca 'revisado en Mesa' para (persona, proyecto) (HTMX). Solo Talento.
 
     El estado 'Listo' general de la persona se deriva de tener todos sus
     equipos revisados; aquí solo se alterna la revisión de un proyecto.
     """
-    if not request.user.is_admin:
+    if not access.allows_person(request.user, "talent_table.edit", get_object_or_404(_user_model(), pk=pk)):
         return HttpResponse(status=403)
 
     from django.contrib.auth import get_user_model
@@ -873,9 +884,10 @@ def talent_mesa_project_toggle(request, pk, project_id):
 
 @login_required
 @require_POST
+@requires("talent_table.assign_feedback", Scope.AREA)
 def talent_responsable_add(request, pk):
     """Agrega un responsable de retroalimentación (HTMX). Solo Talento."""
-    if not request.user.is_admin:
+    if not access.allows_person(request.user, "talent_table.assign_feedback", get_object_or_404(_user_model(), pk=pk)):
         return HttpResponse(status=403)
 
     from django.contrib.auth import get_user_model
@@ -904,9 +916,10 @@ def talent_responsable_add(request, pk):
 
 @login_required
 @require_POST
+@requires("talent_table.assign_feedback", Scope.AREA)
 def talent_responsable_remove(request, pk, rid):
     """Quita un responsable de retroalimentación (HTMX). Solo Talento."""
-    if not request.user.is_admin:
+    if not access.allows_person(request.user, "talent_table.assign_feedback", get_object_or_404(_user_model(), pk=pk)):
         return HttpResponse(status=403)
 
     from django.contrib.auth import get_user_model
@@ -951,6 +964,7 @@ def _feedback_card(note, responsables, final, viewer_role, can_reopen, *, period
 
 
 @login_required
+@requires("feedback.view", Scope.ASIGNADO)
 def feedback_session_list(request):
     """Retroalimentación: 3 secciones dinámicas según tu relación con cada nota —
     doy como principal, asisto como secundario, y recibo (tu propia nota)— más una
@@ -1006,7 +1020,7 @@ def feedback_session_list(request):
     ctx["primary_cards"].sort(key=lambda c: c["target"].full_name)
     ctx["secondary_cards"].sort(key=lambda c: c["target"].full_name)
 
-    if request.user.is_admin:
+    if permissions.sees_all_feedback(request.user):
         seen_note_ids = {note.pk for note in given_notes}
         if own_note:
             seen_note_ids.add(own_note.pk)
@@ -1031,6 +1045,7 @@ def feedback_session_list(request):
 
 
 @login_required
+@requires("feedback.view", Scope.ASIGNADO)
 def feedback_session_detail(request, pk):
     """Pantalla de Retroalimentación de Mesa de Talento: la llena el responsable asignado."""
     from django.contrib.auth import get_user_model
@@ -1145,7 +1160,7 @@ def _responsables_fragment(request, note, target):
     responsables = list(note.responsables.select_related("user__area").order_by("-is_primary", "user__full_name"))
     primary = next((r for r in responsables if r.is_primary), None)
     secondaries = [r for r in responsables if not r.is_primary]
-    all_users = User.objects.filter(is_active=True, is_superuser=False).exclude(
+    all_users = access.assignable_users("assign.feedback_responsable").exclude(
         pk__in=[r.user_id for r in responsables]
     ).order_by("full_name")
     html = render_to_string("dashboards/_responsables_widget.html", {
@@ -1160,6 +1175,7 @@ def _responsables_fragment(request, note, target):
 
 
 @login_required
+@requires("people.results.export", Scope.AREA)
 def export_scores_xlsx(request):
     """Exporta a XLSX las calificaciones y escenarios de Mesa de Talento del periodo
     abierto, para los colaboradores visibles del viewer."""
@@ -1170,7 +1186,7 @@ def export_scores_xlsx(request):
     from apps.evaluations.models import TalentSessionNote
 
     period = _open_period()
-    users = permissions.visible_users(request.user).select_related("area", "level")
+    users = access.users_in_scope(request.user, "people.results.export").select_related("area", "level")
     finals = {}
     notes = {}
     if period:

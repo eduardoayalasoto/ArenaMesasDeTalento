@@ -136,12 +136,13 @@
 
   <!-- Talento -->
   <div x-show="tab === 'talento'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="id" title="Asigna área, nivel y rol" text="<b>Menú → Usuarios</b>. Sin área/nivel, una persona no puede iniciar su evaluación." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="folder" title="Administra proyectos y equipos" text="<b>Menú → Proyectos</b>: Lead, tipo de duración y miembros." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="list" title="Administra los cuestionarios" text="<b>Menú → Cuestionarios</b>: edita preguntas y publica versiones (versionado seguro)." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="calendar" title="Abre y cierra periodos" text="<b>Menú → Periodos</b>. Al cerrar, la captura queda en solo lectura." %}
-    {% include "dashboards/_help_step.html" with n=5 icon="star" title="Captura el Impacto Arena" text="<b>Menú → Impacto Arena</b>: tabla por persona; al guardar se recalcula la calificación final." %}
-    {% include "dashboards/_help_step.html" with n=6 icon="chart" title="Da seguimiento y exporta" text="<b>Avance del periodo</b> (% de avance) y <b>Mesa de Talento</b> (exporta CSV desde Mi área)." %}
+    {% include "dashboards/_help_step.html" with n=1 icon="shield-user" title="Perfiles y permisos" text="<b>Menú → Catálogos → Perfiles y permisos</b>: cada persona tiene un perfil, y cada perfil define pantalla por pantalla qué puede hacer y con qué alcance (propio, asignado, su área o todos). Crea, duplica o edita perfiles sin tocar código, y asígnalos en <b>Usuarios</b> (columna Perfil). «Ver acceso» explica qué puede hacer cada persona." %}
+    {% include "dashboards/_help_step.html" with n=2 icon="id" title="Asigna área, nivel y rol" text="<b>Menú → Usuarios</b>. Sin área/nivel, una persona no puede iniciar su evaluación." %}
+    {% include "dashboards/_help_step.html" with n=3 icon="folder" title="Administra proyectos y equipos" text="<b>Menú → Proyectos</b>: Lead, tipo de duración y miembros." %}
+    {% include "dashboards/_help_step.html" with n=4 icon="list" title="Administra los cuestionarios" text="<b>Menú → Cuestionarios</b>: edita preguntas y publica versiones (versionado seguro)." %}
+    {% include "dashboards/_help_step.html" with n=5 icon="calendar" title="Abre y cierra periodos" text="<b>Menú → Periodos</b>. Al cerrar, la captura queda en solo lectura." %}
+    {% include "dashboards/_help_step.html" with n=6 icon="star" title="Captura el Impacto Arena" text="<b>Menú → Impacto Arena</b>: tabla por persona; al guardar se recalcula la calificación final." %}
+    {% include "dashboards/_help_step.html" with n=7 icon="chart" title="Da seguimiento y exporta" text="<b>Avance del periodo</b> (% de avance) y <b>Mesa de Talento</b> (exporta CSV desde Mi área)." %}
   </div>
 
   <!-- Arena Learn (spec 004) -->

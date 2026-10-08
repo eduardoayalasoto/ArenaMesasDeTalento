@@ -63,7 +63,10 @@ def test_user_results_acepta_periodo_historico_para_si_mismo(client, collaborato
 
 @pytest.mark.django_db
 def test_my_area_acepta_periodo_historico(client, collaborator, closed_period):
-    client.force_login(collaborator)
+    # Spec 005: Mi área es para perfiles con alcance de área o mayor (aquí, Talento).
+    from apps.core.tests.conftest import make_learn_user
+
+    client.force_login(make_learn_user("talento.historico@arena-analytics.com", role="TALENTO"))
     resp = client.get(reverse("dashboards:my_area"), {"periodo": closed_period.pk})
     assert resp.status_code == 200
     assert resp.context["period"] == closed_period

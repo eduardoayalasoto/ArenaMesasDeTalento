@@ -65,7 +65,10 @@ class ProjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        active = self.fields["owner"].queryset.filter(is_active=True)
+        # Solo quien tiene "Asignable como rol de proyecto" en su perfil (spec 005, FR-020).
+        from apps.access.services import assignable_users
+
+        active = assignable_users("assign.project_role").order_by("full_name")
         self.fields["owner"].queryset = active
         self.fields["owner"].empty_label = "— Selecciona un Owner —"
         self.fields["responsable"].queryset = active

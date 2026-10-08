@@ -1,3 +1,4 @@
+{% load access_tags %}
 <div id="mesa-review-block" class="card p-5">
   <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
     <div>
@@ -19,7 +20,7 @@
           <i data-lucide="folder" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
           {{ r.project.name }}
         </span>
-        {% if request.user.is_admin %}
+        {% if request.user|can:"talent_table.edit" %}
           <button type="button"
             hx-post="{% url 'dashboards:talent_mesa_project_toggle' pk=target.pk project_id=r.project.pk %}"
             hx-target="#mesa-review-block" hx-swap="outerHTML"

@@ -25,6 +25,8 @@ from django.db.models import Avg, Count, Q, QuerySet, Sum
 from django.urls import reverse
 from django.utils import timezone
 
+from apps.access import services as access
+from apps.access.registry import Scope
 from apps.core.services import permissions
 
 User = get_user_model()
@@ -88,25 +90,35 @@ def eligible_approvers(req, stage) -> QuerySet:
         if explicit.exists():
             return explicit
 
+    def by_perm(key, at_least):
+        return active.filter(pk__in=access.users_with(key, at_least, include_superusers=True).values("pk"))
+
     if stage == S.LEAD:
+        # Asignado: el Lead directo (si su perfil lo permite). Su área: Leads del área. Todos: cualquiera.
         if requester.direct_lead_id:
-            direct = active.filter(pk=requester.direct_lead_id)
+            direct = by_perm("learn.approve.lead", Scope.ASIGNADO).filter(pk=requester.direct_lead_id)
             if direct.exists():
                 return direct
-        if not requester.area_id:
-            return active.none()
-        return active.filter(area_id=requester.area_id, level__code="LEAD")
+        area_q = Q(area_id=requester.area_id) if requester.area_id else Q(pk__in=[])
+        return by_perm("learn.approve.lead", Scope.AREA).filter(
+            area_q | Q(pk__in=access.users_with("learn.approve.lead", Scope.TODOS).values("pk"))
+        )
 
     if stage == S.DIRECCION:
+        # Se prefiere al Director asignado al área (si su perfil puede aprobar esta etapa).
         area = requester.area
         if area is not None and area.director_id:
-            director = active.filter(pk=area.director_id, role=User.Role.DIRECTOR)
+            director = by_perm("learn.approve.direction", Scope.ASIGNADO).filter(pk=area.director_id)
             if director.exists():
                 return director
-        return active.filter(role=User.Role.DIRECTOR)
+        area_q = Q(area_id=requester.area_id) if requester.area_id else Q(pk__in=[])
+        return by_perm("learn.approve.direction", Scope.AREA).filter(
+            area_q | Q(pk__in=access.users_with("learn.approve.direction", Scope.TODOS,
+                                                include_superusers=True).values("pk"))
+        )
 
     if stage == S.TALENTO:
-        return active.filter(Q(role=User.Role.TALENTO) | Q(is_superuser=True))
+        return by_perm("learn.approve.talento", Scope.TODOS)
 
     return active.none()
 
@@ -116,9 +128,11 @@ def _stage_skipped_by_role(req, stage) -> bool:
     S = _models().CourseRequest.Stage
     u = req.user
     if stage == S.LEAD:
-        return u.is_lead or u.is_director or u.is_admin
+        # Quien aprueba cursos de otros (Lead de área, Dirección o Talento) no pasa por la etapa Lead.
+        return (access.has(u, "learn.approve.lead", Scope.AREA)
+                or access.has(u, "learn.approve.direction") or access.has(u, "learn.approve.talento"))
     if stage == S.DIRECCION:
-        return u.is_director
+        return access.has(u, "learn.approve.direction")
     return False
 
 
@@ -379,7 +393,7 @@ def cancel(req, actor, comment: str = ""):
     owner_cancellable = (St.BORRADOR, St.EN_REVISION, St.REQUIERE_AJUSTES)
     if req.user_id == actor.pk and req.status in owner_cancellable:
         stage = m.ApprovalStep.Stage.COLABORADOR
-    elif actor.is_admin and req.status in (*owner_cancellable, St.AUTORIZADA):
+    elif access.has(actor, "learn.reassign") and req.status in (*owner_cancellable, St.AUTORIZADA):
         if not comment:
             raise ValidationError("Escribe el motivo de la cancelación.")
         stage = m.ApprovalStep.Stage.TALENTO
@@ -401,8 +415,8 @@ def reassign(req, actor, new_approver, comment: str = ""):
     """Talento asigna explícitamente al aprobador de la etapa actual (FR-013)."""
     m = _models()
     req = _locked(req)
-    if not actor.is_admin:
-        raise PermissionDenied("Solo Talento puede reasignar aprobadores.")
+    if not access.has(actor, "learn.reassign"):
+        raise PermissionDenied("Tu perfil no permite reasignar aprobadores.")
     if req.status != m.CourseRequest.Status.EN_REVISION or not req.current_stage:
         raise ValidationError("Solo se reasignan solicitudes en revisión.")
     comment = (comment or "").strip()
@@ -426,7 +440,7 @@ def update_payment(req, actor, payment_mode, payment_status, final_cost=None, re
     m = _models()
     St = m.CourseRequest.Status
     req = _locked(req)
-    if not (req.user_id == actor.pk or actor.is_admin):
+    if not (req.user_id == actor.pk or access.has(actor, "learn.reassign")):
         raise PermissionDenied("No puedes registrar el pago de esta solicitud.")
     if req.status not in (St.AUTORIZADA, St.COMPLETADA, St.VALIDADA):
         raise ValidationError("El pago se registra una vez autorizado el curso.")
@@ -512,7 +526,7 @@ def add_evidence(req, actor, uploaded_file, kind=None):
     Kind = m.CourseEvidence.Kind
     kind = kind or Kind.CERTIFICADO
     req = _locked(req)
-    if not (req.user_id == actor.pk or actor.is_admin):
+    if not (req.user_id == actor.pk or access.has(actor, "learn.reassign")):
         raise PermissionDenied("No puedes subir evidencia a esta solicitud.")
     St = m.CourseRequest.Status
     allowed = (St.AUTORIZADA, St.COMPLETADA, St.VALIDADA)
@@ -633,8 +647,8 @@ def validate_evidence(evidence, actor, approve: bool, comment: str = ""):
     V = m.CourseEvidence.Validation
     St = m.CourseRequest.Status
     A = m.ApprovalStep.Action
-    if not actor.is_admin:
-        raise PermissionDenied("Solo Talento valida evidencias.")
+    if not access.has(actor, "learn.evidence.validate"):
+        raise PermissionDenied("Tu perfil no permite validar evidencias.")
     ev = m.CourseEvidence.objects.select_for_update().get(pk=evidence.pk)
     req = _locked(ev.request)
     if ev.kind != m.CourseEvidence.Kind.CERTIFICADO:
@@ -672,8 +686,8 @@ def create_direct(user, actor, data: dict, review_data: dict, files, origin=None
     O = m.CourseRequest.Origin
     origin = origin or O.REGISTRO_DIRECTO
     if origin == O.HISTORICO:
-        if not actor.is_admin:
-            raise PermissionDenied("Solo Talento carga cursos históricos.")
+        if not access.has(actor, "learn.historic.create"):
+            raise PermissionDenied("Tu perfil no permite cargar cursos históricos.")
     elif user.pk != actor.pk:
         raise PermissionDenied("Solo puedes registrar tus propios cursos.")
     if origin == O.SOLICITUD:
@@ -742,8 +756,8 @@ def catalog_reviews(course) -> QuerySet:
 def promote_to_catalog(req, actor):
     """Talento convierte un curso nuevo completado en curso del catálogo (FR-029)."""
     m = _models()
-    if not actor.is_admin:
-        raise PermissionDenied("Solo Talento administra el catálogo.")
+    if not access.has(actor, "learn.catalog.manage"):
+        raise PermissionDenied("Tu perfil no permite administrar el catálogo.")
     req = _locked(req)
     if req.catalog_course_id:
         raise ValidationError("Este curso ya pertenece al catálogo.")
@@ -1008,10 +1022,15 @@ def approver_context(req) -> dict:
 
 
 def is_course_approver(user) -> bool:
-    """Puede llegarle una solicitud: Lead, Lead directo de alguien, Director o Talento."""
-    return bool(
-        user.is_lead or user.is_director or user.is_admin or user.direct_reports.exists()
-    )
+    """Puede llegarle una solicitud según su perfil: Lead de área, Dirección, Talento, o es Lead
+    directo / aprobador reasignado de alguien (alcance Asignado)."""
+    if (access.has(user, "learn.approve.lead", Scope.AREA) or access.has(user, "learn.approve.direction")
+            or access.has(user, "learn.approve.talento")):
+        return True
+    if not access.has(user, "learn.approve.lead", Scope.ASIGNADO):
+        return False
+    return user.direct_reports.exists() or _models().ApprovalStep.objects.filter(
+        action="REASIGNAR", assigned_to=user).exists()
 
 
 def approvals_for(user) -> list:
@@ -1023,11 +1042,11 @@ def approvals_for(user) -> list:
     # Prefiltro barato por rol antes de resolver aprobadores por solicitud.
     S = m.CourseRequest.Stage
     stages = []
-    if user.is_lead or user.direct_reports.exists():
+    if access.has(user, "learn.approve.lead", Scope.ASIGNADO):
         stages.append(S.LEAD)
-    if user.is_director:
+    if access.has(user, "learn.approve.direction", Scope.ASIGNADO):
         stages.append(S.DIRECCION)
-    if user.is_admin:
+    if access.has(user, "learn.approve.talento", Scope.ASIGNADO):
         stages.append(S.TALENTO)
     reassigned_ids = set(
         m.ApprovalStep.objects.filter(
@@ -1086,7 +1105,7 @@ def pending_for(user) -> list[dict]:
             text = "Cierra tu curso con evidencia y reseña"
             url = reverse("learning:request_complete", args=[req.pk])
         items.append({"project": req.name, "text": text, "url": url, "icon": "book"})
-    if user.is_admin:
+    if access.has(user, "learn.evidence.validate"):
         n = m.CourseEvidence.objects.filter(
             kind=m.CourseEvidence.Kind.CERTIFICADO,
             validation=m.CourseEvidence.Validation.PENDIENTE,
@@ -1261,7 +1280,7 @@ def _notify_owner(req, what: str, comment: str = ""):
 
 
 def _notify_talento(req, what: str):
-    talento = _active_users().filter(Q(role=User.Role.TALENTO)).exclude(pk=req.user_id)
+    talento = access.users_with("learn.evidence.validate").exclude(pk=req.user_id)
     url = _absolute(reverse("learning:request_detail", args=[req.pk]))
     _send(list(talento), f"Arena Learn · {req.name} {what}",
           f"El curso «{req.name}» de {req.user.full_name} {what}.\nDetalle: {url}\n")

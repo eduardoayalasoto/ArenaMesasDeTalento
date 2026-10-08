@@ -50,11 +50,18 @@ def navigation(request):
             {"label": label, "url": url, "icon": icon, "name": url_name, "active": active}
         )
 
-    # Pantallas para todos los autenticados
-    add("Mi tablero", "dashboards:home", "home")
+    # Menú derivado de la matriz de perfiles (spec 005, FR-016): nunca se muestra un acceso que la
+    # pantalla luego niegue. Donde el alcance es "Asignado", además se exige tener la relación.
+    from apps.access import services as access
+    from apps.access.registry import Scope
 
-    # Colaborador / Lead / Líder de proyecto: capturar Ownership
-    if not user.is_talento and not user.is_director or user.is_superuser:
+    def can(key, at_least=Scope.PROPIO):
+        return access.has(user, key, at_least)
+
+    if can("dashboard.home.view"):
+        add("Mi tablero", "dashboards:home", "home")
+
+    if can("ownership.self.manage"):
         add("Mis evaluaciones", "evaluations:ownership_list", "clipboard", also_active=(
             "evaluations:ownership_start",
             "evaluations:ownership_lead_start",
@@ -69,83 +76,86 @@ def navigation(request):
             "evaluations:ownership_reset",
         ))
 
-    # Lead de área
-    if user.is_lead or user.is_admin or user.is_director:
+    if can("people.results.view", Scope.AREA):
         add("Mi área", "dashboards:my_area", "users")
 
-    # Evaluador de Ownership — solo si tiene al menos una evaluación asignada (primaria o secundaria)
     from apps.evaluations.models import OwnershipEvaluator
-    if OwnershipEvaluator.objects.filter(user=user).exists():
+    if can("ownership.validate", Scope.TODOS) or (
+        can("ownership.validate", Scope.ASIGNADO) and OwnershipEvaluator.objects.filter(user=user).exists()
+    ):
         add("Validación de Ownership", "evaluations:ownership_validation", "check")
 
-    # Retroalimentación — la doy (responsable asignado), la recibo (soy el colaborador de
-    # la nota, en cualquier periodo, no solo el abierto — spec de navegación histórica), o soy Talento.
+    # Retroalimentación: la doy, asisto o la recibo (en cualquier periodo), o alcance Todos.
     from apps.evaluations.models import FeedbackResponsible, TalentSessionNote
-    has_feedback_role = (
+    if can("feedback.view", Scope.TODOS) or (can("feedback.view", Scope.ASIGNADO) and (
         FeedbackResponsible.objects.filter(user=user).exists()
         or TalentSessionNote.objects.filter(user=user).exists()
-    )
-    if user.is_admin or has_feedback_role:
+    )):
         add("Retroalimentación", "dashboards:feedback_session_list", "message-circle")
 
-    # Líder de proyecto — captura de Entrega de Valor
-    if user.leads_projects or user.is_superuser:
+    if can("value_delivery.capture", Scope.TODOS) or (
+        can("value_delivery.capture", Scope.ASIGNADO) and user.leads_projects
+    ):
         add("Entrega de Valor", "evaluations:value_delivery_list", "package", also_active=(
             "evaluations:value_delivery_capture",
         ))
 
-    # Arena Learn (spec 004) — para todos: solicitar, aprobar y consultar cursos.
-    add("Arena Learn", "learning:my_courses", "graduation-cap", also_active=(
-        "learning:request_start", "learning:request_create", "learning:request_edit", "learning:request_detail",
-        "learning:request_complete", "learning:review_edit", "learning:direct_create",
-        "learning:catalog_list", "learning:catalog_detail",
-        "learning:catalog_create", "learning:catalog_edit", "learning:people_list",
-        "learning:person_profile", "learning:course_public", "learning:tracking",
-        "learning:historic_create", "learning:settings_edit",
-    ))
+    if can("learn.self") or can("learn.public.view"):
+        add("Arena Learn", "learning:my_courses", "graduation-cap", also_active=(
+            "learning:request_start", "learning:request_create", "learning:request_edit", "learning:request_detail",
+            "learning:request_complete", "learning:review_edit", "learning:direct_create",
+            "learning:catalog_list", "learning:catalog_detail",
+            "learning:catalog_create", "learning:catalog_edit", "learning:people_list",
+            "learning:person_profile", "learning:course_public", "learning:tracking",
+            "learning:historic_create", "learning:settings_edit",
+        ))
 
-    # Arena Learn — aprobadores (Lead, Lead directo, Director, Talento): acceso fijo con contador.
     from apps.core.services.learning_flow import approvals_for, is_course_approver
     if is_course_approver(user):
         add("Aprobar cursos", "learning:approvals_inbox", "check")
         if items and items[-1]["name"] == "learning:approvals_inbox":
             items[-1]["badge"] = len(approvals_for(user))
 
-    # Comité de Talento y Dirección — Mesa de Talento
-    if user.is_admin or user.is_director:
+    if can("talent_table.view", Scope.AREA):
         add("Mesa de Talento", "dashboards:talent_table", "table")
+    if can("current_scenario.view", Scope.AREA):
         add("Escenario Actual", "dashboards:current_scenario_board", "move")
 
-    # Validador de Entrega de Valor — cola de validación (asignado por proyecto, o Talento)
-    if user.is_admin or user.validates_projects:
+    from apps.core.services.permissions import can_edit_project, has_value_delivery_validations
+    if has_value_delivery_validations(user):
         add("Validar Entrega de Valor", "evaluations:value_delivery_review", "shield")
 
-    # Proyectos — Talento, Leads y Directores (crear/editar todos)
-    from apps.core.services.permissions import can_edit_project
     if can_edit_project(user):
         add("Proyectos", "catalog:project_admin", "folder")
 
-    # Talento — captura de Impacto Arena y administración
-    if user.is_admin:
+    if can("arena_impact.edit"):
         add("Impacto Arena", "evaluations:arena_impact", "star")
+    if can("period_progress.view"):
         add("Avance del periodo", "dashboards:period_progress", "chart")
 
-        # Catálogos administrables — agrupados en un folder colapsable.
-        catalog_children: list[dict] = []
+    # Catálogos administrables — cada uno según su permiso, agrupados en un folder colapsable.
+    catalog_children: list[dict] = []
+    if can("questionnaires.manage"):
         add("Cuestionarios", "questionnaires:admin_list", "list", target=catalog_children)
+    if can("users.manage"):
         add("Usuarios", "accounts:user_admin", "id", target=catalog_children)
+    if can("scenarios.manage"):
         add("Escenarios", "catalog:scenario_admin", "layers", target=catalog_children)
+    if can("periods.manage"):
         add("Periodos", "catalog:period_admin", "calendar", target=catalog_children)
+    if can("areas.manage"):
         add("Áreas", "catalog:area_admin", "map", target=catalog_children)
-        add("Ponderaciones", "catalog:weight_admin", "scale", target=catalog_children)
-        if catalog_children:
-            items.append({
-                "type": "group",
-                "label": "Catálogos",
-                "icon": "catalog",
-                "children": catalog_children,
-                "active": any(c["active"] for c in catalog_children),
-            })
+    if can("access.manage"):
+        add("Perfiles y permisos", "access:profile_list", "shield-user", target=catalog_children,
+            also_active=("access:profile_matrix", "access:effective_access"))
+    if catalog_children:
+        items.append({
+            "type": "group",
+            "label": "Catálogos",
+            "icon": "catalog",
+            "children": catalog_children,
+            "active": any(c["active"] for c in catalog_children),
+        })
 
     return {"nav_items": items}
 
@@ -186,7 +196,9 @@ def notifications(request):
             "icon": "camera",
         })
 
-    if period:
+    from apps.access import services as access
+
+    if period and access.has(user, "ownership.self.manage"):
         list_url = _safe_url("evaluations:ownership_list") or "#"
         if user.is_lead:
             # Lead: una sola evaluación transversal (project=None)

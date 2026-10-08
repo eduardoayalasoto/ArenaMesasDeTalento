@@ -207,10 +207,17 @@ class ReasonForm(forms.Form):
 class ReassignForm(forms.Form):
     approver = forms.ModelChoiceField(
         label="Nuevo aprobador",
-        queryset=User.objects.filter(is_active=True, deleted_at__isnull=True).order_by("full_name"),
+        queryset=User.objects.none(),
         widget=forms.Select(attrs=INPUT),
     )
     comment = forms.CharField(label="Motivo", widget=forms.Textarea(attrs={**TEXTAREA, "rows": 2}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Solo quien tiene "Asignable como aprobador reasignado" (spec 005, FR-020).
+        from apps.access.services import assignable_users
+
+        self.fields["approver"].queryset = assignable_users("assign.learn_approver").order_by("full_name")
 
 
 class EvidenceValidationForm(forms.Form):

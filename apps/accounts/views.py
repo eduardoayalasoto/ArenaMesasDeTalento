@@ -3,6 +3,7 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db.models import ProtectedError
 from django.http import Http404, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,14 +12,17 @@ from django.utils import timezone
 from apps.catalog.models import Area, SeniorityLevel
 
 from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserCreateForm
+from apps.access import services as access
+from apps.access.decorators import requires
 
 User = get_user_model()
 
 
 @login_required
+@requires("users.manage")
 def user_create(request):
     """Alta de un usuario nuevo (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "users.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento y Cultura crea usuarios.",
@@ -29,6 +33,14 @@ def user_create(request):
         form = UserCreateForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Perfil sugerido por rol y nivel (spec 005, R8); después se cambia en Usuarios.
+            from apps.access.models import Profile
+            from apps.access.seed import suggested_profile_slug
+
+            suggested = Profile.objects.filter(slug=suggested_profile_slug(user), is_system=False).first()
+            if suggested:
+                user.profile = suggested
+                user.save(update_fields=["profile"])
             messages.success(request, f"Creaste a {user.full_name} ({user.email}).")
             return redirect("accounts:user_admin")
 
@@ -114,9 +126,10 @@ def profile(request):
 
 
 @login_required
+@requires("users.manage")
 def user_admin(request):
     """Asignación masiva de área, nivel y rol (criterio de salida de Fase 1)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "users.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento y Cultura administra a los colaboradores.",
@@ -125,13 +138,17 @@ def user_admin(request):
     areas = {a.code: a for a in Area.objects.all()}
     levels = {l.code: l for l in SeniorityLevel.objects.all()}
 
-    lead_candidates = User.objects.filter(
-        is_active=True, deleted_at__isnull=True,
-    ).select_related("level").order_by("full_name")
+    lead_candidates = access.assignable_users("assign.direct_lead").select_related("level").order_by("full_name")
     lead_ids = set(lead_candidates.values_list("id", flat=True))
+
+    from apps.access.models import Profile
+
+    profiles = {p.pk: p for p in Profile.objects.filter(is_system=False)}
+    can_assign_profiles = access.has(request.user, "access.manage")
 
     if request.method == "POST":
         updated = 0
+        profile_errors = []
         for user in User.objects.filter(is_superuser=False, deleted_at__isnull=True):
             if f"area-{user.id}" not in request.POST:
                 continue  # usuario no estaba visible en el form (filtro activo)
@@ -157,11 +174,22 @@ def user_admin(request):
                 user.direct_lead_id = new_lead_id
                 user.save(update_fields=["area", "level", "role", "direct_lead"])
                 updated += 1
+            # Perfil (spec 005): solo si llegó en el POST y quien guarda puede administrar perfiles.
+            profile_raw = request.POST.get(f"profile-{user.id}")
+            if can_assign_profiles and profile_raw and profile_raw.isdigit() and int(profile_raw) in profiles:
+                try:
+                    if access.assign_profile(user, profiles[int(profile_raw)], request.user):
+                        updated += 1
+                except ValidationError as exc:
+                    profile_errors.append(f"{user.full_name}: {' '.join(exc.messages)}")
+        for err in profile_errors:
+            messages.error(request, err)
         messages.success(request, f"Actualizaste {updated} colaborador(es).")
         return redirect("accounts:user_admin")
 
     q = request.GET.get("q", "").strip()
-    users = User.objects.filter(is_superuser=False, deleted_at__isnull=True).select_related("area", "level")
+    users = User.objects.filter(is_superuser=False, deleted_at__isnull=True).select_related(
+        "area", "level", "profile")
     if q:
         users = users.filter(full_name__icontains=q)
 
@@ -172,14 +200,17 @@ def user_admin(request):
         "levels": SeniorityLevel.objects.all(),
         "roles": User.Role.choices,
         "lead_candidates": lead_candidates,
+        "profiles": sorted(profiles.values(), key=lambda p: p.name),
+        "can_assign_profiles": can_assign_profiles,
         "q": q,
     })
 
 
 @login_required
+@requires("users.reset_password")
 def user_reset_password(request, pk):
     """Restablece la contraseña de un colaborador a Arena2026! (solo Talento/admin)."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "users.reset_password"):
         return render(request, "errors/403.html", {
             "titulo": "Acción reservada a Talento",
             "mensaje": "Solo Talento y Cultura puede resetear contraseñas.",
@@ -200,9 +231,10 @@ def user_reset_password(request, pk):
 
 
 @login_required
+@requires("users.delete")
 def user_delete(request, pk):
     """Elimina o desactiva un usuario (solo Talento/admin). Soft delete si tiene historial."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "users.delete"):
         return render(request, "errors/403.html", {
             "titulo": "Acción reservada a Talento",
             "mensaje": "Solo Talento y Cultura puede eliminar usuarios.",

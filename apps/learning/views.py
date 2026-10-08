@@ -19,6 +19,9 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Area, SeniorityLevel
+from apps.access import services as access
+from apps.access.decorators import requires, requires_any
+from apps.access.registry import Scope
 from apps.core.services import learning_flow as flow
 from apps.core.services import permissions
 
@@ -80,6 +83,8 @@ def _base_ctx(request, active, **extra):
         "learn_tab": active,
         "can_manage": permissions.can_manage_learning(request.user),
         "can_track": permissions.can_view_learning_tracking(request.user),
+        "can_historic": access.has(request.user, "learn.historic.create"),
+        "can_settings": access.has(request.user, "learn.settings.edit"),
         "approvals_count": len(flow.approvals_for(request.user)),
         "is_approver": flow.is_course_approver(request.user),
     }
@@ -91,6 +96,7 @@ def _base_ctx(request, active, **extra):
 
 
 @login_required
+@requires("learn.self")
 def my_courses(request):
     reqs = (
         CourseRequest.objects.filter(user=request.user)
@@ -119,6 +125,7 @@ def _catalog_from_query(request):
 
 
 @login_required
+@requires("learn.self")
 def request_start(request):
     """Paso 1 de "Solicitar curso": elegir un curso ya conocido en Arena o uno nuevo."""
     q = request.GET.get("q", "").strip()
@@ -140,6 +147,7 @@ def _template_from_query(request):
 
 
 @login_required
+@requires("learn.self")
 def request_create(request):
     catalog_course = _catalog_from_query(request)
     template_req = None if catalog_course else _template_from_query(request)
@@ -178,6 +186,7 @@ def request_create(request):
 
 
 @login_required
+@requires("learn.self")
 def request_edit(request, pk):
     req = _get_request(pk)
     if req.user_id != request.user.pk:
@@ -208,6 +217,7 @@ def request_edit(request, pk):
 
 
 @login_required
+@requires("learn.private.view")
 def request_detail(request, pk):
     req = _get_request(pk)
     if not permissions.can_view_course_private(request.user, req):
@@ -216,6 +226,7 @@ def request_detail(request, pk):
         return _forbidden(request)
     is_owner = req.user_id == request.user.pk
     can_decide = flow.can_decide(request.user, req)
+    can_manage_req = access.has(request.user, "learn.reassign")
     St = CourseRequest.Status
     ctx = _base_ctx(
         request, "mine" if is_owner else "approvals",
@@ -224,13 +235,16 @@ def request_detail(request, pk):
         evidences=req.evidences.defer("data"),
         review=getattr(req, "review", None),
         can_decide=can_decide,
-        approver_ctx=flow.approver_context(req) if (can_decide or request.user.is_admin) else None,
+        approver_ctx=flow.approver_context(req) if (
+            can_decide or access.has(request.user, "learn.private.view", Scope.TODOS)) else None,
         current_approvers=list(flow.eligible_approvers(req, req.current_stage)) if req.current_stage else [],
         can_cancel=(is_owner and req.status in (St.BORRADOR, St.EN_REVISION, St.REQUIERE_AJUSTES))
-        or (request.user.is_admin and req.status in (St.BORRADOR, St.EN_REVISION, St.REQUIERE_AJUSTES, St.AUTORIZADA)),
-        can_reassign=request.user.is_admin and req.status == St.EN_REVISION,
-        can_pay=(is_owner or request.user.is_admin) and req.status in (St.AUTORIZADA, St.COMPLETADA, St.VALIDADA),
-        can_promote=request.user.is_admin and not req.catalog_course_id and req.status in (St.COMPLETADA, St.VALIDADA),
+        or (can_manage_req and req.status in (St.BORRADOR, St.EN_REVISION, St.REQUIERE_AJUSTES, St.AUTORIZADA)),
+        can_reassign=can_manage_req and req.status == St.EN_REVISION,
+        can_pay=(is_owner or can_manage_req) and req.status in (St.AUTORIZADA, St.COMPLETADA, St.VALIDADA),
+        can_promote=permissions.can_manage_learning(request.user) and not req.catalog_course_id
+        and req.status in (St.COMPLETADA, St.VALIDADA),
+        can_validate_evidence=access.has(request.user, "learn.evidence.validate"),
         payment_form=PaymentForm(instance=req),
         reassign_form=ReassignForm(),
         fiscal=LearningSettings.load().fiscal_instructions,
@@ -243,6 +257,7 @@ def request_detail(request, pk):
 
 @login_required
 @require_POST
+@requires_any("learn.approve.direction", "learn.approve.lead", "learn.approve.talento")
 def request_decide(request, pk):
     req = _get_request(pk)
     form = DecisionForm(request.POST)
@@ -264,6 +279,7 @@ def request_decide(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.self")
 def request_cancel(request, pk):
     req = _get_request(pk)
     form = CommentForm(request.POST)
@@ -281,9 +297,10 @@ def request_cancel(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.reassign")
 def request_reassign(request, pk):
     req = _get_request(pk)
-    if not permissions.can_manage_learning(request.user):
+    if not access.has(request.user, "learn.reassign"):
         return _forbidden(request, "Solo Talento puede reasignar aprobadores.")
     form = ReassignForm(request.POST)
     if not form.is_valid():
@@ -301,12 +318,13 @@ def request_reassign(request, pk):
 
 
 @login_required
+@requires_any("learn.approve.direction", "learn.approve.lead", "learn.approve.talento")
 def approvals_inbox(request):
     reqs = flow.approvals_for(request.user)
     # Talento ve todo: además de lo que le toca decidir, todas las solicitudes en revisión.
     others = (
         flow.all_in_review_for_talento(exclude_pks=[r.pk for r in reqs])
-        if permissions.can_manage_learning(request.user) else None
+        if access.has(request.user, "learn.all_requests.view", Scope.AREA) else None
     )
     return render(request, "learning/approvals_inbox.html", _base_ctx(
         request, "approvals", page_title="Por aprobar · Arena Learn",
@@ -327,6 +345,7 @@ def _payment_block(request, req, error="", saved=False):
 
 @login_required
 @require_POST
+@requires("learn.self")
 def request_payment(request, pk):
     req = _get_request(pk)
     is_htmx = bool(request.headers.get("HX-Request"))
@@ -354,6 +373,7 @@ def request_payment(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.self")
 def request_receipt(request, pk):
     """Sube el comprobante fiscal (privado) de un curso autorizado."""
     req = _get_request(pk)
@@ -376,6 +396,7 @@ def request_receipt(request, pk):
 
 
 @login_required
+@requires("learn.self")
 def request_complete(request, pk):
     req = _get_request(pk)
     if req.user_id != request.user.pk:
@@ -399,6 +420,7 @@ def request_complete(request, pk):
 
 
 @login_required
+@requires("learn.self")
 def review_edit(request, pk):
     req = _get_request(pk)
     review = getattr(req, "review", None)
@@ -419,6 +441,7 @@ def review_edit(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.self")
 def request_not_completed(request, pk):
     req = _get_request(pk)
     form = ReasonForm(request.POST)
@@ -437,11 +460,12 @@ def request_not_completed(request, pk):
 
 
 @login_required
+@requires("learn.public.view")
 def evidence_file(request, pk):
     ev = get_object_or_404(CourseEvidence.objects.select_related("request"), pk=pk)
     req = ev.request
     if ev.is_private:
-        allowed = req.user_id == request.user.pk or request.user.is_admin
+        allowed = req.user_id == request.user.pk or access.has(request.user, "learn.reassign")
     else:
         allowed = permissions.can_view_course_public(request.user, req)
     if not allowed:
@@ -456,6 +480,7 @@ def evidence_file(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.evidence.validate")
 def evidence_validate(request, pk):
     ev = get_object_or_404(CourseEvidence.objects.select_related("request"), pk=pk)
     form = EvidenceValidationForm(request.POST)
@@ -477,6 +502,7 @@ def evidence_validate(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.self")
 def evidence_replace(request, pk):
     ev = get_object_or_404(CourseEvidence.objects.select_related("request"), pk=pk)
     form = SingleEvidenceForm(request.POST, request.FILES)
@@ -527,13 +553,15 @@ def _direct_view(request, historic: bool):
 
 
 @login_required
+@requires("learn.self")
 def direct_create(request):
     return _direct_view(request, historic=False)
 
 
 @login_required
+@requires("learn.historic.create")
 def historic_create(request):
-    if not permissions.can_manage_learning(request.user):
+    if not access.has(request.user, "learn.historic.create"):
         return _forbidden(request, "Solo Talento carga cursos históricos.")
     return _direct_view(request, historic=True)
 
@@ -546,9 +574,10 @@ def _filters(request, keys):
 
 
 @login_required
+@requires("learn.public.view")
 def catalog_list(request):
     f = _filters(request, ("q", "area", "level", "kind", "pillar"))
-    show_archived = request.GET.get("archivados") == "1" and request.user.is_admin
+    show_archived = request.GET.get("archivados") == "1" and permissions.can_manage_learning(request.user)
     courses = flow.catalog_queryset(f, include_archived=show_archived)
     if show_archived:
         courses = courses.filter(is_active=False)
@@ -560,9 +589,10 @@ def catalog_list(request):
 
 
 @login_required
+@requires("learn.public.view")
 def catalog_detail(request, pk):
     course = get_object_or_404(flow.catalog_queryset(include_archived=True), pk=pk)
-    if not course.is_active and not request.user.is_admin:
+    if not course.is_active and not permissions.can_manage_learning(request.user):
         raise Http404
     return render(request, "learning/catalog_detail.html", _base_ctx(
         request, "catalog", page_title=course.name, course=course, reviews=flow.catalog_reviews(course),
@@ -570,6 +600,7 @@ def catalog_detail(request, pk):
 
 
 @login_required
+@requires("learn.catalog.manage")
 def catalog_edit(request, pk=None):
     if not permissions.can_manage_learning(request.user):
         return _forbidden(request, "Solo Talento administra el catálogo.")
@@ -590,6 +621,7 @@ def catalog_edit(request, pk=None):
 
 @login_required
 @require_POST
+@requires("learn.catalog.manage")
 def catalog_archive(request, pk):
     if not permissions.can_manage_learning(request.user):
         return _forbidden(request, "Solo Talento administra el catálogo.")
@@ -602,6 +634,7 @@ def catalog_archive(request, pk):
 
 @login_required
 @require_POST
+@requires("learn.catalog.manage")
 def catalog_promote(request, pk):
     req = _get_request(pk)
     try:
@@ -619,6 +652,7 @@ def catalog_promote(request, pk):
 
 
 @login_required
+@requires("learn.public.view")
 def people_list(request):
     St = CourseRequest.Status
     q = request.GET.get("q", "").strip()
@@ -644,6 +678,7 @@ def people_list(request):
 
 
 @login_required
+@requires("learn.public.view")
 def person_profile(request, pk):
     person = get_object_or_404(User.objects.select_related("area", "level"), pk=pk)
     if not permissions.can_view_learning_profile(request.user, person):
@@ -659,6 +694,7 @@ def person_profile(request, pk):
 
 
 @login_required
+@requires("learn.public.view")
 def course_public(request, pk):
     req = _get_request(pk)
     if not permissions.can_view_course_public(request.user, req):
@@ -675,6 +711,8 @@ def course_public(request, pk):
 def _tracking_filters(request):
     f = _filters(request, ("area", "persona", "anio", "estado"))
     out = {}
+    if not access.has(request.user, "learn.tracking.view", Scope.TODOS):
+        f["area"] = str(request.user.area_id or 0)
     if f.get("area"):
         out["area"] = f["area"]
     if f.get("persona"):
@@ -687,6 +725,7 @@ def _tracking_filters(request):
 
 
 @login_required
+@requires("learn.tracking.view")
 def tracking(request):
     if not permissions.can_view_learning_tracking(request.user):
         return _forbidden(request, "El seguimiento es para Talento y Dirección.")
@@ -703,6 +742,7 @@ def tracking(request):
 
 
 @login_required
+@requires("learn.tracking.view")
 def tracking_export(request):
     if not permissions.can_view_learning_tracking(request.user):
         return _forbidden(request, "El seguimiento es para Talento y Dirección.")
@@ -738,8 +778,9 @@ def tracking_export(request):
 
 
 @login_required
+@requires("learn.settings.edit")
 def settings_edit(request):
-    if not permissions.can_manage_learning(request.user):
+    if not access.has(request.user, "learn.settings.edit"):
         return _forbidden(request, "Solo Talento edita la configuración de Arena Learn.")
     obj = LearningSettings.load()
     form = SettingsForm(request.POST or None, instance=obj)

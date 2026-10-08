@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-4xl">
+  <a href="{% url 'accounts:user_admin' %}" class="text-sm text-arena-700 hover:underline inline-flex items-center gap-1 mb-2"><i data-lucide="chevron-left" class="w-4 h-4"></i> Usuarios</a>
+  <section class="card p-5 mb-5 flex flex-wrap items-center gap-4">
+    {% include "partials/avatar.html" with subject=person size="w-14 h-14" %}
+    <div class="min-w-0">
+      <h2 class="text-lg font-semibold text-slate-900">{{ person.full_name }}</h2>
+      <p class="text-sm text-slate-600">{{ person.area.name|default:"Sin área" }}{% if person.level %} · {{ person.level.name }}{% endif %}</p>
+    </div>
+    <div class="ml-auto text-right">
+      <p class="text-xs text-slate-500">Perfil</p>
+      {% if person.is_superuser %}<p class="font-semibold text-slate-900">Superusuario (acceso total)</p>
+      {% elif data.profile %}<a href="{% url 'access:profile_matrix' data.profile.slug %}" class="font-semibold text-arena-700 hover:underline">{{ data.profile.name }}</a>{% if not person.profile_id %}<p class="text-xs text-amber-700">Sugerido por rol y nivel (sin asignar)</p>{% endif %}{% endif %}
+    </div>
+  </section>
+
+  <div class="grid md:grid-cols-3 gap-5">
+    <div class="md:col-span-2 space-y-4">
+      {% for m in data.modules %}
+        <section class="card overflow-hidden">
+          <h3 class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 text-sm font-semibold text-slate-900">{{ m.module }} <span class="font-normal text-slate-500">· {{ m.granted }} de {{ m.rows|length }}</span></h3>
+          <ul class="divide-y divide-slate-100 text-sm">
+            {% for r in m.rows %}
+              <li class="px-4 py-2 flex items-center justify-between gap-3 {% if not r.scope %}text-slate-400{% endif %}">
+                <span>{{ r.perm.screen }}</span>
+                <span class="badge {% if r.scope >= 40 %}bg-emerald-50 text-emerald-700{% elif r.scope %}bg-sky-50 text-sky-700{% else %}bg-slate-100 text-slate-400{% endif %}">{{ r.scope.label }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endfor %}
+    </div>
+    <aside>
+      <section class="card p-4">
+        <h3 class="text-sm font-semibold text-slate-900 mb-2">Responsabilidades vigentes</h3>
+        <p class="text-xs text-slate-500 mb-3">Con alcance «Asignado», estas relaciones definen sobre qué registros actúa.</p>
+        <ul class="space-y-1.5 text-sm">
+          {% for label, n in data.relations %}<li class="flex justify-between gap-2"><span class="text-slate-600">{{ label }}</span><span class="font-medium tabular-nums {% if not n %}text-slate-400{% endif %}">{{ n }}</span></li>{% endfor %}
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}

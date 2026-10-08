@@ -7,7 +7,7 @@ from . import views
 app_name = "dashboards"
 
 urlpatterns = [
-    path("", views.HomeView.as_view(), name="home"),
+    path("", views.home, name="home"),
     path("ayuda/", views.HelpView.as_view(), name="help"),
     path("mi-area/", views.my_area, name="my_area"),
     path("mesa-talento/", views.talent_table, name="talent_table"),

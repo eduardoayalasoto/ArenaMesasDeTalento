@@ -8,16 +8,15 @@ from django.shortcuts import get_object_or_404, redirect, render
 from apps.core.services import questionnaire_editor as editor
 
 from .models import Question, QuestionnaireTemplate, Section
-
-
-def _require_admin(request):
-    return request.user.is_admin
+from apps.access import services as access
+from apps.access.decorators import requires
 
 
 @login_required
+@requires("questionnaires.manage")
 def admin_list(request):
     """Lista de cuestionarios agrupados, con estado, versión y conteo de preguntas."""
-    if not _require_admin(request):
+    if not access.has(request.user, "questionnaires.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento y Cultura administra los cuestionarios.",
@@ -34,9 +33,10 @@ def admin_list(request):
 
 
 @login_required
+@requires("questionnaires.manage")
 def template_edit(request, pk):
     """Ve un cuestionario; si es BORRADOR permite editarlo; permite versionar y publicar."""
-    if not _require_admin(request):
+    if not access.has(request.user, "questionnaires.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra los cuestionarios.",

@@ -31,6 +31,7 @@ apps/
   questionnaires/  Template, Section, Question, ScaleOption + editor/versionado
   evaluations/     OwnershipEvaluation, OwnershipAnswer, ValueDeliveryEvaluation, ArenaImpactScore, FinalScore + flujos
   dashboards/      tablero (=resultados), Mi área, Mesa de Talento, avance, exportes, ayuda
+  access/          Perfiles y permisos (spec 005): registry.py (catálogo de permisos en código), Profile, ProfileGrant, AccessAuditLog, @requires
   learning/        Arena Learn (spec 004): CatalogCourse, CourseRequest, ApprovalStep, CourseEvidence, CourseReview, LearningSettings
   core/            services/ (lógica), middleware, context_processors, management/commands (seed*), text, templatetags
 templates/         base.html + partials/ + por app
@@ -54,6 +55,9 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **learning (Arena Learn, spec 004):** `CourseRequest` (solicitud/registro de curso; `status` BORRADOR→EN_REVISION(+`current_stage` LEAD/DIRECCION/TALENTO)→AUTORIZADA→COMPLETADA→VALIDADA, o REQUIERE_AJUSTES/RECHAZADA/CANCELADA/NO_CONCLUIDA; `origin` SOLICITUD/REGISTRO_DIRECTO/HISTORICO; campos de pago solo informativos), `ApprovalStep` (bitácora inmutable), `CourseEvidence` (archivos en BD, máx. 4 MB; CERTIFICADO público, COMPROBANTE_FISCAL privado), `CourseReview`, `CatalogCourse`, `LearningSettings` (instrucciones fiscales). Nuevos campos: `User.direct_lead` y `Area.director` (aprobadores).
 
 ## 5. Roles, permisos y reglas clave
+
+> **Desde la spec 005 los permisos NO dependen del rol**: cada usuario tiene un **perfil** (`User.profile`, editable en Catálogos → Perfiles y permisos) y cada perfil concede, por permiso del catálogo (`apps/access/registry.py`), un alcance jerárquico: Sin acceso < Propio < Asignado < Su área < Todos. Toda vista lleva `@requires("clave")`; `apps/core/tests/test_access_coverage.py` falla si una ruta no está mapeada. `permissions.py` es una fachada sobre la matriz (+ relación). Sin perfil → el sugerido por rol/nivel. El nivel LEAD sigue definiendo cuestionario/ponderación y la evaluación transversal, pero ya no permisos. Perfiles semilla = "deber ser" (`apps/access/seed.py`); correcciones vs. el comportamiento anterior en `apps/access/legacy.py::EXPECTED_CHANGES`.
+
 - **Roles:** Colaborador, Talento (admin), Director. **Lead** se deriva del nivel (LEAD). **Evaluador** se deriva de ser `validator` de alguna evaluación (no del liderazgo).
 - **Visibilidad** (`core/services/permissions.py`): colaborador → solo él; lead → su área; Talento/Director/superuser → todos. Filtrado a nivel queryset.
 - **Escala** (RN-03): 1 No cumple · 2 Cumple parcial · 3 Cumple · 4 Excede · N/A (se excluye del promedio).

@@ -4,14 +4,17 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from apps.access import services as access
+from apps.access.decorators import requires
 
 User = get_user_model()
 
 
 @login_required
+@requires("areas.manage")
 def area_admin(request):
     """Áreas y su Director (Arena Learn, spec 004). Solo Talento/admin."""
-    if not request.user.is_admin:
+    if not access.has(request.user, "areas.manage"):
         return render(request, "errors/403.html", {
             "titulo": "Administración reservada a Talento",
             "mensaje": "Solo Talento administra las áreas.",
@@ -20,16 +23,14 @@ def area_admin(request):
     from apps.catalog.forms import AreaDirectorForm
     from apps.catalog.models import Area
 
-    directors = User.objects.filter(
-        role=User.Role.DIRECTOR, is_active=True, deleted_at__isnull=True,
-    ).order_by("full_name")
+    directors = access.assignable_users("assign.area_director").order_by("full_name")
     if request.method == "POST":
         form = AreaDirectorForm(request.POST)
         if form.is_valid():
             area = get_object_or_404(Area, pk=form.cleaned_data["area"])
             director_id = form.cleaned_data.get("director")
             if director_id and not directors.filter(pk=director_id).exists():
-                messages.error(request, "El usuario elegido no es un Director activo.")
+                messages.error(request, "Esa persona no puede ser Director de área según su perfil.")
             else:
                 area.director_id = director_id or None
                 area.save(update_fields=["director"])

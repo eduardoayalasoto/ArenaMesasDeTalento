@@ -27,7 +27,7 @@
 
 {# Resultados con hero card sticky #}
 {% if period %}
-  {% include "dashboards/_results_body.html" with subject=target detail_links=request.user.is_admin sticky_hero=True %}
+  {% include "dashboards/_results_body.html" with subject=target detail_links=can_edit_mesa sticky_hero=True %}
 {% else %}
   <div class="card p-8 text-center text-slate-400">No hay periodo abierto.</div>
 {% endif %}
@@ -38,7 +38,7 @@
   <div class="flex items-center gap-2 mb-4">
     <i data-lucide="table" class="w-5 h-5 text-arena-600"></i>
     <h2 class="text-lg font-semibold text-slate-900">Mesa de Talento</h2>
-    {% if not request.user.is_admin %}
+    {% if not can_edit_mesa %}
       <span class="badge bg-slate-100 text-slate-500 text-xs">Solo lectura</span>
     {% endif %}
   </div>
@@ -48,7 +48,7 @@
     {% include "dashboards/_mesa_review_block.html" %}
   </div>
 
-  {% if request.user.is_admin %}
+  {% if can_edit_mesa %}
   {# Editable para Talento #}
   <div x-data="talentNote({
     url: '{% url 'dashboards:talent_note_autosave' pk=target.pk %}',
