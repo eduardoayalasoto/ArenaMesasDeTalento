@@ -129,13 +129,24 @@ if DATABASE_URL:
     }
     if "channel_binding" in qs:
         options["channel_binding"] = qs["channel_binding"][0]
+    # Esquema propio dentro de la BD compartida de Neon (db-arena): cada
+    # sistema vive en su esquema ("talento-app", "crm-app", ...), nunca en
+    # public. El search_path va como parámetro de arranque de la conexión;
+    # el pooler de Neon (PgBouncer, modo transacción) NO lo respeta, por eso
+    # con esquema se usa el host directo (sin "-pooler"). DB_SCHEMA vacío
+    # vuelve al comportamiento anterior (public + pooler).
+    db_host = url.hostname
+    db_schema = os.environ.get("DB_SCHEMA", "talento-app").strip()
+    if db_schema:
+        db_host = db_host.replace("-pooler.", ".")
+        options["options"] = f'-c search_path="{db_schema}",public'
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
             "NAME": url.path.lstrip("/"),
             "USER": url.username,
             "PASSWORD": url.password,
-            "HOST": url.hostname,
+            "HOST": db_host,
             "PORT": url.port or "5432",
             "CONN_MAX_AGE": 0,  # serverless: sin conexiones persistentes
             "OPTIONS": options,
