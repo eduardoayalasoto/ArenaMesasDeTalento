@@ -32,8 +32,17 @@ Lucide, sin emojis).
   daisyUI vendorizado en `static/vendor/daisyui/`). El CSS compilado se versiona.
 - Python: `.\.venv\Scripts\python.exe` (la `.venv` se creó en otra ruta: usar `python -m pytest`).
 - Consola cp1252: `PYTHONIOENCODING=utf-8`.
-- Producción: Vercel (push a `main` = deploy) + Neon Postgres; **Vercel no corre migraciones**:
-  aplicarlas con la URL unpooled de `docs/neon.md` antes del push.
+- Producción: Vercel (push a `main` = deploy, https://arena-mesasdetalento.vercel.app) + Neon
+  Postgres; **Vercel no corre migraciones**: aplicarlas con la URL unpooled de `docs/neon.md`
+  antes del push.
+- **BD compartida por esquemas (desde 2026-10-08):** Neon `db-arena`/`neondb` aloja varios sistemas,
+  uno por esquema. Esta app vive en **`"talento-app"`** (NO en `public`, que queda vacío);
+  arena-crm vive en `"crm-app"` — nunca tocar ese esquema desde aquí. `config/settings.py` fija
+  `options=-c search_path="talento-app",public` y usa el host DIRECTO de Neon (el pooler ignora
+  `options`); `DB_SCHEMA` lo controla (vacío = comportamiento anterior). `pg_dump`/migraciones
+  siempre por la conexión directa.
+- Favicon: `static/img/favicon.svg` = `sprout` de Lucide sobre el degradado naranja de "talento"
+  (`talento-300` #FFB45A → `talento-600` #F2711C).
 - UI y textos en español (México); código en inglés.
 
 ## Agentes y skills del proyecto

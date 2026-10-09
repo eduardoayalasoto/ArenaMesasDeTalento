@@ -1,5 +1,12 @@
 # Deploy a Vercel — Guía paso a paso
 
+> **Estado actual (2026-10-08): en producción.** Proyecto Vercel `arena-mesasdetalento` (equipo
+> `eduardoayalasotos-projects`), https://arena-mesasdetalento.vercel.app, push a `main` = deploy.
+> BD: Neon `db-arena`/`neondb`, **esquema `"talento-app"`** (ver `CLAUDE.md` § Entorno). Las tablas
+> se movieron de `public` a `"talento-app"` el 2026-10-08 sin corte (respaldo: rama Neon
+> `respaldo-pre-talento-app-20261008` + `pg_dump` local). El resto de esta guía es la historia del
+> primer despliegue.
+
 > Estado: **configuración lista** (entrypoint `api/wsgi.py` que detecta el builder de Django de Vercel, `.vercelignore`, WhiteNoise sin collectstatic, `psycopg` en requirements). Falta ejecutar el deploy, que requiere tu cuenta de Vercel y un Postgres gestionado.
 
 > **Entrypoint:** el builder nuevo de Vercel busca `wsgi.py`/`api/wsgi.py`/etc. (no `config/wsgi.py`). Por eso existe `api/wsgi.py` que reexpone la app. No se usa `vercel.json` (el builder es zero-config). Si prefieres otra ruta, define `[tool.vercel] entrypoint` en `pyproject.toml`.
