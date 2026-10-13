@@ -36,11 +36,10 @@ Las guías de IA y Datos no traen nivel por curso: sus cursos quedan en "Todos l
 
 **Datos propuestos con criterio técnico:** ver `revision-datos-propuestos.md` (42 tipos y 182 enfoques, cada uno con su motivo).
 
-## Pendiente: corrida en producción
+## Corrida en producción (2026-10-12, autorizada por el usuario)
 
-Se hará solo con autorización explícita y en este orden:
-1. Rama de respaldo `backup-pre-006`.
-2. `migrate`.
-3. `reset_learning_data --confirm`.
-4. `import_learning_plans`.
-5. Push a `main`.
+1. Respaldo: rama de Neon `backup-pre-006` (`br-silent-tooth-ap8lrcfc`), creada antes de cualquier cambio.
+2. `migrate`: se aplicaron `access.0003` y `learning.0004`.
+3. `reset_learning_data --confirm`: se borró lo mismo que en el ensayo (5 pasos, 4 solicitudes, 7 filas de historial, 5 cursos).
+4. `import_learning_plans`: 260 cursos, 4 planes publicados, 279 cursos en planes y KO en 34 cursos.
+5. Push a `main` (deploy en Vercel).

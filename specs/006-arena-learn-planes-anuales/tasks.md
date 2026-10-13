@@ -122,7 +122,7 @@ description: "Task list for 006 Arena Learn — planes anuales, etiquetas e impo
   - `reset_learning_data(before, confirm)` según R10.
 - [x] T028 [US4] Comandos `apps/learning/management/commands/reset_learning_data.py` (`--before`, `--confirm`; sin confirm solo imprime conteos) e `import_learning_plans.py` (`--xlsx`, `--plans`, `--year`, `--dry-run`; imprime el resumen legible). Verificar `test_access_coverage.py` en verde con todas las rutas de las fases 3 y 4
 - [x] T029 [US4] `--dry-run` local contra la BD de desarrollo con los archivos reales; guardar el resumen en `specs/006-arena-learn-planes-anuales/reporte-importacion.md`, con la tabla de datos **propuestos** (curso, tipo, enfoque, motivo). **Gate: el usuario lo revisa junto con el JSON**
-- [ ] T030 [US4] Corrida en producción (quickstart § 3), solo con autorización explícita del usuario:
+- [x] T030 [US4] Corrida en producción (quickstart § 3), solo con autorización explícita del usuario:
   1. migraciones con la URL directa;
   2. `reset_learning_data` en seco y luego confirmar conteos;
   3. rama de respaldo `backup-pre-006` en Neon;
@@ -174,7 +174,7 @@ description: "Task list for 006 Arena Learn — planes anuales, etiquetas e impo
 
 ## Phase 9: Polish
 
-- [ ] T041 [P] Auditoría de UI con el agente `frontend-auditor` sobre las plantillas nuevas (CUMPLE / NO CUMPLE contra `DESIGN_SYSTEM.md`) y corrección de hallazgos
+- [x] T041 [P] Auditoría de UI con el agente `frontend-auditor` sobre las plantillas nuevas (CUMPLE / NO CUMPLE contra `DESIGN_SYSTEM.md`) y corrección de hallazgos
 - [x] T042 [P] Actualizar `docs/CONTEXTO_Sistema.md` (modelos, rutas y comandos de 006)
 - [ ] T043 Suite completa `python -m pytest --reuse-db` en verde y recorrido manual de quickstart § 4
 
