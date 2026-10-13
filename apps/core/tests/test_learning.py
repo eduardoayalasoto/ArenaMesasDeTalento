@@ -210,7 +210,10 @@ def test_direct_historic_catalog_and_promotion(learn_people, catalog_course, lea
                               origin=CourseRequest.Origin.HISTORICO, catalog_course=catalog_course)
     assert hist.name == catalog_course.name
 
-    catalog_course.areas.add(learn_area)
+    from apps.learning.models import PlanCourse, TrainingPlan
+
+    plan = TrainingPlan.objects.create(area=learn_area, year=2026, title="Plan", status=TrainingPlan.Status.PUBLICADO)
+    PlanCourse.objects.create(plan=plan, course=catalog_course)
     flow.create_direct(p["colab"], p["colab"], {}, learn_review_data(rating=4), [pdf()], catalog_course=catalog_course)
     c = flow.catalog_queryset({"area": learn_area.pk}).get()
     assert c.completed_count == 2 and float(c.avg_rating) == 3.0
@@ -218,7 +221,8 @@ def test_direct_historic_catalog_and_promotion(learn_people, catalog_course, lea
     with pytest.raises(PermissionDenied):
         flow.promote_to_catalog(direct, p["colab"])
     course = flow.promote_to_catalog(direct, p["talento"])
-    assert list(course.areas.all()) == [learn_area] and list(flow.catalog_reviews(course)) == [direct.review]
+    assert [t.name for t in course.tags.all()] == ["dbt"] and list(flow.catalog_reviews(course)) == [direct.review]
+    assert [t.name for t in hist.tags.all()] == ["Big Data", "Spark"]  # se precargan las del catálogo (FR-004)
 
     catalog_course.is_active = False
     catalog_course.save()
@@ -278,7 +282,7 @@ def test_views_render_and_request_via_form(client, learn_people, catalog_course)
 
     url = reverse("learning:request_create") + f"?catalogo={catalog_course.pk}"
     resp = client.post(url, {
-        "catalogo": catalog_course.pk, "estimated_cost": "3500", "currency": "MXN", "kind": "CURSO",
+        "catalogo": catalog_course.pk, "estimated_cost": "3500", "currency": "MXN", "kind": "ESTRUCTURADO",
         "start_date_planned": "2026-10-10", "end_date_planned": "2026-11-10",
         "justification": "Spark para el proyecto Y", "payment_mode": "REEMBOLSO", "action": "submit",
     })

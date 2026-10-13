@@ -1,0 +1,9 @@
+{% comment %}
+Tipo de aprendizaje, enfoque y etiquetas de un curso del catálogo (spec 006).
+Tipo y enfoque son dimensiones independientes. Uso:
+  {% include "learning/_course_badges.html" with course=c %}
+  {% include "learning/_course_badges.html" with course=c show_tags=False %}
+{% endcomment %}
+<span class="badge badge-soft badge-primary">{{ course.get_kind_display }}</span>
+<span class="badge badge-soft badge-info" title="Enfoque">{{ course.get_focus_display }}</span>
+{% if show_tags is not False %}{% for t in course.tags.all %}<span class="badge badge-outline text-base-content/70">{{ t.name }}</span>{% endfor %}{% endif %}

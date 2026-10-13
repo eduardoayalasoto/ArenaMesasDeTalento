@@ -60,10 +60,10 @@
     <div class="grid sm:grid-cols-2 gap-4">
       {% for field in form %}
         {% if field.name != "justification" %}
-        <div class="{% if field.name == 'name' or field.name == 'url' %}sm:col-span-2{% endif %}">
+        <div class="{% if field.name == 'name' or field.name == 'url' or field.name == 'tags' %}sm:col-span-2{% endif %}">
           <label class="fieldset-legend" for="{{ field.id_for_label }}">{{ field.label }}{% if field.name in "name provider url start_date_planned end_date_planned" %} <span class="text-error">*</span>{% endif %}</label>
           {{ field }}
-          {% if field.name == "tags" %}<p class="mt-1 text-base text-base-content/60">Sepáralas por coma; ayudan a que otros encuentren el curso.</p>{% endif %}
+          {% if field.name == "tags" %}<p class="mt-1 text-base text-base-content/60">{{ field.help_text }}</p>{% endif %}
           {% if field.name == "url" and not catalog_course %}<p class="mt-1 text-base text-base-content/60">{{ field.help_text }}</p>{% endif %}
           {% for e in field.errors %}<p class="mt-1 text-base text-error">{{ e }}</p>{% endfor %}
         </div>

@@ -1,39 +1,53 @@
 {% extends "base.html" %}
+{% load learning_tags core_extras %}
 {% block content %}
 {% include "learning/_subnav.html" %}
 
-<div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+<div class="flex flex-wrap items-end justify-between gap-3 mb-3">
   <form method="get" class="flex flex-wrap items-end gap-2">
+    {% for chip in tag_chips %}{% if chip.active %}<input type="hidden" name="etiqueta" value="{{ chip.tag.pk }}">{% endif %}{% endfor %}
     <div class="relative">
-      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none"></i>
-      <input type="search" name="q" value="{{ f.q }}" class="input w-full pl-9 w-56" placeholder="Curso, proveedor o tema…" aria-label="Buscar en el catálogo">
+      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" aria-hidden="true"></i>
+      <input type="search" name="q" value="{{ f.q }}" class="input pl-9 w-56" placeholder="Curso, proveedor o etiqueta…" aria-label="Buscar en el catálogo">
     </div>
-    <select name="area" class="select w-full w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
-    <select name="level" class="select w-full w-auto" aria-label="Nivel"><option value="">Todos los niveles</option>{% for l in levels %}<option value="{{ l.pk }}" {% if f.level == l.pk|stringformat:"s" %}selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
-    <select name="kind" class="select w-full w-auto" aria-label="Tipo"><option value="">Todos los tipos</option>{% for v, l in kinds %}<option value="{{ v }}" {% if f.kind == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
-    <select name="pillar" class="select w-full w-auto" aria-label="Pilar"><option value="">Todos los pilares</option>{% for v, l in pillars %}<option value="{{ v }}" {% if f.pillar == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <select name="area" class="select w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
+    <select name="kind" class="select w-auto" aria-label="Tipo de aprendizaje"><option value="">Todos los tipos</option>{% for v, l in kinds %}<option value="{{ v }}" {% if f.kind == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <select name="focus" class="select w-auto" aria-label="Enfoque"><option value="">Todo enfoque</option>{% for v, l in focuses %}<option value="{{ v }}" {% if f.focus == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
     <button type="submit" class="btn btn-outline btn-primary">Filtrar</button>
-    {% if f %}<a href="{% url 'learning:catalog_list' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
+    {% if filtered %}<a href="{% url 'learning:catalog_list' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
   </form>
   {% if can_manage %}
-    <div class="flex gap-2">
+    <div class="flex flex-wrap gap-2">
+      {% if can_manage_tags %}<a href="{% url 'learning:tag_list' %}" class="btn btn-ghost"><i data-lucide="tags" class="w-4 h-4" aria-hidden="true"></i> Etiquetas</a>{% endif %}
       <a href="?archivados={% if show_archived %}0{% else %}1{% endif %}" class="btn btn-ghost">{% if show_archived %}Ver activos{% else %}Ver archivados{% endif %}</a>
-      <a href="{% url 'learning:catalog_create' %}" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Nuevo curso</a>
+      <a href="{% url 'learning:catalog_create' %}" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Nuevo curso</a>
     </div>
   {% endif %}
 </div>
 
+{% if tag_chips %}
+  <div class="flex flex-wrap items-center gap-1.5 mb-4" role="group" aria-label="Filtrar por etiqueta">
+    <span class="text-base text-base-content/60 mr-1">Etiquetas:</span>
+    {% for chip in tag_chips %}
+      <a href="?{{ chip.query }}" class="badge {% if chip.active %}badge-primary{% else %}badge-outline text-base-content/70 hover:border-primary{% endif %}" {% if chip.active %}aria-current="true"{% endif %}>
+        {% if chip.active %}<i data-lucide="check" class="w-3 h-3" aria-hidden="true"></i>{% endif %}{{ chip.tag.name }}
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
+
 {% if courses %}
+  <p class="text-base text-base-content/60 mb-3">{{ courses|length }} curso{{ courses|length|pluralize }}</p>
   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     {% for c in courses %}
       <a href="{% url 'learning:catalog_detail' c.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col gap-3 hover:border-primary/25 hover:shadow transition">
-        <div class="flex items-start justify-between gap-2">
-          <span class="badge bg-primary/10 text-primary">{{ c.get_kind_display }}</span>
-          {% if c.pillar %}<span class="badge bg-base-200 text-base-content/70">{{ c.get_pillar_display }}</span>{% endif %}
+        <div class="flex flex-wrap items-center gap-1.5">
+          {% include "learning/_course_badges.html" with course=c %}
         </div>
         <div>
           <p class="font-semibold text-base-content">{{ c.name }}</p>
-          <p class="text-base text-base-content/60">{{ c.provider }}{% if c.duration_hours %} · {{ c.duration_hours }} h{% endif %}</p>
+          <p class="text-base text-base-content/60">{{ c.provider }}{% if c.duration_hours %} · {{ c.duration_hours|hours }}{% endif %}</p>
+          {% with areas=plan_areas|get_item:c.pk %}{% if areas %}<p class="text-base text-base-content/60">Planes: {% for a in areas %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}{% endwith %}
         </div>
         <div class="mt-auto flex items-center justify-between text-base">
           {% if c.avg_rating %}

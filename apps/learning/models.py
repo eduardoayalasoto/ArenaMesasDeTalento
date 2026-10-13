@@ -1,4 +1,4 @@
-"""Arena Learn (spec 004): solicitud, autorización y registro de cursos con costo.
+"""Arena Learn (spec 004 + 006): catálogo, solicitudes, etiquetas y planes anuales por área.
 
 La lógica de negocio (transiciones, aprobadores, evidencia) vive en
 `apps/core/services/learning_flow.py`; aquí solo hay estructura y reglas locales.
@@ -12,11 +12,24 @@ from simple_history.models import HistoricalRecords
 
 
 class CourseKind(models.TextChoices):
-    CURSO = "CURSO", "Curso"
+    """Tipo de aprendizaje (spec 006, R12). El orden es el de agrupación en los planes."""
+
+    ESTRUCTURADO = "ESTRUCTURADO", "Estructurado"
     CERTIFICACION = "CERTIFICACION", "Certificación"
-    CAPACITACION = "CAPACITACION", "Capacitación"
-    CONFERENCIA = "CONFERENCIA", "Conferencia"
-    OTRO = "OTRO", "Otro"
+    PUNTUAL = "PUNTUAL", "Puntual"
+    CONTEXTUAL = "CONTEXTUAL", "Contextual"
+    SOFT_SKILLS = "SOFT_SKILLS", "Soft Skills"
+    EVENTO = "EVENTO", "Evento"
+
+
+KIND_ORDER = {k: i for i, k in enumerate(CourseKind.values)}
+
+
+class Focus(models.TextChoices):
+    """Enfoque del curso: dimensión independiente del tipo (no se deriva de él)."""
+
+    HORIZONTAL = "HORIZONTAL", "Horizontal"
+    VERTICAL = "VERTICAL", "Vertical"
 
 
 class Currency(models.TextChoices):
@@ -31,14 +44,38 @@ class Pillar(models.TextChoices):
     IMPACTO_ARENA = "IMPACTO_ARENA", "Impacto Arena"
 
 
-def normalize_tags(raw: str) -> str:
-    """'Power BI,  mlops ,power bi' -> 'power bi, mlops' (minúsculas, sin duplicados)."""
-    seen: list[str] = []
-    for part in (raw or "").split(","):
-        tag = " ".join(part.strip().lower().split())
-        if tag and tag not in seen:
-            seen.append(tag)
-    return ", ".join(seen)
+def normalize_tag_key(name: str) -> str:
+    """'  Kó ' -> 'ko': minúsculas, sin acentos y con espacios colapsados (FR-001)."""
+    import unicodedata
+
+    text = unicodedata.normalize("NFKD", name or "")
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    return " ".join(text.lower().split())
+
+
+class Tag(models.Model):
+    """Etiqueta gestionable de Arena Learn (spec 006, US1). Solo un nombre."""
+
+    name = models.CharField("nombre", max_length=60)
+    key = models.CharField("clave normalizada", max_length=60, unique=True, editable=False)
+    is_active = models.BooleanField("activa", default=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "etiqueta"
+        verbose_name_plural = "etiquetas"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = " ".join((self.name or "").split())
+        self.key = normalize_tag_key(self.name)
+        super().save(*args, **kwargs)
 
 
 class CatalogCourse(models.Model):
@@ -47,18 +84,16 @@ class CatalogCourse(models.Model):
     name = models.CharField("nombre", max_length=160)
     provider = models.CharField("proveedor / plataforma", max_length=120)
     url = models.URLField("liga", blank=True)
-    kind = models.CharField("tipo", max_length=16, choices=CourseKind.choices, default=CourseKind.CURSO)
+    kind = models.CharField(
+        "tipo de aprendizaje", max_length=16, choices=CourseKind.choices, default=CourseKind.ESTRUCTURADO,
+    )
+    focus = models.CharField("enfoque", max_length=10, choices=Focus.choices, default=Focus.HORIZONTAL)
     reference_cost = models.DecimalField(
         "costo de referencia", max_digits=10, decimal_places=2, null=True, blank=True,
     )
     currency = models.CharField("moneda", max_length=3, choices=Currency.choices, default=Currency.MXN)
-    duration_hours = models.PositiveSmallIntegerField("duración (horas)", null=True, blank=True)
-    pillar = models.CharField("pilar", max_length=16, choices=Pillar.choices, blank=True, default="")
-    tags = models.CharField("etiquetas", max_length=200, blank=True, help_text="Separadas por coma.")
-    areas = models.ManyToManyField("catalog.Area", blank=True, related_name="+", verbose_name="áreas recomendadas")
-    levels = models.ManyToManyField(
-        "catalog.SeniorityLevel", blank=True, related_name="+", verbose_name="niveles recomendados",
-    )
+    duration_hours = models.DecimalField("duración (horas)", max_digits=5, decimal_places=1, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="courses", verbose_name="etiquetas")
     description = models.TextField("descripción", blank=True)
     is_active = models.BooleanField("activo", default=True)
     created_by = models.ForeignKey(
@@ -77,14 +112,6 @@ class CatalogCourse(models.Model):
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        self.tags = normalize_tags(self.tags)
-        super().save(*args, **kwargs)
-
-    @property
-    def tag_list(self) -> list[str]:
-        return [t for t in self.tags.split(", ") if t]
 
 
 class CourseRequest(models.Model):
@@ -149,10 +176,12 @@ class CourseRequest(models.Model):
     name = models.CharField("nombre del curso", max_length=160)
     provider = models.CharField("proveedor / plataforma", max_length=120)
     url = models.URLField("liga", blank=True)
-    kind = models.CharField("tipo", max_length=16, choices=CourseKind.choices, default=CourseKind.CURSO)
-    duration_hours = models.PositiveSmallIntegerField("duración (horas)", null=True, blank=True)
-    pillar = models.CharField("pilar", max_length=16, choices=Pillar.choices, blank=True, default="")
-    tags = models.CharField("etiquetas", max_length=200, blank=True)
+    kind = models.CharField(
+        "tipo de aprendizaje", max_length=16, choices=CourseKind.choices, default=CourseKind.ESTRUCTURADO,
+    )
+    duration_hours = models.DecimalField("duración (horas)", max_digits=5, decimal_places=1, null=True, blank=True)
+    pillar = models.CharField("pilar que fortalece", max_length=16, choices=Pillar.choices, blank=True, default="")
+    tags = models.ManyToManyField(Tag, blank=True, related_name="requests", verbose_name="etiquetas")
 
     estimated_cost = models.DecimalField(
         "costo estimado", max_digits=10, decimal_places=2, null=True, blank=True,
@@ -183,6 +212,9 @@ class CourseRequest(models.Model):
         "tipo de comprobante", max_length=16, choices=ReceiptType.choices, blank=True, default="",
     )
     not_completed_reason = models.TextField("motivo de no conclusión", blank=True)
+    is_imported = models.BooleanField(
+        "importado", default=False, help_text="Registro histórico cargado sin evidencia ni reseña (spec 006, US6).",
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -240,11 +272,6 @@ class CourseRequest(models.Model):
         if self.final_cost is None or not self.estimated_cost:
             return False
         return self.final_cost > self.estimated_cost * Decimal("1.10")
-
-    @property
-    def tag_list(self) -> list[str]:
-        return [t for t in self.tags.split(", ") if t]
-
 
 class ApprovalStep(models.Model):
     """Bitácora inmutable de cada transición de una solicitud (FR-010)."""
@@ -404,3 +431,115 @@ class LearningSettings(models.Model):
     def load(cls) -> "LearningSettings":
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+# --- Planes anuales por área (spec 006) ---------------------------------------------
+
+
+class TrainingPlan(models.Model):
+    """Plan de capacitación sugerido de un área para un año (US2)."""
+
+    class Status(models.TextChoices):
+        BORRADOR = "BORRADOR", "Borrador"
+        PUBLICADO = "PUBLICADO", "Publicado"
+        ARCHIVADO = "ARCHIVADO", "Archivado"
+
+    area = models.ForeignKey("catalog.Area", on_delete=models.PROTECT, related_name="training_plans",
+                             verbose_name="área")
+    year = models.PositiveSmallIntegerField("año")
+    title = models.CharField("título", max_length=160)
+    start_month = models.PositiveSmallIntegerField("mes inicial", default=1)
+    end_month = models.PositiveSmallIntegerField("mes final", default=12)
+    hours_min = models.PositiveSmallIntegerField("horas por semana (mín.)", null=True, blank=True)
+    hours_max = models.PositiveSmallIntegerField("horas por semana (máx.)", null=True, blank=True)
+    intro = models.TextField("introducción", blank=True)
+    type_notes = models.JSONField("texto por tipo de aprendizaje", default=dict, blank=True)
+    status = models.CharField("estado", max_length=10, choices=Status.choices, default=Status.BORRADOR)
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "plan de capacitación"
+        verbose_name_plural = "planes de capacitación"
+        ordering = ["-year", "area__name"]
+        constraints = [
+            models.UniqueConstraint(fields=["area", "year"], name="learning_plan_unique_area_year"),
+        ]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def is_published(self) -> bool:
+        return self.status == self.Status.PUBLICADO
+
+    @property
+    def is_archived(self) -> bool:
+        return self.status == self.Status.ARCHIVADO
+
+
+class PlanCourse(models.Model):
+    """Curso sugerido dentro de un plan, con niveles propios del plan (FR-011/012)."""
+
+    plan = models.ForeignKey(TrainingPlan, on_delete=models.CASCADE, related_name="items")
+    course = models.ForeignKey(CatalogCourse, on_delete=models.PROTECT, related_name="plan_items",
+                               verbose_name="curso")
+    order = models.PositiveSmallIntegerField("orden", default=0)
+    levels = models.ManyToManyField("catalog.SeniorityLevel", blank=True, related_name="+",
+                                    verbose_name="niveles recomendados")
+    note = models.CharField("nota", max_length=200, blank=True)
+
+    class Meta:
+        verbose_name = "curso del plan"
+        verbose_name_plural = "cursos del plan"
+        ordering = ["order", "pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["plan", "course"], name="learning_plancourse_unique"),
+        ]
+
+    def __str__(self):
+        return f"{self.course} · {self.plan}"
+
+
+class PersonalPlan(models.Model):
+    """Mi plan: selección personal de cursos de un colaborador para un año (US3)."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="personal_plans")
+    year = models.PositiveSmallIntegerField("año")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "plan personal"
+        verbose_name_plural = "planes personales"
+        constraints = [
+            models.UniqueConstraint(fields=["user", "year"], name="learning_personalplan_unique"),
+        ]
+
+    def __str__(self):
+        return f"{self.user} · {self.year}"
+
+
+class PersonalPlanItem(models.Model):
+    """Curso en Mi plan. El avance se deriva de las solicitudes/registros (R8)."""
+
+    personal_plan = models.ForeignKey(PersonalPlan, on_delete=models.CASCADE, related_name="items")
+    course = models.ForeignKey(CatalogCourse, on_delete=models.PROTECT, related_name="+")
+    source = models.ForeignKey(PlanCourse, on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    discarded = models.BooleanField("descartado", default=False)
+    started_at = models.DateTimeField("empezado", null=True, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "curso de Mi plan"
+        verbose_name_plural = "cursos de Mi plan"
+        ordering = ["added_at", "pk"]
+        constraints = [
+            models.UniqueConstraint(fields=["personal_plan", "course"], name="learning_planitem_unique"),
+        ]
+
+    def __str__(self):
+        return f"{self.course} · {self.personal_plan}"

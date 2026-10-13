@@ -8,14 +8,10 @@
     {% for e in form.non_field_errors %}<p class="text-base text-error">{{ e }}</p>{% endfor %}
     <div class="grid sm:grid-cols-2 gap-4">
       {% for field in form %}
-        <div class="{% if field.name in 'name url description areas levels tags' %}sm:col-span-2{% endif %}">
-          {% if field.name == "areas" or field.name == "levels" %}
-            <span class="fieldset-legend">{{ field.label|capfirst }}</span>
-            <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in field %}<label class="inline-flex items-center gap-1.5 text-base text-base-content/80">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
-          {% else %}
-            <label class="fieldset-legend" for="{{ field.id_for_label }}">{{ field.label|capfirst }}{% if field.field.required %} <span class="text-error">*</span>{% endif %}</label>
-            {{ field }}
-          {% endif %}
+        <div class="{% if field.name in 'name url description tag_names' %}sm:col-span-2{% endif %}">
+          <label class="fieldset-legend" for="{{ field.id_for_label }}">{{ field.label|capfirst }}{% if field.field.required %} <span class="text-error">*</span>{% endif %}</label>
+          {{ field }}
+          {% if field.name == "url" and same_url %}<p class="mt-1 text-base text-warning">Ya existe un curso con esta liga: <a href="{% url 'learning:catalog_detail' same_url.pk %}" class="underline">{{ same_url.name }}</a>.</p>{% endif %}
           {% if field.help_text %}<p class="mt-1 text-base text-base-content/60">{{ field.help_text }}</p>{% endif %}
           {% for e in field.errors %}<p class="mt-1 text-base text-error">{{ e }}</p>{% endfor %}
         </div>

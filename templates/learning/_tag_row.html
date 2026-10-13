@@ -1,0 +1,56 @@
+{% comment %}Fila de la tabla de etiquetas (htmx: renombrar y activar/desactivar devuelven esta fila).{% endcomment %}
+<tr id="tag-row-{{ t.pk }}" x-data="{ editing: {% if error %}true{% else %}false{% endif %} }">
+  <td>
+    <div x-show="!editing" class="flex items-center gap-2">
+      <span class="badge {% if t.is_active %}badge-soft badge-primary{% else %}badge-ghost text-base-content/50{% endif %}">{{ t.name }}</span>
+    </div>
+    <form x-show="editing" x-cloak class="flex items-center gap-2"
+          hx-post="{% url 'learning:tag_edit' t.pk %}" hx-target="#tag-row-{{ t.pk }}" hx-swap="outerHTML"
+          hx-indicator="#tag-spin-{{ t.pk }}">
+      {% csrf_token %}
+      <input type="text" name="name" value="{{ t.name }}" maxlength="60" class="input input-sm w-48" aria-label="Nuevo nombre de {{ t.name }}">
+      <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+      <button type="button" class="btn btn-sm btn-ghost" @click="editing = false">Cancelar</button>
+    </form>
+    {% if error %}<p class="mt-1 text-base text-error">{{ error }}</p>{% endif %}
+  </td>
+  <td class="text-right tabular-nums">{{ t.course_count }}</td>
+  <td class="text-right tabular-nums">{{ t.request_count }}</td>
+  <td>{% if t.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Desactivada</span>{% endif %}</td>
+  <td>
+    <div class="flex justify-end items-center gap-1">
+      <span id="tag-spin-{{ t.pk }}" class="loading loading-spinner loading-xs htmx-indicator" aria-hidden="true"></span>
+      <button type="button" class="btn btn-sm btn-ghost" @click="editing = true" x-show="!editing">
+        <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Renombrar
+      </button>
+      {% if t.is_active %}
+        <button type="button" class="btn btn-sm btn-ghost" data-modal-open="tag-merge-{{ t.pk }}" onclick="openModal(this.dataset.modalOpen)">
+          <i data-lucide="merge" class="w-4 h-4" aria-hidden="true"></i> Fusionar
+        </button>
+      {% endif %}
+      <button type="button" class="btn btn-sm btn-ghost"
+              hx-post="{% url 'learning:tag_toggle' t.pk %}" hx-target="#tag-row-{{ t.pk }}" hx-swap="outerHTML"
+              hx-indicator="#tag-spin-{{ t.pk }}">
+        {% if t.is_active %}<i data-lucide="eye-off" class="w-4 h-4" aria-hidden="true"></i> Desactivar{% else %}<i data-lucide="eye" class="w-4 h-4" aria-hidden="true"></i> Reactivar{% endif %}
+      </button>
+    </div>
+    {% if t.is_active %}
+      <dialog id="tag-merge-{{ t.pk }}" class="modal" aria-label="Fusionar {{ t.name }}">
+        <div class="modal-box max-w-sm">
+          <h3 class="font-heading text-lg font-semibold">Fusionar «{{ t.name }}»</h3>
+          <p class="py-2 text-base text-base-content/70">Sus {{ t.course_count }} curso{{ t.course_count|pluralize }} y {{ t.request_count }} solicitud{{ t.request_count|pluralize:"es" }} pasan a la etiqueta destino, sin duplicados. «{{ t.name }}» desaparece.</p>
+          <form method="post" action="{% url 'learning:tag_merge' t.pk %}" class="space-y-3">
+            {% csrf_token %}
+            <label class="fieldset-legend" for="{{ merge_form.target.id_for_label }}">{{ merge_form.target.label }}</label>
+            {{ merge_form.target }}
+            <div class="modal-action">
+              <button type="button" class="btn btn-ghost btn-sm" onclick="this.closest('dialog').close()">Cancelar</button>
+              <button type="submit" class="btn btn-primary btn-sm">Fusionar</button>
+            </div>
+          </form>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button type="submit">Cerrar</button></form>
+      </dialog>
+    {% endif %}
+  </td>
+</tr>

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load learning_tags %}
 {% block content %}
 {% include "learning/_subnav.html" %}
 
@@ -6,19 +7,36 @@
   <div class="lg:col-span-2 space-y-6">
     <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6">
       <div class="flex flex-wrap items-center gap-2 mb-2">
-        <span class="badge bg-primary/10 text-primary">{{ course.get_kind_display }}</span>
-        {% if course.pillar %}<span class="badge bg-base-200 text-base-content/70">{{ course.get_pillar_display }}</span>{% endif %}
+        {% include "learning/_course_badges.html" with course=course show_tags=False %}
         {% if not course.is_active %}<span class="badge bg-base-300 text-base-content/70">Archivado</span>{% endif %}
       </div>
       <h3 class="text-lg font-semibold text-base-content">{{ course.name }}</h3>
-      <p class="text-base text-base-content/70">{{ course.provider }}{% if course.duration_hours %} · {{ course.duration_hours }} h{% endif %}{% if course.reference_cost is not None %} · referencia ${{ course.reference_cost|floatformat:"0g" }} {{ course.currency }}{% endif %}</p>
-      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-base text-primary hover:underline"><i data-lucide="external-link" class="w-4 h-4"></i> Ver el curso</a>{% endif %}
+      <p class="text-base text-base-content/70">{{ course.provider }}{% if course.duration_hours %} · {{ course.duration_hours|hours }}{% endif %}{% if course.reference_cost is not None %} · referencia ${{ course.reference_cost|floatformat:"0g" }} {{ course.currency }}{% endif %}</p>
+      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1 text-base text-primary hover:underline"><i data-lucide="external-link" class="w-4 h-4" aria-hidden="true"></i> Ver el curso</a>{% endif %}
       {% if course.description %}<p class="mt-4 text-base text-base-content/80 whitespace-pre-line">{{ course.description }}</p>{% endif %}
-      <div class="mt-4 flex flex-wrap gap-2 text-base text-base-content/70">
-        {% for a in course.areas.all %}<span class="badge bg-base-200 text-base-content/70">{{ a.name }}</span>{% endfor %}
-        {% for l in course.levels.all %}<span class="badge bg-base-200 text-base-content/70">{{ l.name }}</span>{% endfor %}
-        {% for t in course.tag_list %}<span class="badge bg-base-100 border border-base-300 text-base-content/60">#{{ t }}</span>{% endfor %}
-      </div>
+      {% if course.tags.all %}
+        <div class="mt-4 flex flex-wrap gap-1.5" role="group" aria-label="Etiquetas">
+          {% for t in course.tags.all %}<span class="badge badge-outline text-base-content/70">{{ t.name }}</span>{% endfor %}
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6">
+      <h4 class="font-semibold text-base-content mb-3">En los planes de capacitación</h4>
+      {% if plan_items %}
+        <ul class="divide-y divide-base-300">
+          {% for pc in plan_items %}
+            <li class="py-2 flex flex-wrap items-center justify-between gap-2">
+              <a href="{% url 'learning:plan_detail' pc.plan.pk %}" class="text-base text-base-content hover:underline">{{ pc.plan.area.name }} · {{ pc.plan.year }}{% if pc.plan.is_archived %} <span class="text-base-content/50">(archivado)</span>{% endif %}</a>
+              <span class="flex flex-wrap gap-1">
+                {% for lv in pc.levels.all %}<span class="badge badge-soft">{{ lv.name }}</span>{% empty %}<span class="badge badge-soft">Todos los niveles</span>{% endfor %}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-base text-base-content/60">Este curso aún no forma parte de ningún plan publicado.</p>
+      {% endif %}
     </section>
 
     <section>
@@ -51,13 +69,14 @@
       {% else %}<p class="text-base text-base-content/60">Sin calificaciones aún</p>{% endif %}
       <p class="mt-2 text-base text-base-content/70">{{ course.completed_count }} persona{{ course.completed_count|pluralize }} de Arena lo completó</p>
       {% if course.is_active %}
-        <a href="{% url 'learning:request_create' %}?catalogo={{ course.pk }}" class="btn btn-primary w-full mt-4"><i data-lucide="send" class="w-4 h-4"></i> Solicitar este curso</a>
+        {% if can_myplan %}<div class="mt-4">{% include "learning/_my_plan_button.html" with course=course pc=None added=False full=True %}</div>{% endif %}
+        <a href="{% url 'learning:request_create' %}?catalogo={{ course.pk }}" class="btn btn-primary w-full mt-4"><i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i> Solicitar este curso</a>
         <a href="{% url 'learning:direct_create' %}?catalogo={{ course.pk }}" class="btn btn-ghost w-full mt-2 text-base">Ya lo tomé: registrarlo</a>
       {% endif %}
     </div>
     {% if can_manage %}
       <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 space-y-2">
-        <a href="{% url 'learning:catalog_edit' course.pk %}" class="btn btn-outline btn-primary w-full"><i data-lucide="pencil" class="w-4 h-4"></i> Editar</a>
+        <a href="{% url 'learning:catalog_edit' course.pk %}" class="btn btn-outline btn-primary w-full"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</a>
         <form method="post" action="{% url 'learning:catalog_archive' course.pk %}">{% csrf_token %}
           <button type="submit" class="btn btn-ghost w-full">{% if course.is_active %}Archivar{% else %}Reactivar{% endif %}</button>
         </form>

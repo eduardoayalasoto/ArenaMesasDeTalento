@@ -1,0 +1,11 @@
+{% comment %}Sugerencias para `components/_tag_input.html` (htmx). Se insertan dentro del `x-data` del campo.{% endcomment %}
+{% for t in suggestions %}
+  <li role="option"><button type="button" data-tag-option data-name="{{ t.name }}" @click="add($el.dataset.name)">{{ t.name }}</button></li>
+{% endfor %}
+{% if q and not exists %}
+  <li role="option"><button type="button" data-tag-option data-name="{{ q }}" @click="add($el.dataset.name)">
+    <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Crear «{{ q }}»
+  </button></li>
+{% elif not suggestions %}
+  <li class="menu-disabled"><span class="text-base-content/60">{% if q %}Ya está en la lista o está desactivada{% else %}Escribe para buscar etiquetas{% endif %}</span></li>
+{% endif %}

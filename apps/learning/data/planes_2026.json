@@ -1,0 +1,6275 @@
+{
+ "year": 2026,
+ "plans": [
+  {
+   "area": "PM",
+   "year": 2026,
+   "title": "Plan de Capacitación PM 2026",
+   "intro": "Catálogo sugerido, no currícula obligatoria: cada PM elige según su nivel, la brecha identificada en su evaluación y sus proyectos actuales. Las etiquetas Jr, Mid y Snr indican el nivel para el que el curso es prioritario; un curso sin nivel es para todos.",
+   "start_month": 5,
+   "end_month": 12,
+   "hours_min": 3,
+   "hours_max": 10,
+   "type_notes": {
+    "ESTRUCTURADO": "Cursos completos que construyen profundidad real en los dominios más críticos del PM. Organizados por dominio y etiquetados por nivel. La ruta recomendada para desarrollar las brechas identificadas en la evaluación.",
+    "CERTIFICACION": "Certificaciones que validan externamente las habilidades técnicas y de gestión del PM. Especialmente relevantes para los dominios de datos e IA donde el PM necesita credibilidad ante equipos técnicos y clientes.",
+    "PUNTUAL": "Cursos cortos de 1–3 horas para aprender un skill específico antes de un proyecto, preparar una presentación importante o mantenerse al día con lo que está cambiando rápido. Principalmente DeepLearning.AI (gratuitos) y DataCamp.",
+    "CONTEXTUAL": "Cursos que construyen criterio de contexto, no habilidades técnicas directas. Conectan el trabajo de PM con la realidad del mercado y de los clientes de Arena — los sectores donde se aplican las soluciones que gestiona."
+   },
+   "items": [
+    {
+     "course": "coursera.org/professional-certificates/google-project-management",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 1
+    },
+    {
+     "course": "coursera.org/learn/introduction-to-certified-scrum-master",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 2
+    },
+    {
+     "course": "coursera.org/learn/work-smarter-not-harder",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 3
+    },
+    {
+     "course": "coursera.org/learn/advanced-project-management-and-leadership",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 4
+    },
+    {
+     "course": "coursera.org/learn/agile-leadership-principles-and-practices",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 5
+    },
+    {
+     "course": "coursera.org/learn/communicate-with-impact",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 6
+    },
+    {
+     "course": "coursera.org/learn/wharton-communication-skills",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 7
+    },
+    {
+     "course": "coursera.org/specializations/business-communication",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 8
+    },
+    {
+     "course": "coursera.org/learn/project-management-communication-stakeholders-leadership",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 9
+    },
+    {
+     "course": "datacamp.com/courses/data-storytelling-concepts",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 10
+    },
+    {
+     "course": "datacamp.com/courses/communicating-data-insights",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 11
+    },
+    {
+     "course": "datacamp.com/tracks/data-storytelling",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 12
+    },
+    {
+     "course": "udemy.com/course/become-a-product-manager-learn-the-skills-get-a-job",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 13
+    },
+    {
+     "course": "coursera.org/professional-certificates/google-data-analytics",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 14
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-core-data-concepts",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 15
+    },
+    {
+     "course": "learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst-associate",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 16
+    },
+    {
+     "course": "coursera.org/learn/ai-for-everyone",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 17
+    },
+    {
+     "course": "coursera.org/learn/data-analysis-with-python",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 18
+    },
+    {
+     "course": "coursera.org/learn/agile-project-management",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 19
+    },
+    {
+     "course": "coursera.org/learn/project-risk-management",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 20
+    },
+    {
+     "course": "coursera.org/learn/critical-thinking-problem-solving",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 21
+    },
+    {
+     "course": "coursera.org/learn/everyday-leadership-foundation",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 22
+    },
+    {
+     "course": "coursera.org/learn/feedback",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 23
+    },
+    {
+     "course": "coursera.org/learn/emotional-intelligence-in-leadership-1",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 24
+    },
+    {
+     "course": "coursera.org/learn/negotiation-skills",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 25
+    },
+    {
+     "course": "cert:PMP",
+     "levels": [
+      "SNR"
+     ],
+     "note": "PMI · Examen ~$405 USD miembro / $555 no miembro",
+     "order": 26
+    },
+    {
+     "course": "cert:PL-300",
+     "levels": [
+      "MID"
+     ],
+     "note": "MS Learn · Gratis para preparación · Examen ~$165 USD",
+     "order": 27
+    },
+    {
+     "course": "cert:DP-900",
+     "levels": [
+      "MID"
+     ],
+     "note": "MS Learn · Gratis para preparación · Examen ~$165 USD",
+     "order": 28
+    },
+    {
+     "course": "cert:AI-901",
+     "levels": [],
+     "note": "MS Learn · Gratis para preparación · Examen ~$165 USD",
+     "order": 29
+    },
+    {
+     "course": "datacamp.com/courses/data-communication-concepts",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 30
+    },
+    {
+     "course": "datacamp.com/courses/creating-dashboards-in-tableau",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 31
+    },
+    {
+     "course": "datacamp.com/courses/introduction-to-power-bi",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 32
+    },
+    {
+     "course": "coursera.org/learn/building-powerful-reports-and-dashboards-in-powerbi",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 33
+    },
+    {
+     "course": "datacamp.com/courses/understanding-machine-learning",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 34
+    },
+    {
+     "course": "datacamp.com/courses/introduction-to-data-engineering",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 35
+    },
+    {
+     "course": "datacamp.com/courses/understanding-data-engineering",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 36
+    },
+    {
+     "course": "datacamp.com/courses/introduction-to-sql",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 37
+    },
+    {
+     "course": "datacamp.com/courses/intermediate-sql",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 38
+    },
+    {
+     "course": "deeplearning.ai/courses/building-evaluating-advanced-rag",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 39
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/fundamentals-generative-ai",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 40
+    },
+    {
+     "course": "linkedin.com/learning/using-ai-for-data-driven-insights",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 41
+    },
+    {
+     "course": "datacamp.com/courses/data-driven-decision-making",
+     "levels": [],
+     "note": "",
+     "order": 42
+    },
+    {
+     "course": "deeplearning.ai/courses/evaluating-debugging-generative-ai",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 43
+    },
+    {
+     "course": "deeplearning.ai/courses/quality-safety-llm-applications",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 44
+    },
+    {
+     "course": "coursera.org/learn/managing-as-a-coach",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 45
+    },
+    {
+     "course": "coursera.org/learn/manager-of-managers-coaching-and-mentoring-people-managers",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 46
+    },
+    {
+     "course": "coursera.org/specializations/logic-critical-thinking-duke",
+     "levels": [],
+     "note": "",
+     "order": 47
+    },
+    {
+     "course": "coursera.org/specializations/critical-thinking",
+     "levels": [],
+     "note": "",
+     "order": 48
+    },
+    {
+     "course": "coursera.org/learn/mindware",
+     "levels": [],
+     "note": "",
+     "order": 49
+    },
+    {
+     "course": "coursera.org/learn/creative-thinking-techniques-and-tools-for-success",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 50
+    },
+    {
+     "course": "datacamp.com/courses/introduction-to-ai-for-work",
+     "levels": [],
+     "note": "",
+     "order": 51
+    },
+    {
+     "course": "coursera.org/learn/generative-ai-for-everyone",
+     "levels": [],
+     "note": "",
+     "order": 52
+    },
+    {
+     "course": "coursera.org/specializations/generative-ai-for-product-managers",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 53
+    },
+    {
+     "course": "coursera.org/professional-certificates/microsoft-ai-product-manager",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 54
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/courses/ai-901t00",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 55
+    },
+    {
+     "course": "deeplearning.ai/courses/chatgpt-prompt-eng",
+     "levels": [],
+     "note": "",
+     "order": 56
+    },
+    {
+     "course": "linkedin.com/learning/generative-ai-for-product-managers",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 57
+    },
+    {
+     "course": "youtube.com/watch?v=ZPQ8iSgv96Q",
+     "levels": [],
+     "note": "",
+     "order": 58
+    },
+    {
+     "course": "youtube.com/watch?v=gNQ9-kgyHfo",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 59
+    },
+    {
+     "course": "youtube.com/watch?v=hK1SJqJi1PU",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 60
+    },
+    {
+     "course": "mckinsey.com/forward/overview",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 61
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/transform-your-business-with-microsoft-ai",
+     "levels": [],
+     "note": "",
+     "order": 62
+    },
+    {
+     "course": "coursera.org/professional-certificates/unilever-supply-chain-data-analyst",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 63
+    },
+    {
+     "course": "alison.com/course/fundamentals-of-retail-analytics",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 64
+    },
+    {
+     "course": "alison.com/course/an-introduction-to-supply-chain-management",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 65
+    },
+    {
+     "course": "alison.com/course/mastering-supply-chain-and-logistics-management",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 66
+    },
+    {
+     "course": "coursera.org/specializations/wharton-retail-strategy",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 67
+    },
+    {
+     "course": "linkedin.com/learning/introduction-to-artificial-intelligence-24947908",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 68
+    },
+    {
+     "course": "linkedin.com/learning/generative-ai-for-business-leaders",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 69
+    },
+    {
+     "course": "datacamp.com/es/courses/artificial-intelligence-ai-strategy",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 70
+    },
+    {
+     "course": "coursera.org/learn/generative-ai-strategy-business-leaders",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 71
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/create-business-value",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 72
+    },
+    {
+     "course": "learn.microsoft.com/en-us/ai/playbook/technology-guidance/overreliance-on-ai/overreliance-on-ai",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 73
+    },
+    {
+     "course": "linkedin.com/learning/strategic-thinking-22616141",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 74
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/explore-microsoft-365-copilot-agents",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 75
+    },
+    {
+     "course": "linkedin.com/learning/the-ai-driven-product-designer",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 76
+    },
+    {
+     "course": "linkedin.com/learning/the-manager-s-guide-to-career-conversations-in-the-age-of-ai",
+     "levels": [
+      "JR"
+     ],
+     "note": "",
+     "order": 77
+    },
+    {
+     "course": "linkedin.com/learning/ai-agents-for-product-leaders",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 78
+    },
+    {
+     "course": "linkedin.com/learning/leverage-generative-ai-to-streamline-processes-and-increase-efficiency-as-a-manager",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 79
+    },
+    {
+     "course": "linkedin.com/learning/artificial-intelligence-for-project-managers-24531458",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 80
+    },
+    {
+     "course": "linkedin.com/learning/strengthen-your-decision-making-with-generative-ai",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 81
+    },
+    {
+     "course": "linkedin.com/learning/integrating-generative-ai-into-the-creative-process",
+     "levels": [
+      "MID"
+     ],
+     "note": "",
+     "order": 82
+    },
+    {
+     "course": "linkedin.com/learning/artificial-intelligence-and-business-strategy",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 83
+    },
+    {
+     "course": "linkedin.com/learning/introduction-to-large-language-models",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 84
+    },
+    {
+     "course": "linkedin.com/learning/introduction-to-nlp-and-llms-principles-and-practical-applications",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 85
+    },
+    {
+     "course": "datacamp.com/courses/mlops-concepts",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 86
+    },
+    {
+     "course": "linkedin.com/learning/introduction-to-ai-governance",
+     "levels": [
+      "SNR"
+     ],
+     "note": "",
+     "order": 87
+    }
+   ]
+  },
+  {
+   "area": "UXUI",
+   "year": 2026,
+   "title": "Plan de Capacitación UX/UI 2026",
+   "intro": "Catálogo sugerido, no currícula obligatoria: cada diseñador elige según su nivel, su rol en los proyectos y las áreas de oportunidad identificadas.",
+   "start_month": 5,
+   "end_month": 12,
+   "hours_min": 3,
+   "hours_max": 10,
+   "type_notes": {
+    "PUNTUAL": "Recursos de 30 min a 3 horas para desarrollar un skill específico, mantenerse al día con tendencias de diseño o preparar terreno antes de un proyecto con requerimientos particulares."
+   },
+   "items": [
+    {
+     "course": "coursera.org/professional-certificates/google-ux-design",
+     "levels": [
+      "JR",
+      "MID"
+     ],
+     "note": "Coursera · Licencia activa requerida · ~6 meses a ritmo parcial",
+     "order": 1
+    },
+    {
+     "course": "interaction-design.org/courses/user-research-methods-and-best-practices",
+     "levels": [],
+     "note": "",
+     "order": 2
+    },
+    {
+     "course": "coursera.org/learn/ux-research-and-information-architecture",
+     "levels": [],
+     "note": "",
+     "order": 3
+    },
+    {
+     "course": "interaction-design.org/courses/design-thinking-the-ultimate-guide",
+     "levels": [],
+     "note": "",
+     "order": 4
+    },
+    {
+     "course": "interaction-design.org/courses/ui-design-patterns-for-successful-software",
+     "levels": [],
+     "note": "",
+     "order": 5
+    },
+    {
+     "course": "help.figma.com/hc/en-us/articles/14552901442839-overview-introduction-to-design-systems",
+     "levels": [],
+     "note": "",
+     "order": 6
+    },
+    {
+     "course": "ixdf.org/courses/accessibility-in-practice",
+     "levels": [],
+     "note": "",
+     "order": 7
+    },
+    {
+     "course": "interaction-design.org/courses/information-visualization-getting-dashboards-right",
+     "levels": [],
+     "note": "",
+     "order": 8
+    },
+    {
+     "course": "interaction-design.org/courses/data-driven-design-quantitative-research-for-ux",
+     "levels": [],
+     "note": "",
+     "order": 9
+    },
+    {
+     "course": "interaction-design.org/courses/present-like-a-pro-communication-skills",
+     "levels": [],
+     "note": "",
+     "order": 10
+    },
+    {
+     "course": "interaction-design.org/courses/agile-methods-for-ux-design",
+     "levels": [],
+     "note": "",
+     "order": 11
+    },
+    {
+     "course": "coursera.org/learn/data-science-course",
+     "levels": [],
+     "note": "",
+     "order": 12
+    },
+    {
+     "course": "nngroup.com/articles/ux-research-cheat-sheet",
+     "levels": [],
+     "note": "",
+     "order": 13
+    },
+    {
+     "course": "nngroup.com/articles/user-journeys-vs-user-flows",
+     "levels": [],
+     "note": "",
+     "order": 14
+    },
+    {
+     "course": "nngroup.com/articles/usability-testing-101",
+     "levels": [],
+     "note": "",
+     "order": 15
+    },
+    {
+     "course": "uxdesign.cc/design-edge-cases-and-where-to-find-them-921414b20b4",
+     "levels": [],
+     "note": "",
+     "order": 16
+    },
+    {
+     "course": "help.figma.com/hc/en-us/articles/15339657135383-guide-to-variables-in-figma",
+     "levels": [],
+     "note": "",
+     "order": 17
+    },
+    {
+     "course": "nngroup.com/articles/design-systems-101",
+     "levels": [],
+     "note": "",
+     "order": 18
+    },
+    {
+     "course": "nngroup.com/articles/visual-treatments-accessibility",
+     "levels": [],
+     "note": "",
+     "order": 19
+    },
+    {
+     "course": "help.figma.com/hc/en-us/articles/15023124644247-guide-to-dev-mode",
+     "levels": [],
+     "note": "",
+     "order": 20
+    },
+    {
+     "course": "designbetter.com/books/design-systems-handbook",
+     "levels": [],
+     "note": "",
+     "order": 21
+    },
+    {
+     "course": "nngroup.com/articles/dashboards-preattentive",
+     "levels": [],
+     "note": "",
+     "order": 22
+    },
+    {
+     "course": "storytellingwithdata.com/chart-guide",
+     "levels": [],
+     "note": "",
+     "order": 23
+    },
+    {
+     "course": "m2.material.io/design/communication/data-visualization.html",
+     "levels": [],
+     "note": "",
+     "order": 24
+    },
+    {
+     "course": "nngroup.com/articles/empty-state-interface-design",
+     "levels": [],
+     "note": "",
+     "order": 25
+    },
+    {
+     "course": "observablehq.com/@d3/gallery",
+     "levels": [],
+     "note": "",
+     "order": 26
+    },
+    {
+     "course": "nngroup.com/articles/data-tables",
+     "levels": [],
+     "note": "",
+     "order": 27
+    },
+    {
+     "course": "nngroup.com/articles/design-critiques",
+     "levels": [],
+     "note": "",
+     "order": 28
+    },
+    {
+     "course": "nngroup.com/articles/collaborating-stakeholders",
+     "levels": [],
+     "note": "",
+     "order": 29
+    },
+    {
+     "course": "interaction-design.org/literature/article/ux-research-communication-know-your-audience",
+     "levels": [],
+     "note": "",
+     "order": 30
+    },
+    {
+     "course": "nngroup.com/articles/ux-stories",
+     "levels": [],
+     "note": "",
+     "order": 31
+    },
+    {
+     "course": "medium.com/@rchang/a-beginners-guide-to-data-engineering-part-i-4227c5c457d7",
+     "levels": [],
+     "note": "",
+     "order": 32
+    },
+    {
+     "course": "youtube.com/watch?v=i_LwzRVP7bg",
+     "levels": [],
+     "note": "",
+     "order": 33
+    },
+    {
+     "course": "coursera.org/learn/what-is-datascience",
+     "levels": [],
+     "note": "",
+     "order": 34
+    },
+    {
+     "course": "coursera.org/learn/powerpoint-presentations",
+     "levels": [],
+     "note": "",
+     "order": 35
+    },
+    {
+     "course": "nngroup.com/articles/ux-writing-study-guide",
+     "levels": [],
+     "note": "",
+     "order": 36
+    },
+    {
+     "course": "interaction-design.org/literature/article/how-to-involve-stakeholders-in-your-user-research",
+     "levels": [],
+     "note": "",
+     "order": 37
+    },
+    {
+     "course": "coursera.org/learn/strategic-management",
+     "levels": [],
+     "note": "",
+     "order": 38
+    },
+    {
+     "course": "nngroup.com/articles/return-on-investment-for-usability",
+     "levels": [],
+     "note": "",
+     "order": 39
+    },
+    {
+     "course": "coursera.org/learn/project-management-foundations",
+     "levels": [],
+     "note": "",
+     "order": 40
+    },
+    {
+     "course": "nngroup.com/articles/prioritization-matrices",
+     "levels": [],
+     "note": "",
+     "order": 41
+    }
+   ]
+  },
+  {
+   "area": "CD",
+   "year": 2026,
+   "title": "Plan de Capacitación Ingeniería de IA 2026",
+   "intro": "Catálogo sugerido, no currícula rígida: cada persona elige sus cursos según su rol en proyectos, sus fortalezas y su tiempo disponible. Stack: Azure + Claude. Microsoft Learn y Anthropic Academy son gratuitos; el costo principal son los exámenes de certificación.",
+   "start_month": 4,
+   "end_month": 12,
+   "hours_min": 5,
+   "hours_max": 10,
+   "type_notes": {
+    "PUNTUAL": "Cursos de 1–2 horas enseñados por los creadores de las herramientas. Para aprender un skill específico en una tarde, mantenerse al día con lo que está cambiando rápido, o preparar terreno antes de un proyecto. Todos gratuitos en learn.deeplearning.ai salvo donde se indica.",
+    "CONTEXTUAL": "Cursos que construyen criterio de decisión, no habilidades técnicas directas. Conectan el trabajo de IA con la realidad del mundo — cuándo usar ML clásico en lugar de un LLM, y cómo aplica la IA en los sectores de los clientes."
+   },
+   "items": [
+    {
+     "course": "learn.microsoft.com/en-us/training/courses/ai-901t00",
+     "levels": [],
+     "note": "",
+     "order": 1
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/get-started-ai-apps-agents",
+     "levels": [],
+     "note": "",
+     "order": 2
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/embrace-responsible-ai-principles-practices",
+     "levels": [],
+     "note": "",
+     "order": 3
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/develop-ai-solutions-azure-openai",
+     "levels": [],
+     "note": "",
+     "order": 4
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/ai-knowldge-mining",
+     "levels": [],
+     "note": "",
+     "order": 5
+    },
+    {
+     "course": "anthropic.skilljar.com/claude-with-the-anthropic-api",
+     "levels": [],
+     "note": "",
+     "order": 6
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/courses/ai-103t00",
+     "levels": [],
+     "note": "",
+     "order": 7
+    },
+    {
+     "course": "anthropic.skilljar.com/introduction-to-model-context-protocol",
+     "levels": [],
+     "note": "",
+     "order": 8
+    },
+    {
+     "course": "anthropic.skilljar.com/model-context-protocol-advanced-topics",
+     "levels": [],
+     "note": "",
+     "order": 9
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/introduction-machine-learn-operations",
+     "levels": [],
+     "note": "",
+     "order": 10
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/courses/ai-300t00",
+     "levels": [],
+     "note": "",
+     "order": 11
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/introduction-end-analytics-use-microsoft-fabric",
+     "levels": [],
+     "note": "",
+     "order": 12
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/get-started-fabric",
+     "levels": [],
+     "note": "",
+     "order": 13
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/explore-real-time-analytics-microsoft-fabric",
+     "levels": [],
+     "note": "",
+     "order": 14
+    },
+    {
+     "course": "anthropic.skilljar.com/claude-code-in-action",
+     "levels": [],
+     "note": "",
+     "order": 15
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/evaluate-generative-ai-apps",
+     "levels": [],
+     "note": "",
+     "order": 16
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/ai-security-controls",
+     "levels": [],
+     "note": "",
+     "order": 17
+    },
+    {
+     "course": "cert:AI-901",
+     "levels": [],
+     "note": "Beta abr 2026 · Live jun 2026 · ~$165 USD",
+     "order": 18
+    },
+    {
+     "course": "cert:AI-103",
+     "levels": [],
+     "note": "Beta abr 2026 · Live jun 2026 · ~$165 USD",
+     "order": 19
+    },
+    {
+     "course": "cert:AI-300",
+     "levels": [],
+     "note": "Beta mar 2026 · Live may 2026 · ~$165 USD",
+     "order": 20
+    },
+    {
+     "course": "cert:CCA",
+     "levels": [],
+     "note": "Anthropic Academy · Gratuito vía Claude Partner Network",
+     "order": 21
+    },
+    {
+     "course": "coursera.org/learn/microsoft-getting-started-with-generative-ai-in-azure",
+     "levels": [],
+     "note": "",
+     "order": 22
+    },
+    {
+     "course": "deeplearning.ai/courses/reasoning-with-o1",
+     "levels": [],
+     "note": "",
+     "order": 23
+    },
+    {
+     "course": "deeplearning.ai/courses/reinforcement-learning-from-human-feedback",
+     "levels": [],
+     "note": "",
+     "order": 24
+    },
+    {
+     "course": "deeplearning.ai/courses/pretraining-llms",
+     "levels": [],
+     "note": "",
+     "order": 25
+    },
+    {
+     "course": "deeplearning.ai/courses/post-training-of-llms",
+     "levels": [],
+     "note": "",
+     "order": 26
+    },
+    {
+     "course": "deeplearning.ai/courses/reinforcement-fine-tuning-llms-grpo",
+     "levels": [],
+     "note": "",
+     "order": 27
+    },
+    {
+     "course": "deeplearning.ai/courses/embedding-models-from-architecture-to-implementation",
+     "levels": [],
+     "note": "",
+     "order": 28
+    },
+    {
+     "course": "deeplearning.ai/courses/chatgpt-prompt-eng",
+     "levels": [],
+     "note": "",
+     "order": 29
+    },
+    {
+     "course": "deeplearning.ai/courses/building-systems-with-chatgpt",
+     "levels": [],
+     "note": "",
+     "order": 30
+    },
+    {
+     "course": "deeplearning.ai/courses/getting-structured-llm-output",
+     "levels": [],
+     "note": "",
+     "order": 31
+    },
+    {
+     "course": "deeplearning.ai/courses/langchain-chat-with-your-data",
+     "levels": [],
+     "note": "",
+     "order": 32
+    },
+    {
+     "course": "deeplearning.ai/courses/building-evaluating-advanced-rag",
+     "levels": [],
+     "note": "",
+     "order": 33
+    },
+    {
+     "course": "deeplearning.ai/courses/advanced-retrieval-for-ai",
+     "levels": [],
+     "note": "",
+     "order": 34
+    },
+    {
+     "course": "deeplearning.ai/courses/vector-databases-embeddings-applications",
+     "levels": [],
+     "note": "",
+     "order": 35
+    },
+    {
+     "course": "deeplearning.ai/courses/knowledge-graphs-rag",
+     "levels": [],
+     "note": "",
+     "order": 36
+    },
+    {
+     "course": "deeplearning.ai/courses/preprocessing-unstructured-data-for-llm-applications",
+     "levels": [],
+     "note": "",
+     "order": 37
+    },
+    {
+     "course": "deeplearning.ai/courses/prompt-compression-and-query-optimization",
+     "levels": [],
+     "note": "",
+     "order": 38
+    },
+    {
+     "course": "deeplearning.ai/courses/retrieval-optimization-from-tokenization-to-vector-quantization",
+     "levels": [],
+     "note": "",
+     "order": 39
+    },
+    {
+     "course": "deeplearning.ai/courses/multimodal-rag-chat-with-videos",
+     "levels": [],
+     "note": "",
+     "order": 40
+    },
+    {
+     "course": "deeplearning.ai/courses/building-agentic-rag-with-llamaindex",
+     "levels": [],
+     "note": "",
+     "order": 41
+    },
+    {
+     "course": "deeplearning.ai/courses/retrieval-augmented-generation",
+     "levels": [],
+     "note": "",
+     "order": 42
+    },
+    {
+     "course": "deeplearning.ai/courses/google-cloud-vertex-ai",
+     "levels": [],
+     "note": "",
+     "order": 43
+    },
+    {
+     "course": "deeplearning.ai/courses/large-multimodal-model-prompting-with-gemini",
+     "levels": [],
+     "note": "",
+     "order": 44
+    },
+    {
+     "course": "deeplearning.ai/courses/javascript-rag-web-apps-with-llamaindex",
+     "levels": [],
+     "note": "",
+     "order": 45
+    },
+    {
+     "course": "deeplearning.ai/courses/building-applications-vector-databases",
+     "levels": [],
+     "note": "",
+     "order": 46
+    },
+    {
+     "course": "deeplearning.ai/courses/building-multimodal-search-and-rag",
+     "levels": [],
+     "note": "",
+     "order": 47
+    },
+    {
+     "course": "datacamp.com/courses/natural-language-processing-nlp-in-python",
+     "levels": [],
+     "note": "",
+     "order": 48
+    },
+    {
+     "course": "datacamp.com/courses/natural-language-processing-with-spacy",
+     "levels": [],
+     "note": "",
+     "order": 49
+    },
+    {
+     "course": "deeplearning.ai/courses/functions-tools-agents-langchain",
+     "levels": [],
+     "note": "",
+     "order": 50
+    },
+    {
+     "course": "deeplearning.ai/courses/ai-agents-in-langgraph",
+     "levels": [],
+     "note": "",
+     "order": 51
+    },
+    {
+     "course": "deeplearning.ai/courses/long-term-agentic-memory-with-langgraph",
+     "levels": [],
+     "note": "",
+     "order": 52
+    },
+    {
+     "course": "deeplearning.ai/courses/multi-ai-agent-systems-with-crewai",
+     "levels": [],
+     "note": "",
+     "order": 53
+    },
+    {
+     "course": "deeplearning.ai/courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai",
+     "levels": [],
+     "note": "",
+     "order": 54
+    },
+    {
+     "course": "deeplearning.ai/courses/ai-agentic-design-patterns-with-autogen",
+     "levels": [],
+     "note": "",
+     "order": 55
+    },
+    {
+     "course": "deeplearning.ai/courses/building-your-own-database-agent",
+     "levels": [],
+     "note": "",
+     "order": 56
+    },
+    {
+     "course": "deeplearning.ai/courses/function-calling-and-data-extraction-with-llms",
+     "levels": [],
+     "note": "",
+     "order": 57
+    },
+    {
+     "course": "deeplearning.ai/courses/building-ai-browser-agents",
+     "levels": [],
+     "note": "",
+     "order": 58
+    },
+    {
+     "course": "deeplearning.ai/courses/building-code-agents-with-hugging-face-smolagents",
+     "levels": [],
+     "note": "",
+     "order": 59
+    },
+    {
+     "course": "deeplearning.ai/courses/dspy-build-optimize-agentic-apps",
+     "levels": [],
+     "note": "",
+     "order": 60
+    },
+    {
+     "course": "deeplearning.ai/courses/orchestrating-workflows-for-genai-applications",
+     "levels": [],
+     "note": "",
+     "order": 61
+    },
+    {
+     "course": "deeplearning.ai/courses/a2a-the-agent2agent-protocol",
+     "levels": [],
+     "note": "",
+     "order": 62
+    },
+    {
+     "course": "deeplearning.ai/courses/building-and-evaluating-data-agents",
+     "levels": [],
+     "note": "",
+     "order": 63
+    },
+    {
+     "course": "deeplearning.ai/courses/agent-memory-building-memory-aware-agents",
+     "levels": [],
+     "note": "",
+     "order": 64
+    },
+    {
+     "course": "deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic",
+     "levels": [],
+     "note": "",
+     "order": 65
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/build-first-machine-operations-workflow",
+     "levels": [],
+     "note": "",
+     "order": 66
+    },
+    {
+     "course": "deeplearning.ai/courses/llmops",
+     "levels": [],
+     "note": "",
+     "order": 67
+    },
+    {
+     "course": "deeplearning.ai/courses/automated-testing-llmops",
+     "levels": [],
+     "note": "",
+     "order": 68
+    },
+    {
+     "course": "deeplearning.ai/courses/improving-accuracy-of-llm-applications",
+     "levels": [],
+     "note": "",
+     "order": 69
+    },
+    {
+     "course": "deeplearning.ai/courses/efficiently-serving-llms",
+     "levels": [],
+     "note": "",
+     "order": 70
+    },
+    {
+     "course": "deeplearning.ai/courses/building-ai-applications-with-haystack",
+     "levels": [],
+     "note": "",
+     "order": 71
+    },
+    {
+     "course": "deeplearning.ai/courses/serverless-llm-apps-amazon-bedrock",
+     "levels": [],
+     "note": "",
+     "order": 72
+    },
+    {
+     "course": "deeplearning.ai/courses/carbon-aware-computing-for-genai-developers",
+     "levels": [],
+     "note": "",
+     "order": 73
+    },
+    {
+     "course": "deeplearning.ai/courses/finetuning-large-language-models",
+     "levels": [],
+     "note": "",
+     "order": 74
+    },
+    {
+     "course": "deeplearning.ai/courses/claude-code-a-highly-agentic-coding-assistant",
+     "levels": [],
+     "note": "",
+     "order": 75
+    },
+    {
+     "course": "deeplearning.ai/courses/vibe-coding-101-with-replit",
+     "levels": [],
+     "note": "",
+     "order": 76
+    },
+    {
+     "course": "deeplearning.ai/courses/building-ai-voice-agents-for-production",
+     "levels": [],
+     "note": "",
+     "order": 77
+    },
+    {
+     "course": "deeplearning.ai/courses/pair-programming-llm",
+     "levels": [],
+     "note": "",
+     "order": 78
+    },
+    {
+     "course": "deeplearning.ai/courses/microsoft-semantic-kernel",
+     "levels": [],
+     "note": "",
+     "order": 79
+    },
+    {
+     "course": "deeplearning.ai/courses/quantization-fundamentals-with-hugging-face",
+     "levels": [],
+     "note": "",
+     "order": 80
+    },
+    {
+     "course": "deeplearning.ai/courses/quantization-in-depth",
+     "levels": [],
+     "note": "",
+     "order": 81
+    },
+    {
+     "course": "deeplearning.ai/courses/introduction-to-on-device-ai",
+     "levels": [],
+     "note": "",
+     "order": 82
+    },
+    {
+     "course": "deeplearning.ai/courses/intro-to-federated-learning",
+     "levels": [],
+     "note": "",
+     "order": 83
+    },
+    {
+     "course": "datacamp.com/courses/anomaly-detection-in-python",
+     "levels": [],
+     "note": "",
+     "order": 84
+    },
+    {
+     "course": "datacamp.com/courses/cleaning-data-with-generative-ai",
+     "levels": [],
+     "note": "",
+     "order": 85
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/power-bi-copilot",
+     "levels": [],
+     "note": "",
+     "order": 86
+    },
+    {
+     "course": "learn.microsoft.com/en-us/dax/dax-copilot",
+     "levels": [],
+     "note": "",
+     "order": 87
+    },
+    {
+     "course": "deeplearning.ai/courses/evaluating-debugging-generative-ai",
+     "levels": [],
+     "note": "",
+     "order": 88
+    },
+    {
+     "course": "deeplearning.ai/courses/quality-safety-llm-applications",
+     "levels": [],
+     "note": "",
+     "order": 89
+    },
+    {
+     "course": "deeplearning.ai/courses/red-teaming-llm-applications",
+     "levels": [],
+     "note": "",
+     "order": 90
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/create-machine-learn-models",
+     "levels": [],
+     "note": "",
+     "order": 91
+    },
+    {
+     "course": "datacamp.com/courses/machine-learning-for-time-series-data-in-python",
+     "levels": [],
+     "note": "",
+     "order": 92
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/transform-your-business-with-microsoft-ai",
+     "levels": [],
+     "note": "",
+     "order": 93
+    },
+    {
+     "course": "coursera.org/professional-certificates/unilever-supply-chain-data-analyst",
+     "levels": [],
+     "note": "",
+     "order": 94
+    },
+    {
+     "course": "alison.com/course/an-introduction-to-supply-chain-management",
+     "levels": [],
+     "note": "",
+     "order": 95
+    },
+    {
+     "course": "alison.com/course/mastering-supply-chain-and-logistics-management",
+     "levels": [],
+     "note": "",
+     "order": 96
+    },
+    {
+     "course": "alison.com/course/fundamentals-of-retail-analytics",
+     "levels": [],
+     "note": "",
+     "order": 97
+    },
+    {
+     "course": "alison.com/course/beginners-guide-to-retail-management",
+     "levels": [],
+     "note": "",
+     "order": 98
+    },
+    {
+     "course": "coursera.org/specializations/wharton-retail-strategy",
+     "levels": [],
+     "note": "",
+     "order": 99
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/evaluate-generative-ai-apps",
+     "levels": [],
+     "note": "",
+     "order": 100
+    }
+   ]
+  },
+  {
+   "area": "ID",
+   "year": 2026,
+   "title": "Plan de Capacitación Ingeniería de Datos 2026",
+   "intro": "Catálogo sugerido, no currícula rígida: cada persona elige sus cursos según su rol en proyectos, sus fortalezas y su tiempo disponible.",
+   "start_month": 4,
+   "end_month": 12,
+   "hours_min": 5,
+   "hours_max": 10,
+   "type_notes": {
+    "PUNTUAL": "Cursos de 1–4 horas para aprender un skill específico, mantenerse al día o preparar terreno antes de un proyecto. Mezcla MS Learn, DataCamp, Coursera, Databricks Academy y vendor docs.",
+    "CONTEXTUAL": "Cursos que construyen criterio de negocio y dominio, e introducen el uso de IA generativa en el flujo del ingeniero de datos. Lo que hace la diferencia entre un ingeniero técnico y un ingeniero que entrega valor."
+   },
+   "items": [
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/get-started-with-python-fundamentals",
+     "levels": [],
+     "note": "",
+     "order": 1
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/get-started-querying-with-transact-sql",
+     "levels": [],
+     "note": "",
+     "order": 2
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/data-engineer-azure-databricks",
+     "levels": [],
+     "note": "",
+     "order": 3
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/write-first-query-kusto-query-language",
+     "levels": [],
+     "note": "",
+     "order": 4
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/get-started-azure-cosmos-db-sql-api",
+     "levels": [],
+     "note": "",
+     "order": 5
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/data-integration-scale-azure-data-factory",
+     "levels": [],
+     "note": "",
+     "order": 6
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/implement-data-streaming-with-asa",
+     "levels": [],
+     "note": "",
+     "order": 7
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/courses/dp-700t00",
+     "levels": [],
+     "note": "",
+     "order": 8
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/modules/intro-to-containers",
+     "levels": [],
+     "note": "",
+     "order": 9
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/deploy-manage-containers-azure-kubernetes-service",
+     "levels": [],
+     "note": "",
+     "order": 10
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/az-400-implement-ci-azure-pipelines-github-actions",
+     "levels": [],
+     "note": "",
+     "order": 11
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/create-use-analytics-reports-power-bi",
+     "levels": [],
+     "note": "",
+     "order": 12
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/model-data-power-bi",
+     "levels": [],
+     "note": "",
+     "order": 13
+    },
+    {
+     "course": "cert:DP-700",
+     "levels": [
+      "MID",
+      "SNR",
+      "LEAD"
+     ],
+     "note": "Disponible 2025+ · ~$165 USD · Recomendado para Mid+",
+     "order": 14
+    },
+    {
+     "course": "cert:DP-203",
+     "levels": [
+      "SNR",
+      "LEAD"
+     ],
+     "note": "~$165 USD · Recomendado para Senior+ con foco Azure clásico",
+     "order": 15
+    },
+    {
+     "course": "cert:DBX",
+     "levels": [],
+     "note": "~$200 USD · Foco en Spark + Delta Lake + Lakehouse",
+     "order": 16
+    },
+    {
+     "course": "cert:AZ-400",
+     "levels": [
+      "SNR",
+      "LEAD"
+     ],
+     "note": "~$165 USD · Recomendado para Senior / Lead con foco DevOps",
+     "order": 17
+    },
+    {
+     "course": "coursera.org/specializations/python",
+     "levels": [],
+     "note": "",
+     "order": 18
+    },
+    {
+     "course": "peps.python.org/pep-0008",
+     "levels": [],
+     "note": "",
+     "order": 19
+    },
+    {
+     "course": "mode.com/sql-tutorial",
+     "levels": [],
+     "note": "",
+     "order": 20
+    },
+    {
+     "course": "databricks.com/learn/training/lakehouse-fundamentals",
+     "levels": [],
+     "note": "",
+     "order": 21
+    },
+    {
+     "course": "coursera.org/learn/introduction-to-pyspark",
+     "levels": [],
+     "note": "",
+     "order": 22
+    },
+    {
+     "course": "learn.mongodb.com/learning-paths/introduction-to-mongodb",
+     "levels": [],
+     "note": "",
+     "order": 23
+    },
+    {
+     "course": "academy.astronomer.io/path/airflow-101",
+     "levels": [],
+     "note": "",
+     "order": 24
+    },
+    {
+     "course": "databricks.com/es/training/catalog/data-engineering-with-databricks-spanish-4723",
+     "levels": [],
+     "note": "",
+     "order": 25
+    },
+    {
+     "course": "developer.confluent.io/courses/apache-kafka/events",
+     "levels": [],
+     "note": "",
+     "order": 26
+    },
+    {
+     "course": "courses.getdbt.com/courses/fundamentals",
+     "levels": [],
+     "note": "",
+     "order": 27
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/work-with-data-warehouses-using-microsoft-fabric",
+     "levels": [],
+     "note": "",
+     "order": 28
+    },
+    {
+     "course": "coursera.org/specializations/data-engineering-foundations",
+     "levels": [],
+     "note": "",
+     "order": 29
+    },
+    {
+     "course": "docker.com/101-tutorial",
+     "levels": [],
+     "note": "",
+     "order": 30
+    },
+    {
+     "course": "edx.org/learn/kubernetes/the-linux-foundation-introduction-to-kubernetes",
+     "levels": [],
+     "note": "",
+     "order": 31
+    },
+    {
+     "course": "skills.github.com",
+     "levels": [],
+     "note": "",
+     "order": 32
+    },
+    {
+     "course": "developer.hashicorp.com/terraform/tutorials",
+     "levels": [],
+     "note": "",
+     "order": 33
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/fundamentals-bicep",
+     "levels": [],
+     "note": "",
+     "order": 34
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/deploy-configure-azure-monitor",
+     "levels": [],
+     "note": "",
+     "order": 35
+    },
+    {
+     "course": "learn.microsoft.com/en-us/azure/well-architected",
+     "levels": [],
+     "note": "",
+     "order": 36
+    },
+    {
+     "course": "coursera.org/learn/devops-and-cicd-for-data-engineering-performance",
+     "levels": [],
+     "note": "",
+     "order": 37
+    },
+    {
+     "course": "sqlbi.com/p/introducing-dax-video-course",
+     "levels": [],
+     "note": "",
+     "order": 38
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/visualize-data-power-bi",
+     "levels": [],
+     "note": "",
+     "order": 39
+    },
+    {
+     "course": "coursera.org/learn/data-results",
+     "levels": [],
+     "note": "",
+     "order": 40
+    },
+    {
+     "course": "greatexpectations.io/expectations",
+     "levels": [],
+     "note": "",
+     "order": 41
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/secure-your-cloud-data",
+     "levels": [],
+     "note": "",
+     "order": 42
+    },
+    {
+     "course": "openlineage.io/docs",
+     "levels": [],
+     "note": "",
+     "order": 43
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/transform-your-business-with-microsoft-ai",
+     "levels": [],
+     "note": "",
+     "order": 44
+    },
+    {
+     "course": "alison.com/course/an-introduction-to-supply-chain-management",
+     "levels": [],
+     "note": "",
+     "order": 45
+    },
+    {
+     "course": "alison.com/course/fundamentals-of-retail-analytics",
+     "levels": [],
+     "note": "",
+     "order": 46
+    },
+    {
+     "course": "anthropic.skilljar.com/claude-with-the-anthropic-api",
+     "levels": [],
+     "note": "",
+     "order": 47
+    },
+    {
+     "course": "anthropic.skilljar.com/claude-code-in-action",
+     "levels": [],
+     "note": "",
+     "order": 48
+    },
+    {
+     "course": "learn.microsoft.com/en-us/training/paths/work-smarter-with-copilot-in-microsoft-fabric",
+     "levels": [],
+     "note": "",
+     "order": 49
+    },
+    {
+     "course": "deeplearning.ai/courses/function-calling-and-data-extraction-with-llms",
+     "levels": [],
+     "note": "",
+     "order": 50
+    },
+    {
+     "course": "deeplearning.ai/courses/building-your-own-database-agent",
+     "levels": [],
+     "note": "",
+     "order": 51
+    }
+   ]
+  }
+ ],
+ "courses": [
+  {
+   "key": "coursera.org/professional-certificates/google-project-management",
+   "url": "https://www.coursera.org/professional-certificates/google-project-management",
+   "name": "Google Project Management Certificate (módulos 1-2)",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/introduction-to-certified-scrum-master",
+   "url": "https://www.coursera.org/learn/introduction-to-certified-scrum-master",
+   "name": "Introduction to Scrum Master Training",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 10.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/work-smarter-not-harder",
+   "url": "https://www.coursera.org/learn/work-smarter-not-harder",
+   "name": "Work Smarter, Not Harder: Time Management for Personal & Professional Productivity",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/advanced-project-management-and-leadership",
+   "url": "https://www.coursera.org/learn/advanced-project-management-and-leadership",
+   "name": "Advanced Project Management and Leadership",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/agile-leadership-principles-and-practices",
+   "url": "https://www.coursera.org/learn/agile-leadership-principles-and-practices",
+   "name": "Agile Leadership Principles and Practices",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/communicate-with-impact",
+   "url": "https://www.coursera.org/learn/communicate-with-impact",
+   "name": "Storytelling and influencing: Communicate with impact",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/wharton-communication-skills",
+   "url": "https://www.coursera.org/learn/wharton-communication-skills",
+   "name": "Improving Communication Skills",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/specializations/business-communication",
+   "url": "https://www.coursera.org/specializations/business-communication",
+   "name": "Business Communication",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/project-management-communication-stakeholders-leadership",
+   "url": "https://www.coursera.org/learn/project-management-communication-stakeholders-leadership",
+   "name": "Project Management Communication, Stakeholders & Leadership",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/data-storytelling-concepts",
+   "url": "https://www.datacamp.com/courses/data-storytelling-concepts",
+   "name": "Data Storytelling Concepts",
+   "provider": "DataCamp",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 2.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/communicating-data-insights",
+   "url": "https://www.datacamp.com/courses/communicating-data-insights",
+   "name": "Communicating Data Insights",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": 2.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso corto (≈2 h) de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/tracks/data-storytelling",
+   "url": "https://www.datacamp.com/tracks/data-storytelling",
+   "name": "Data Storytelling",
+   "provider": "DataCamp",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "udemy.com/course/become-a-product-manager-learn-the-skills-get-a-job",
+   "url": "https://www.udemy.com/course/become-a-product-manager-learn-the-skills-get-a-job/",
+   "name": "Become a Product Manager | Learn the Skills & Get the Job",
+   "provider": "Udemy",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/professional-certificates/google-data-analytics",
+   "url": "https://www.coursera.org/professional-certificates/google-data-analytics",
+   "name": "Google Data Analytics Professional Certificate",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-core-data-concepts",
+   "url": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-core-data-concepts/",
+   "name": "Microsoft Azure Data Fundamentals",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst-associate",
+   "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst-associate/",
+   "name": "Power BI Data Analyst",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/ai-for-everyone",
+   "url": "https://www.coursera.org/learn/ai-for-everyone",
+   "name": "AI for Everyone",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 6.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/data-analysis-with-python",
+   "url": "https://www.coursera.org/learn/data-analysis-with-python",
+   "name": "Data Analysis with Python",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/agile-project-management",
+   "url": "https://www.coursera.org/learn/agile-project-management",
+   "name": "Agile Project Management",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/project-risk-management",
+   "url": "https://www.coursera.org/learn/project-risk-management",
+   "name": "Managing Project Risks and Changes",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 7.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/critical-thinking-problem-solving",
+   "url": "https://www.coursera.org/learn/critical-thinking-problem-solving",
+   "name": "Critical Thinking & Problem Solving",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 10.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: el material dice ESTRUCTURADO y PUNTUAL; se toma ESTRUCTURADO (curso completo)",
+   "aliases": [
+    "Critical Thinking and Problem Solving"
+   ]
+  },
+  {
+   "key": "coursera.org/learn/everyday-leadership-foundation",
+   "url": "https://www.coursera.org/learn/everyday-leadership-foundation",
+   "name": "Foundations of Everyday Leadership",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 16.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/feedback",
+   "url": "https://www.coursera.org/learn/feedback",
+   "name": "Giving Helpful Feedback",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/emotional-intelligence-in-leadership-1",
+   "url": "https://www.coursera.org/learn/emotional-intelligence-in-leadership-1",
+   "name": "Emotional Intelligence in Leadership",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": 3.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/negotiation-skills",
+   "url": "https://www.coursera.org/learn/negotiation-skills",
+   "name": "Successful Negotiation: Essential Strategies and Skills",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:PMP",
+   "url": "https://www.pmi.org/certifications/project-management-pmp",
+   "name": "PMP · Project Management Professional",
+   "provider": "PMI",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 405,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:PL-300",
+   "url": "",
+   "name": "PL-300 · Microsoft Power BI Data Analyst Associate",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:DP-900",
+   "url": "",
+   "name": "DP-900 · Microsoft Azure Data Fundamentals",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:AI-901",
+   "url": "",
+   "name": "AI-901 · Azure AI Fundamentals",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/data-communication-concepts",
+   "url": "https://www.datacamp.com/courses/data-communication-concepts",
+   "name": "Data Communication Concepts",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Communicat»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/creating-dashboards-in-tableau",
+   "url": "https://www.datacamp.com/courses/creating-dashboards-in-tableau",
+   "name": "Creating Dashboards in Tableau",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/introduction-to-power-bi",
+   "url": "https://www.datacamp.com/courses/introduction-to-power-bi",
+   "name": "Introduction to Power BI",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una sola herramienta o técnica",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/building-powerful-reports-and-dashboards-in-powerbi",
+   "url": "https://www.coursera.org/learn/building-powerful-reports-and-dashboards-in-powerbi",
+   "name": "Building Powerful Reports and Dashboards in Power BI",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": 20.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/understanding-machine-learning",
+   "url": "https://www.datacamp.com/courses/understanding-machine-learning",
+   "name": "Understanding Machine Learning",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/introduction-to-data-engineering",
+   "url": "https://www.datacamp.com/courses/introduction-to-data-engineering",
+   "name": "Introduction to Data Engineering",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Introduction»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/understanding-data-engineering",
+   "url": "https://www.datacamp.com/courses/understanding-data-engineering",
+   "name": "Understanding Data Engineering",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/introduction-to-sql",
+   "url": "https://www.datacamp.com/courses/introduction-to-sql",
+   "name": "Introduction to SQL",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/intermediate-sql",
+   "url": "https://www.datacamp.com/courses/intermediate-sql",
+   "name": "Intermediate SQL",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Intermediate»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-evaluating-advanced-rag",
+   "url": "https://www.deeplearning.ai/courses/building-evaluating-advanced-rag",
+   "name": "Building and Evaluating Advanced RAG",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": 1.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Eval»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/fundamentals-generative-ai",
+   "url": "https://learn.microsoft.com/en-us/training/modules/fundamentals-generative-ai/",
+   "name": "Fundamentals of Generative AI",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Fundamentals»)",
+   "aliases": [
+    "Introduction to Generative AI and Agents"
+   ]
+  },
+  {
+   "key": "linkedin.com/learning/using-ai-for-data-driven-insights",
+   "url": "https://www.linkedin.com/learning/using-ai-for-data-driven-insights",
+   "name": "Using AI for Data-Driven Insights",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: aplica la IA de forma amplia al rol o a la gestión",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/data-driven-decision-making",
+   "url": "https://www.datacamp.com/courses/data-driven-decision-making",
+   "name": "Data-Driven Decision Making for Business",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («for Business»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/evaluating-debugging-generative-ai",
+   "url": "https://www.deeplearning.ai/courses/evaluating-debugging-generative-ai",
+   "name": "Evaluating and Debugging Generative AI",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Eval»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/quality-safety-llm-applications",
+   "url": "https://www.deeplearning.ai/courses/quality-safety-llm-applications",
+   "name": "Quality and Safety for LLM Applications",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/managing-as-a-coach",
+   "url": "https://www.coursera.org/learn/managing-as-a-coach",
+   "name": "Managing as a Coach",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 12.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: habilidad de gestión transversal",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/manager-of-managers-coaching-and-mentoring-people-managers",
+   "url": "https://www.coursera.org/learn/manager-of-managers-coaching-and-mentoring-people-managers",
+   "name": "Manager of Managers: Coaching and Mentoring People Managers",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 3.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: habilidad de gestión transversal",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/specializations/logic-critical-thinking-duke",
+   "url": "https://www.coursera.org/specializations/logic-critical-thinking-duke",
+   "name": "Introduction to Logic and Critical Thinking Specialization (Duke)",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 12.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Introduction»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/specializations/critical-thinking",
+   "url": "https://www.coursera.org/specializations/critical-thinking",
+   "name": "Critical Thinking: A Brain-Based Guide for the ChatGPT Era",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 16.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Thinking»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/mindware",
+   "url": "https://www.coursera.org/learn/mindware",
+   "name": "Mindware: Critical Thinking for the Information Age",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 12.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Thinking»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/creative-thinking-techniques-and-tools-for-success",
+   "url": "https://www.coursera.org/learn/creative-thinking-techniques-and-tools-for-success",
+   "name": "Creative Thinking: Techniques and Tools for Success",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 12.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Thinking»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/introduction-to-ai-for-work",
+   "url": "https://www.datacamp.com/courses/introduction-to-ai-for-work",
+   "name": "Introduction to AI for Work",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 2.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Introduction»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/generative-ai-for-everyone",
+   "url": "https://www.coursera.org/learn/generative-ai-for-everyone",
+   "name": "Generative AI for Everyone",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 9.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («for Everyone»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/specializations/generative-ai-for-product-managers",
+   "url": "https://www.coursera.org/specializations/generative-ai-for-product-managers",
+   "name": "Generative AI for Product Managers",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 12.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («for Product Managers»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/professional-certificates/microsoft-ai-product-manager",
+   "url": "https://www.coursera.org/professional-certificates/microsoft-ai-product-manager",
+   "name": "Microsoft AI Product Manager Professional Certificate",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 60.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: programa profesional amplio (60 h) para el rol de PM",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/courses/ai-901t00",
+   "url": "https://learn.microsoft.com/en-us/training/courses/ai-901t00",
+   "name": "Introduction to AI in Azure",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 15.0,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": true,
+   "proposed": [],
+   "why": "",
+   "aliases": [
+    "AI-901T00-A: Introduction to AI in Azure"
+   ]
+  },
+  {
+   "key": "deeplearning.ai/courses/chatgpt-prompt-eng",
+   "url": "https://www.deeplearning.ai/courses/chatgpt-prompt-eng",
+   "name": "ChatGPT Prompt Engineering for Developers",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": 1.5,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Prompt»)",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/generative-ai-for-product-managers",
+   "url": "https://www.linkedin.com/learning/generative-ai-for-product-managers",
+   "name": "GenAI for Product Managers",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 0.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («for Product Managers»)",
+   "aliases": [
+    "GenAI For Product Managers"
+   ]
+  },
+  {
+   "key": "youtube.com/watch?v=ZPQ8iSgv96Q",
+   "url": "https://www.youtube.com/watch?v=ZPQ8iSgv96Q",
+   "name": "Amazon Technical Program Manager (TPM) Interview Guide",
+   "provider": "YouTube",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "youtube.com/watch?v=gNQ9-kgyHfo",
+   "url": "https://www.youtube.com/watch?v=gNQ9-kgyHfo",
+   "name": "Amazon System Design Preparation (SIP)",
+   "provider": "YouTube",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "youtube.com/watch?v=hK1SJqJi1PU",
+   "url": "https://www.youtube.com/watch?v=hK1SJqJi1PU",
+   "name": "Product Manager Technical Interviews: System Design",
+   "provider": "YouTube",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "mckinsey.com/forward/overview",
+   "url": "https://www.mckinsey.com/forward/overview",
+   "name": "McKinsey Forward",
+   "provider": "McKinsey Forward",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 20.0,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: contexto o habilidad transversal",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/transform-your-business-with-microsoft-ai",
+   "url": "https://learn.microsoft.com/en-us/training/paths/transform-your-business-with-microsoft-ai/",
+   "name": "Transform your business with Microsoft AI",
+   "provider": "Microsoft Learn",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («business»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/professional-certificates/unilever-supply-chain-data-analyst",
+   "url": "https://www.coursera.org/professional-certificates/unilever-supply-chain-data-analyst",
+   "name": "Supply Chain Analytics for Professionals",
+   "provider": "Coursera",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Supply Chain»)",
+   "aliases": [
+    "Unilever Supply Chain Data Analyst"
+   ]
+  },
+  {
+   "key": "alison.com/course/fundamentals-of-retail-analytics",
+   "url": "https://alison.com/course/fundamentals-of-retail-analytics",
+   "name": "Fundamentals of Retail Analytics",
+   "provider": "Alison",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Fundamentals»)",
+   "aliases": []
+  },
+  {
+   "key": "alison.com/course/an-introduction-to-supply-chain-management",
+   "url": "https://alison.com/course/an-introduction-to-supply-chain-management",
+   "name": "Introduction to Supply Chain Management",
+   "provider": "Alison",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Introduction»)",
+   "aliases": []
+  },
+  {
+   "key": "alison.com/course/mastering-supply-chain-and-logistics-management",
+   "url": "https://alison.com/course/mastering-supply-chain-and-logistics-management",
+   "name": "Mastering Supply Chain and Logistics Management",
+   "provider": "Alison",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Supply Chain»)",
+   "aliases": [
+    "Supply Chain and Logistics Management"
+   ]
+  },
+  {
+   "key": "coursera.org/specializations/wharton-retail-strategy",
+   "url": "https://www.coursera.org/specializations/wharton-retail-strategy",
+   "name": "Omnichannel Retail Strategy Specialization",
+   "provider": "Coursera",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Retail»)",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/introduction-to-artificial-intelligence-24947908",
+   "url": "https://www.linkedin.com/learning/introduction-to-artificial-intelligence-24947908",
+   "name": "Introduction to AI",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 2.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Introduction»)",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/generative-ai-for-business-leaders",
+   "url": "https://www.linkedin.com/learning/generative-ai-for-business-leaders",
+   "name": "GenAI For Business Leaders",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («For Business»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/es/courses/artificial-intelligence-ai-strategy",
+   "url": "https://www.datacamp.com/es/courses/artificial-intelligence-ai-strategy",
+   "name": "Artificial Intelligence Strategy",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 3.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Strategy»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/generative-ai-strategy-business-leaders",
+   "url": "https://www.coursera.org/learn/generative-ai-strategy-business-leaders",
+   "name": "Generative AI Strategy for Business Leaders",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 7.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Strategy»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/create-business-value",
+   "url": "https://learn.microsoft.com/en-us/training/modules/create-business-value/",
+   "name": "Creating business value with AI",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 0.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («business»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/ai/playbook/technology-guidance/overreliance-on-ai/overreliance-on-ai",
+   "url": "https://learn.microsoft.com/en-us/ai/playbook/technology-guidance/overreliance-on-ai/overreliance-on-ai",
+   "name": "Fostering appropriate reliance on GenAI",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: criterio general de uso de IA",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/strategic-thinking-22616141",
+   "url": "https://www.linkedin.com/learning/strategic-thinking-22616141",
+   "name": "Strategic Thinking",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Strategic»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/explore-microsoft-365-copilot-agents",
+   "url": "https://learn.microsoft.com/en-us/training/modules/explore-microsoft-365-copilot-agents/",
+   "name": "Explore Microsoft 365 Copilot and agents",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: panorama de toda la suite de Copilot",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/the-ai-driven-product-designer",
+   "url": "https://www.linkedin.com/learning/the-ai-driven-product-designer",
+   "name": "The AI-Driven Product Designer",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: aplica la IA de forma amplia al rol o a la gestión",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/the-manager-s-guide-to-career-conversations-in-the-age-of-ai",
+   "url": "https://www.linkedin.com/learning/the-manager-s-guide-to-career-conversations-in-the-age-of-ai",
+   "name": "The Manager's Guide to Career Conversations in the Age of AI",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Career»)",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/ai-agents-for-product-leaders",
+   "url": "https://www.linkedin.com/learning/ai-agents-for-product-leaders",
+   "name": "Introduction to AI Agents",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/leverage-generative-ai-to-streamline-processes-and-increase-efficiency-as-a-manager",
+   "url": "https://www.linkedin.com/learning/leverage-generative-ai-to-streamline-processes-and-increase-efficiency-as-a-manager",
+   "name": "Leverage Generative AI to Streamline Processes and Increase Efficiency as a Manager",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: aplica la IA de forma amplia al rol o a la gestión",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/artificial-intelligence-for-project-managers-24531458",
+   "url": "https://www.linkedin.com/learning/artificial-intelligence-for-project-managers-24531458",
+   "name": "Artificial Intelligence for PM",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: aplica la IA de forma amplia al rol o a la gestión",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/strengthen-your-decision-making-with-generative-ai",
+   "url": "https://www.linkedin.com/learning/strengthen-your-decision-making-with-generative-ai",
+   "name": "Strengthen your Decision Making with GenAI",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: aplica la IA de forma amplia al rol o a la gestión",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/integrating-generative-ai-into-the-creative-process",
+   "url": "https://www.linkedin.com/learning/integrating-generative-ai-into-the-creative-process",
+   "name": "Integrating GenAI Into the Creative Process",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: aplica la IA de forma amplia al rol o a la gestión",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/artificial-intelligence-and-business-strategy",
+   "url": "https://www.linkedin.com/learning/artificial-intelligence-and-business-strategy",
+   "name": "Implementing AI Solutions in Business",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 2.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Business»)",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/introduction-to-large-language-models",
+   "url": "https://www.linkedin.com/learning/introduction-to-large-language-models",
+   "name": "LLM Concepts",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 2.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Concepts»)",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/introduction-to-nlp-and-llms-principles-and-practical-applications",
+   "url": "https://www.linkedin.com/learning/introduction-to-nlp-and-llms-principles-and-practical-applications",
+   "name": "Introduction to NLP and LLM: Principles and Practical Applications",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.5,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/mlops-concepts",
+   "url": "https://www.datacamp.com/courses/mlops-concepts",
+   "name": "MLOps Concept",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 2.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "linkedin.com/learning/introduction-to-ai-governance",
+   "url": "https://www.linkedin.com/learning/introduction-to-ai-governance",
+   "name": "Intro to AI Governance",
+   "provider": "LinkedIn Learning",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": 1.0,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "tipo: solo en el bloque KO de PM → Puntual (decisión de la spec); enfoque: cubre fundamentos o varios temas («Intro»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/professional-certificates/google-ux-design",
+   "url": "https://www.coursera.org/professional-certificates/google-ux-design",
+   "name": "Google UX Design Certificate",
+   "provider": "Google / Coursera",
+   "kind": "CERTIFICACION",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: programa amplio: research, wireframes, prototipos y handoff",
+   "aliases": [
+    "Google UX Design Professional Certificate"
+   ]
+  },
+  {
+   "key": "interaction-design.org/courses/user-research-methods-and-best-practices",
+   "url": "https://www.interaction-design.org/courses/user-research-methods-and-best-practices",
+   "name": "User Research — Methods and Best Practices",
+   "provider": "Interaction Design Foundation",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo de varias semanas, con módulos",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/ux-research-and-information-architecture",
+   "url": "https://www.coursera.org/learn/ux-research-and-information-architecture",
+   "name": "UX Research and Information Architecture",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo con varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/courses/design-thinking-the-ultimate-guide",
+   "url": "https://www.interaction-design.org/courses/design-thinking-the-ultimate-guide",
+   "name": "Design Thinking: The Ultimate Guide",
+   "provider": "Interaction Design Foundation",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/courses/ui-design-patterns-for-successful-software",
+   "url": "https://www.interaction-design.org/courses/ui-design-patterns-for-successful-software",
+   "name": "UI Design Patterns for Successful Software",
+   "provider": "Interaction Design Foundation",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo de varias semanas, con módulos",
+   "aliases": []
+  },
+  {
+   "key": "help.figma.com/hc/en-us/articles/14552901442839-overview-introduction-to-design-systems",
+   "url": "https://help.figma.com/hc/en-us/articles/14552901442839-Overview-Introduction-to-design-systems",
+   "name": "Introduction to Design Systems",
+   "provider": "Figma",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso corto de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "ixdf.org/courses/accessibility-in-practice",
+   "url": "https://ixdf.org/courses/accessibility-in-practice",
+   "name": "Accessibility in Practice",
+   "provider": "Interaction Design Foundation",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo de varias semanas, con módulos",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/courses/information-visualization-getting-dashboards-right",
+   "url": "https://www.interaction-design.org/courses/information-visualization-getting-dashboards-right",
+   "name": "Information Visualization: Getting Dashboards Right",
+   "provider": "Interaction Design Foundation",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo de varias semanas, con módulos",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/courses/data-driven-design-quantitative-research-for-ux",
+   "url": "https://www.interaction-design.org/courses/data-driven-design-quantitative-research-for-ux",
+   "name": "Data-Driven Design: Quantitative Research for UX",
+   "provider": "Interaction Design Foundation",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo de varias semanas, con módulos",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/courses/present-like-a-pro-communication-skills",
+   "url": "https://www.interaction-design.org/courses/present-like-a-pro-communication-skills",
+   "name": "Present Like a Pro: Communication Skills to Fast-Track Your Career",
+   "provider": "Interaction Design Foundation",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: habilidad interpersonal",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/courses/agile-methods-for-ux-design",
+   "url": "https://www.interaction-design.org/courses/agile-methods-for-ux-design",
+   "name": "Agile Methods for UX Design",
+   "provider": "Interaction Design Foundation",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo de varias semanas, con módulos",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/data-science-course",
+   "url": "https://www.coursera.org/learn/data-science-course",
+   "name": "A Crash Course in Data Science",
+   "provider": "Coursera",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo con varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/ux-research-cheat-sheet",
+   "url": "https://www.nngroup.com/articles/ux-research-cheat-sheet/",
+   "name": "UX Research Cheat Sheet",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («UX Research»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/user-journeys-vs-user-flows",
+   "url": "https://www.nngroup.com/articles/user-journeys-vs-user-flows/",
+   "name": "User Journeys vs. User Flows",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/usability-testing-101",
+   "url": "https://www.nngroup.com/articles/usability-testing-101/",
+   "name": "Usability (User) Testing 101",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Testing»)",
+   "aliases": []
+  },
+  {
+   "key": "uxdesign.cc/design-edge-cases-and-where-to-find-them-921414b20b4",
+   "url": "https://uxdesign.cc/design-edge-cases-and-where-to-find-them-921414b20b4",
+   "name": "Design Edge Cases — and Where to Find Them",
+   "provider": "UX Collective",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "help.figma.com/hc/en-us/articles/15339657135383-guide-to-variables-in-figma",
+   "url": "https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma",
+   "name": "Guide to variables in Figma",
+   "provider": "Figma",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Figma»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/design-systems-101",
+   "url": "https://www.nngroup.com/articles/design-systems-101/",
+   "name": "Design Systems 101",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Design System»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/visual-treatments-accessibility",
+   "url": "https://www.nngroup.com/articles/visual-treatments-accessibility/",
+   "name": "5 Visual Treatments that Improve Accessibility",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Accessibility»)",
+   "aliases": []
+  },
+  {
+   "key": "help.figma.com/hc/en-us/articles/15023124644247-guide-to-dev-mode",
+   "url": "https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode",
+   "name": "Guide to Dev Mode",
+   "provider": "Figma",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "designbetter.com/books/design-systems-handbook",
+   "url": "https://designbetter.com/books/design-systems-handbook",
+   "name": "Design Systems Handbook — InVision",
+   "provider": "Design Better",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Design System»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/dashboards-preattentive",
+   "url": "https://www.nngroup.com/articles/dashboards-preattentive/",
+   "name": "Preattentive Attributes and Their Applications in Dashboards",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "storytellingwithdata.com/chart-guide",
+   "url": "https://www.storytellingwithdata.com/chart-guide",
+   "name": "Chart Guide — Storytelling with Data",
+   "provider": "Storytelling with Data",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: guía específica para elegir gráficas",
+   "aliases": []
+  },
+  {
+   "key": "m2.material.io/design/communication/data-visualization.html",
+   "url": "https://m2.material.io/design/communication/data-visualization.html",
+   "name": "Material Design Data Visualization Guidelines",
+   "provider": "Material Design",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/empty-state-interface-design",
+   "url": "https://www.nngroup.com/articles/empty-state-interface-design/",
+   "name": "Empty-State Interface Design",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "observablehq.com/@d3/gallery",
+   "url": "https://observablehq.com/@d3/gallery",
+   "name": "D3 Gallery",
+   "provider": "Observable",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/data-tables",
+   "url": "https://www.nngroup.com/articles/data-tables/",
+   "name": "Data Tables: Four Major User Tasks",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/design-critiques",
+   "url": "https://www.nngroup.com/articles/design-critiques/",
+   "name": "Design Critiques: Encourage a Positive Culture to Improve Products",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: práctica de equipo transversal",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/collaborating-stakeholders",
+   "url": "https://www.nngroup.com/articles/collaborating-stakeholders/",
+   "name": "How to Collaborate with Stakeholders in UX Research",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Stakeholder»)",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/literature/article/ux-research-communication-know-your-audience",
+   "url": "https://www.interaction-design.org/literature/article/ux-research-communication-know-your-audience",
+   "name": "UX Research Communication – Know Your Audience",
+   "provider": "Interaction Design Foundation",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («UX Research»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/ux-stories",
+   "url": "https://www.nngroup.com/articles/ux-stories/",
+   "name": "UX Stories Communicate Designs",
+   "provider": "Nielsen Norman Group",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Communicat»)",
+   "aliases": []
+  },
+  {
+   "key": "medium.com/@rchang/a-beginners-guide-to-data-engineering-part-i-4227c5c457d7",
+   "url": "https://medium.com/@rchang/a-beginners-guide-to-data-engineering-part-i-4227c5c457d7",
+   "name": "A Beginner's Guide to Data Engineering — Part I",
+   "provider": "Medium",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "youtube.com/watch?v=i_LwzRVP7bg",
+   "url": "https://www.youtube.com/watch?v=i_LwzRVP7bg",
+   "name": "Machine Learning for Everybody – Full Course",
+   "provider": "YouTube",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/what-is-datascience",
+   "url": "https://www.coursera.org/learn/what-is-datascience",
+   "name": "What is Data Science?",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («What is»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/powerpoint-presentations",
+   "url": "https://www.coursera.org/learn/powerpoint-presentations",
+   "name": "Effective Business Presentations with PowerPoint",
+   "provider": "Coursera",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Business»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/ux-writing-study-guide",
+   "url": "https://www.nngroup.com/articles/ux-writing-study-guide/",
+   "name": "UX Writing Study Guide",
+   "provider": "Nielsen Norman Group",
+   "kind": "SOFT_SKILLS",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una sola práctica (UX writing)",
+   "aliases": []
+  },
+  {
+   "key": "interaction-design.org/literature/article/how-to-involve-stakeholders-in-your-user-research",
+   "url": "https://www.interaction-design.org/literature/article/how-to-involve-stakeholders-in-your-user-research",
+   "name": "How to Involve Stakeholders in Your User Research",
+   "provider": "Interaction Design Foundation",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Stakeholder»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/strategic-management",
+   "url": "https://www.coursera.org/learn/strategic-management",
+   "name": "Strategic Management",
+   "provider": "Coursera",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Strategic»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/return-on-investment-for-usability",
+   "url": "https://www.nngroup.com/articles/return-on-investment-for-usability/",
+   "name": "Return on Investment for Usability",
+   "provider": "Nielsen Norman Group",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: contexto o habilidad transversal",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/project-management-foundations",
+   "url": "https://www.coursera.org/learn/project-management-foundations",
+   "name": "Foundations of Project Management",
+   "provider": "Coursera",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Foundations»)",
+   "aliases": []
+  },
+  {
+   "key": "nngroup.com/articles/prioritization-matrices",
+   "url": "https://www.nngroup.com/articles/prioritization-matrices/",
+   "name": "Using Prioritization Matrices to Inform UX Decisions",
+   "provider": "Nielsen Norman Group",
+   "kind": "SOFT_SKILLS",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: contexto o habilidad transversal",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/get-started-ai-apps-agents",
+   "url": "https://learn.microsoft.com/en-us/training/paths/get-started-ai-apps-agents/",
+   "name": "Introduction to Generative AI concepts",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/embrace-responsible-ai-principles-practices",
+   "url": "https://learn.microsoft.com/en-us/training/modules/embrace-responsible-ai-principles-practices/",
+   "name": "Embrace Responsible AI principles and practices",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: módulo, artículo o video de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/develop-ai-solutions-azure-openai",
+   "url": "https://learn.microsoft.com/en-us/training/paths/develop-ai-solutions-azure-openai/",
+   "name": "Develop generative AI solutions with Azure OpenAI Service",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/ai-knowldge-mining",
+   "url": "https://learn.microsoft.com/en-us/training/modules/ai-knowldge-mining/",
+   "name": "Implement knowledge mining with Azure AI Search",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: módulo, artículo o video de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "anthropic.skilljar.com/claude-with-the-anthropic-api",
+   "url": "https://anthropic.skilljar.com/claude-with-the-anthropic-api",
+   "name": "Building with the Claude API",
+   "provider": "Anthropic Academy",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/courses/ai-103t00",
+   "url": "https://learn.microsoft.com/en-us/training/courses/ai-103t00",
+   "name": "AI-103T00-A: Develop AI apps and agents on Azure",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso oficial de Microsoft de varios días (preparación AI-103)",
+   "aliases": []
+  },
+  {
+   "key": "anthropic.skilljar.com/introduction-to-model-context-protocol",
+   "url": "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
+   "name": "Introduction to Model Context Protocol",
+   "provider": "Anthropic Academy",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo con varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "anthropic.skilljar.com/model-context-protocol-advanced-topics",
+   "url": "https://anthropic.skilljar.com/model-context-protocol-advanced-topics",
+   "name": "MCP: Advanced Topics",
+   "provider": "Anthropic Academy",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso completo con varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/introduction-machine-learn-operations",
+   "url": "https://learn.microsoft.com/en-us/training/paths/introduction-machine-learn-operations/",
+   "name": "Introduction to Machine Learning Operations (MLOps)",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/courses/ai-300t00",
+   "url": "https://learn.microsoft.com/en-us/training/courses/ai-300t00",
+   "name": "AI-300T00-A: Operationalize ML and generative AI solutions",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso oficial de Microsoft de varios días (preparación AI-300)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/introduction-end-analytics-use-microsoft-fabric",
+   "url": "https://learn.microsoft.com/en-us/training/modules/introduction-end-analytics-use-microsoft-fabric/",
+   "name": "Introduction to end-to-end analytics using Microsoft Fabric",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: módulo, artículo o video de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/get-started-fabric",
+   "url": "https://learn.microsoft.com/en-us/training/paths/get-started-fabric/",
+   "name": "Get started with Microsoft Fabric",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/explore-real-time-analytics-microsoft-fabric",
+   "url": "https://learn.microsoft.com/en-us/training/paths/explore-real-time-analytics-microsoft-fabric/",
+   "name": "Implement Real-Time Intelligence with Microsoft Fabric",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "anthropic.skilljar.com/claude-code-in-action",
+   "url": "https://anthropic.skilljar.com/claude-code-in-action",
+   "name": "Claude Code in Action",
+   "provider": "Anthropic Academy",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/evaluate-generative-ai-apps",
+   "url": "https://learn.microsoft.com/en-us/training/modules/evaluate-generative-ai-apps/",
+   "name": "Evaluating generative AI applications",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: módulo, artículo o video de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/ai-security-controls",
+   "url": "https://learn.microsoft.com/en-us/training/modules/ai-security-controls/",
+   "name": "AI security controls",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: módulo, artículo o video de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "cert:AI-103",
+   "url": "",
+   "name": "AI-103 · Azure AI App & Agent Developer Associate",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:AI-300",
+   "url": "",
+   "name": "AI-300 · MLOps Engineer Associate",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:CCA",
+   "url": "",
+   "name": "Claude Certified Architect",
+   "provider": "Anthropic Academy",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/microsoft-getting-started-with-generative-ai-in-azure",
+   "url": "https://www.coursera.org/learn/microsoft-getting-started-with-generative-ai-in-azure",
+   "name": "Getting Started with Generative AI in Azure",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/reasoning-with-o1",
+   "url": "https://www.deeplearning.ai/courses/reasoning-with-o1",
+   "name": "Reasoning with o1",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/reinforcement-learning-from-human-feedback",
+   "url": "https://www.deeplearning.ai/courses/reinforcement-learning-from-human-feedback",
+   "name": "Reinforcement Learning from Human Feedback",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una sola herramienta o técnica",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/pretraining-llms",
+   "url": "https://www.deeplearning.ai/courses/pretraining-llms",
+   "name": "Pretraining LLMs",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/post-training-of-llms",
+   "url": "https://www.deeplearning.ai/courses/post-training-of-llms",
+   "name": "Post-training of LLMs",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/reinforcement-fine-tuning-llms-grpo",
+   "url": "https://www.deeplearning.ai/courses/reinforcement-fine-tuning-llms-grpo",
+   "name": "Reinforcement Fine-Tuning with GRPO",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Fine-Tun»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/embedding-models-from-architecture-to-implementation",
+   "url": "https://www.deeplearning.ai/courses/embedding-models-from-architecture-to-implementation",
+   "name": "Embedding Models",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Embedding»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-systems-with-chatgpt",
+   "url": "https://www.deeplearning.ai/courses/building-systems-with-chatgpt",
+   "name": "Building Systems with the ChatGPT API",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («API»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/getting-structured-llm-output",
+   "url": "https://www.deeplearning.ai/courses/getting-structured-llm-output",
+   "name": "Getting Structured LLM Output",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/langchain-chat-with-your-data",
+   "url": "https://www.deeplearning.ai/courses/langchain-chat-with-your-data",
+   "name": "LangChain: Chat with Your Data",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («LangChain»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/advanced-retrieval-for-ai",
+   "url": "https://www.deeplearning.ai/courses/advanced-retrieval-for-ai",
+   "name": "Advanced Retrieval for AI with Chroma",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Advanced»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/vector-databases-embeddings-applications",
+   "url": "https://www.deeplearning.ai/courses/vector-databases-embeddings-applications",
+   "name": "Vector Databases: from Embeddings to Applications",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Vector»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/knowledge-graphs-rag",
+   "url": "https://www.deeplearning.ai/courses/knowledge-graphs-rag",
+   "name": "Knowledge Graphs for RAG",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («RAG»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/preprocessing-unstructured-data-for-llm-applications",
+   "url": "https://www.deeplearning.ai/courses/preprocessing-unstructured-data-for-llm-applications",
+   "name": "Preprocessing Unstructured Data for LLM Applications",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/prompt-compression-and-query-optimization",
+   "url": "https://www.deeplearning.ai/courses/prompt-compression-and-query-optimization",
+   "name": "Prompt Compression and Query Optimization",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Prompt»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/retrieval-optimization-from-tokenization-to-vector-quantization",
+   "url": "https://www.deeplearning.ai/courses/retrieval-optimization-from-tokenization-to-vector-quantization",
+   "name": "Retrieval Optimization: From Tokenization to Vector Quantization",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Vector»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/multimodal-rag-chat-with-videos",
+   "url": "https://www.deeplearning.ai/courses/multimodal-rag-chat-with-videos",
+   "name": "Multimodal RAG: Chat with Videos",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («RAG»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-agentic-rag-with-llamaindex",
+   "url": "https://www.deeplearning.ai/courses/building-agentic-rag-with-llamaindex",
+   "name": "Building Agentic RAG with LlamaIndex",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agentic»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/retrieval-augmented-generation",
+   "url": "https://www.deeplearning.ai/courses/retrieval-augmented-generation",
+   "name": "Retrieval Augmented Generation (RAG)",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («RAG»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/google-cloud-vertex-ai",
+   "url": "https://www.deeplearning.ai/courses/google-cloud-vertex-ai",
+   "name": "Understanding and Applying Text Embeddings",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Embedding»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/large-multimodal-model-prompting-with-gemini",
+   "url": "https://www.deeplearning.ai/courses/large-multimodal-model-prompting-with-gemini",
+   "name": "Large Multimodal Model Prompting with Gemini",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Prompt»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/javascript-rag-web-apps-with-llamaindex",
+   "url": "https://www.deeplearning.ai/courses/javascript-rag-web-apps-with-llamaindex",
+   "name": "JavaScript RAG Web Apps with LlamaIndex",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («RAG»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-applications-vector-databases",
+   "url": "https://www.deeplearning.ai/courses/building-applications-vector-databases",
+   "name": "Building Applications with Vector Databases",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Vector»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-multimodal-search-and-rag",
+   "url": "https://www.deeplearning.ai/courses/building-multimodal-search-and-rag",
+   "name": "Building Multimodal Search and RAG",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («RAG»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/natural-language-processing-nlp-in-python",
+   "url": "https://www.datacamp.com/courses/natural-language-processing-nlp-in-python",
+   "name": "Natural Language Processing (NLP) in Python",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («NLP»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/natural-language-processing-with-spacy",
+   "url": "https://www.datacamp.com/courses/natural-language-processing-with-spacy",
+   "name": "Natural Language Processing with spaCy",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («spaCy»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/functions-tools-agents-langchain",
+   "url": "https://www.deeplearning.ai/courses/functions-tools-agents-langchain",
+   "name": "Functions, Tools and Agents with LangChain",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agents»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/ai-agents-in-langgraph",
+   "url": "https://www.deeplearning.ai/courses/ai-agents-in-langgraph",
+   "name": "AI Agents in LangGraph",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agents»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/long-term-agentic-memory-with-langgraph",
+   "url": "https://www.deeplearning.ai/courses/long-term-agentic-memory-with-langgraph",
+   "name": "Long-Term Agentic Memory with LangGraph",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agentic»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/multi-ai-agent-systems-with-crewai",
+   "url": "https://www.deeplearning.ai/courses/multi-ai-agent-systems-with-crewai",
+   "name": "Multi AI Agent Systems with crewAI",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agent»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai",
+   "url": "https://www.deeplearning.ai/courses/practical-multi-ai-agents-and-advanced-use-cases-with-crewai",
+   "name": "Practical Multi AI Agents and Advanced Use Cases with crewAI",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agents»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/ai-agentic-design-patterns-with-autogen",
+   "url": "https://www.deeplearning.ai/courses/ai-agentic-design-patterns-with-autogen",
+   "name": "AI Agentic Design Patterns with AutoGen",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agentic»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-your-own-database-agent",
+   "url": "https://www.deeplearning.ai/courses/building-your-own-database-agent",
+   "name": "Building Your Own Database Agent",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "kind",
+    "focus"
+   ],
+   "why": "tipo: el material dice PUNTUAL y CONTEXTUAL; se toma PUNTUAL (curso completo); enfoque: profundiza en una herramienta o técnica («Agent»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/function-calling-and-data-extraction-with-llms",
+   "url": "https://www.deeplearning.ai/courses/function-calling-and-data-extraction-with-llms",
+   "name": "Function-Calling and Data Extraction with LLMs",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "kind",
+    "focus"
+   ],
+   "why": "tipo: el material dice PUNTUAL y CONTEXTUAL; se toma PUNTUAL (curso completo); enfoque: profundiza en una herramienta o técnica («Function-Calling»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-ai-browser-agents",
+   "url": "https://www.deeplearning.ai/courses/building-ai-browser-agents",
+   "name": "Building AI Browser Agents",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agents»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-code-agents-with-hugging-face-smolagents",
+   "url": "https://www.deeplearning.ai/courses/building-code-agents-with-hugging-face-smolagents",
+   "name": "Building Code Agents with Hugging Face smolagents",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agents»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/dspy-build-optimize-agentic-apps",
+   "url": "https://www.deeplearning.ai/courses/dspy-build-optimize-agentic-apps",
+   "name": "DSPy: Build and Optimize Agentic Apps",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agentic»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/orchestrating-workflows-for-genai-applications",
+   "url": "https://www.deeplearning.ai/courses/orchestrating-workflows-for-genai-applications",
+   "name": "Orchestrating Workflows for GenAI Applications",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/a2a-the-agent2agent-protocol",
+   "url": "https://www.deeplearning.ai/courses/a2a-the-agent2agent-protocol",
+   "name": "A2A: The Agent2Agent Protocol",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-and-evaluating-data-agents",
+   "url": "https://www.deeplearning.ai/courses/building-and-evaluating-data-agents",
+   "name": "Building and Evaluating Data Agents",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Eval»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/agent-memory-building-memory-aware-agents",
+   "url": "https://www.deeplearning.ai/courses/agent-memory-building-memory-aware-agents",
+   "name": "Agent Memory: Building Memory-Aware Agents",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agent»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic",
+   "url": "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic",
+   "name": "MCP: Build Rich-Context AI Apps with Anthropic",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («MCP»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/build-first-machine-operations-workflow",
+   "url": "https://learn.microsoft.com/en-us/training/paths/build-first-machine-operations-workflow/",
+   "name": "Operationalize machine learning models (MLOps)",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind",
+    "focus"
+   ],
+   "why": "tipo: el material dice PUNTUAL y CONTEXTUAL; se toma PUNTUAL (curso completo); enfoque: profundiza en una herramienta o técnica («MLOps»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/llmops",
+   "url": "https://www.deeplearning.ai/courses/llmops",
+   "name": "LLMOps",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («LLMOps»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/automated-testing-llmops",
+   "url": "https://www.deeplearning.ai/courses/automated-testing-llmops",
+   "name": "Automated Testing for LLMOps",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Testing»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/improving-accuracy-of-llm-applications",
+   "url": "https://www.deeplearning.ai/courses/improving-accuracy-of-llm-applications",
+   "name": "Improving Accuracy of LLM Applications",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/efficiently-serving-llms",
+   "url": "https://www.deeplearning.ai/courses/efficiently-serving-llms",
+   "name": "Efficiently Serving LLMs",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Serving»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-ai-applications-with-haystack",
+   "url": "https://www.deeplearning.ai/courses/building-ai-applications-with-haystack",
+   "name": "Building AI Applications with Haystack",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Haystack»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/serverless-llm-apps-amazon-bedrock",
+   "url": "https://www.deeplearning.ai/courses/serverless-llm-apps-amazon-bedrock",
+   "name": "Serverless LLM Apps with Amazon Bedrock",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/carbon-aware-computing-for-genai-developers",
+   "url": "https://www.deeplearning.ai/courses/carbon-aware-computing-for-genai-developers",
+   "name": "Carbon Aware Computing for GenAI Developers",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/finetuning-large-language-models",
+   "url": "https://www.deeplearning.ai/courses/finetuning-large-language-models",
+   "name": "Finetuning Large Language Models",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Finetun»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/claude-code-a-highly-agentic-coding-assistant",
+   "url": "https://www.deeplearning.ai/courses/claude-code-a-highly-agentic-coding-assistant",
+   "name": "Claude Code: A Highly Agentic Coding Assistant",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Claude Code»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/vibe-coding-101-with-replit",
+   "url": "https://www.deeplearning.ai/courses/vibe-coding-101-with-replit",
+   "name": "Vibe Coding 101 with Replit",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/building-ai-voice-agents-for-production",
+   "url": "https://www.deeplearning.ai/courses/building-ai-voice-agents-for-production",
+   "name": "Building AI Voice Agents for Production",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Agents»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/pair-programming-llm",
+   "url": "https://www.deeplearning.ai/courses/pair-programming-llm",
+   "name": "Pair Programming with a Large Language Model",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/microsoft-semantic-kernel",
+   "url": "https://www.deeplearning.ai/courses/microsoft-semantic-kernel",
+   "name": "How Business Thinkers Can Start Building AI Plugins with Semantic Kernel",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: se centra en un SDK específico (Semantic Kernel)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/quantization-fundamentals-with-hugging-face",
+   "url": "https://www.deeplearning.ai/courses/quantization-fundamentals-with-hugging-face",
+   "name": "Quantization Fundamentals with Hugging Face",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/quantization-in-depth",
+   "url": "https://www.deeplearning.ai/courses/quantization-in-depth",
+   "name": "Quantization in Depth",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Quantiz»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/introduction-to-on-device-ai",
+   "url": "https://www.deeplearning.ai/courses/introduction-to-on-device-ai",
+   "name": "Introduction to On-Device AI",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una sola herramienta o técnica",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/intro-to-federated-learning",
+   "url": "https://www.deeplearning.ai/courses/intro-to-federated-learning",
+   "name": "Federated Learning",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/anomaly-detection-in-python",
+   "url": "https://www.datacamp.com/courses/anomaly-detection-in-python",
+   "name": "Anomaly Detection in Python",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Anomaly»)",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/cleaning-data-with-generative-ai",
+   "url": "https://www.datacamp.com/courses/cleaning-data-with-generative-ai",
+   "name": "Cleaning Data with GenAI",
+   "provider": "DataCamp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/power-bi-copilot",
+   "url": "https://learn.microsoft.com/en-us/training/modules/power-bi-copilot/",
+   "name": "Get started with Copilot in PBI",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Copilot in»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/dax/dax-copilot",
+   "url": "https://learn.microsoft.com/en-us/dax/dax-copilot",
+   "name": "Write DAX queries with Copilot",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («DAX»)",
+   "aliases": []
+  },
+  {
+   "key": "deeplearning.ai/courses/red-teaming-llm-applications",
+   "url": "https://www.deeplearning.ai/courses/red-teaming-llm-applications",
+   "name": "Red Teaming LLM Applications",
+   "provider": "DeepLearning.AI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/create-machine-learn-models",
+   "url": "https://learn.microsoft.com/en-us/training/paths/create-machine-learn-models/",
+   "name": "Create machine learning models",
+   "provider": "Microsoft Learn",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: contexto o habilidad transversal",
+   "aliases": []
+  },
+  {
+   "key": "datacamp.com/courses/machine-learning-for-time-series-data-in-python",
+   "url": "https://www.datacamp.com/courses/machine-learning-for-time-series-data-in-python",
+   "name": "Machine Learning for Time Series Data in Python",
+   "provider": "DataCamp",
+   "kind": "CONTEXTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": true,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Time Series»)",
+   "aliases": []
+  },
+  {
+   "key": "alison.com/course/beginners-guide-to-retail-management",
+   "url": "https://alison.com/course/beginners-guide-to-retail-management",
+   "name": "Beginners' Guide to Retail Management",
+   "provider": "Alison",
+   "kind": "CONTEXTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Retail»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/evaluate-generative-ai-apps",
+   "url": "https://learn.microsoft.com/en-us/training/paths/evaluate-generative-ai-apps/",
+   "name": "Evaluate generative AI apps with Azure AI Foundry",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/get-started-with-python-fundamentals",
+   "url": "https://learn.microsoft.com/en-us/training/paths/get-started-with-python-fundamentals/",
+   "name": "Take your first steps with Python",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/get-started-querying-with-transact-sql",
+   "url": "https://learn.microsoft.com/en-us/training/paths/get-started-querying-with-transact-sql/",
+   "name": "Get started querying with Transact-SQL",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/data-engineer-azure-databricks",
+   "url": "https://learn.microsoft.com/en-us/training/paths/data-engineer-azure-databricks/",
+   "name": "Apache Spark fundamentals on Azure Databricks",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/write-first-query-kusto-query-language",
+   "url": "https://learn.microsoft.com/en-us/training/modules/write-first-query-kusto-query-language/",
+   "name": "Write your first query with KQL",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": [
+    "Intro to Kusto Query Language (KQL)",
+    "Write your first query with Kusto Query Language"
+   ]
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/get-started-azure-cosmos-db-sql-api",
+   "url": "https://learn.microsoft.com/en-us/training/paths/get-started-azure-cosmos-db-sql-api/",
+   "name": "Work with NoSQL data in Azure Cosmos DB",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/data-integration-scale-azure-data-factory",
+   "url": "https://learn.microsoft.com/en-us/training/paths/data-integration-scale-azure-data-factory/",
+   "name": "Data integration at scale with Azure Data Factory",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/implement-data-streaming-with-asa",
+   "url": "https://learn.microsoft.com/en-us/training/paths/implement-data-streaming-with-asa/",
+   "name": "Streaming data with Azure Stream Analytics & Event Hubs",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/courses/dp-700t00",
+   "url": "https://learn.microsoft.com/en-us/training/courses/dp-700t00",
+   "name": "DP-700T00: Implement Data Engineering in Microsoft Fabric",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: curso oficial de Microsoft de varios días (preparación DP-700)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/modules/intro-to-containers",
+   "url": "https://learn.microsoft.com/en-us/training/modules/intro-to-containers/",
+   "name": "Build a containerized web application with Docker",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: módulo, artículo o video de un solo tema",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/deploy-manage-containers-azure-kubernetes-service",
+   "url": "https://learn.microsoft.com/en-us/training/paths/deploy-manage-containers-azure-kubernetes-service/",
+   "name": "Introduction to Kubernetes on Azure",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/az-400-implement-ci-azure-pipelines-github-actions",
+   "url": "https://learn.microsoft.com/en-us/training/paths/az-400-implement-ci-azure-pipelines-github-actions/",
+   "name": "AZ-400: Implement CI with Azure Pipelines and GitHub Actions",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/create-use-analytics-reports-power-bi",
+   "url": "https://learn.microsoft.com/en-us/training/paths/create-use-analytics-reports-power-bi/",
+   "name": "Create and use analytics reports with Power BI",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/model-data-power-bi",
+   "url": "https://learn.microsoft.com/en-us/training/paths/model-data-power-bi/",
+   "name": "Model data in Power BI (DAX, relaciones)",
+   "provider": "Microsoft Learn",
+   "kind": "ESTRUCTURADO",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "kind"
+   ],
+   "why": "tipo: ruta o programa de varios módulos",
+   "aliases": []
+  },
+  {
+   "key": "cert:DP-700",
+   "url": "",
+   "name": "DP-700 · Fabric Data Engineer Associate",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:DP-203",
+   "url": "",
+   "name": "DP-203 · Azure Data Engineer Associate",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:DBX",
+   "url": "",
+   "name": "Databricks Certified Data Engineer Associate",
+   "provider": "Databricks",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 200,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "cert:AZ-400",
+   "url": "",
+   "name": "AZ-400 · DevOps Engineer Expert",
+   "provider": "Microsoft",
+   "kind": "CERTIFICACION",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 165,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [],
+   "why": "",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/specializations/python",
+   "url": "https://www.coursera.org/specializations/python",
+   "name": "Python for Everybody Specialization",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: introducción o panorama general de varios temas",
+   "aliases": []
+  },
+  {
+   "key": "peps.python.org/pep-0008",
+   "url": "https://peps.python.org/pep-0008/",
+   "name": "PEP 8 — Style Guide for Python Code",
+   "provider": "python.org",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Python»)",
+   "aliases": []
+  },
+  {
+   "key": "mode.com/sql-tutorial",
+   "url": "https://mode.com/sql-tutorial",
+   "name": "SQL Tutorial — Mode Analytics",
+   "provider": "Mode (ThoughtSpot)",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («SQL»)",
+   "aliases": []
+  },
+  {
+   "key": "databricks.com/learn/training/lakehouse-fundamentals",
+   "url": "https://www.databricks.com/learn/training/lakehouse-fundamentals",
+   "name": "Lakehouse Fundamentals (Spark + Delta)",
+   "provider": "Databricks",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/introduction-to-pyspark",
+   "url": "https://www.coursera.org/learn/introduction-to-pyspark",
+   "name": "Introduction to PySpark",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.mongodb.com/learning-paths/introduction-to-mongodb",
+   "url": "https://learn.mongodb.com/learning-paths/introduction-to-mongodb",
+   "name": "Introduction to MongoDB",
+   "provider": "MongoDB University",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una sola herramienta o técnica",
+   "aliases": []
+  },
+  {
+   "key": "academy.astronomer.io/path/airflow-101",
+   "url": "https://academy.astronomer.io/path/airflow-101",
+   "name": "Airflow 101 Fundamentals",
+   "provider": "Astronomer Academy",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "databricks.com/es/training/catalog/data-engineering-with-databricks-spanish-4723",
+   "url": "https://www.databricks.com/es/training/catalog/data-engineering-with-databricks-spanish-4723",
+   "name": "Data Engineering with Databricks - Spanish",
+   "provider": "Databricks",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Databricks»)",
+   "aliases": []
+  },
+  {
+   "key": "developer.confluent.io/courses/apache-kafka/events",
+   "url": "https://developer.confluent.io/courses/apache-kafka/events/",
+   "name": "Apache Kafka 101 (Streaming)",
+   "provider": "Confluent Developer",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Kafka»)",
+   "aliases": []
+  },
+  {
+   "key": "courses.getdbt.com/courses/fundamentals",
+   "url": "https://courses.getdbt.com/courses/fundamentals",
+   "name": "dbt Fundamentals",
+   "provider": "dbt Labs",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/work-with-data-warehouses-using-microsoft-fabric",
+   "url": "https://learn.microsoft.com/en-us/training/paths/work-with-data-warehouses-using-microsoft-fabric/",
+   "name": "Implement a data warehouse with Microsoft Fabric",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Fabric»)",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/specializations/data-engineering-foundations",
+   "url": "https://www.coursera.org/specializations/data-engineering-foundations",
+   "name": "Data Engineering Foundations Specialization",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Foundations»)",
+   "aliases": []
+  },
+  {
+   "key": "docker.com/101-tutorial",
+   "url": "https://www.docker.com/101-tutorial/",
+   "name": "Docker 101 Tutorial",
+   "provider": "Docker",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Docker»)",
+   "aliases": []
+  },
+  {
+   "key": "edx.org/learn/kubernetes/the-linux-foundation-introduction-to-kubernetes",
+   "url": "https://www.edx.org/learn/kubernetes/the-linux-foundation-introduction-to-kubernetes",
+   "name": "Introduction to Kubernetes",
+   "provider": "edX",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "skills.github.com",
+   "url": "https://skills.github.com/",
+   "name": "GitHub Skills — Actions, PRs y más",
+   "provider": "GitHub Skills",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "developer.hashicorp.com/terraform/tutorials",
+   "url": "https://developer.hashicorp.com/terraform/tutorials",
+   "name": "Terraform Tutorials (IaC)",
+   "provider": "HashiCorp",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Terraform»)",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/fundamentals-bicep",
+   "url": "https://learn.microsoft.com/en-us/training/paths/fundamentals-bicep/",
+   "name": "Bicep para Azure (IaC nativo)",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/deploy-configure-azure-monitor",
+   "url": "https://learn.microsoft.com/en-us/training/paths/deploy-configure-azure-monitor/",
+   "name": "Observability with Azure Monitor",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/azure/well-architected",
+   "url": "https://learn.microsoft.com/en-us/azure/well-architected/",
+   "name": "Azure Well-Architected Framework",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: marco general que cubre todos los pilares de arquitectura",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/devops-and-cicd-for-data-engineering-performance",
+   "url": "https://www.coursera.org/learn/devops-and-cicd-for-data-engineering-performance",
+   "name": "DevOps and CI/CD for Data Engineering Performance",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («DevOps»)",
+   "aliases": []
+  },
+  {
+   "key": "sqlbi.com/p/introducing-dax-video-course",
+   "url": "https://www.sqlbi.com/p/introducing-dax-video-course/",
+   "name": "Introduction to DAX (Power BI)",
+   "provider": "SQLBI",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/visualize-data-power-bi",
+   "url": "https://learn.microsoft.com/en-us/training/paths/visualize-data-power-bi/",
+   "name": "Visualize data with Power BI",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "coursera.org/learn/data-results",
+   "url": "https://www.coursera.org/learn/data-results",
+   "name": "Communicating Data Science Results",
+   "provider": "Coursera",
+   "kind": "PUNTUAL",
+   "focus": "HORIZONTAL",
+   "duration_hours": null,
+   "reference_cost": null,
+   "currency": "MXN",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: cubre fundamentos o varios temas («Communicat»)",
+   "aliases": []
+  },
+  {
+   "key": "greatexpectations.io/expectations",
+   "url": "https://greatexpectations.io/expectations/",
+   "name": "Data Quality with Great Expectations",
+   "provider": "Great Expectations",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/secure-your-cloud-data",
+   "url": "https://learn.microsoft.com/en-us/training/paths/secure-your-cloud-data/",
+   "name": "Secure your cloud data",
+   "provider": "Microsoft Learn",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "openlineage.io/docs",
+   "url": "https://openlineage.io/docs/",
+   "name": "OpenLineage — Data Lineage Estándar",
+   "provider": "OpenLineage",
+   "kind": "PUNTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: skill específico",
+   "aliases": []
+  },
+  {
+   "key": "learn.microsoft.com/en-us/training/paths/work-smarter-with-copilot-in-microsoft-fabric",
+   "url": "https://learn.microsoft.com/en-us/training/paths/work-smarter-with-copilot-in-microsoft-fabric/",
+   "name": "Work smarter with Copilot in Microsoft Fabric",
+   "provider": "Microsoft Learn",
+   "kind": "CONTEXTUAL",
+   "focus": "VERTICAL",
+   "duration_hours": null,
+   "reference_cost": 0,
+   "currency": "USD",
+   "ko": false,
+   "proposed": [
+    "focus"
+   ],
+   "why": "enfoque: profundiza en una herramienta o técnica («Copilot in»)",
+   "aliases": []
+  }
+ ]
+}

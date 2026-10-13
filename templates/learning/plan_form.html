@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+<div>
+  <h3 class="text-lg font-semibold text-base-content mb-4">{% if plan %}Editar plan{% else %}Nuevo plan de capacitación{% endif %}</h3>
+  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 space-y-5" novalidate>
+    {% csrf_token %}
+    {% for e in form.non_field_errors %}<p class="text-base text-error">{{ e }}</p>{% endfor %}
+    <div class="grid sm:grid-cols-2 gap-4">
+      {% for field in form %}{% if field.name not in form.kind_fields %}
+        <div class="{% if field.name == 'title' or field.name == 'intro' %}sm:col-span-2{% endif %}">
+          <label class="fieldset-legend" for="{{ field.id_for_label }}">{{ field.label|capfirst }}{% if field.field.required %} <span class="text-error">*</span>{% endif %}</label>
+          {{ field }}
+          {% for e in field.errors %}<p class="mt-1 text-base text-error">{{ e }}</p>{% endfor %}
+        </div>
+      {% endif %}{% endfor %}
+    </div>
+    <fieldset class="space-y-3">
+      <legend class="font-semibold text-base-content">Texto por tipo de aprendizaje <span class="font-normal text-base-content/60">(opcional, se muestra arriba de cada grupo)</span></legend>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {% for field in form %}{% if field.name in form.kind_fields %}
+          <div><label class="fieldset-legend" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}</div>
+        {% endif %}{% endfor %}
+      </div>
+    </fieldset>
+    {% if not plan %}<p class="text-base text-base-content/60">El plan se crea en borrador: agrégale cursos y publícalo cuando esté listo.</p>{% endif %}
+    <div class="flex justify-end gap-2">
+      <a href="{% if plan %}{% url 'learning:plan_detail' plan.pk %}{% else %}{% url 'learning:plan_list' %}?todos=1{% endif %}" class="btn btn-ghost">Cancelar</a>
+      <button type="submit" class="btn btn-primary"><i data-lucide="save" class="w-4 h-4" aria-hidden="true"></i> Guardar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

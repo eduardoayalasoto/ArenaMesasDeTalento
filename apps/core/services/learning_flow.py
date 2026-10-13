@@ -27,7 +27,7 @@ from django.utils import timezone
 
 from apps.access import services as access
 from apps.access.registry import Scope
-from apps.core.services import permissions
+from apps.core.services import learning_tags, permissions
 
 User = get_user_model()
 
@@ -190,10 +190,11 @@ def assert_can_submit(user):
 
 
 COURSE_FIELDS = (
-    "name", "provider", "url", "kind", "duration_hours", "pillar", "tags",
+    "name", "provider", "url", "kind", "duration_hours", "pillar",
     "estimated_cost", "currency", "start_date_planned", "end_date_planned", "justification",
 )
-CATALOG_SNAPSHOT = ("name", "provider", "url", "kind", "duration_hours", "pillar", "tags", "currency")
+# Datos de la plataforma que se copian del catálogo (spec 006: el pilar ya no vive en el catálogo).
+CATALOG_SNAPSHOT = ("name", "provider", "url", "kind", "duration_hours", "currency")
 
 
 def _validate_request_data(req):
@@ -220,8 +221,6 @@ def _validate_request_data(req):
 
 
 def _apply_data(req, data, catalog_course=None):
-    from apps.learning.models import normalize_tags
-
     for field in COURSE_FIELDS:
         if field in data:
             setattr(req, field, data[field] if data[field] is not None else _blank_for(field))
@@ -231,9 +230,20 @@ def _apply_data(req, data, catalog_course=None):
             setattr(req, field, getattr(catalog_course, field))
         if data.get("estimated_cost") is None and catalog_course.reference_cost is not None:
             req.estimated_cost = catalog_course.reference_cost
-    req.tags = normalize_tags(req.tags)
+    # Las etiquetas (M2M) se asignan después de guardar: `_save_tags` (spec 006, FR-004).
+    if "tags" in data:
+        req._tag_names = list(data["tags"] or [])
+    elif catalog_course is not None and req.pk is None:
+        req._tag_names = [t.name for t in catalog_course.tags.all()]
     req.name = " ".join((req.name or "").split())
     req.provider = " ".join((req.provider or "").split())
+
+
+def _save_tags(req, actor):
+    names = getattr(req, "_tag_names", None)
+    if names is not None:
+        learning_tags.set_tags(req, names, actor)
+        del req._tag_names
 
 
 def _blank_for(field):
@@ -255,6 +265,7 @@ def create_request(user, data: dict, catalog_course=None, submit=False):
     if submit:
         _validate_request_data(req)
     req.save()
+    _save_tags(req, user)
     if submit:
         req = submit_request(req, user)
     return req
@@ -272,6 +283,7 @@ def update_request(req, actor, data: dict, submit=False):
     if submit:
         _validate_request_data(req)
     req.save()
+    _save_tags(req, actor)
     if submit:
         req = submit_request(req, actor)
     return req
@@ -700,6 +712,7 @@ def create_direct(user, actor, data: dict, review_data: dict, files, origin=None
     req.status = m.CourseRequest.Status.COMPLETADA
     req.closed_at = timezone.now()
     req.save()
+    _save_tags(req, actor)
     for f in files or ():
         _create_evidence(req, actor, f, m.CourseEvidence.Kind.CERTIFICADO)
     if not req.evidences.exists():
@@ -714,29 +727,64 @@ def create_direct(user, actor, data: dict, review_data: dict, files, origin=None
 
 
 def catalog_queryset(filters: dict | None = None, include_archived=False) -> QuerySet:
-    """Catálogo con agregados (sin N+1): personas que lo completaron y rating promedio."""
+    """Catálogo con agregados (sin N+1): personas que lo completaron y rating promedio.
+
+    Filtros: `q` (nombre, proveedor o etiqueta), `area` (planes publicados en que aparece),
+    `kind` (tipo de aprendizaje), `focus` (enfoque) y `tags` (lista de ids, AND).
+    """
     m = _models()
     St = m.CourseRequest.Status
     done = Q(requests__status__in=(St.COMPLETADA, St.VALIDADA))
     qs = m.CatalogCourse.objects.annotate(
         completed_count=Count("requests__user", filter=done, distinct=True),
         avg_rating=Avg("requests__review__rating", filter=done),
-    ).prefetch_related("areas", "levels")
+    ).prefetch_related("tags")
     if not include_archived:
         qs = qs.filter(is_active=True)
     f = filters or {}
     if f.get("q"):
         q = f["q"].strip()
-        qs = qs.filter(Q(name__icontains=q) | Q(provider__icontains=q) | Q(tags__icontains=q))
+        matching = m.CatalogCourse.objects.filter(
+            Q(name__icontains=q) | Q(provider__icontains=q) | Q(tags__name__icontains=q),
+        ).values("pk")
+        qs = qs.filter(pk__in=matching)
     if f.get("area"):
-        qs = qs.filter(areas__pk=f["area"])
-    if f.get("level"):
-        qs = qs.filter(levels__pk=f["level"])
+        qs = qs.filter(pk__in=m.PlanCourse.objects.filter(
+            plan__area_id=f["area"], plan__status=m.TrainingPlan.Status.PUBLICADO,
+        ).values("course_id"))
     if f.get("kind"):
         qs = qs.filter(kind=f["kind"])
-    if f.get("pillar"):
-        qs = qs.filter(pillar=f["pillar"])
-    return qs.distinct().order_by("name")
+    if f.get("focus"):
+        qs = qs.filter(focus=f["focus"])
+    for tid in f.get("tags") or ():
+        qs = qs.filter(pk__in=m.CatalogCourse.tags.through.objects.filter(tag_id=tid).values("catalogcourse_id"))
+    return qs.order_by("name")
+
+
+def course_plan_areas(courses) -> dict[int, list]:
+    """Áreas de los planes publicados en que aparece cada curso (spec 006, R12). 1 consulta."""
+    m = _models()
+    out: dict[int, list] = {}
+    rows = (
+        m.PlanCourse.objects.filter(course__in=courses, plan__status=m.TrainingPlan.Status.PUBLICADO)
+        .select_related("plan__area").order_by("plan__area__name")
+    )
+    for pc in rows:
+        areas = out.setdefault(pc.course_id, [])
+        if pc.plan.area not in areas:
+            areas.append(pc.plan.area)
+    return out
+
+
+@transaction.atomic
+def save_catalog_course(course, actor, tag_names):
+    """Alta/edición de un curso del catálogo con sus etiquetas (la vista valida con el Form)."""
+    access.require(actor, "learn.catalog.manage")
+    if course.pk is None:
+        course.created_by = actor
+    course.save()
+    learning_tags.set_tags(course, tag_names, actor)
+    return course
 
 
 def catalog_reviews(course) -> QuerySet:
@@ -766,13 +814,9 @@ def promote_to_catalog(req, actor):
     course = m.CatalogCourse.objects.create(
         name=req.name, provider=req.provider, url=req.url, kind=req.kind,
         reference_cost=req.final_cost if req.final_cost is not None else req.estimated_cost,
-        currency=req.currency, duration_hours=req.duration_hours, pillar=req.pillar,
-        tags=req.tags, created_by=actor, promoted_from=req,
+        currency=req.currency, duration_hours=req.duration_hours, created_by=actor, promoted_from=req,
     )
-    review = getattr(req, "review", None)
-    if review is not None:
-        course.areas.set(review.audience_areas.all())
-        course.levels.set(review.audience_levels.all())
+    course.tags.set(req.tags.all())
     req.catalog_course = course
     req.save(update_fields=["catalog_course", "updated_at"])
     return course
@@ -788,12 +832,22 @@ def _course_key(name: str, provider: str) -> tuple[str, str]:
     return (" ".join((name or "").lower().split()), " ".join((provider or "").lower().split()))
 
 
-def normalize_url(url: str) -> str:
-    """Liga canónica del curso: sin esquema, `www.`, parámetros, fragmento ni diagonal final.
+TRACKING_PARAMS = frozenset({"t", "si", "ref", "trk", "source", "referralcode", "feature"})
 
-    'https://www.udemy.com/course/x/?couponCode=A#r' y 'udemy.com/course/x' -> 'udemy.com/course/x'.
+
+def _is_tracking_param(key: str) -> bool:
+    k = key.lower()
+    return k in TRACKING_PARAMS or k.startswith("utm") or k.startswith("coupon")
+
+
+def normalize_url(url: str) -> str:
+    """Liga canónica del curso: sin esquema, `www.`, fragmento, diagonal final ni parámetros
+    de rastreo o posición; conserva los que identifican el recurso (spec 006, R3).
+
+    'https://www.udemy.com/course/x/?couponCode=A#r' -> 'udemy.com/course/x'
+    'https://www.youtube.com/watch?v=abc&t=285s'      -> 'youtube.com/watch?v=abc'
     """
-    from urllib.parse import urlsplit
+    from urllib.parse import parse_qsl, urlencode, urlsplit
 
     url = (url or "").strip()
     if not url:
@@ -803,7 +857,9 @@ def normalize_url(url: str) -> str:
     if host.startswith("www."):
         host = host[4:]
     path = parts.path.rstrip("/").lower()
-    return f"{host}{path}" if host else ""
+    params = sorted((k, v) for k, v in parse_qsl(parts.query) if not _is_tracking_param(k))
+    query = f"?{urlencode(params)}" if params else ""
+    return f"{host}{path}{query}" if host else ""
 
 
 def course_identity(name: str, provider: str, url: str = "") -> tuple:
@@ -873,7 +929,9 @@ def requestable_courses(user, q: str = "") -> dict:
 
     known_qs = m.CourseRequest.objects.filter(status__in=KNOWN_STATUSES).select_related("review")
     if q:
-        known_qs = known_qs.filter(Q(name__icontains=q) | Q(provider__icontains=q) | Q(tags__icontains=q))
+        known_qs = known_qs.filter(pk__in=m.CourseRequest.objects.filter(
+            Q(name__icontains=q) | Q(provider__icontains=q) | Q(tags__name__icontains=q),
+        ).values("pk"))
 
     # Uso histórico de cada curso del catálogo: veces autorizado y modalidad más reciente.
     catalog_usage: dict[int, dict] = {}
@@ -925,9 +983,11 @@ def requestable_courses(user, q: str = "") -> dict:
 
 def template_data_from(req) -> dict:
     """Datos de curso (sin justificación ni fechas) para precargar una solicitud nueva."""
-    return {f: getattr(req, f) for f in (
-        "name", "provider", "url", "kind", "duration_hours", "pillar", "tags", "estimated_cost", "currency",
+    data = {f: getattr(req, f) for f in (
+        "name", "provider", "url", "kind", "duration_hours", "pillar", "estimated_cost", "currency",
     )}
+    data["tags"] = [t.name for t in req.tags.all()]
+    return data
 
 
 # --- Lecturas para perfil público (R6) ---------------------------------------------
@@ -960,7 +1020,7 @@ def public_course_context(req) -> dict:
         "url": req.url,
         "kind": req.get_kind_display(),
         "pillar": req.get_pillar_display() if req.pillar else "",
-        "tags": req.tag_list,
+        "tags": [t.name for t in req.tags.all()],
         "duration_hours": req.duration_hours,
         "start_date": req.start_date_planned,
         "end_date": req.end_date_planned,

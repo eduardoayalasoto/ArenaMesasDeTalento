@@ -32,7 +32,8 @@ apps/
   evaluations/     OwnershipEvaluation, OwnershipAnswer, ValueDeliveryEvaluation, ArenaImpactScore, FinalScore + flujos
   dashboards/      tablero (=resultados), Mi área, Mesa de Talento, avance, exportes, ayuda
   access/          Perfiles y permisos (spec 005): registry.py (catálogo de permisos en código), Profile, ProfileGrant, AccessAuditLog, @requires
-  learning/        Arena Learn (spec 004): CatalogCourse, CourseRequest, ApprovalStep, CourseEvidence, CourseReview, LearningSettings
+  learning/        Arena Learn (spec 004 + 006): CatalogCourse, CourseRequest, ApprovalStep, CourseEvidence, CourseReview, LearningSettings,
+                   Tag, TrainingPlan, PlanCourse, PersonalPlan, PersonalPlanItem (data/planes_2026.json = plan 2026 importado)
   core/            services/ (lógica), middleware, context_processors, management/commands (seed*), text, templatetags
 templates/         base.html + partials/ + por app
 static/            src/input.css, css/app.css (compilado), vendor/ (lucide/alpine/htmx), img/ (logo, favicon)
@@ -52,7 +53,7 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
   - `ArenaImpactScore` (user×period, score, notes, captured_by).
   - `FinalScore` (materializado: pilares, final_score, band, is_complete).
 
-- **learning (Arena Learn, spec 004):** `CourseRequest` (solicitud/registro de curso; `status` BORRADOR→EN_REVISION(+`current_stage` LEAD/DIRECCION/TALENTO)→AUTORIZADA→COMPLETADA→VALIDADA, o REQUIERE_AJUSTES/RECHAZADA/CANCELADA/NO_CONCLUIDA; `origin` SOLICITUD/REGISTRO_DIRECTO/HISTORICO; campos de pago solo informativos), `ApprovalStep` (bitácora inmutable), `CourseEvidence` (archivos en BD, máx. 4 MB; CERTIFICADO público, COMPROBANTE_FISCAL privado), `CourseReview`, `CatalogCourse`, `LearningSettings` (instrucciones fiscales). Nuevos campos: `User.direct_lead` y `Area.director` (aprobadores).
+- **learning (Arena Learn, spec 004):** `CourseRequest` (solicitud/registro de curso; `status` BORRADOR→EN_REVISION(+`current_stage` LEAD/DIRECCION/TALENTO)→AUTORIZADA→COMPLETADA→VALIDADA, o REQUIERE_AJUSTES/RECHAZADA/CANCELADA/NO_CONCLUIDA; `origin` SOLICITUD/REGISTRO_DIRECTO/HISTORICO; campos de pago solo informativos), `ApprovalStep` (bitácora inmutable), `CourseEvidence` (archivos en BD, máx. 4 MB; CERTIFICADO público, COMPROBANTE_FISCAL privado), `CourseReview`, `CatalogCourse`, `LearningSettings` (instrucciones fiscales). **Spec 006:** `CatalogCourse` describe lo propio de la plataforma: `kind` = tipo de aprendizaje (Estructurado/Certificación/Puntual/Contextual/Soft Skills/Evento) y `focus` = enfoque (Horizontal/Vertical), independientes; sin niveles, pilar ni áreas (las áreas se derivan de los planes publicados). `Tag` (etiquetas gestionables, M2M en curso y solicitud; "KO" la asigna la importación). `TrainingPlan` (área×año, BORRADOR/PUBLICADO/ARCHIVADO, `type_notes`) → `PlanCourse` (curso + niveles propios del plan + nota; la vista agrupa por tipo). `PersonalPlan`/`PersonalPlanItem` = Mi plan; su avance se deriva de `CourseRequest` (no guarda estado). Nuevos campos: `User.direct_lead` y `Area.director` (aprobadores).
 
 ## 5. Roles, permisos y reglas clave
 
@@ -71,6 +72,7 @@ docs/              KB, plan, progreso, este contexto, Deploy_Vercel, usuarios.cs
 - **Entrega de Valor:** el **líder del proyecto** captura (criterio de tiempo según FINITO/INDEFINIDO) → **Director** valida o regresa con comentario → recalcula finales del equipo.
 - **Impacto Arena:** **Talento** captura en tabla con **autoguardado por campo** (carga los datos de la BD; guarda calificación/nota al salir del campo; indicador por fila) → recalcula finales. Mismo patrón que el autosave de Ownership.
 - **Arena Learn:** el colaborador solicita un curso (catálogo o nuevo) → Lead directo (o cualquier Lead del área) → Director del área (o cualquier Director) → Talento; se omiten las etapas donde el solicitante sería su propio aprobador. Regresar exige comentario y al reenviar reanuda en esa etapa. Autorizado: registra modalidad/estado de pago (no se gestiona). Cierre: evidencia + reseña obligatorias; un curso autorizado sin cerrar bloquea nuevas solicitudes (o se marca No concluido). Talento valida evidencia. Lógica en `core/services/learning_flow.py`; rutas bajo `/arena-learn/`.
+- **Arena Learn · planes (spec 006):** Talento publica un plan por área y año (`/arena-learn/planes/`); el colaborador agrega cursos a **Mi plan** (`/arena-learn/mi-plan/`) y los inicia con "Solicitar autorización" (flujo de 004) o "Empezar" (sin costo); su Lead (reportes directos), Dirección y Talento ven su plan y el **Avance de planes** con exporte. Etiquetas administrables en `/arena-learn/etiquetas/`. Servicios: `learning_tags.py`, `learning_plans.py`, `learning_import.py`. Comandos: `reset_learning_data --before AAAA-MM-DD [--confirm]` e `import_learning_plans [--dry-run]` (carga `apps/learning/data/planes_2026.json`, armado con `scripts/extract_plans_html.py` + `scripts/build_plans_json.py`).
 - **Calificación final:** `FinalScore` materializado; se recalcula al validar EV / guardar Impacto / abrir resultados.
 
 ## 7. Capa de servicios (`apps/core/services/`)

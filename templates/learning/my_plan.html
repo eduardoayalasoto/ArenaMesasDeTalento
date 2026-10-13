@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+
+<div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+  <div>
+    <h3 class="text-lg font-semibold text-base-content">{% if is_me %}Mi plan {{ year }}{% else %}Plan {{ year }} de {{ owner.full_name }}{% endif %}</h3>
+    <p class="text-base text-base-content/60">{% if is_me %}Los cursos que elegiste para este año. El avance se actualiza solo con tus solicitudes y registros de Arena Learn.{% else %}{{ owner.area.name|default:"Sin área" }}{% if owner.level %} · {{ owner.level.name }}{% endif %} · solo lectura{% endif %}</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-2">
+    {% if years|length > 1 %}
+      <form method="get" class="flex items-center gap-2">
+        <label class="sr-only" for="plan-year">Año</label>
+        <select id="plan-year" name="anio" class="select w-auto" onchange="this.form.submit()">{% for y in years %}<option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>{% endfor %}</select>
+      </form>
+    {% endif %}
+    {% if is_me and area_plan %}<a href="{% url 'learning:plan_detail' area_plan.pk %}" class="btn btn-primary"><i data-lucide="map" class="w-4 h-4" aria-hidden="true"></i> Plan de mi área</a>{% elif is_me %}<a href="{% url 'learning:plan_list' %}" class="btn btn-primary"><i data-lucide="map" class="w-4 h-4" aria-hidden="true"></i> Ver planes</a>{% endif %}
+  </div>
+</div>
+
+{% if view.rows %}
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
+    {% for code, label in states.items %}
+      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4">
+        <p class="text-base text-base-content/60">{{ label }}</p>
+        <p class="text-2xl font-semibold text-base-content tabular-nums">{{ view.counts|get_item:code }}</p>
+      </div>
+    {% endfor %}
+  </div>
+  <ul class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-300">
+    {% for row in view.rows %}{% include "learning/_my_plan_row.html" %}{% endfor %}
+  </ul>
+{% else %}
+  {% if is_me %}
+    {% include "partials/empty_state.html" with icon="list-checks" title="Aún no tienes cursos en tu plan de este año" message="Abre el plan de tu área y usa «Agregar a Mi plan» en los cursos que te interesen." %}
+  {% else %}
+    {% include "partials/empty_state.html" with icon="list-checks" title="Sin plan para este año" message="Esta persona todavía no ha elegido cursos." %}
+  {% endif %}
+{% endif %}
+{% endblock %}

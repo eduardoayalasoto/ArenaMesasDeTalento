@@ -157,18 +157,21 @@ def learn_people(db, learn_area, learn_levels):
 
 @pytest.fixture
 def catalog_course(db):
+    from apps.core.services import learning_tags
     from apps.learning.models import CatalogCourse
 
-    return CatalogCourse.objects.create(
-        name="Spark para analítica", provider="Databricks Academy", kind="CURSO",
-        reference_cost=Decimal("3500.00"), currency="MXN", duration_hours=20, tags="Spark, Big Data",
+    course = CatalogCourse.objects.create(
+        name="Spark para analítica", provider="Databricks Academy", kind="ESTRUCTURADO",
+        reference_cost=Decimal("3500.00"), currency="MXN", duration_hours=20,
     )
+    course.tags.set(learning_tags.resolve(["Spark", "Big Data"]))
+    return course
 
 
 def learn_request_data(**overrides):
     data = {
         "name": "Curso de dbt", "provider": "dbt Labs", "url": "https://learn.getdbt.com",
-        "kind": "CURSO", "duration_hours": 12, "pillar": "ENTREGA_VALOR", "tags": "dbt",
+        "kind": "ESTRUCTURADO", "duration_hours": 12, "pillar": "ENTREGA_VALOR", "tags": ["dbt"],
         "estimated_cost": Decimal("2500.00"), "currency": "MXN",
         "start_date_planned": date(2026, 10, 1), "end_date_planned": date(2026, 11, 1),
         "justification": "Modelado de datos para el proyecto X.",

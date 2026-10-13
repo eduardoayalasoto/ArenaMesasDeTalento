@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load learning_tags %}
 {% block content %}
 {% include "learning/_subnav.html" %}
 
@@ -70,10 +71,10 @@
         <div><dt class="text-base-content/60">Proveedor</dt><dd class="text-base-content">{{ req.provider|default:"—" }}</dd></div>
         <div><dt class="text-base-content/60">Liga</dt><dd class="truncate">{% if req.url %}<a href="{{ req.url }}" target="_blank" rel="noopener" class="text-primary hover:underline">{{ req.url }}</a>{% else %}—{% endif %}</dd></div>
         <div><dt class="text-base-content/60">Fechas tentativas</dt><dd class="text-base-content">{{ req.start_date_planned|date:"d/m/Y"|default:"—" }} – {{ req.end_date_planned|date:"d/m/Y"|default:"—" }}</dd></div>
-        <div><dt class="text-base-content/60">Duración</dt><dd class="text-base-content">{% if req.duration_hours %}{{ req.duration_hours }} h{% else %}—{% endif %}</dd></div>
+        <div><dt class="text-base-content/60">Duración</dt><dd class="text-base-content">{% if req.duration_hours %}{{ req.duration_hours|hours }}{% else %}—{% endif %}</dd></div>
         <div><dt class="text-base-content/60">Costo estimado</dt><dd class="text-base-content font-medium">{% if req.estimated_cost is not None %}${{ req.estimated_cost|floatformat:"0g" }} {{ req.currency }}{% else %}Gratuito / no indicado{% endif %}</dd></div>
-        <div><dt class="text-base-content/60">Pilar</dt><dd class="text-base-content">{{ req.get_pillar_display|default:"—" }}</dd></div>
-        {% if req.tag_list %}<div class="sm:col-span-2"><dt class="text-base-content/60">Etiquetas</dt><dd class="flex flex-wrap gap-1 mt-1">{% for t in req.tag_list %}<span class="badge bg-base-200 text-base-content/70">{{ t }}</span>{% endfor %}</dd></div>{% endif %}
+        <div><dt class="text-base-content/60">Pilar que fortalece</dt><dd class="text-base-content">{{ req.get_pillar_display|default:"—" }}</dd></div>
+        {% with tags=req.tags.all %}{% if tags %}<div class="sm:col-span-2"><dt class="text-base-content/60">Etiquetas</dt><dd class="flex flex-wrap gap-1 mt-1">{% for t in tags %}<span class="badge badge-outline text-base-content/70">{{ t.name }}</span>{% endfor %}</dd></div>{% endif %}{% endwith %}
       </dl>
       {% if req.justification %}
         <div class="mt-4">

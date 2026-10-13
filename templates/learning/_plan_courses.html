@@ -1,0 +1,122 @@
+{% load learning_tags %}
+{% comment %}
+Cursos del plan agrupados por tipo de aprendizaje, con filtros (htmx). Se reemplaza completo en
+#plan-courses al filtrar o al editar cursos del plan. Contexto: _plan_courses_ctx (views_plans).
+{% endcomment %}
+{% url 'learning:plan_detail' plan.pk as plan_url %}
+<form class="flex flex-wrap items-end gap-2 mb-3" hx-get="{{ plan_url }}" hx-target="#plan-courses" hx-swap="innerHTML"
+      hx-trigger="change" hx-indicator="#plan-spin">
+  <input type="hidden" name="partial" value="courses">
+  {% for chip in tag_chips %}{% if chip.active %}<input type="hidden" name="etiqueta" value="{{ chip.tag.pk }}">{% endif %}{% endfor %}
+  <select name="kind" class="select w-auto" aria-label="Tipo de aprendizaje">
+    <option value="">Todos los tipos</option>
+    {% for v, l in kinds %}<option value="{{ v }}" {% if f.kind == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+  </select>
+  <select name="level" class="select w-auto" aria-label="Nivel">
+    <option value="">Todos los niveles</option>
+    {% for lv in levels %}<option value="{{ lv.pk }}" {% if f.level == lv.pk|stringformat:"s" %}selected{% endif %}>{{ lv.name }}</option>{% endfor %}
+  </select>
+  {% if filtered %}<a href="{{ plan_url }}" class="btn btn-ghost">Limpiar</a>{% endif %}
+  <span id="plan-spin" class="loading loading-spinner loading-sm htmx-indicator self-center" aria-hidden="true"></span>
+</form>
+
+{% if tag_chips %}
+  <div class="flex flex-wrap items-center gap-1.5 mb-4" role="group" aria-label="Filtrar por etiqueta">
+    <span class="text-base text-base-content/60 mr-1">Etiquetas:</span>
+    {% for chip in tag_chips %}
+      <a href="{{ plan_url }}?{{ chip.query }}" hx-get="{{ plan_url }}?{{ chip.query }}&partial=courses" hx-target="#plan-courses" hx-indicator="#plan-spin"
+         class="badge cursor-pointer {% if chip.active %}badge-primary{% else %}badge-outline text-base-content/70 hover:border-primary{% endif %}" {% if chip.active %}aria-current="true"{% endif %}>
+        {% if chip.active %}<i data-lucide="check" class="w-3 h-3" aria-hidden="true"></i>{% endif %}{{ chip.tag.name }}
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if can_manage_plans and item_form %}
+  <details class="bg-base-100 border border-base-300 rounded-2xl shadow-sm mb-5">
+    <summary class="cursor-pointer px-5 py-3 text-base font-medium text-primary flex items-center gap-2"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Agregar curso del catálogo</summary>
+    <form class="px-5 pb-5 grid sm:grid-cols-2 gap-3" hx-post="{% url 'learning:plan_item_save' plan.pk %}" hx-target="#plan-courses" hx-indicator="#plan-spin">
+      {% csrf_token %}
+      <div class="sm:col-span-2">
+        <label class="fieldset-legend" for="{{ item_form.course.id_for_label }}">{{ item_form.course.label }}</label>{{ item_form.course }}
+        <p class="mt-1 text-base text-base-content/60">El tipo de aprendizaje y el enfoque se toman del curso del catálogo.</p>
+      </div>
+      <fieldset><legend class="fieldset-legend">{{ item_form.levels.label }}</legend>
+        <div class="flex flex-wrap gap-x-4 gap-y-2">{% for cb in item_form.levels %}<label class="inline-flex items-center gap-1.5 text-base">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
+        <p class="mt-1 text-base text-base-content/60">{{ item_form.levels.help_text }}</p>
+      </fieldset>
+      <div><label class="fieldset-legend" for="{{ item_form.note.id_for_label }}">{{ item_form.note.label }}</label>{{ item_form.note }}</div>
+      <div class="sm:col-span-2 flex justify-end"><button type="submit" class="btn btn-primary">Agregar al plan</button></div>
+    </form>
+  </details>
+{% endif %}
+
+{% for g in groups %}
+  <section class="mb-6" aria-labelledby="grp-{{ g.kind }}">
+    <div class="flex flex-wrap items-baseline gap-2 mb-1">
+      <h4 id="grp-{{ g.kind }}" class="font-semibold text-base-content">{{ g.label }}</h4>
+      <span class="text-base text-base-content/50">· {{ g.items|length }} curso{{ g.items|length|pluralize }}</span>
+    </div>
+    {% if g.note %}<p class="text-base text-base-content/60 mb-3 max-w-3xl">{{ g.note }}</p>{% endif %}
+    <ul class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-300">
+      {% for it in g.items %}
+        <li class="p-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between" x-data="{ edit: false }">
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <a href="{% url 'learning:catalog_detail' it.course.pk %}" class="font-medium text-base-content hover:underline">{{ it.course.name }}</a>
+              {% if not it.course.is_active %}<span class="badge badge-soft badge-warning">No disponible</span>{% endif %}
+            </div>
+            <p class="text-base text-base-content/60">{{ it.course.provider }}{% if it.course.duration_hours %} · {{ it.course.duration_hours|hours }}{% endif %}{% if it.course.reference_cost is not None %} · ${{ it.course.reference_cost|floatformat:"0g" }} {{ it.course.currency }}{% endif %}{% if it.note %} · {{ it.note }}{% endif %}</p>
+            <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <span class="badge badge-soft badge-info" title="Enfoque">{{ it.course.get_focus_display }}</span>
+              {% for lv in it.levels.all %}<span class="badge badge-soft">{{ lv.name }}</span>{% empty %}<span class="badge badge-soft">Todos los niveles</span>{% endfor %}
+              {% for t in it.course.tags.all %}<span class="badge badge-outline text-base-content/70">{{ t.name }}</span>{% endfor %}
+              {% if it.avg_rating %}<span class="inline-flex items-center gap-1 text-base text-base-content/70">{% include "learning/_stars.html" with value=it.avg_rating size="w-3.5 h-3.5" %} {{ it.avg_rating|floatformat:1 }}</span>{% endif %}
+            </div>
+            {% if can_manage_plans %}
+              <form x-show="edit" x-cloak class="mt-3 flex flex-wrap items-end gap-3" hx-post="{% url 'learning:plan_item_edit' plan.pk it.pk %}" hx-target="#plan-courses" hx-indicator="#plan-spin">
+                {% csrf_token %}<input type="hidden" name="action" value="save">
+                <fieldset class="flex flex-wrap gap-x-3 gap-y-1"><legend class="sr-only">Niveles recomendados</legend>
+                  {% for lv in levels %}<label class="inline-flex items-center gap-1 text-base"><input type="checkbox" class="checkbox checkbox-sm" name="levels" value="{{ lv.pk }}" {% if lv in it.levels.all %}checked{% endif %}> {{ lv.name }}</label>{% endfor %}
+                </fieldset>
+                <input type="text" name="note" value="{{ it.note }}" maxlength="200" class="input input-sm w-56" placeholder="Nota (opcional)" aria-label="Nota">
+                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                <button type="button" class="btn btn-sm btn-ghost" @click="edit = false">Cancelar</button>
+              </form>
+            {% endif %}
+          </div>
+          <div class="flex flex-wrap items-center gap-1 shrink-0">
+            {% if it.course.url %}<div class="tooltip tooltip-left" data-tip="Abrir en la plataforma">{% include "components/_icon_button.html" with icon="external-link" label="Abrir en la plataforma" href=it.course.url extra_attrs='target="_blank" rel="noopener"' %}</div>{% endif %}
+            {% if can_myplan and it.course.is_active %}
+              {% include "learning/_my_plan_button.html" with course=it.course pc=it added=False %}
+            {% endif %}
+            {% if can_manage_plans %}
+              {% url 'learning:plan_item_edit' plan.pk it.pk as item_url %}
+              <div class="tooltip tooltip-left" data-tip="Editar niveles y nota">{% include "components/_icon_button.html" with icon="pencil" label="Editar niveles y nota" extra_attrs='@click="edit = !edit"' %}</div>
+              <div class="tooltip tooltip-left" data-tip="Subir">{% include "components/_icon_button.html" with icon="arrow-up" label="Subir" hx_post=item_url hx_target="#plan-courses" extra_attrs='hx-vals=\'{"action": "up"}\'' %}</div>
+              <div class="tooltip tooltip-left" data-tip="Bajar">{% include "components/_icon_button.html" with icon="arrow-down" label="Bajar" hx_post=item_url hx_target="#plan-courses" extra_attrs='hx-vals=\'{"action": "down"}\'' %}</div>
+              <div class="tooltip tooltip-left" data-tip="Quitar del plan">{% with pk_s=it.pk|stringformat:"s" %}{% with modal_id="rm-item-"|add:pk_s %}{% include "components/_icon_button.html" with icon="trash-2" label="Quitar del plan" extra_attrs='data-modal-open="'|add:modal_id|add:'" onclick="openModal(this.dataset.modalOpen)"' %}{% endwith %}{% endwith %}</div>
+              <dialog id="rm-item-{{ it.pk }}" class="modal" aria-label="Quitar curso del plan">
+                <div class="modal-box max-w-sm">
+                  <h3 class="font-heading text-lg font-semibold">Quitar del plan</h3>
+                  <p class="py-3 text-base text-base-content/70">«{{ it.course.name }}» deja de mostrarse en este plan. Sigue en el catálogo y en Mi plan de quien ya lo eligió.</p>
+                  <div class="modal-action">
+                    <form method="dialog"><button type="submit" class="btn btn-ghost btn-sm">Cancelar</button></form>
+                    <button type="button" class="btn btn-error btn-sm" hx-post="{{ item_url }}" hx-vals='{"action": "delete"}' hx-target="#plan-courses" hx-indicator="#plan-spin" onclick="this.closest('dialog').close()">Quitar</button>
+                  </div>
+                </div>
+                <form method="dialog" class="modal-backdrop"><button type="submit">Cerrar</button></form>
+              </dialog>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% empty %}
+  {% if filtered %}
+    {% include "partials/empty_state.html" with icon="search" title="Ningún curso coincide con esos filtros" message="Quita algún filtro para ver más cursos del plan." %}
+  {% else %}
+    {% include "partials/empty_state.html" with icon="map" title="Este plan aún no tiene cursos" message="Talento agrega los cursos desde el catálogo." %}
+  {% endif %}
+{% endfor %}

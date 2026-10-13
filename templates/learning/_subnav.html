@@ -1,12 +1,12 @@
 {% comment %}Encabezado y pestañas de Arena Learn. Contexto: learn_tab, approvals_count, can_manage, can_track.{% endcomment %}
-{% url 'learning:my_courses' as u_mine %}{% url 'learning:catalog_list' as u_cat %}{% url 'learning:people_list' as u_people %}{% url 'learning:approvals_inbox' as u_appr %}{% url 'learning:tracking' as u_track %}
+{% url 'learning:my_courses' as u_mine %}{% url 'learning:catalog_list' as u_cat %}{% url 'learning:people_list' as u_people %}{% url 'learning:approvals_inbox' as u_appr %}{% url 'learning:tracking' as u_track %}{% url 'learning:plan_list' as u_plans %}{% url 'learning:my_plan' as u_myplan %}{% url 'learning:plan_tracking' as u_track_plans %}
 <div class="mb-6">
   <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
     <div class="flex items-center gap-3">
       <span class="grid place-items-center w-10 h-10 rounded-xl bg-primary/10 text-primary"><i data-lucide="graduation-cap" class="w-5 h-5"></i></span>
       <div>
         <h2 class="text-xl font-semibold text-base-content font-display">Arena Learn</h2>
-        <p class="text-base text-base-content/70">Solicita, registra y comparte los cursos que impulsan tu desarrollo.</p>
+        <p class="text-base text-base-content/70">Planes de tu área, tu plan del año y los cursos que impulsan tu desarrollo.</p>
       </div>
     </div>
     <div class="flex flex-wrap gap-2">
@@ -16,13 +16,15 @@
   </div>
   <nav class="flex gap-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-b border-base-300" aria-label="Secciones de Arena Learn">
     <a href="{{ u_mine }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'mine' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Mis cursos</a>
+    {% if can_myplan %}<a href="{{ u_myplan }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'myplan' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Mi plan</a>{% endif %}
+    {% if can_plans %}<a href="{{ u_plans }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'plans' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Planes</a>{% endif %}
     <a href="{{ u_cat }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'catalog' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Catálogo</a>
     <a href="{{ u_people }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'people' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Personas</a>
     {% if is_approver or approvals_count or learn_tab == 'approvals' %}
     <a href="{{ u_appr }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap inline-flex items-center gap-1.5 {% if learn_tab == 'approvals' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Por aprobar{% if approvals_count %} <span class="badge bg-error text-white">{{ approvals_count }}</span>{% endif %}</a>
     {% endif %}
-    {% if can_track %}
-    <a href="{{ u_track }}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'tracking' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Seguimiento</a>
+    {% if can_track or can_track_plans %}
+    <a href="{% if can_track %}{{ u_track }}{% else %}{{ u_track_plans }}{% endif %}" class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px whitespace-nowrap {% if learn_tab == 'tracking' %}border-primary text-primary{% else %}border-transparent text-base-content/60 hover:text-base-content{% endif %}">Seguimiento</a>
     {% endif %}
   </nav>
 </div>

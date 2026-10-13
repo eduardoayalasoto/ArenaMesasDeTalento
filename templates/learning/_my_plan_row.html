@@ -1,0 +1,50 @@
+{% load learning_tags %}
+{% comment %}Fila de Mi plan (htmx: Empezar y Descartar devuelven esta fila). Contexto: row = {item, state}, is_me.{% endcomment %}
+{% with it=row.item st=row.state c=row.item.course %}
+<li id="myplan-{{ it.pk }}" class="p-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between {% if st.code == 'DESCARTADO' %}bg-base-200/50{% endif %}">
+  <div class="min-w-0">
+    <div class="flex flex-wrap items-center gap-1.5">
+      <a href="{% url 'learning:catalog_detail' c.pk %}" class="font-medium text-base-content hover:underline">{{ c.name }}</a>
+      <span class="badge badge-soft {% if st.tone == 'success' %}badge-success{% elif st.tone == 'info' %}badge-info{% endif %}">{{ st.label }}</span>
+      {% if st.detail %}<span class="text-base text-base-content/60">{{ st.detail }}</span>{% endif %}
+    </div>
+    <p class="text-base text-base-content/60">{{ c.provider }} · {{ c.get_kind_display }} · {{ c.get_focus_display }}{% if c.duration_hours %} · {{ c.duration_hours|hours }}{% endif %}{% if it.source %} · Plan {{ it.source.plan.area.name }} {{ it.source.plan.year }}{% endif %}</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-1 shrink-0">
+    <span id="myplan-spin-{{ it.pk }}" class="loading loading-spinner loading-xs htmx-indicator" aria-hidden="true"></span>
+    {% if c.url %}<div class="tooltip tooltip-left" data-tip="Abrir en la plataforma">{% include "components/_icon_button.html" with icon="external-link" label="Abrir en la plataforma" href=c.url extra_attrs='target="_blank" rel="noopener"' %}</div>{% endif %}
+    {% if st.request %}<a href="{% url 'learning:request_detail' st.request.pk %}" class="btn btn-sm btn-ghost">Ver registro</a>{% endif %}
+    {% if is_me %}
+      {% if st.code == "PENDIENTE" and not st.request or st.code == "PENDIENTE" and st.request.status != "BORRADOR" %}
+        <button type="button" class="btn btn-sm btn-soft btn-primary" data-modal-open="start-{{ it.pk }}" onclick="openModal(this.dataset.modalOpen)"><i data-lucide="play" class="w-4 h-4" aria-hidden="true"></i> Iniciar</button>
+        <dialog id="start-{{ it.pk }}" class="modal" aria-label="Iniciar {{ c.name }}">
+          <div class="modal-box max-w-md">
+            <h3 class="font-heading text-lg font-semibold">Iniciar «{{ c.name }}»</h3>
+            <p class="py-2 text-base text-base-content/70">¿El curso tiene costo para Arena?</p>
+            <div class="grid gap-2">
+              <form method="post" action="{% url 'learning:my_plan_start' it.pk %}">{% csrf_token %}<input type="hidden" name="mode" value="request">
+                <button type="submit" class="btn w-full {% if c.reference_cost %}btn-primary{% else %}btn-outline btn-primary{% endif %}"><i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i> Sí: solicitar autorización</button>
+              </form>
+              <button type="button" class="btn w-full {% if c.reference_cost %}btn-outline btn-primary{% else %}btn-primary{% endif %}"
+                      hx-post="{% url 'learning:my_plan_start' it.pk %}" hx-vals='{"mode": "free"}' hx-target="#myplan-{{ it.pk }}" hx-swap="outerHTML" hx-indicator="#myplan-spin-{{ it.pk }}"
+                      onclick="this.closest('dialog').close()"><i data-lucide="play" class="w-4 h-4" aria-hidden="true"></i> No: empezar ahora</button>
+            </div>
+            {% if c.reference_cost %}<p class="mt-2 text-base text-base-content/60">Costo de referencia: ${{ c.reference_cost|floatformat:"0g" }} {{ c.currency }}.</p>{% endif %}
+            <div class="modal-action"><form method="dialog"><button type="submit" class="btn btn-ghost btn-sm">Cancelar</button></form></div>
+          </div>
+          <form method="dialog" class="modal-backdrop"><button type="submit">Cerrar</button></form>
+        </dialog>
+      {% elif st.code == "EN_CURSO" or st.code == "PENDIENTE" %}
+        <form method="post" action="{% url 'learning:my_plan_complete' it.pk %}">{% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-soft btn-success"><i data-lucide="circle-check" class="w-4 h-4" aria-hidden="true"></i> {% if st.request and st.request.status != "AUTORIZADA" %}Continuar{% else %}Completar{% endif %}</button>
+        </form>
+      {% endif %}
+      {% if st.code == "DESCARTADO" %}
+        <button type="button" class="btn btn-sm btn-ghost" hx-post="{% url 'learning:my_plan_discard' it.pk %}" hx-vals='{"action": "restore"}' hx-target="#myplan-{{ it.pk }}" hx-swap="outerHTML" hx-indicator="#myplan-spin-{{ it.pk }}"><i data-lucide="undo-2" class="w-4 h-4" aria-hidden="true"></i> Reactivar</button>
+      {% elif st.code != "COMPLETADO" %}
+        <button type="button" class="btn btn-sm btn-ghost" hx-post="{% url 'learning:my_plan_discard' it.pk %}" hx-vals='{"action": "discard"}' hx-target="#myplan-{{ it.pk }}" hx-swap="outerHTML" hx-indicator="#myplan-spin-{{ it.pk }}">Descartar</button>
+      {% endif %}
+    {% endif %}
+  </div>
+</li>
+{% endwith %}

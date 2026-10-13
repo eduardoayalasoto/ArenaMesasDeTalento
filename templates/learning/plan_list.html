@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+
+<div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+  <div>
+    <h3 class="text-lg font-semibold text-base-content">Planes de capacitación por área</h3>
+    <p class="text-base text-base-content/60">Catálogos sugeridos, no currículas obligatorias: elige según tu nivel, tus proyectos y tu tiempo.</p>
+  </div>
+  {% if can_manage_plans %}<a href="{% url 'learning:plan_create' %}" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Nuevo plan</a>{% endif %}
+</div>
+
+{% for year, year_plans in by_year %}
+  <section class="mb-6">
+    <h4 class="font-semibold text-base-content mb-3">{{ year }}</h4>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {% for p in year_plans %}
+        <a href="{% url 'learning:plan_detail' p.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col gap-2 hover:border-primary/25 hover:shadow transition">
+          <div class="flex items-center justify-between gap-2">
+            <span class="badge badge-soft badge-primary">{{ p.area.name }}</span>
+            {% if p.status == "BORRADOR" %}<span class="badge badge-soft badge-warning">Borrador</span>{% elif p.status == "ARCHIVADO" %}<span class="badge badge-soft">Archivado</span>{% endif %}
+          </div>
+          <p class="font-semibold text-base-content">{{ p.title }}</p>
+          {% if p.hours_min %}<p class="text-base text-base-content/60">{{ p.hours_min }}{% if p.hours_max %}–{{ p.hours_max }}{% endif %} h por semana</p>{% endif %}
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+{% empty %}
+  {% include "partials/empty_state.html" with icon="map" title="Aún no hay planes publicados" message="Cuando Talento publique el plan de tu área lo verás aquí." %}
+{% endfor %}
+{% endblock %}

@@ -5,6 +5,7 @@ por `apps/core/services/permissions.py`.
 """
 
 import io
+import json
 from datetime import datetime
 
 from django.contrib import messages
@@ -16,6 +17,7 @@ from django.db.models import Count, Q
 from django.http import Http404, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Area, SeniorityLevel
@@ -23,6 +25,7 @@ from apps.access import services as access
 from apps.access.decorators import requires, requires_any
 from apps.access.registry import Scope
 from apps.core.services import learning_flow as flow
+from apps.core.services import learning_plans, learning_tags
 from apps.core.services import permissions
 
 from .forms import (
@@ -40,6 +43,8 @@ from .forms import (
     ReviewForm,
     SettingsForm,
     SingleEvidenceForm,
+    TagMergeForm,
+    TagRenameForm,
 )
 from .models import (
     ApprovalStep,
@@ -47,8 +52,9 @@ from .models import (
     CourseEvidence,
     CourseKind,
     CourseRequest,
+    Focus,
     LearningSettings,
-    Pillar,
+    Tag,
 )
 
 User = get_user_model()
@@ -85,6 +91,9 @@ def _base_ctx(request, active, **extra):
         "can_track": permissions.can_view_learning_tracking(request.user),
         "can_historic": access.has(request.user, "learn.historic.create"),
         "can_settings": access.has(request.user, "learn.settings.edit"),
+        "can_plans": access.has(request.user, "learn.plans.view"),
+        "can_myplan": access.has(request.user, "learn.myplan"),
+        "can_track_plans": access.has(request.user, "learn.plans.tracking"),
         "approvals_count": len(flow.approvals_for(request.user)),
         "is_approver": flow.is_course_approver(request.user),
     }
@@ -151,7 +160,7 @@ def _template_from_query(request):
 def request_create(request):
     catalog_course = _catalog_from_query(request)
     template_req = None if catalog_course else _template_from_query(request)
-    initial = {"currency": "MXN", "kind": "CURSO"}
+    initial = {"currency": "MXN", "kind": "ESTRUCTURADO"}
     if template_req is not None:
         initial.update(flow.template_data_from(template_req))
     form = RequestForm(request.POST or None, catalog_course=catalog_course, initial=initial)
@@ -527,7 +536,7 @@ def _direct_view(request, historic: bool):
     catalog_course = _catalog_from_query(request)
     FormCls = HistoricCourseForm if historic else DirectCourseForm
     form = FormCls(request.POST or None, catalog_course=catalog_course,
-                   initial={"currency": "MXN", "kind": "CURSO"})
+                   initial={"currency": "MXN", "kind": "ESTRUCTURADO"})
     review_form = ReviewForm(request.POST or None, prefix="r")
     files_form = EvidenceUploadForm(request.POST or None, request.FILES or None)
     if request.method == "POST" and form.is_valid() and review_form.is_valid() and files_form.is_valid():
@@ -573,19 +582,53 @@ def _filters(request, keys):
     return {k: request.GET.get(k, "").strip() for k in keys if request.GET.get(k, "").strip()}
 
 
+def _tag_ids(request, param="etiqueta") -> list[int]:
+    return [int(v) for v in request.GET.getlist(param) if str(v).isdigit()]
+
+
+def _tag_chips(request, tags, selected, param="etiqueta") -> list[dict]:
+    """Fichas de filtro por etiqueta: cada una alterna su id en la query actual (AND)."""
+    chips = []
+    for t in tags:
+        q = request.GET.copy()
+        ids = [i for i in selected if i != t.pk] if t.pk in selected else [*selected, t.pk]
+        q.setlist(param, [str(i) for i in ids])
+        q.pop("page", None)
+        chips.append({"tag": t, "active": t.pk in selected, "query": q.urlencode()})
+    return chips
+
+
 @login_required
 @requires("learn.public.view")
 def catalog_list(request):
-    f = _filters(request, ("q", "area", "level", "kind", "pillar"))
+    f = _filters(request, ("q", "area", "kind", "focus"))
+    tag_ids = _tag_ids(request)
     show_archived = request.GET.get("archivados") == "1" and permissions.can_manage_learning(request.user)
-    courses = flow.catalog_queryset(f, include_archived=show_archived)
+    courses = flow.catalog_queryset({**f, "tags": tag_ids}, include_archived=show_archived)
     if show_archived:
         courses = courses.filter(is_active=False)
+    courses = list(courses)
     return render(request, "learning/catalog_list.html", _base_ctx(
         request, "catalog", page_title="Catálogo · Arena Learn", courses=courses, f=f,
-        areas=Area.objects.filter(is_active=True), levels=SeniorityLevel.objects.all(),
-        kinds=CourseKind.choices, pillars=[p for p in Pillar.choices if p[0]], show_archived=show_archived,
+        plan_areas=flow.course_plan_areas(courses),
+        areas=Area.objects.filter(is_active=True), kinds=CourseKind.choices, focuses=Focus.choices,
+        tag_chips=_tag_chips(request, Tag.objects.filter(is_active=True, courses__isnull=False).distinct(), tag_ids),
+        filtered=bool(f or tag_ids), show_archived=show_archived,
+        can_manage_tags=access.has(request.user, "learn.tags.manage"),
     ))
+
+
+@login_required
+@requires("learn.public.view")
+def tag_suggest(request):
+    """Parcial con sugerencias de etiquetas activas para `_tag_input` (htmx)."""
+    q = request.GET.get("tag_q", "")
+    field = request.GET.get("field", "tags")
+    exclude = request.GET.getlist(field) if field in ("tags", "tag_names") else []
+    return render(request, "learning/_tag_suggest.html", {
+        "suggestions": learning_tags.suggest(q, exclude=exclude), "q": " ".join(q.split()),
+        "exists": Tag.objects.filter(key=learning_tags.normalize_tag_key(q)).exists() if q.strip() else True,
+    })
 
 
 @login_required
@@ -594,8 +637,14 @@ def catalog_detail(request, pk):
     course = get_object_or_404(flow.catalog_queryset(include_archived=True), pk=pk)
     if not course.is_active and not permissions.can_manage_learning(request.user):
         raise Http404
+    plan_items = (
+        course.plan_items.select_related("plan__area").prefetch_related("levels")
+        .exclude(plan__status="BORRADOR").order_by("-plan__year", "plan__area__name")
+    )
     return render(request, "learning/catalog_detail.html", _base_ctx(
         request, "catalog", page_title=course.name, course=course, reviews=flow.catalog_reviews(course),
+        plan_items=plan_items,
+        in_my_plan=learning_plans.my_plan_course_ids(request.user, timezone.localdate().year),
     ))
 
 
@@ -607,15 +656,19 @@ def catalog_edit(request, pk=None):
     course = get_object_or_404(CatalogCourse, pk=pk) if pk else None
     form = CatalogCourseForm(request.POST or None, instance=course)
     if request.method == "POST" and form.is_valid():
-        obj = form.save(commit=False)
-        if course is None:
-            obj.created_by = request.user
-        obj.save()
-        form.save_m2m()
-        messages.success(request, "Guardaste el curso del catálogo.")
-        return redirect("learning:catalog_detail", pk=obj.pk)
+        try:
+            obj = flow.save_catalog_course(form.save(commit=False), request.user, form.cleaned_data["tag_names"])
+        except ValidationError as exc:
+            _apply_errors(form, exc)
+        else:
+            messages.success(request, "Guardaste el curso del catálogo.")
+            return redirect("learning:catalog_detail", pk=obj.pk)
+    same_url = flow.catalog_for_url(form["url"].value() or "") if request.method == "POST" else None
+    if same_url is not None and course is not None and same_url.pk == course.pk:
+        same_url = None
     return render(request, "learning/catalog_form.html", _base_ctx(
         request, "catalog", page_title="Editar curso" if course else "Nuevo curso", form=form, course=course,
+        same_url=same_url,
     ))
 
 
@@ -690,6 +743,7 @@ def person_profile(request, pk):
         completed=[c for c in courses if c["status"] in (St.COMPLETADA, St.VALIDADA)],
         in_progress=[c for c in courses if c["status"] == St.AUTORIZADA],
         is_me=person.pk == request.user.pk,
+        can_see_plan=learning_plans.can_view_personal_plan(request.user, person),
     ))
 
 
@@ -793,3 +847,71 @@ def settings_edit(request):
     return render(request, "learning/settings_form.html", _base_ctx(
         request, "tracking", page_title="Configuración · Arena Learn", form=form,
     ))
+
+
+# --- Etiquetas (spec 006, US1) -----------------------------------------------------------------------
+
+
+def _toast(response, message, variant="success"):
+    response["HX-Trigger"] = json.dumps({"toast": {"message": message, "variant": variant}})
+    return response
+
+
+def _tag_row(request, tag, error=""):
+    tag = learning_tags.with_usage().get(pk=tag.pk)
+    return render(request, "learning/_tag_row.html", {
+        "t": tag, "error": error, "merge_form": TagMergeForm(source=tag, prefix=f"m{tag.pk}"),
+    })
+
+
+@login_required
+@requires("learn.tags.manage")
+def tag_list(request):
+    tags = list(learning_tags.with_usage())
+    rows = [{"t": t, "merge_form": TagMergeForm(source=t, prefix=f"m{t.pk}")} for t in tags]
+    return render(request, "learning/tag_list.html", _base_ctx(
+        request, "catalog", page_title="Etiquetas · Arena Learn", rows=rows,
+    ))
+
+
+@login_required
+@require_POST
+@requires("learn.tags.manage")
+def tag_edit(request, pk):
+    tag = get_object_or_404(Tag, pk=pk)
+    form = TagRenameForm(request.POST)
+    if not form.is_valid():
+        return _toast(_tag_row(request, tag, "Escribe un nombre válido."), "No se guardó el nombre.", "error")
+    try:
+        learning_tags.rename(tag, form.cleaned_data["name"], request.user)
+    except ValidationError as exc:
+        return _toast(_tag_row(request, tag, _error_text(exc)), _error_text(exc), "error")
+    return _toast(_tag_row(request, tag), "Renombraste la etiqueta.")
+
+
+@login_required
+@require_POST
+@requires("learn.tags.manage")
+def tag_toggle(request, pk):
+    tag = get_object_or_404(Tag, pk=pk)
+    learning_tags.set_active(tag, not tag.is_active, request.user)
+    return _toast(_tag_row(request, tag), "Reactivaste la etiqueta." if tag.is_active else "Desactivaste la etiqueta.")
+
+
+@login_required
+@require_POST
+@requires("learn.tags.manage")
+def tag_merge(request, pk):
+    tag = get_object_or_404(Tag, pk=pk)
+    form = TagMergeForm(request.POST, source=tag, prefix=f"m{tag.pk}")
+    if not form.is_valid():
+        messages.error(request, "Elige la etiqueta destino.")
+        return redirect("learning:tag_list")
+    target = form.cleaned_data["target"]
+    try:
+        learning_tags.merge(tag, target, request.user)
+    except ValidationError as exc:
+        messages.error(request, _error_text(exc))
+    else:
+        messages.success(request, f"Fusionaste «{tag.name}» en «{target.name}».")
+    return redirect("learning:tag_list")

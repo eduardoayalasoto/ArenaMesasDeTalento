@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from . import views
+from . import views, views_plans as vp
 
 app_name = "learning"
 
@@ -27,6 +27,11 @@ urlpatterns = [
     path("evidencias/<int:pk>/validar/", views.evidence_validate, name="evidence_validate"),
     path("evidencias/<int:pk>/reemplazar/", views.evidence_replace, name="evidence_replace"),
     path("catalogo/", views.catalog_list, name="catalog_list"),
+    path("etiquetas/sugerir/", views.tag_suggest, name="tag_suggest"),
+    path("etiquetas/", views.tag_list, name="tag_list"),
+    path("etiquetas/<int:pk>/editar/", views.tag_edit, name="tag_edit"),
+    path("etiquetas/<int:pk>/fusionar/", views.tag_merge, name="tag_merge"),
+    path("etiquetas/<int:pk>/estado/", views.tag_toggle, name="tag_toggle"),
     path("catalogo/nuevo/", views.catalog_edit, name="catalog_create"),
     path("catalogo/<int:pk>/", views.catalog_detail, name="catalog_detail"),
     path("catalogo/<int:pk>/editar/", views.catalog_edit, name="catalog_edit"),
@@ -38,4 +43,20 @@ urlpatterns = [
     path("seguimiento/exportar/", views.tracking_export, name="tracking_export"),
     path("historico/nuevo/", views.historic_create, name="historic_create"),
     path("configuracion/", views.settings_edit, name="settings_edit"),
+    # Planes por área, Mi plan y seguimiento (spec 006).
+    path("planes/", vp.plan_list, name="plan_list"),
+    path("planes/nuevo/", vp.plan_edit, name="plan_create"),
+    path("planes/<int:pk>/", vp.plan_detail, name="plan_detail"),
+    path("planes/<int:pk>/editar/", vp.plan_edit, name="plan_edit"),
+    path("planes/<int:pk>/estado/", vp.plan_status, name="plan_status"),
+    path("planes/<int:pk>/cursos/", vp.plan_item_save, name="plan_item_save"),
+    path("planes/<int:pk>/cursos/<int:iid>/", vp.plan_item_edit, name="plan_item_edit"),
+    path("mi-plan/", vp.my_plan, name="my_plan"),
+    path("mi-plan/agregar/", vp.my_plan_add, name="my_plan_add"),
+    path("mi-plan/<int:iid>/iniciar/", vp.my_plan_start, name="my_plan_start"),
+    path("mi-plan/<int:iid>/completar/", vp.my_plan_complete, name="my_plan_complete"),
+    path("mi-plan/<int:iid>/descartar/", vp.my_plan_discard, name="my_plan_discard"),
+    path("personas/<int:pk>/plan/", vp.person_plan, name="person_plan"),
+    path("seguimiento/planes/", vp.plan_tracking, name="plan_tracking"),
+    path("seguimiento/planes/exportar/", vp.plan_tracking_export, name="plan_tracking_export"),
 ]

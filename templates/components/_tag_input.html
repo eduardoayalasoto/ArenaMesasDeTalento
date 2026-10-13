@@ -1,0 +1,62 @@
+{% comment %}
+Campo de etiquetas autocompletable para formularios (spec 006, R2) -- lo pinta
+`apps.learning.forms.TagInputWidget`; no se incluye a mano.
+
+- Fichas `badge badge-soft badge-primary` con botón para quitar; cada ficha viaja
+  como `<input type="hidden" name="{{ name }}">` (la lista completa es el valor).
+- Sugerencias por htmx (`learning:tag_suggest`, parcial `_tag_suggest.html`): al
+  escribir o enfocar. Enter (o coma) agrega lo escrito: si no existe, se crea al guardar.
+- Alpine SOLO guarda la lista local de fichas y si el panel está abierto.
+
+Contexto: name, values (lista de nombres), input_id, suggest_url, disabled.
+{% endcomment %}
+{{ values|json_script:data_id }}
+<div class="relative" data-tag-input
+     x-data="{
+       tags: JSON.parse(document.getElementById('{{ data_id }}').textContent),
+       term: '',
+       open: false,
+       key(v) { return (v || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().split(/\s+/).filter(Boolean).join(' '); },
+       add(v) {
+         v = (v || '').split(/\s+/).filter(Boolean).join(' ');
+         if (v && !this.tags.some(t => this.key(t) === this.key(v))) { this.tags.push(v); }
+         this.term = ''; this.open = false;
+         this.$nextTick(() => { window.renderIcons && window.renderIcons(this.$el); this.$refs.input.focus(); });
+       },
+       remove(i) { this.tags.splice(i, 1); },
+     }"
+     @click.outside="open = false" @keydown.escape="open = false">
+  <template x-for="t in tags" :key="key(t)"><input type="hidden" name="{{ name }}" :value="t"></template>
+  <div class="input w-full h-auto min-h-10 flex flex-wrap items-center gap-1.5 py-1.5 {% if disabled %}bg-base-200 text-base-content/60 cursor-not-allowed{% endif %}"{% if disabled %} aria-disabled="true"{% endif %}>
+    <template x-for="(t, i) in tags" :key="key(t)">
+      <span class="badge badge-soft badge-primary gap-1">
+        <span x-text="t"></span>
+        {% if not disabled %}
+        <button type="button" class="btn btn-ghost btn-xs btn-circle -mr-1" @click="remove(i)" :aria-label="'Quitar etiqueta ' + t">
+          <i data-lucide="x" class="w-3 h-3" aria-hidden="true"></i>
+        </button>
+        {% endif %}
+      </span>
+    </template>
+    {% if not disabled %}
+    <input type="text" id="{{ input_id }}" name="tag_q" x-ref="input" x-model="term" autocomplete="off"
+           class="grow min-w-32 bg-transparent outline-none text-base" placeholder="Escribe una etiqueta…"
+           aria-label="Agregar etiqueta" role="combobox" :aria-expanded="open.toString()" aria-autocomplete="list" aria-controls="{{ input_id }}-suggest"
+           hx-get="{{ suggest_url }}" hx-trigger="input changed delay:200ms, focus"
+           hx-target="#{{ input_id }}-suggest" hx-include="closest [data-tag-input]"
+           hx-vals='{"field": "{{ name }}"}' hx-indicator="#{{ input_id }}-spin"
+           @focus="open = true" @input="open = true"
+           @keydown.enter.prevent="add(term)" @keydown.comma.prevent="add(term)"
+           @keydown.backspace="if (!term && tags.length) { tags.pop(); }"
+           @keydown.arrow-down.prevent="open = true; $nextTick(() => { const b = $root.querySelector('[data-tag-option]'); b && b.focus(); })">
+    <span id="{{ input_id }}-spin" class="loading loading-spinner loading-xs htmx-indicator" aria-hidden="true"></span>
+    {% endif %}
+  </div>
+  {% if not disabled %}
+  <div x-show="open" x-cloak class="absolute z-30 mt-1 w-full">
+    <ul id="{{ input_id }}-suggest" class="menu w-full bg-base-100 border border-base-300 rounded-box shadow-sm max-h-60 overflow-y-auto flex-nowrap" role="listbox"
+        @keydown.arrow-down.prevent="const n = $event.target.closest('li')?.nextElementSibling?.querySelector('[data-tag-option]'); n && n.focus()"
+        @keydown.arrow-up.prevent="const p = $event.target.closest('li')?.previousElementSibling?.querySelector('[data-tag-option]'); p ? p.focus() : $refs.input.focus()"></ul>
+  </div>
+  {% endif %}
+</div>

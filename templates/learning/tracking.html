@@ -2,6 +2,12 @@
 {% block content %}
 {% include "learning/_subnav.html" %}
 
+{% if can_track_plans %}
+<nav class="tabs tabs-box w-fit mb-4" aria-label="Tipo de seguimiento">
+  <a class="tab tab-active" aria-current="page" href="{% url 'learning:tracking' %}">Solicitudes</a>
+  <a class="tab" href="{% url 'learning:plan_tracking' %}">Planes personales</a>
+</nav>
+{% endif %}
 <div class="flex flex-wrap items-end justify-between gap-3 mb-5">
   <form method="get" class="flex flex-wrap items-end gap-2">
     <select name="area" class="select w-full w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>

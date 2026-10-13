@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+
+<div class="flex flex-wrap items-end justify-between gap-3 mb-4">
+  <div>
+    <h3 class="text-lg font-semibold text-base-content">Etiquetas</h3>
+    <p class="text-base text-base-content/60">Renombra, fusiona duplicados o desactiva las que ya no deben ofrecerse. Una etiqueta desactivada sigue visible donde ya estaba.</p>
+  </div>
+  <a href="{% url 'learning:catalog_list' %}" class="btn btn-ghost"><i data-lucide="arrow-left" class="w-4 h-4" aria-hidden="true"></i> Catálogo</a>
+</div>
+
+{% if rows %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr><th>Etiqueta</th><th class="text-right">Cursos</th><th class="text-right">Solicitudes</th><th>Estado</th><th class="text-right">Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}{% include "learning/_tag_row.html" with t=row.t merge_form=row.merge_form %}{% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  {% include "partials/empty_state.html" with icon="tags" title="Aún no hay etiquetas" message="Se crean desde el campo Etiquetas de un curso o de una solicitud." %}
+{% endif %}
+{% endblock %}

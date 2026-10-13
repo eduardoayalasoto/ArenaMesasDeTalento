@@ -1,0 +1,10 @@
+{% comment %}Botón "Agregar a Mi plan" (htmx: se reemplaza a sí mismo). Contexto: course, pc (PlanCourse o None), added, in_my_plan.{% endcomment %}
+{% if added or course.pk in in_my_plan %}
+  <a href="{% url 'learning:my_plan' %}" class="btn btn-sm btn-soft btn-success {% if full %}w-full{% endif %}"><i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> En mi plan</a>
+{% else %}
+  <form hx-post="{% url 'learning:my_plan_add' %}" hx-swap="outerHTML" hx-indicator="find .loading" class="{% if full %}flex w-full{% else %}inline-flex{% endif %}">
+    {% csrf_token %}
+    {% if pc %}<input type="hidden" name="plan_course" value="{{ pc.pk }}">{% else %}<input type="hidden" name="course" value="{{ course.pk }}">{% endif %}
+    <button type="submit" class="btn btn-sm btn-soft btn-primary {% if full %}w-full{% endif %}"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Agregar a Mi plan <span class="loading loading-spinner loading-xs htmx-indicator" aria-hidden="true"></span></button>
+  </form>
+{% endif %}

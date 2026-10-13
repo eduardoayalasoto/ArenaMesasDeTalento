@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+
+<div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+  <nav class="tabs tabs-box w-fit" aria-label="Tipo de seguimiento">
+    {% if can_track %}<a class="tab" href="{% url 'learning:tracking' %}">Solicitudes</a>{% endif %}
+    <a class="tab tab-active" aria-current="page" href="{% url 'learning:plan_tracking' %}">Planes personales</a>
+  </nav>
+  <a href="{% url 'learning:plan_tracking_export' %}?{{ export_query }}" class="btn btn-outline btn-primary"><i data-lucide="download" class="w-4 h-4" aria-hidden="true"></i> Exportar Excel</a>
+</div>
+
+<form method="get" class="flex flex-wrap items-end gap-2 mb-5">
+  <select name="anio" class="select w-auto" aria-label="Año">{% for y in years %}<option value="{{ y }}" {% if data.year == y %}selected{% endif %}>{{ y }}</option>{% endfor %}</select>
+  <select name="area" class="select w-auto" aria-label="Área"><option value="">Todas las áreas</option>{% for a in areas %}<option value="{{ a.pk }}" {% if f.area == a.pk|stringformat:"s" %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
+  <select name="persona" class="select w-auto" aria-label="Persona"><option value="">Todas las personas</option>{% for p in people %}<option value="{{ p.pk }}" {% if f.persona == p.pk|stringformat:"s" %}selected{% endif %}>{{ p.full_name }}</option>{% endfor %}</select>
+  <button type="submit" class="btn btn-outline btn-primary">Filtrar</button>
+  {% if f %}<a href="{% url 'learning:plan_tracking' %}" class="btn btn-ghost">Limpiar</a>{% endif %}
+</form>
+
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4"><p class="text-base text-base-content/60">Personas con plan</p><p class="text-2xl font-semibold text-base-content tabular-nums">{{ data.people_with_plan }}</p></div>
+  {% for code, label in states.items %}
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4"><p class="text-base text-base-content/60">{{ label }}</p><p class="text-2xl font-semibold text-base-content tabular-nums">{{ data.totals|get_item:code }}</p></div>
+  {% endfor %}
+</div>
+
+{% if data.rows %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto">
+    <table class="table">
+      <thead><tr><th>Persona</th><th>Área</th><th class="text-right">Pendientes</th><th class="text-right">En curso</th><th class="text-right">Completados</th><th class="text-right">Descartados</th><th>Avance</th><th class="text-right">Acciones</th></tr></thead>
+      <tbody>
+        {% for r in data.rows %}
+          <tr>
+            <td class="font-medium">{{ r.person.full_name }}</td>
+            <td class="text-base-content/70">{{ r.person.area.name|default:"—" }}</td>
+            <td class="text-right tabular-nums">{{ r.counts.PENDIENTE }}</td>
+            <td class="text-right tabular-nums">{{ r.counts.EN_CURSO }}</td>
+            <td class="text-right tabular-nums">{{ r.counts.COMPLETADO }}</td>
+            <td class="text-right tabular-nums">{{ r.counts.DESCARTADO }}</td>
+            <td class="min-w-36"><div class="flex items-center gap-2"><progress class="progress progress-primary w-24" value="{{ r.progress }}" max="100" aria-label="Avance de {{ r.person.full_name }}"></progress><span class="tabular-nums text-base-content/70">{{ r.counts.COMPLETADO }}/{{ r.active }}</span></div></td>
+            <td class="text-right"><a href="{% url 'learning:person_plan' r.person.pk %}?anio={{ data.year }}" class="btn btn-sm btn-soft btn-primary"><i data-lucide="eye" class="w-4 h-4" aria-hidden="true"></i> Ver</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  {% include "partials/empty_state.html" with icon="chart-gantt" title="Nadie en tu alcance tiene plan este año" message="Cuando las personas agreguen cursos a Mi plan verás aquí su avance." %}
+{% endif %}
+{% endblock %}

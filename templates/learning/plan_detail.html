@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "learning/_subnav.html" %}
+
+<section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 mb-5">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2 mb-1">
+        <span class="badge badge-soft badge-primary">{{ plan.area.name }}</span>
+        {% if plan.status == "BORRADOR" %}<span class="badge badge-soft badge-warning">Borrador · solo lo ve Talento</span>
+        {% elif plan.status == "ARCHIVADO" %}<span class="badge badge-soft">Archivado · solo consulta</span>
+        {% else %}<span class="badge badge-soft badge-success">Publicado</span>{% endif %}
+      </div>
+      <h3 class="text-lg font-semibold text-base-content">{{ plan.title }}</h3>
+      <p class="text-base text-base-content/70">
+        <i data-lucide="calendar" class="inline w-4 h-4 -mt-0.5" aria-hidden="true"></i> {{ period }}
+        {% if plan.hours_min %} · <i data-lucide="clock" class="inline w-4 h-4 -mt-0.5" aria-hidden="true"></i> {{ plan.hours_min }}{% if plan.hours_max %}–{{ plan.hours_max }}{% endif %} h por semana{% endif %}
+        · {{ count }} curso{{ count|pluralize }}
+      </p>
+      {% if plan.intro %}<p class="mt-3 text-base text-base-content/80 whitespace-pre-line max-w-3xl">{{ plan.intro }}</p>{% endif %}
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      {% if other_plans %}
+        <div class="dropdown dropdown-end">
+          <button type="button" tabindex="0" class="btn btn-ghost"><i data-lucide="map" class="w-4 h-4" aria-hidden="true"></i> Otros planes</button>
+          <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-300 rounded-box shadow-sm w-64 z-30 max-h-72 overflow-y-auto flex-nowrap">
+            {% for p in other_plans %}<li><a href="{% url 'learning:plan_detail' p.pk %}">{{ p.area.name }} · {{ p.year }}{% if p.status != "PUBLICADO" %} <span class="text-base-content/50">({{ p.get_status_display|lower }})</span>{% endif %}</a></li>{% endfor %}
+            <li><a href="{% url 'learning:plan_list' %}?todos=1">Ver todos</a></li>
+          </ul>
+        </div>
+      {% endif %}
+      {% if can_manage_plans %}
+        <a href="{% url 'learning:plan_edit' plan.pk %}" class="btn btn-outline btn-primary"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</a>
+        {% if plan.status == "BORRADOR" %}
+          <form method="post" action="{% url 'learning:plan_status' plan.pk %}">{% csrf_token %}<input type="hidden" name="action" value="publish"><button type="submit" class="btn btn-primary"><i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i> Publicar</button></form>
+        {% elif plan.status == "PUBLICADO" %}
+          {% url 'learning:plan_status' plan.pk as status_url %}
+          {% with unpublish_url=status_url|add:"?action=unpublish" archive_url=status_url|add:"?action=archive" %}
+            {% include "components/_confirm.html" with confirm_id="plan-unpublish" title="Regresar a borrador" message="El plan dejará de verse para los colaboradores hasta que lo publiques de nuevo. Mi plan de cada persona no cambia." confirm_url=unpublish_url trigger_label="Regresar a borrador" trigger_icon="undo-2" confirm_label="Regresar a borrador" %}
+            {% include "components/_confirm.html" with confirm_id="plan-archive" title="Archivar plan" message="Queda como histórico de solo consulta: ya no se podrán agregar sus cursos a Mi plan." confirm_url=archive_url trigger_label="Archivar" trigger_icon="archive" confirm_label="Archivar" %}
+          {% endwith %}
+        {% else %}
+          <form method="post" action="{% url 'learning:plan_status' plan.pk %}">{% csrf_token %}<input type="hidden" name="action" value="reopen"><button type="submit" class="btn btn-ghost">Volver a publicar</button></form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div id="plan-courses">
+  {% include "learning/_plan_courses.html" %}
+</div>
+{% endblock %}

@@ -53,6 +53,13 @@ LEGACY = {
     "learn.tracking.view":            (N,   N,   T,   T),
     "learn.historic.create":          (N,   N,   N,   T),
     "learn.settings.edit":            (N,   N,   N,   T),
+    # spec 006: pantallas nuevas, sin comportamiento anterior; se igualan a la semilla.
+    "learn.tags.manage":              (N,   N,   N,   T),
+    "learn.plans.view":               (T,   T,   T,   T),
+    "learn.plans.manage":             (N,   N,   N,   T),
+    "learn.myplan":                   (P,   P,   P,   P),
+    "learn.myplan.others":            (N,   A,   T,   T),
+    "learn.plans.tracking":           (N,   A,   T,   T),
     "assign.ownership_evaluator":     (T,   T,   T,   T),
     "assign.project_role":            (T,   T,   T,   T),
     "assign.feedback_responsable":    (T,   T,   T,   T),
