@@ -8,7 +8,7 @@
     <h3 class="text-xl font-semibold text-base-content font-display">{{ person.full_name }}</h3>
     <p class="text-base text-base-content/70">{{ person.area.name|default:"Sin área" }}{% if person.level %} · {{ person.level.name }}{% endif %}</p>
     {% if person.deleted_at %}<p class="text-base text-base-content/60 mt-1">Ya no colabora en Arena · historial de solo lectura</p>{% endif %}
-    {% if can_see_plan %}<a href="{% if is_me %}{% url 'learning:my_plan' %}{% else %}{% url 'learning:person_plan' person.pk %}{% endif %}" class="btn btn-sm btn-soft btn-primary mt-2"><i data-lucide="list-checks" class="w-4 h-4" aria-hidden="true"></i> {% if is_me %}Mi plan{% else %}Ver su plan{% endif %}</a>{% endif %}
+    {% if can_see_plan %}<a href="{% if is_me %}{% url 'learning:my_plan' %}{% else %}{% url 'learning:person_plan' person.pk %}{% endif %}" class="btn btn-outline btn-primary mt-3"><i data-lucide="list-checks" class="w-4 h-4" aria-hidden="true"></i> {% if is_me %}Mi plan{% else %}Ver su plan{% endif %}</a>{% endif %}
   </div>
   <dl class="ml-auto flex gap-6 text-center">
     <div><dt class="text-base text-base-content/60">Completados</dt><dd class="text-2xl font-semibold text-base-content">{{ completed|length }}</dd></div>

@@ -31,6 +31,9 @@ Props:
     por default -- pensado para una fila de tabla densa). Con
     `trigger_label` el disparador es `_button.html` ghost chico (ícono +
     texto, contraste normal del tema); sin él, `_icon_button.html` circular.
+  trigger_size: "sm" (default, filas y barras densas) | "md" -- con
+    `trigger_label`, usa "md" cuando el disparador vive en el encabezado de
+    la página junto a otros botones de tamaño normal (todos del mismo alto).
   trigger_aria: nombre accesible del disparador de solo ícono (default:
     `title`, p. ej. "Eliminar"); con `trigger_label` el nombre es el texto.
   confirm_label (default "Eliminar") / cancel_label (default "Cancelar").
@@ -38,7 +41,7 @@ Props:
 <div>
   {% with trigger_attrs='data-modal-open="'|add:confirm_id|add:'" onclick="openModal(this.dataset.modalOpen)"' %}
     {% if trigger_label %}
-      {% include "components/_button.html" with variant="ghost" size="sm" label=trigger_label icon=trigger_icon|default:"trash-2" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" full_width=False %}
+      {% include "components/_button.html" with variant="ghost" size=trigger_size|default:"sm" label=trigger_label icon=trigger_icon|default:"trash-2" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" full_width=False %}
     {% else %}
       {% include "components/_icon_button.html" with icon=trigger_icon|default:"trash-2" label=trigger_aria|default:title|default:"Eliminar" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" variant="" size="" %}
     {% endif %}

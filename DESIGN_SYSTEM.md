@@ -63,6 +63,10 @@ Clases canónicas (las mismas del CRM, sin equivalente legado):
   única adición sobre el CRM, aprobada 2026-10-08).
 - **Botones**: `btn btn-primary` · `btn btn-outline btn-primary` (secundario) · `btn btn-ghost` ·
   `btn btn-error` · `btn btn-sm btn-soft btn-primary` (acción ligera en tablas).
+- **Tamaño de botones (2026-10-13)**: todo botón del encabezado de una página o de su tarjeta
+  principal usa el tamaño normal (`btn`, sin `btn-sm`), igual que «Exportar Excel» del dashboard,
+  aunque sea ghost o abra una confirmación (`_confirm.html` con `trigger_size="md"`). `btn-sm` solo
+  va en filas de tabla, tarjetas de listado, avisos en línea y barras densas.
 - **Formularios**: `input w-full` · `select w-full` · `textarea w-full` · `file-input w-full`;
   label `fieldset-legend` (o el componente `_form_field`).
 - **Badges**: `badge` + `badge-soft badge-{success|warning|error|info}` (o `_badge`).

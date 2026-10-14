@@ -15,9 +15,9 @@
     </div>
     <p class="text-base text-base-content/70">{{ course.provider }} · {{ course.kind }}{% if course.duration_hours %} · {{ course.duration_hours|hours }}{% endif %}{% if course.pillar %} · {{ course.pillar }}{% endif %}</p>
     <div class="mt-3 flex flex-wrap gap-2">
-      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="btn btn-sm btn-soft btn-primary"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Ver el curso</a>{% endif %}
-      {% if course.catalog_course_id %}<a href="{% url 'learning:catalog_detail' course.catalog_course_id %}" class="btn btn-sm btn-soft btn-primary"><i data-lucide="bookmark" class="w-3.5 h-3.5"></i> En el catálogo</a>{% endif %}
-      {% if can_see_private %}<a href="{% url 'learning:request_detail' course.pk %}" class="btn btn-sm btn-soft btn-primary"><i data-lucide="lock" class="w-3.5 h-3.5"></i> Detalle completo</a>{% endif %}
+      {% if course.url %}<a href="{{ course.url }}" target="_blank" rel="noopener" class="btn btn-outline btn-primary"><i data-lucide="external-link" class="w-4 h-4"></i> Ver el curso</a>{% endif %}
+      {% if course.catalog_course_id %}<a href="{% url 'learning:catalog_detail' course.catalog_course_id %}" class="btn btn-outline btn-primary"><i data-lucide="bookmark" class="w-4 h-4"></i> En el catálogo</a>{% endif %}
+      {% if can_see_private %}<a href="{% url 'learning:request_detail' course.pk %}" class="btn btn-outline btn-primary"><i data-lucide="lock" class="w-4 h-4"></i> Detalle completo</a>{% endif %}
     </div>
     {% if course.tags %}<div class="mt-3 flex flex-wrap gap-1">{% for t in course.tags %}<span class="badge badge-outline text-base-content/70">{{ t }}</span>{% endfor %}</div>{% endif %}
   </section>
