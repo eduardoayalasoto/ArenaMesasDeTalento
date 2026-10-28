@@ -56,9 +56,9 @@
 - [x] T023 Compilar CSS con `.\build_css.ps1` (clases nuevas) y versionar `static/css/`
 - [x] T024 Aplicar la migración a Neon producción (URL unpooled de `docs/neon.md`)
 - [x] T025 Actualizar `docs/CONTEXTO_Sistema.md` (campos del reactivo, comando de importación, v2 vigente)
-- [ ] T026 Commit + push a `main` (deploy Vercel) y **esperar a que el deploy con el sync corregido esté activo** (analyze F1)
-- [ ] T027 Importación en producción: registrar conteo de respuestas, `--dry-run`, luego `--publish`; volver a contar (SC-002) y verificar quickstart paso 4
-- [ ] T028 Escribir `specs/007-checklists-ownership-2027/reporte-revision.md` (por cuestionario: reactivos, títulos ajustados, criterios de revisión, estado final, conteos antes/después), commit + push
+- [x] T026 Commit + push a `main` (deploy Vercel) y **esperar a que el deploy con el sync corregido esté activo** (analyze F1)
+- [x] T027 Importación en producción: registrar conteo de respuestas, `--dry-run`, luego `--publish`; volver a contar (SC-002) y verificar quickstart paso 4
+- [x] T028 Escribir `specs/007-checklists-ownership-2027/reporte-revision.md` (por cuestionario: reactivos, títulos ajustados, criterios de revisión, estado final, conteos antes/después), commit + push
 
 ## Dependencies
 

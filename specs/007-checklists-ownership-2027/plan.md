@@ -32,7 +32,7 @@ comando idempotente `import_questionnaire_version` que carga la v2 y opcionalmen
 
 **Constraints**: sin Node; corrida de pruebas ≤ 3 min; no tocar el esquema `crm-app`; no romper evaluaciones de 2026-S1
 
-**Scale/Scope**: 16 cuestionarios, 447 reactivos nuevos; 73+2 evaluaciones de 2026-S1 y 2.116 respuestas que deben quedar intactas
+**Scale/Scope**: 16 cuestionarios, 427 reactivos nuevos; 73+2 evaluaciones de 2026-S1 y 2.116 respuestas que deben quedar intactas
 
 ## Constitution Check
 

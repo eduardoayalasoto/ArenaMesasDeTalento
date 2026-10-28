@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-28
 
-**Status**: Draft
+**Status**: Implementada y en producción (2026-10-28)
 
 **Input**: User description: "Importar los 4 Excel de `docs/Checklists/Versión 2027` como versión 2 de los 16 cuestionarios de Ownership (CD/ID/PM/UXUI × JR/MID/SNR/LEAD) y publicarlos en producción. Agregar al reactivo los campos del checklist (entregable, formato, criterio de aceptación, frecuencia, comentarios/guía, expectativa por nivel); mostrarlos en el formulario de evaluación y en el editor. Conservar los títulos más específicos que ya existen cuando el Excel trae títulos genéricos; agrupar en secciones cuando haya categoría. Corregir la resincronización de cuestionario que borra respuestas. Importación repetible desde los xlsx. Entrega de Valor no cambia. Las hojas de metodología de PM quedan como material de referencia."
 
