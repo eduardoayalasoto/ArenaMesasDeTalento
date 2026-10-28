@@ -2,11 +2,13 @@
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.core.services import questionnaire_editor as editor
 
+from .forms import QuestionForm
 from .models import Question, QuestionnaireTemplate, Section
 from apps.access import services as access
 from apps.access.decorators import requires
@@ -54,8 +56,12 @@ def template_edit(request, pk):
             return redirect("questionnaires:template_edit", pk=copy.pk)
 
         if action == "publish" and editable:
-            editor.publish_template(template)
-            messages.success(request, f"Publicaste la versión {template.version}.")
+            try:
+                editor.publish_template(template)
+            except ValidationError as exc:
+                messages.error(request, "No se puede publicar: " + " ".join(exc.messages))
+            else:
+                messages.success(request, f"Publicaste la versión {template.version}.")
             return redirect("questionnaires:template_edit", pk=template.pk)
 
         if not editable:
@@ -70,20 +76,24 @@ def template_edit(request, pk):
 
         elif action == "save_question":
             q = get_object_or_404(Question, pk=request.POST.get("question"), section__template=template)
-            q.title = request.POST.get("title", "").strip()
-            q.text = request.POST.get("text", "").strip()
-            q.save(update_fields=["title", "text"])
-            messages.success(request, "Guardé la pregunta.")
+            form = QuestionForm(request.POST, instance=q, template=template)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Guardé la pregunta.")
+            else:
+                messages.error(request, _form_errors(form))
 
         elif action == "add_question":
             section = get_object_or_404(Section, pk=request.POST.get("section"), template=template)
-            order = (section.questions.count() or 0) + 1
-            Question.objects.create(
-                section=section, order=order,
-                title=request.POST.get("title", "Nueva pregunta").strip() or "Nueva pregunta",
-                text=request.POST.get("text", "").strip(),
-            )
-            messages.success(request, "Agregué la pregunta.")
+            form = QuestionForm(request.POST, template=template)
+            if form.is_valid():
+                q = form.save(commit=False)
+                q.section = section
+                q.order = (section.questions.count() or 0) + 1
+                q.save()
+                messages.success(request, "Agregué la pregunta.")
+            else:
+                messages.error(request, _form_errors(form))
 
         elif action == "delete_question":
             q = get_object_or_404(Question, pk=request.POST.get("question"), section__template=template)
@@ -107,6 +117,10 @@ def template_edit(request, pk):
         "scale": scale,
         "editable": editable,
     })
+
+
+def _form_errors(form):
+    return " ".join(e for errors in form.errors.values() for e in errors)
 
 
 def _move_question(template, question_id, direction):

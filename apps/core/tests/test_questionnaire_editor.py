@@ -3,7 +3,7 @@
 import pytest
 
 from apps.core.services import questionnaire_editor as editor
-from apps.questionnaires.models import Question, QuestionnaireTemplate, Section
+from apps.questionnaires.models import Question, QuestionnaireTemplate, ScaleOption, Section
 
 
 @pytest.fixture
@@ -15,6 +15,7 @@ def published(db, area, level_jr):
     s = Section.objects.create(template=tpl, title="Checklist", order=1)
     Question.objects.create(section=s, order=1, title="P1", text="desc")
     Question.objects.create(section=s, order=2, title="P2")
+    ScaleOption.objects.create(template=tpl, value=3, label="Cumple", order=1)
     return tpl
 
 

@@ -223,7 +223,8 @@
               <span class="text-base font-semibold text-base-content/50 tabular-nums mt-0.5">{{ forloop.counter }}.</span>
               <div class="flex-1">
                 <p class="font-medium text-base-content">{{ question.title }}</p>
-                {% if question.text %}<p class="mt-1.5 text-base text-base-content/70 leading-relaxed">{{ question.text }}</p>{% endif %}
+                {% if question.text %}<p class="mt-1.5 text-base text-base-content/70 leading-relaxed whitespace-pre-line">{{ question.text }}</p>{% endif %}
+                {% include "partials/_checklist_details.html" with question=question %}
                 <div class="mt-4 flex flex-wrap gap-3">
                   {% for opt in scale %}
                     <label class="cursor-pointer">

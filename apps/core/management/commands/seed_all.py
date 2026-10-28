@@ -23,6 +23,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.MIGRATE_HEADING(f"\n>> {step}"))
             try:
                 call_command(step)
+                if step == "seed_questionnaires":
+                    # Checklists 2027 vigentes (spec 007): v2 publicada sobre la v1 sembrada.
+                    call_command(
+                        "import_questionnaire_version",
+                        dir="fixtures/questionnaires/2027", target_version=2, publish=True,
+                    )
             except Exception as exc:  # noqa: BLE001
                 # Pasos aún no implementados (fases posteriores) no detienen el seed.
                 self.stderr.write(self.style.WARNING(f"  - {step} omitido: {exc}"))

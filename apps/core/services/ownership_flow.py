@@ -1,5 +1,6 @@
 """Reglas del ciclo de vida de la evaluación de Ownership (RN-05/06)."""
 
+from django.db import transaction
 from django.utils import timezone
 
 from apps.core.services import period_lifecycle, scoring
@@ -108,18 +109,29 @@ def remove_evaluator(evaluation, user):
     OwnershipEvaluator.objects.filter(evaluation=evaluation, user=user, is_primary=False).delete()
 
 
+@transaction.atomic
 def sync_evaluation_template(evaluation) -> bool:
-    """Sincroniza el template de una evaluación abierta con el área/nivel actual del colaborador.
+    """Cambia el cuestionario de una evaluación cuando al colaborador le cambiaron área o nivel.
 
-    Si el template guardado ya no coincide (el colaborador cambió de área o nivel),
-    actualiza el template y borra las respuestas previas (pertenecían al template anterior).
-    Solo actúa sobre evaluaciones en estado BORRADOR.
-    Devuelve True si hubo cambio.
+    Solo actúa si la evaluación está en BORRADOR, nunca fue enviada (una reabierta conserva
+    su cuestionario), su periodo está ABIERTO y el puesto del cuestionario guardado difiere del
+    puesto actual. Publicar una versión nueva del mismo puesto NO la mueve (spec 007, FR-001).
+    Borra las respuestas previas (pertenecían al cuestionario anterior). Devuelve True si cambió.
     """
-    if evaluation.is_submitted:
+    from apps.catalog.models import EvaluationPeriod
+    from apps.evaluations.models import OwnershipEvaluation
+
+    user = evaluation.user
+    template = evaluation.template
+    if (
+        evaluation.is_submitted
+        or evaluation.period.status != EvaluationPeriod.Status.ABIERTO
+        or (template.area_id == user.area_id and template.level_id == user.level_id)
+        or evaluation.history.filter(status=OwnershipEvaluation.Status.ENVIADA).exists()
+    ):
         return False
-    current_template = resolve_ownership_template(evaluation.user)
-    if current_template is None or evaluation.template_id == current_template.id:
+    current_template = resolve_ownership_template(user)
+    if current_template is None:
         return False
     evaluation.answers.all().delete()
     evaluation.template = current_template

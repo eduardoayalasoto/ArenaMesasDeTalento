@@ -256,7 +256,12 @@ def _render_ownership(request, pk, *, editing):
             "mensaje": "Esta evaluación pertenece a otra persona o área.",
         }, status=403)
 
-    if ownership_flow.sync_evaluation_template(evaluation):
+    # Solo en edición: la vista de consulta nunca cambia el cuestionario (spec 007, FR-001).
+    if (
+        editing
+        and _can_edit_answers(request.user, evaluation)
+        and ownership_flow.sync_evaluation_template(evaluation)
+    ):
         messages.info(
             request,
             "Tu área o nivel cambiaron; tu cuestionario se actualizó al correspondiente. "

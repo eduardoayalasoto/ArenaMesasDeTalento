@@ -1,0 +1,24 @@
+{% comment %}
+  Desplegable "Ver criterio" con los campos del checklist de un reactivo (spec 007).
+  Param: question. No pinta nada si el reactivo no tiene campos del checklist.
+  Excepción a components/_button.html: el disparador alterna su texto y gira el chevron con Alpine.
+{% endcomment %}
+{% if question.has_checklist_details %}
+  <div class="mt-3" x-data="{ open: false }">
+    <button type="button" class="btn btn-ghost btn-sm min-h-11 sm:min-h-0 px-2 -ml-2 gap-1 text-base-content/80"
+            aria-expanded="false" aria-controls="crit-{{ question.pk }}"
+            @click="open = !open" :aria-expanded="open.toString()">
+      <span class="text-primary">{% include "partials/icon.html" with name="info" cls="w-4 h-4" %}</span>
+      <span x-text="open ? 'Ocultar criterio' : 'Ver criterio'">Ver criterio</span>
+      <span class="transition-transform" :class="open && 'rotate-180'">{% include "partials/icon.html" with name="chevron-down" cls="w-4 h-4" %}</span>
+    </button>
+    <dl id="crit-{{ question.pk }}" x-show="open" x-collapse x-cloak class="mt-2 rounded-xl bg-base-200 border border-base-300 px-4 py-3 space-y-3">
+      {% for label, value in question.checklist_details %}
+        <div>
+          <dt class="text-sm font-semibold text-base-content/80">{{ label }}</dt>
+          <dd class="mt-0.5 text-base text-base-content/70 leading-relaxed whitespace-pre-line">{{ value }}</dd>
+        </div>
+      {% endfor %}
+    </dl>
+  </div>
+{% endif %}

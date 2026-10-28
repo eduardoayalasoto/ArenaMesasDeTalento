@@ -1,0 +1,858 @@
+source: docs/Checklists/Versión 2027/Checklist de Actividades Product Management - Octubre 2026.xlsx
+templates:
+- area: PM
+  level: JR
+  questions:
+  - title: Documentación del plan y del avance — Plan de trabajo
+    text: Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un plan actualizado con lo descrito en este checklist que el equipo de Arena y el cliente pueden revisar en cualquier momento y ver la versión más actualizada
+    deliverable: Plan de trabajo con control de versiones por cada cambio mayor
+    deliverable_format: XLS, Arena OS
+    frequency: Semanal
+    guidance: Si el cliente requiere un plan de trabajo documentado en su formato o herramienta, esta versión puede ser utilizada siempre y cuando cumpla con la descripción completa y criterio de aceptación descritos en este checklist
+  - title: Documentación del plan y del avance — Backlog de features y entregables
+    text: Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un backlog actualizado con lo descrito en este checklist que el equipo de Arena y el cliente pueden revisar en cualquier momento y ver la versión más actualizada
+    deliverable: Backlog con control de versiones por cada cambio mayor
+    deliverable_format: XLS, Arena OS
+    frequency: Cada sprint
+  - title: Documentación del plan y del avance — Registro de actividades del equipo
+    text: Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un documento donde se puede visualizar el set de tareas completadas por tema, fecha y miembro del equipo (e.g. presentación de avance semana, presentación de sprint review)
+    deliverable: Durante el proyecto se lleva una métrica documentada cada semana y sprint de las actividades completadas por cada miembro del equipo
+    deliverable_format: XLS, Arena OS
+    frequency: Semanal y cada sprint
+  - title: Documentación del plan y del avance — Reporte semanal de avance
+    text: Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo
+    acceptance_criteria: El cliente y el equipo de Arena tienen claro el panorama general cada semana del avance y actividades principales sin tener que ir a ver el mayor nivel de detalle al plan
+    deliverable: Documentos semanales de avance
+    deliverable_format: PPT, PDF, Arena OS
+    frequency: Semanal
+    guidance: El formato del reporte de avance se validará con el cliente y ajustará según su retro durante las primeras 4 semanas de la iniciativa o proyecto
+  - title: Documentación del plan y del avance — Comunicación de ajustes al plan
+    text: Documentar y enviar por escrito (correo + chat grupal + chat individial) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial
+    acceptance_criteria: Cada ajuste de alcance, cambio de prioridades, ajuste al plan o retarget de entregable está documentado y comunicado claramente por escrito
+    deliverable: Correos, Histórico de chats con los avisos y validaciones correpsondientes
+    deliverable_format: Mail, Teams, Arena OS
+    frequency: Por evento
+    guidance: Las minutas también pueden ser consideradas como evidencia de ejecución de este punto
+  - title: Documentación del plan y del avance — Estándares de trabajo
+    text: Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente
+    acceptance_criteria: El equipo del proyecto tiene claro cómo debe entregar sus desarrollos y qué reglas y evaluaciones recibirá antes de entregar el proyecto
+    deliverable: Ligas o documentos con los estándares a seguir en el proyecto, documentados y validados con cliente, en minuta
+    deliverable_format: Mail, Teams, PPT/PDF
+    frequency: Una vez al inicio del proyecto y confirmado con cada fase de entregas
+    guidance: En caso de no existir un estándar, el equipo interno deberá validar uno propuesto por Arena y documentar por correo que ese será el estándar a utilizar en el proyecto. En caso de cambiar el estándar durante el proyecto, esto debe ser notificado internamente y con cliente, acompañado de una documentación del impacto de ese cambio
+  - title: Documentación del plan y del avance — Indicadores del proyecto
+    text: Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Arena tiene un mecanismo para analizar el avance y desempeño del proyecto de forma rápida en un único punto de revisión
+    deliverable: Archivo actualizado con indicadores
+    deliverable_format: XLS, PPT/PD, Arena OS
+    frequency: Semanal
+    guidance: Se tomará el archivo de indicadores de KO como punto de partida
+  - title: Documentación del plan y del avance — Estructura de canal y archivos
+    text: Mantener una estructura de canal y archivos en teams, donde todo el equipo trabajo sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes
+    acceptance_criteria: El equipo y los clientes pueden acceder fácilmente a archivos sin tener que intercambiar adjuntos por correo, la carpeta del proyecto tiene una estructura ordenada y los nombres de los archivos se identifican claramente
+    deliverable: Canales en teams
+    deliverable_format: Teams, Sharepoint
+    frequency: Durante todo el proyecto
+  - title: Rutinas de gestión — Dailys
+    text: Asegurar dailys recurrentes agendados
+    acceptance_criteria: Las sesiones duran 15 - 20 mins, el equipo está preparado previo a la sesión y los comentarios y validaciones están enfocados a tareas específicas por día y persona
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Chat, Arena OS
+    frequency: Diaria
+  - title: Rutinas de gestión — Weekly status reports
+    text: Ejecutar weekly status reports con cliente técnico y de negocio
+    acceptance_criteria: El equipo tiene una rutina donde el cliente se queda con la tranquilidad y certidumbre de lo que estamos trabajando y si salen pendientes o actividades, éstos se documentan y ejecutan en tiempo y forma. El PM muestra un dominio del plan, de la solución y puede responder ante dudas y cuestionamientos de forma contundente
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta, Arena OS
+    frequency: Por sprint
+  - title: Rutinas de gestión — Sprint planning
+    text: Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan
+    acceptance_criteria: Cada miembro del equipo sale con la claridad de los entregables por día que debe ejecutar, su criterio de aceptación y definición de terminado, así como las actualizaciones a los planes correspondientes
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta, Arena OS
+    frequency: Por sprint
+    guidance: Los sprints deberán ser de 2 semanas, en momentos específicos podrán ser de 1 o 3 semanas
+  - title: Rutinas de gestión — Sprint review
+    text: Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan
+    acceptance_criteria: El equipo documenta y valida cada uno de los entregables internamente y con el cliente, documentando siguientes pasos y tareas a incluir
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta, Arena OS
+    frequency: Por sprint
+    guidance: Los sprints deberán ser de 2 semanas, en momentos específicos podrán ser de 1 o 3 semanas
+  - title: Rutinas de gestión — Sprint retrospective
+    text: Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo
+    acceptance_criteria: El equipo tiene un espacio para expresar sus preocupaciones, sugerencias de mejora y continuar con un buen ambiente de trabajo
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta, Arena OS
+    frequency: Por evento
+    guidance: Se recomienda llevar las mediciones de retrospectiva base de la metodología Scrum
+  - title: Rutinas de gestión — Refinamientos
+    text: Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa
+    acceptance_criteria: El equipo interno tiene claridad de las implicaciones y ajustes en sus actividades individuales cuando existen cambios al alcance, a las prioridades, al backlog, a los estándares de trabajo o al plan de trabajo del proyecto
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta, Arena OS
+    frequency: Por evento, cada cambio al alcance, backlog, plan de trabajo o estándar de trabajo
+  - title: Cuestionamiento y validación de resultados — Diseño de solución técnico
+    text: Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente
+    acceptance_criteria: El cliente técnico y el cliente de negocio tienen claro lo que estamos construyendo y existe una aprobación documentada. El equipo de Arena tiene una guía clara del objetivo a desarrollar
+    deliverable: Diseño de la solución documentado y versionado
+    deliverable_format: PPT/PDF
+    frequency: Por evento, al menos cada sprint
+    guidance: Los diseños deberán tener el mayor nivel de detalle posible, agregando diagramas, descripciones detalladas, explicaciones escritas y otros elementos de soporte
+  - title: Cuestionamiento y validación de resultados — Diseño de solución de negocio
+    text: Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad
+    acceptance_criteria: El cliente técnico y el cliente de negocio tienen claro lo que estamos construyendo y existe una aprobación documentada. El equipo de Arena tiene una guía clara del objetivo a desarrollar
+    deliverable: Diseño de la solución documentado y versionado
+    deliverable_format: PPT/PDF
+    frequency: Por evento, al menos cada sprint
+    guidance: Los diseños deberán tener el mayor nivel de detalle posible, agregando diagramas, descripciones detalladas, explicaciones escritas y otros elementos de soporte
+  - title: Cuestionamiento y validación de resultados — Presentaciones de resultados
+    text: Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio
+    acceptance_criteria: El cliente no hace correcciones recurrentes que pudieron haber sido identificadas anteriormente por el equipo y por el PM, los resultados tienen pocos retrabajos y las sesiones de revisión con cliente no terminan rápidamente por identificar múltiples errores en los primeros minutos
+    deliverable: Presentaciones elaboradas, retrabajos documentados y percepción del cliente registrada
+    deliverable_format: PPT/PDF
+    frequency: Por sprint
+  - title: Preparación de reuniones y seguimiento con el cliente — Preparación de reuniones
+    text: Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente
+    acceptance_criteria: El equipo llega siempre con material a las sesiones, llega con respuestas preparadas ante posibles dudas y en general el cliente percibe un excelente dominio y preparación de la sesión
+    deliverable: XLS con la documentación de cada reunión planeada
+    deliverable_format: XLS Formato Prep Reuniones
+    frequency: Obligatorio para cada reunión agendada
+    guidance: Se espera que el formato de preparación de reuniones se llene al menos un día hábil antes de la sesión y que se llene con juicio crítico y detenimiento. De este ejercicio deben resultar acciones individuales y para el resto del equipo que aseguren tener una preparación correcta de cómo llevar y participar en cada sesión, especialmente con cliente
+  - title: Preparación de reuniones y seguimiento con el cliente — One on ones de retroalimentación
+    text: Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente
+    acceptance_criteria: El cliente siente cercanía y confianza para expresar sus recomendaciones de mejora, alineamos expectativas de lo que puede lograr el equipo y el cliente identifica mejoras tangibles en función a sus comentarios. La retroalimentación se registra y analiza consistentemente por el equipo de Arena
+    deliverable: Evidencia de retroalimentación y registro del feedback recibido
+    deliverable_format: Mail, Chat, Calendario, Arena OS
+    frequency: Por evento, al menos cada 3 - 4 semanas
+  - title: Preparación de reuniones y seguimiento con el cliente — Comunicación de avance y puntos críticos
+    text: Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance
+    acceptance_criteria: El cliente (todo el grupo de stakeholders relevantes) puede mantenerse actualizado sin necesidad de esperar a la comunicación formal de minutas y pre-reads a través de mensajes cortos, resumidos y claros
+    deliverable: Evidencia de los mensajes directos en chat invidual o grupal
+    deliverable_format: Chat
+    frequency: 2 - 3 veces por semana
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Pre-reads
+    text: Enviar pre-reads para sesiones internas y con clientes
+    acceptance_criteria: El cliente recibe el material con anticipación, damos seguimiento por chat a posibles dudas o comentarios que debamos llevar preparados para la sesión y llegamos a las sesiones a resolver cuestionamientos identificados
+    deliverable: Correos con las presentaciones enviadas al menos 24 hrs antes de la sesión
+    deliverable_format: Mail, Material de Pre-read
+    frequency: Por evento, al menos una vez cada semana
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Minutas de acuerdos y definiciones
+    text: Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan
+    acceptance_criteria: Las minutas son claras, concisas, no tienen errores de ortografía y el cliente las entiende claramente según el feedback recabado
+    deliverable: Correos enviados con minutas y/o minutas adjuntas
+    deliverable_format: Mail
+    frequency: Por evento, al menos una vez por semana
+    guidance: Se espera claridad y alineación con el Ejemplo de Minuta mostrado en este documento. Si es necesario en el correo o mensaje con la minuta se pueden agregar la liga o adjunto a material de consulta como PPT/XLS
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Minutas de mejoras y ajustes
+    text: Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente
+    acceptance_criteria: Las minutas son claras, concisas, no tienen errores de ortografía y el cliente las entiende claramente según el feedback recabado
+    deliverable: Correos enviados con minutas y/o minutas adjuntas
+    deliverable_format: Mail
+    frequency: Por evento, al menos cada 3 - 4 semanas
+    guidance: Se espera claridad y alineación con el Ejemplo de Minuta mostrado en este documento. Si es necesario en el correo o mensaje con la minuta se pueden agregar la liga o adjunto a material de consulta como PPT/XLS
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Llega al sprint planning con estimaciones propias de sus tareas, después de revisar el backlog y los criterios de aceptación.
+
+      • Cumple las fechas que compromete. Cuando no, la desviación es menor y está justificada.
+
+      • Avisa en el daily, o antes, en cuanto detecta que una tarea tomará más de lo estimado, y no el día de la entrega.
+
+      • Cuando le falta información para estimar, pide aclaración o divide la tarea en lugar de dar un número al azar.
+
+      • Si no puede responder en 24 horas, confirma que recibió el mensaje e indica cuándo tendrá la respuesta.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Recibe la retroalimentación sin ponerse a la defensiva: escucha, pregunta para entender y reconoce el punto.
+
+      • Corrige lo señalado en el entregable actual dentro del plazo acordado.
+
+      • No repite en entregables posteriores un error que ya se le señaló.
+
+      • Pide revisión a su Mid o Sr antes de dar un entregable por terminado.
+
+      • Registra la retroalimentación recibida y sus acuerdos en sus checkpoints o 1:1.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: PM
+  level: MID
+  questions:
+  - title: Documentación del plan y del avance — Plan de trabajo
+    text: Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un plan actualizado con lo descrito en este checklist que el equipo de Arena y el cliente pueden revisar en cualquier momento y ver la versión más actualizada
+    deliverable: Plan de trabajo con control de versiones por cada cambio mayor
+    deliverable_format: XLS, Planner
+    frequency: Semanal
+    guidance: Si el cliente requiere un plan de trabajo documentado en su formato o herramienta, esta versión puede ser utilizada siempre y cuando cumpla con la descripción completa y criterio de aceptación descritos en este checklist
+  - title: Documentación del plan y del avance — Backlog de features y entregables
+    text: Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un backlog actualizado con lo descrito en este checklist que el equipo de Arena y el cliente pueden revisar en cualquier momento y ver la versión más actualizada
+    deliverable: Backlog con control de versiones por cada cambio mayor
+    deliverable_format: XLS, Planner
+    frequency: Cada sprint
+  - title: Documentación del plan y del avance — Registro de actividades del equipo
+    text: Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un documento donde se puede visualizar el set de tareas completadas por tema, fecha y miembro del equipo (e.g. presentación de avance semana, presentación de sprint review)
+    deliverable: Durante el proyecto se lleva una métrica documentada cada semana y sprint de las actividades completadas por cada miembro del equipo
+    deliverable_format: XLS, Planner
+    frequency: Semanal y cada sprint
+  - title: Documentación del plan y del avance — Reporte semanal de avance
+    text: Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo
+    acceptance_criteria: El cliente y el equipo de Arena tienen claro el panorama general cada semana del avance y actividades principales sin tener que ir a ver el mayor nivel de detalle al plan
+    deliverable: Documentos semanales de avance
+    deliverable_format: PPT, PDF
+    frequency: Semanal
+    guidance: El formato del reporte de avance se validará con el cliente y ajustará según su retro durante las primeras 4 semanas de la iniciativa o proyecto
+  - title: Documentación del plan y del avance — Comunicación de ajustes al plan
+    text: Documentar y enviar por escrito (correo + chat grupal + chat individial) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial
+    acceptance_criteria: Cada ajuste de alcance, cambio de prioridades, ajuste al plan o retarget de entregable está documentado y comunicado claramente por escrito
+    deliverable: Correos, Histórico de chats con los avisos y validaciones correpsondientes
+    deliverable_format: Mail, Teams
+    frequency: Por evento
+    guidance: Las minutas también pueden ser consideradas como evidencia de ejecución de este punto
+  - title: Documentación del plan y del avance — Estándares de trabajo
+    text: Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente
+    acceptance_criteria: El equipo del proyecto tiene claro cómo debe entregar sus desarrollos y qué reglas y evaluaciones recibirá antes de entregar el proyecto
+    deliverable: Ligas o documentos con los estándares a seguir en el proyecto, documentados y validados con cliente, en minuta
+    deliverable_format: Mail, Teams, PPT/PDF
+    frequency: Una vez al inicio del proyecto y confirmado con cada fase de entregas
+    guidance: En caso de no existir un estándar, el equipo interno deberá validar uno propuesto por Arena y documentar por correo que ese será el estándar a utilizar en el proyecto. En caso de cambiar el estándar durante el proyecto, esto debe ser notificado internamente y con cliente, acompañado de una documentación del impacto de ese cambio
+  - title: Documentación del plan y del avance — Indicadores del proyecto
+    text: Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Arena tiene un mecanismo para analizar el avance y desempeño del proyecto de forma rápida en un único punto de revisión
+    deliverable: Archivo actualizado con indicadores
+    deliverable_format: XLS, PPT/PDF
+    frequency: Semanal
+    guidance: Se tomará el archivo de indicadores de KO como punto de partida
+  - title: Documentación del plan y del avance — Estructura de canal y archivos
+    text: Mantener una estructura de canal y archivos en teams, donde todo el equipo trabajo sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes
+    acceptance_criteria: El equipo y los clientes pueden acceder fácilmente a archivos sin tener que intercambiar adjuntos por correo, la carpeta del proyecto tiene una estructura ordenada y los nombres de los archivos se identifican claramente
+    deliverable: Canales en teams
+    deliverable_format: Teams, Sharepoint
+    frequency: Durante todo el proyecto
+  - title: Rutinas de gestión — Dailys
+    text: Asegurar dailys recurrentes agendados
+    acceptance_criteria: Las sesiones duran 15 - 20 mins, el equipo está preparado previo a la sesión y los comentarios y validaciones están enfocados a tareas específicas por día y persona
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Chat
+    frequency: Diaria
+  - title: Rutinas de gestión — Weekly status reports
+    text: Ejecutar weekly status reports con cliente técnico y de negocio
+    acceptance_criteria: El equipo tiene una rutina donde el cliente se queda con la tranquilidad y certidumbre de lo que estamos trabajando y si salen pendientes o actividades, éstos se documentan y ejecutan en tiempo y forma. El PM muestra un dominio del plan, de la solución y puede responder ante dudas y cuestionamientos de forma contundente
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+  - title: Rutinas de gestión — Sprint planning
+    text: Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan
+    acceptance_criteria: Cada miembro del equipo sale con la claridad de los entregables por día que debe ejecutar, su criterio de aceptación y definición de terminado, así como las actualizaciones a los planes correspondientes
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    guidance: Los sprints deberán ser de 2 semanas, en momentos específicos podrán ser de 1 o 3 semanas
+  - title: Rutinas de gestión — Sprint review
+    text: Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan
+    acceptance_criteria: El equipo documenta y valida cada uno de los entregables internamente y con el cliente, documentando siguientes pasos y tareas a incluir
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    guidance: Los sprints deberán ser de 2 semanas, en momentos específicos podrán ser de 1 o 3 semanas
+  - title: Rutinas de gestión — Sprint retrospective
+    text: Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo
+    acceptance_criteria: El equipo tiene un espacio para expresar sus preocupaciones, sugerencias de mejora y continuar con un buen ambiente de trabajo
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento
+    guidance: Se recomienda llevar las mediciones de retrospectiva base de la metodología Scrum
+  - title: Rutinas de gestión — Refinamientos
+    text: Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa
+    acceptance_criteria: El equipo interno tiene claridad de las implicaciones y ajustes en sus actividades individuales cuando existen cambios al alcance, a las prioridades, al backlog, a los estándares de trabajo o al plan de trabajo del proyecto
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento, cada cambio al alcance, backlog, plan de trabajo o estándar de trabajo
+  - title: Cuestionamiento y validación de resultados — Diseño de solución técnico
+    text: Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente
+    acceptance_criteria: El cliente técnico y el cliente de negocio tienen claro lo que estamos construyendo y existe una aprobación documentada. El equipo de Arena tiene una guía clara del objetivo a desarrollar
+    deliverable: Diseño de la solución documentado y versionado
+    deliverable_format: PPT/PDF
+    frequency: Por evento, al menos cada sprint
+    guidance: Los diseños deberán tener el mayor nivel de detalle posible, agregando diagramas, descripciones detalladas, explicaciones escritas y otros elementos de soporte
+  - title: Cuestionamiento y validación de resultados — Diseño de solución de negocio
+    text: Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad
+    acceptance_criteria: El cliente técnico y el cliente de negocio tienen claro lo que estamos construyendo y existe una aprobación documentada. El equipo de Arena tiene una guía clara del objetivo a desarrollar
+    deliverable: Diseño de la solución documentado y versionado
+    deliverable_format: PPT/PDF
+    frequency: Por evento, al menos cada sprint
+    guidance: Los diseños deberán tener el mayor nivel de detalle posible, agregando diagramas, descripciones detalladas, explicaciones escritas y otros elementos de soporte
+  - title: Cuestionamiento y validación de resultados — Presentaciones de resultados
+    text: Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio
+    acceptance_criteria: El cliente no hace correcciones recurrentes que pudieron haber sido identificadas anteriormente por el equipo y por el PM, los resultados tienen pocos retrabajos y las sesiones de revisión con cliente no terminan rápidamente por identificar múltiples errores en los primeros minutos
+    deliverable: Presentaciones elaboradas, retrabajos documentados y percepción del cliente registrada
+    deliverable_format: PPT/PDF
+    frequency: Por sprint
+  - title: Preparación de reuniones y seguimiento con el cliente — Preparación de reuniones
+    text: Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente
+    acceptance_criteria: El equipo llega siempre con material a las sesiones, llega con respuestas preparadas ante posibles dudas y en general el cliente percibe un excelente dominio y preparación de la sesión
+    deliverable: XLS con la documentación de cada reunión planeada
+    deliverable_format: XLS Formato Prep Reuniones
+    frequency: Obligatorio para cada reunión agendada
+    guidance: Se espera que el formato de preparación de reuniones se llene al menos un día hábil antes de la sesión y que se llene con juicio crítico y detenimiento. De este ejercicio deben resultar acciones individuales y para el resto del equipo que aseguren tener una preparación correcta de cómo llevar y participar en cada sesión, especialmente con cliente
+  - title: Preparación de reuniones y seguimiento con el cliente — One on ones de retroalimentación
+    text: Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente
+    acceptance_criteria: El cliente siente cercanía y confianza para expresar sus recomendaciones de mejora, alineamos expectativas de lo que puede lograr el equipo y el cliente identifica mejoras tangibles en función a sus comentarios. La retroalimentación se registra y analiza consistentemente por el equipo de Arena
+    deliverable: Evidencia de retroalimentación y registro del feedback recibido
+    deliverable_format: Mail, Chat, Calendario
+    frequency: Por evento, al menos cada 3 - 4 semanas
+  - title: Preparación de reuniones y seguimiento con el cliente — Comunicación de avance y puntos críticos
+    text: Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance
+    acceptance_criteria: El cliente (todo el grupo de stakeholders relevantes) puede mantenerse actualizado sin necesidad de esperar a la comunicación formal de minutas y pre-reads a través de mensajes cortos, resumidos y claros
+    deliverable: Evidencia de los mensajes directos en chat invidual o grupal
+    deliverable_format: Chat
+    frequency: 2 - 3 veces por semana
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Pre-reads
+    text: Enviar pre-reads para sesiones internas y con clientes
+    acceptance_criteria: El cliente recibe el material con anticipación, damos seguimiento por chat a posibles dudas o comentarios que debamos llevar preparados para la sesión y llegamos a las sesiones a resolver cuestionamientos identificados
+    deliverable: Correos con las presentaciones enviadas al menos 24 hrs antes de la sesión
+    deliverable_format: Mail, Material de Pre-read
+    frequency: Por evento, al menos una vez cada semana
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Minutas de acuerdos y definiciones
+    text: Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan
+    acceptance_criteria: Las minutas son claras, concisas, no tienen errores de ortografía y el cliente las entiende claramente según el feedback recabado
+    deliverable: Correos enviados con minutas y/o minutas adjuntas
+    deliverable_format: Mail
+    frequency: Por evento, al menos una vez por semana
+    guidance: Se espera claridad y alineación con el Ejemplo de Minuta mostrado en este documento. Si es necesario en el correo o mensaje con la minuta se pueden agregar la liga o adjunto a material de consulta como PPT/XLS
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Minutas de mejoras y ajustes
+    text: Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente
+    acceptance_criteria: Las minutas son claras, concisas, no tienen errores de ortografía y el cliente las entiende claramente según el feedback recabado
+    deliverable: Correos enviados con minutas y/o minutas adjuntas
+    deliverable_format: Mail
+    frequency: Por evento, al menos cada 3 - 4 semanas
+    guidance: Se espera claridad y alineación con el Ejemplo de Minuta mostrado en este documento. Si es necesario en el correo o mensaje con la minuta se pueden agregar la liga o adjunto a material de consulta como PPT/XLS
+  - title: Análisis de impactos ante cambios
+    text: Analizar el impacto en fechas, dependencias y carga del equipo antes de ejecutar cambios en alcance o plan de trabajo
+    acceptance_criteria: No se ejecutan cambios sin evaluación explícita de impacto
+    deliverable: Documentación escrita de cambios en alcance y planes de trabajo
+    deliverable_format: Mail / Minuta
+    frequency: Por evento
+    guidance: Puede integrarse a una minuta o correo de cambio, comunicado al cliente y alineado con el equipo y directores de Arena
+  - title: Clarificación de criterios de aceptación ambiguos
+    text: Detectar y resolver criterios incompletos o ambiguos comunicados por cliente o definidos en el alcance antes de la ejecución de los entregables relacionados
+    acceptance_criteria: Reducción de retrabajo por definiciones poco claras
+    deliverable: Documentación diseño de la solución a desarrollar
+    deliverable_format: Backlog / Minuta
+    frequency: Por sprint
+    guidance: Aplica en backlog refinements
+  - title: Detección temprana de desviaciones de calidad
+    text: Identificar desviaciones de calidad de forma recurrente durante la ejecución
+    acceptance_criteria: Los issues se corrigen antes de validación con cliente
+    deliverable: Evaluación de percepción de calidad con stakeholder en reporte de status
+    deliverable_format: Reporte de status
+    frequency: Continuo
+    guidance: No sustituye la revisión formal
+  - title: Gestión consciente de dependencias
+    text: Identificar y destrabar dependencias que impactan la ejecución a través de un seguimiento y comunicación clara y puntual
+    acceptance_criteria: Las dependencias críticas no bloquean entregables
+    deliverable: Mensajes / Correos gestionando las dependencias del proyecto
+    deliverable_format: XLS / Minuta
+    frequency: Semanal
+    guidance: Puede integrarse al plan de trabajo
+  - title: Preparación para validaciones
+    text: Asegurar que entregables estén listos antes de sesiones con cliente
+    acceptance_criteria: Las sesiones no se usan para descubrir problemas básicos, el cliente tiene claro el objetivo, agenda y valor de cada sesión
+    deliverable: Presentación y validación de entregables
+    deliverable_format: PPT
+    frequency: Por sprint
+    guidance: Complementa el pre read
+  - title: Traducción técnica de los elementos del proyecto al stakeholder
+    text: Aprovechar sesiones del proyecto para explicar aspectos técnicos de una forma clara a los stakeholders que no son técnicos, con el lenguaje y detalle que se adapta al stakeholder
+    acceptance_criteria: Los stakeholders de negocio y no técnicos entienden claramente lo que el equipo técnico está construyendo
+    deliverable: Presentación de avance con explicaciones técnicas
+    deliverable_format: PPT
+    frequency: Semanal/Por Sprint
+  - title: Dominio de estrategias de comunicación con stakeholders
+    text: Identificar el orden, tipo de mensaje y momentos para comunicar con cada stakeholders las validaciones y puntos clave del proyecto
+    acceptance_criteria: Identifica cuándo validar de nivel directivo hacia abajo o d enivel operativo hacia arriba. Ajusta los materiales de acuerdo a lo que cada stakeholders conoce y espera
+    deliverable: Plan de actividades de comunicación y gestión de stakeholders incluido en planning
+    deliverable_format: PPT, Teams, Mail
+    frequency: Por sprint
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Llega al sprint planning con estimaciones propias de sus tareas, después de revisar el backlog y los criterios de aceptación.
+
+      • Cumple las fechas que compromete. Cuando no, la desviación es menor y está justificada.
+
+      • Avisa en el daily, o antes, en cuanto detecta que una tarea tomará más de lo estimado, y no el día de la entrega.
+
+      • Cuando le falta información para estimar, pide aclaración o divide la tarea en lugar de dar un número al azar.
+
+      • Si no puede responder en 24 horas, confirma que recibió el mensaje e indica cuándo tendrá la respuesta.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Recibe la retroalimentación sin ponerse a la defensiva: escucha, pregunta para entender y reconoce el punto.
+
+      • Corrige lo señalado en el entregable actual dentro del plazo acordado.
+
+      • No repite en entregables posteriores un error que ya se le señaló.
+
+      • Pide revisión a su Mid o Sr antes de dar un entregable por terminado.
+
+      • Registra la retroalimentación recibida y sus acuerdos en sus checkpoints o 1:1.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: PM
+  level: SNR
+  questions:
+  - title: Documentación del plan y del avance — Plan de trabajo
+    text: Mantener un plan de trabajo a nivel fase, actividad, entregable, responsable, día, semana. Identificando dependencias del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un plan actualizado con lo descrito en este checklist que el equipo de Arena y el cliente pueden revisar en cualquier momento y ver la versión más actualizada
+    deliverable: Plan de trabajo con control de versiones por cada cambio mayor
+    deliverable_format: XLS, Planner
+    frequency: Semanal
+    guidance: Si el cliente requiere un plan de trabajo documentado en su formato o herramienta, esta versión puede ser utilizada siempre y cuando cumpla con la descripción completa y criterio de aceptación descritos en este checklist
+  - title: Documentación del plan y del avance — Backlog de features y entregables
+    text: Mantener un backlog o inventario con la lista de features o entregables ordenados por prioridad y validados con el equipo interno y el cliente en cada sesión de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un backlog actualizado con lo descrito en este checklist que el equipo de Arena y el cliente pueden revisar en cualquier momento y ver la versión más actualizada
+    deliverable: Backlog con control de versiones por cada cambio mayor
+    deliverable_format: XLS, Planner
+    frequency: Cada sprint
+  - title: Documentación del plan y del avance — Registro de actividades del equipo
+    text: Documentar actividades completadas cada día y semana por cada uno de los miembros del equipo de Arena y del cliente de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Existe un documento donde se puede visualizar el set de tareas completadas por tema, fecha y miembro del equipo (e.g. presentación de avance semana, presentación de sprint review)
+    deliverable: Durante el proyecto se lleva una métrica documentada cada semana y sprint de las actividades completadas por cada miembro del equipo
+    deliverable_format: XLS, Planner
+    frequency: Semanal y cada sprint
+  - title: Documentación del plan y del avance — Reporte semanal de avance
+    text: Generar reportes de avance semanales incluyendo fecha del reporte, número de semana, semáforo de status, done/inprogress/todo/blockers-riesgos, siguientes milestones, vista gráfica del plan de trabajo
+    acceptance_criteria: El cliente y el equipo de Arena tienen claro el panorama general cada semana del avance y actividades principales sin tener que ir a ver el mayor nivel de detalle al plan
+    deliverable: Documentos semanales de avance
+    deliverable_format: PPT, PDF
+    frequency: Semanal
+    guidance: El formato del reporte de avance se validará con el cliente y ajustará según su retro durante las primeras 4 semanas de la iniciativa o proyecto
+  - title: Documentación del plan y del avance — Comunicación de ajustes al plan
+    text: Documentar y enviar por escrito (correo + chat grupal + chat individial) el detalle de ajustes al plan, riesgos, retrasos y cambios al alcance en comparación con la propuesta inicial
+    acceptance_criteria: Cada ajuste de alcance, cambio de prioridades, ajuste al plan o retarget de entregable está documentado y comunicado claramente por escrito
+    deliverable: Correos, Histórico de chats con los avisos y validaciones correpsondientes
+    deliverable_format: Mail, Teams
+    frequency: Por evento
+    guidance: Las minutas también pueden ser consideradas como evidencia de ejecución de este punto
+  - title: Documentación del plan y del avance — Estándares de trabajo
+    text: Validar, documentar y compartir al resto del equipo los estándares de trabajo, desarrollo y documentación requeridos por el cliente
+    acceptance_criteria: El equipo del proyecto tiene claro cómo debe entregar sus desarrollos y qué reglas y evaluaciones recibirá antes de entregar el proyecto
+    deliverable: Ligas o documentos con los estándares a seguir en el proyecto, documentados y validados con cliente, en minuta
+    deliverable_format: Mail, Teams, PPT/PDF
+    frequency: Una vez al inicio del proyecto y confirmado con cada fase de entregas
+    guidance: En caso de no existir un estándar, el equipo interno deberá validar uno propuesto por Arena y documentar por correo que ese será el estándar a utilizar en el proyecto. En caso de cambiar el estándar durante el proyecto, esto debe ser notificado internamente y con cliente, acompañado de una documentación del impacto de ese cambio
+  - title: Documentación del plan y del avance — Indicadores del proyecto
+    text: Actualizar indicadores de avance y resultado del proyecto (e.g. % de avance real vs plan, % de actividades completadas, indicadores de negocio como precisión, error, etc.) de acuerdo con los estándares de la Oficina de PMO de Arena y del cliente
+    acceptance_criteria: Arena tiene un mecanismo para analizar el avance y desempeño del proyecto de forma rápida en un único punto de revisión
+    deliverable: Archivo actualizado con indicadores
+    deliverable_format: XLS, PPT/PDF
+    frequency: Semanal
+    guidance: Se tomará el archivo de indicadores de KO como punto de partida
+  - title: Documentación del plan y del avance — Estructura de canal y archivos
+    text: Mantener una estructura de canal y archivos en teams, donde todo el equipo trabajo sobre archivos guardados en esa estructura, ningún archivo del proyecto se encuentra en un drive personal y se alinea con las expectativas y necesidades de los clientes
+    acceptance_criteria: El equipo y los clientes pueden acceder fácilmente a archivos sin tener que intercambiar adjuntos por correo, la carpeta del proyecto tiene una estructura ordenada y los nombres de los archivos se identifican claramente
+    deliverable: Canales en teams
+    deliverable_format: Teams, Sharepoint
+    frequency: Durante todo el proyecto
+  - title: Rutinas de gestión — Dailys
+    text: Asegurar dailys recurrentes agendados
+    acceptance_criteria: Las sesiones duran 15 - 20 mins, el equipo está preparado previo a la sesión y los comentarios y validaciones están enfocados a tareas específicas por día y persona
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Chat
+    frequency: Diaria
+  - title: Rutinas de gestión — Weekly status reports
+    text: Ejecutar weekly status reports con cliente técnico y de negocio
+    acceptance_criteria: El equipo tiene una rutina donde el cliente se queda con la tranquilidad y certidumbre de lo que estamos trabajando y si salen pendientes o actividades, éstos se documentan y ejecutan en tiempo y forma. El PM muestra un dominio del plan, de la solución y puede responder ante dudas y cuestionamientos de forma contundente
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+  - title: Rutinas de gestión — Sprint planning
+    text: Asegurar sprint plan agendados y documentados con minuta, pre-work y ajustes al plan
+    acceptance_criteria: Cada miembro del equipo sale con la claridad de los entregables por día que debe ejecutar, su criterio de aceptación y definición de terminado, así como las actualizaciones a los planes correspondientes
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    guidance: Los sprints deberán ser de 2 semanas, en momentos específicos podrán ser de 1 o 3 semanas
+  - title: Rutinas de gestión — Sprint review
+    text: Asegurar sprint review agendados y documentados con minuta, pre-work y ajustes al plan
+    acceptance_criteria: El equipo documenta y valida cada uno de los entregables internamente y con el cliente, documentando siguientes pasos y tareas a incluir
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    guidance: Los sprints deberán ser de 2 semanas, en momentos específicos podrán ser de 1 o 3 semanas
+  - title: Rutinas de gestión — Sprint retrospective
+    text: Asegurar sprint retrospective agendados y documentados con minuta, pre-work y ajustes al plan o esquema de trabajo
+    acceptance_criteria: El equipo tiene un espacio para expresar sus preocupaciones, sugerencias de mejora y continuar con un buen ambiente de trabajo
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento
+    guidance: Se recomienda llevar las mediciones de retrospectiva base de la metodología Scrum
+  - title: Rutinas de gestión — Refinamientos
+    text: Agendar refinamientos cada vez que exista un ajuste al backlog de actividades, al plan de trabajo o al alcance y entregables del proyecto o iniciativa
+    acceptance_criteria: El equipo interno tiene claridad de las implicaciones y ajustes en sus actividades individuales cuando existen cambios al alcance, a las prioridades, al backlog, a los estándares de trabajo o al plan de trabajo del proyecto
+    deliverable: Sesiones agendadas y ejecutadas y documentadas individualmente según lo especificado en este documento
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento, cada cambio al alcance, backlog, plan de trabajo o estándar de trabajo
+  - title: Cuestionamiento y validación de resultados — Diseño de solución técnico
+    text: Contar con diseños de solución a nivel técnico. Revisados y validados por el PM para asegurar calidad y con signoff de lead técnico de Arena y lead técnico del cliente
+    acceptance_criteria: El cliente técnico y el cliente de negocio tienen claro lo que estamos construyendo y existe una aprobación documentada. El equipo de Arena tiene una guía clara del objetivo a desarrollar
+    deliverable: Diseño de la solución documentado y versionado
+    deliverable_format: PPT/PDF
+    frequency: Por evento, al menos cada sprint
+    guidance: Los diseños deberán tener el mayor nivel de detalle posible, agregando diagramas, descripciones detalladas, explicaciones escritas y otros elementos de soporte
+  - title: Cuestionamiento y validación de resultados — Diseño de solución de negocio
+    text: Contar con diseños de solución a nivel negocio y definiciones. Revisados y validados por el PM para asegurar calidad
+    acceptance_criteria: El cliente técnico y el cliente de negocio tienen claro lo que estamos construyendo y existe una aprobación documentada. El equipo de Arena tiene una guía clara del objetivo a desarrollar
+    deliverable: Diseño de la solución documentado y versionado
+    deliverable_format: PPT/PDF
+    frequency: Por evento, al menos cada sprint
+    guidance: Los diseños deberán tener el mayor nivel de detalle posible, agregando diagramas, descripciones detalladas, explicaciones escritas y otros elementos de soporte
+  - title: Cuestionamiento y validación de resultados — Presentaciones de resultados
+    text: Generar presentaciones de revisión y validación de resultados y entregas con cliente técnico y de negocio
+    acceptance_criteria: El cliente no hace correcciones recurrentes que pudieron haber sido identificadas anteriormente por el equipo y por el PM, los resultados tienen pocos retrabajos y las sesiones de revisión con cliente no terminan rápidamente por identificar múltiples errores en los primeros minutos
+    deliverable: Presentaciones elaboradas, retrabajos documentados y percepción del cliente registrada
+    deliverable_format: PPT/PDF
+    frequency: Por sprint
+  - title: Preparación de reuniones y seguimiento con el cliente — Preparación de reuniones
+    text: Preparar reuniones internas y con el cliente que aseguren que todo el equipo de Arena está listo para llevar la sesión o participar en ella de forma exitosa y contundente
+    acceptance_criteria: El equipo llega siempre con material a las sesiones, llega con respuestas preparadas ante posibles dudas y en general el cliente percibe un excelente dominio y preparación de la sesión
+    deliverable: XLS con la documentación de cada reunión planeada
+    deliverable_format: XLS Formato Prep Reuniones
+    frequency: Obligatorio para cada reunión agendada
+    guidance: Se espera que el formato de preparación de reuniones se llene al menos un día hábil antes de la sesión y que se llene con juicio crítico y detenimiento. De este ejercicio deben resultar acciones individuales y para el resto del equipo que aseguren tener una preparación correcta de cómo llevar y participar en cada sesión, especialmente con cliente
+  - title: Preparación de reuniones y seguimiento con el cliente — One on ones de retroalimentación
+    text: Agendar sesiones one on one de retroalimentación para identificar la percepción de calidad y sugerencias de mejora del cliente
+    acceptance_criteria: El cliente siente cercanía y confianza para expresar sus recomendaciones de mejora, alineamos expectativas de lo que puede lograr el equipo y el cliente identifica mejoras tangibles en función a sus comentarios. La retroalimentación se registra y analiza consistentemente por el equipo de Arena
+    deliverable: Evidencia de retroalimentación y registro del feedback recibido
+    deliverable_format: Mail, Chat, Calendario
+    frequency: Por evento, al menos cada 3 - 4 semanas
+  - title: Preparación de reuniones y seguimiento con el cliente — Comunicación de avance y puntos críticos
+    text: Comunicar por mensaje individual o chat grupal avisando del avance, de los puntos críticos para asegurar que todos los stakeholders involucrados tienen la visibilidad del avance
+    acceptance_criteria: El cliente (todo el grupo de stakeholders relevantes) puede mantenerse actualizado sin necesidad de esperar a la comunicación formal de minutas y pre-reads a través de mensajes cortos, resumidos y claros
+    deliverable: Evidencia de los mensajes directos en chat invidual o grupal
+    deliverable_format: Chat
+    frequency: 2 - 3 veces por semana
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Pre-reads
+    text: Enviar pre-reads para sesiones internas y con clientes
+    acceptance_criteria: El cliente recibe el material con anticipación, damos seguimiento por chat a posibles dudas o comentarios que debamos llevar preparados para la sesión y llegamos a las sesiones a resolver cuestionamientos identificados
+    deliverable: Correos con las presentaciones enviadas al menos 24 hrs antes de la sesión
+    deliverable_format: Mail, Material de Pre-read
+    frequency: Por evento, al menos una vez cada semana
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Minutas de acuerdos y definiciones
+    text: Documentar y enviar minutas con validaciones, definiciones, acuerdos y cambios de alcance o plan
+    acceptance_criteria: Las minutas son claras, concisas, no tienen errores de ortografía y el cliente las entiende claramente según el feedback recabado
+    deliverable: Correos enviados con minutas y/o minutas adjuntas
+    deliverable_format: Mail
+    frequency: Por evento, al menos una vez por semana
+    guidance: Se espera claridad y alineación con el Ejemplo de Minuta mostrado en este documento. Si es necesario en el correo o mensaje con la minuta se pueden agregar la liga o adjunto a material de consulta como PPT/XLS
+  - title: Seguimiento a acuerdos y definiciones de las sesiones — Minutas de mejoras y ajustes
+    text: Documentar y enviar minutas con las mejoras y ajustes relevantes a realizar según los checkpoint y retro de cliente
+    acceptance_criteria: Las minutas son claras, concisas, no tienen errores de ortografía y el cliente las entiende claramente según el feedback recabado
+    deliverable: Correos enviados con minutas y/o minutas adjuntas
+    deliverable_format: Mail
+    frequency: Por evento, al menos cada 3 - 4 semanas
+    guidance: Se espera claridad y alineación con el Ejemplo de Minuta mostrado en este documento. Si es necesario en el correo o mensaje con la minuta se pueden agregar la liga o adjunto a material de consulta como PPT/XLS
+  - title: Análisis de impactos ante cambios
+    text: Analizar el impacto en fechas, dependencias y carga del equipo antes de ejecutar cambios en alcance o plan de trabajo
+    acceptance_criteria: No se ejecutan cambios sin evaluación explícita de impacto
+    deliverable: Documentación escrita de cambios en alcance y planes de trabajo
+    deliverable_format: Mail / Minuta
+    frequency: Por evento
+    guidance: Puede integrarse a una minuta o correo de cambio, comunicado al cliente y alineado con el equipo y directores de Arena
+  - title: Clarificación de criterios de aceptación ambiguos
+    text: Detectar y resolver criterios incompletos o ambiguos comunicados por cliente o definidos en el alcance antes de la ejecución de los entregables relacionados
+    acceptance_criteria: Reducción de retrabajo por definiciones poco claras
+    deliverable: Documentación diseño de la solución a desarrollar
+    deliverable_format: Backlog / Minuta
+    frequency: Por sprint
+    guidance: Aplica en backlog refinements
+  - title: Detección temprana de desviaciones de calidad
+    text: Identificar desviaciones de calidad de forma recurrente durante la ejecución
+    acceptance_criteria: Los issues se corrigen antes de validación con cliente
+    deliverable: Evaluación de percepción de calidad con stakeholder en reporte de status
+    deliverable_format: Reporte de status
+    frequency: Continuo
+    guidance: No sustituye la revisión formal
+  - title: Gestión consciente de dependencias
+    text: Identificar y destrabar dependencias que impactan la ejecución a través de un seguimiento y comunicación clara y puntual
+    acceptance_criteria: Las dependencias críticas no bloquean entregables
+    deliverable: Mensajes / Correos gestionando las dependencias del proyecto
+    deliverable_format: XLS / Minuta
+    frequency: Semanal
+    guidance: Puede integrarse al plan de trabajo
+  - title: Preparación para validaciones
+    text: Asegurar que entregables estén listos antes de sesiones con cliente
+    acceptance_criteria: Las sesiones no se usan para descubrir problemas básicos
+    deliverable: Presentación y validación de entregables
+    deliverable_format: PPT
+    frequency: Por sprint
+    guidance: Complementa el pre read
+  - title: Traducción técnica de los elementos del proyecto al stakeholder
+    text: Aprovechar sesiones del proyecto para explicar aspectos técnicos de una forma clara a los stakeholders que no son técnicos, con el lenguaje y detalle que se adapta al stakeholder
+    acceptance_criteria: Los stakeholders de negocio y no técnicos entienden claramente lo que el equipo técnico está construyendo
+    deliverable: Presentación de avance con explicaciones técnicas
+    deliverable_format: PPT
+    frequency: Semanal/Por Sprint
+  - title: Dominio de estrategias de comunicación con stakeholders
+    text: Identificar el orden, tipo de mensaje y momentos para comunicar con cada stakeholders las validaciones y puntos clave del proyecto
+    acceptance_criteria: Identifica cuándo validar de nivel directivo hacia abajo o d enivel operativo hacia arriba. Ajusta los materiales de acuerdo a lo que cada stakeholders conoce y espera
+    deliverable: Plan de actividades de comunicación y gestión de stakeholders incluido en planning
+    deliverable_format: PPT, Teams, Mail
+    frequency: Por sprint
+  - title: Evaluación de impacto sistémico
+    text: Evaluar impacto y sinergias en otras iniciativas, equipos o capacidades y comunicar a otros equipos para lograr una mejor ejecución y entrega
+    acceptance_criteria: No se generan fricciones organizacionales
+    deliverable: Comunicación oral o escrita con otros equipos para generar eficiencias sistémicas
+    deliverable_format: PPT / Mail
+    frequency: Por evento
+    guidance: Aplica en decisiones relevantes
+  - title: Definición y defensa de límites de alcance
+    text: Establecer y sostener claramente el alcance del proyecto en los momentos donde haya negociaciones respecto a los entregables, equipo y tiempos del proyecto
+    acceptance_criteria: No existe creep de alcance silencioso
+    deliverable: Documentación y minuta que confirma los acuerdos de alcance logrados
+    deliverable_format: PPT / Minuta
+    frequency: Continuo
+    guidance: Se actualiza ante cambios
+  - title: Re encuadre de problemas del cliente
+    text: Cuestionar el problema que el equipo interno o el cliente busca solucionar cuando las actividades no atacan la causa raíz
+    acceptance_criteria: El cliente acepta el ajuste de enfoque
+    deliverable: Documentación y minuta que confirma los acuerdos de alcance logrados
+    deliverable_format: PPT
+    frequency: Por evento
+    guidance: No implica rehacer la propuesta comercial
+  - title: Intervención temprana en riesgos
+    text: Anticipar, comunicar y actuar ante señales tempranas de riesgo involucrando a equipo interno de Arena y al cliente
+    acceptance_criteria: Los problemas no escalan
+    deliverable: Comunicación oral o escrita para anticipar riesgos y acciones correctivas
+    deliverable_format: Mail / Chat
+    frequency: Continuo
+    guidance: Las señales pueden ser cualitativas
+  - title: Transferencia de criterio al equipo
+    text: Elevar el nivel de decisión del equipo mediante coaching
+    acceptance_criteria: El equipo propone soluciones y sus propias actividades a incluir en el plan
+    deliverable: Retro documentada y participación documentada del equipo en los planes
+    deliverable_format: Notas internas / Mail
+    frequency: Continuo
+    guidance: Complementa feedback formal
+  - title: Posicionamiento como asesor de confianza con stakeholder
+    text: Desarrollar una relación de confianza, cercanía y apoyo con los stakeholders clave a través de los one on ones del proyecto
+    deliverable: Identificación de necesidades del stakeholder más allá del proyecto y oportunidades comerciales comunicadas internamente
+    deliverable_format: Mail / Chat
+    frequency: Quincenal/ Mensual
+  - title: Autonomía en la gestión y ejecución del proyecto
+    text: Ejecutar y entregar el proyecto durante periodos largos sin requerir apoyo o presencia constante del equipo directivo, manteniendo tiempo, calidad y confianza
+    acceptance_criteria: Identifica correctamente intervenciones puntuales y efectivas de equipos directivos manteniendo el avance en tiempo y forma
+    deliverable: Autonomía e independencia para llevar un proyecto sin estar esperando dirección o guía constante del equipo
+    frequency: Continuo
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Llega al sprint planning con estimaciones propias de sus tareas, después de revisar el backlog y los criterios de aceptación.
+
+      • Cumple las fechas que compromete. Cuando no, la desviación es menor y está justificada.
+
+      • Avisa en el daily, o antes, en cuanto detecta que una tarea tomará más de lo estimado, y no el día de la entrega.
+
+      • Cuando le falta información para estimar, pide aclaración o divide la tarea en lugar de dar un número al azar.
+
+      • Si no puede responder en 24 horas, confirma que recibió el mensaje e indica cuándo tendrá la respuesta.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Recibe la retroalimentación sin ponerse a la defensiva: escucha, pregunta para entender y reconoce el punto.
+
+      • Corrige lo señalado en el entregable actual dentro del plazo acordado.
+
+      • No repite en entregables posteriores un error que ya se le señaló.
+
+      • Pide revisión a su Mid o Sr antes de dar un entregable por terminado.
+
+      • Registra la retroalimentación recibida y sus acuerdos en sus checkpoints o 1:1.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: PM
+  level: LEAD
+  questions:
+  - title: Aseguramiento de gestión de proyectos — Seguimiento a PMs
+    text: Realizar seguimiento a los PMs con los que trabaja en el proyecto para evaluar el cumplimiento del checklist correspondiente y definir ajustes
+    acceptance_criteria: Se realiza una sesión de retroalimentación 1:1 con cada PM auditado, donde se revisan fortalezas, áreas de mejora y acuerdos de acción. Existe evidencia del feedback y de los acuerdos (ej. nota en herramienta interna, documento compartido o resumen breve).
+    deliverable: Checklist de cada PM evaluado documentado y compartido al PM en una sesión de retro
+    deliverable_format: Correo
+    frequency: Mensual / Bimestral
+    guidance: Cambio por Luis Becerril
+  - title: Guía y soporte al equipo de proyecto — Dailys
+    text: Asistir y participar activamente a los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre
+    acceptance_criteria: El lead participa de forma oral y escrita por chat o correo asegurando que el equipo no pierde de vista los entregables y riesgos críticos a resolver
+    deliverable: Reporte de asistencia en teams
+    deliverable_format: Teams
+    frequency: Al menos asistencia a 1 daily cada 15 días
+    guidance: El lead también evalúa el valor de la reunión, la preparación y foco del equipo y el cumplimiento en objetivo, agenda y tiempos de la reunión
+  - title: Guía y soporte al equipo de proyecto — Planning y review
+    text: Asistir y participar activamente a los planning y review del proyecto
+    acceptance_criteria: El lead participa de forma oral y escrita por chat o correo asegurando que el equipo no pierde de vista los entregables y riesgos críticos a resolver
+    deliverable: Reporte de asistencia en teams
+    deliverable_format: Teams
+    frequency: Cada sprint
+    guidance: El lead también evalúa el valor de la reunión, la preparación y foco del equipo y el cumplimiento en objetivo, agenda y tiempos de la reunión
+  - title: Guía y soporte al equipo de proyecto — Alineación con alcance
+    text: Asegurar y revisar la alineación recurrente del trabajo del equipo vs el alcance de la propuesta
+    acceptance_criteria: El lead revisa lo comprometido por contrato y propuesta vs lo que el equipo está entregando para identificar riesgos
+    deliverable: Documentación de ajustes o guía en sprint plan y sprint review
+    deliverable_format: Minuta/PPT / Word
+    frequency: Cada sprint
+    guidance: Esta actividad se recomienda como trabajo previo al sprint plan y sprint review para tener elementos que ayuden a dar guía al equipo
+  - title: Guía y soporte al equipo de proyecto — Sesiones críticas con stakeholders senior
+    text: Identificar, validar el material y preparación y participar en sesiones críticas donde asistirán stakeholders senior del cliente que requieran apoyo del lead
+    acceptance_criteria: Todas las sesiones con stakeholders no operativos del proyecto cuentan con un pre-read que el equipo y el cliente puede consultar previo a la sesión
+    deliverable: Material y presentación de sesiones clave
+    deliverable_format: PPT
+    frequency: Al menos 1 vez por sprint
+    guidance: El lead debe ayudar a que el equipo tenga clara la estructura, agenda y objetivos de la sesión antes de que construyan el material para evitar retrabajos
+  - title: Guía y soporte al equipo de proyecto — Mapeo de stakeholders
+    text: Ayudar al equipo a mapear y entender a todos los stakeholders involucrados
+    acceptance_criteria: Todo el equipo de proyecto conoce y entiende el rol de todos los stakeholders involucrados
+    deliverable: Directorio actualizado de stakeholders en la documentación del proyecto
+    deliverable_format: XLS
+    frequency: Al menos 1 vez por proyecto
+  - title: Guía y soporte al equipo de proyecto — One on ones con stakeholders senior
+    text: Agendar one on ones con stakeholders senior del proyecto para alinear expectativas y generar una relación de confianza y cercanía
+    acceptance_criteria: Los comentarios principales del one on one se comparten al equipo del proyecto en daily o planning
+    deliverable: Sesiones agendadas y ejecutadas en calendario
+    deliverable_format: Reunión en teams / presencial
+    frequency: Cada sprint
+  - title: Guía y soporte al equipo de proyecto — Participación de directores
+    text: Anticipar participación de directores en momentos y sesiones críticas, dando claridad de la comunicación o influencia requerida de su parte
+    acceptance_criteria: Explica de forma clara el status, la situación y lo que el equipo requiere por parte del director
+    deliverable: Mensajes a director de proyecto comunicando necesidad de apoyo
+    deliverable_format: Teams
+    frequency: Por evento o al menos 1 vez al mes
+  - title: Guía y soporte al equipo de proyecto — Plan de transición y staffing
+    text: Crear y ejecuta un plan de transición, onboarding, KTs y seguimiento al staffing del proyecto al inicio, durante y al final
+    acceptance_criteria: El plan de transición está hecho a la medida del proyecto y considera un plan de comunicación interna y con cliente, que el equipo del proyecto tiene claro y ejecuta con supervisión del lead
+    deliverable: Plan de trabajo y accionables
+    deliverable_format: XLS/PPT
+    frequency: Al menos 2 veces por proyecto
+  - title: Aseguramiento de gestión de proyectos — Cumplimiento PMO
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Oficina de PMO
+    acceptance_criteria: El equipo de la oficina de PMO no necesita estar recordando y dando seguimiento a que las actividades de la oficina de PMO se cumplan en tiempo y forma
+    deliverable: Actividades comunicadas por la oficina de PMO (e.g. status reports, alta de proyectos, etc.)
+    deliverable_format: Según guía oficina PMO
+    frequency: Semanal
+  - title: Aseguramiento de gestión de proyectos — Leads técnicos
+    text: Identificar y hacer equipo con leads técnicos para asegurar que el proyecto cuenta con las bases y diseños técnicos requeridos
+    acceptance_criteria: Existe un trabajo en equipo y alineación entre los leads asignados al proyecto
+    deliverable: Diseños técnicos validados y documentados
+    deliverable_format: Correo, Teams, Otro
+    frequency: Por Sprint
+  - title: Guía y soporte al equipo interno — Mesa de Talento
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Mesa de Talento
+    acceptance_criteria: El equipo de RH no necesita estar recordando y dando seguimiento a que las actividades de la Mesa de Talento se cumplan en tiempo y forma. En caso de cierre de proyecto se asegura que las evaluaciones están cerradas antes de que el equipo se vaya a otros proyectos o iniciativas
+    deliverable: Formatos y actividades comunicadas por RH de Mesa de Talento cumplidas en tiempo y forma
+    deliverable_format: Según guía RH
+    frequency: Semestral
+  - title: Guía y soporte al equipo interno — Planes de capacitación
+    text: Monitorear el avance de los planes de capacitación del equipo de Producto en sus proyectos
+    acceptance_criteria: En los one on ones con equipo directivo interno se comunica el avance de los PMs y las personas que no han podido avanzar por carga de trabajo
+    deliverable: Comunicación por escrito y oral del avance
+    deliverable_format: Correo, Mensaje Teams
+    frequency: Mensual / Bimestral
+  - title: Guía y soporte al equipo interno — Sesiones de mentoring
+    text: Monitorear la ejecución y calidad de las sesiones de mentoring de los equipos de producto en sus proyectos
+    acceptance_criteria: En los one on ones con equipo directivo interno se comunica el avance de los PMs y las personas que no han podido tener mentoring por carga de trabajo
+    deliverable: Comunicación por escrito y oral del avance
+    deliverable_format: Correo, Mensaje Teams
+    frequency: Mensual / Bimestral
+  - title: Guía y soporte al equipo interno — Vacaciones y ausencias
+    text: Dar seguimiento a la planeación y anticipación de los días de vacaciones y ausencias del equipo en sus proyectos para evitar riesgos en la ejecución
+    acceptance_criteria: Todas las vacaciones del equipo se encuentran registradas correctamente en Odoo y correo
+    deliverable: Vacaciones documentadas y aprobadas
+    deliverable_format: Correo, Odoo
+    frequency: Por sprint
+  - title: Guía y soporte al equipo interno — Dudas de procedimientos internos
+    text: Dar seguimiento a resolver directamente dudas de los procedimientos internos de Arena (e.g. PMO, Odoo, Mesa de Talento, Vacaciones, etc.)
+    acceptance_criteria: El equipo de RH identifica que el lead resuelve dudas y domina los procesos internos
+    deliverable: Reconocimiento del equipo del dominio de cómo funciona Arena
+    deliverable_format: Correo, Mensaje Teams
+  - title: Guía y soporte al equipo interno — Sesiones de aprendizaje con PMs
+    text: Planear y ejecutar sesiones de aprendizaje con el equipo de PMs
+    acceptance_criteria: El lead organiza material y presenta una capacitación, foro de trabajo, relato o experiencia que genere en el equipo aprendizaje, desarrolle habilidades de PM y deje al equipo con una encuesta de satisfacción de salida de la sesión con calificación alta
+    deliverable: Presentación y sesión ejecutada
+    deliverable_format: PPT
+    frequency: Al menos 1 vez por trimestre
+    guidance: 'Ejemplos de ideas:
+
+      -Fuckup story, role playing, "what would you have done", workshop de un tema específico, etc.
+
+      Importante que sea de un tema que sientas que domina a nivel experto'
+  - title: Guía y soporte al equipo interno — Directorio de KO y accesos
+    text: Asegurar el mantenimiento del directorio de KO, accesos internos Arena y otros clientes (bajas, altas, cambios de reporte)
+    acceptance_criteria: El equipo asignado a los proyectos está actualizado a los PMs de KO correspondientes y no existen cuentas activas de equipo Arena que ya no está en proyectos de KO
+    deliverable: Correo comunicando al equipo de KO ajustes
+    deliverable_format: Correo, XLS directorio
+    frequency: Por evento (inicio de proyecto, baja, contratación)
+  - title: Guía y soporte al equipo interno — Mejoras a metodologías y estándares
+    text: Identificar y gestionar la implementación de mejoras a las metodologías, estándares de trabajo y herramientas en coordinación con el resto de los leads y del equipo de Arena
+    acceptance_criteria: Se implementan las mejoras al equipo de forma sostenible y con una estrategia en linea con la visión del área
+    deliverable: Evidencia de prácticas implementadas
+    deliverable_format: Correo, Teams, Otro
+    frequency: Por evento (inicio de proyecto, baja, contratación)
+  - title: Soporte comercial — Identificación de oportunidades
+    text: Dar soporte comercial a través de la identificación de oportunidades, necesidades, evolución de soluciones actuales y sensibilización en temas de innovación para el cliente
+    acceptance_criteria: Equipo directivo recibe comunicación respecto a actividades realizadas de búsqueda comercial
+    deliverable: Mensajes y sesiones agendas para explorar oportunidades comerciales
+    deliverable_format: Agenda Teams
+    frequency: Semestral
+    guidance: No se califica el obtener oportunidades o necesidades, se califica el estar proactivamente realizando la búsqueda
+  - title: Soporte comercial — Construcción de propuestas
+    text: Dar soporte comercial a través de la construcción y validación de propuestas en conjunto con otros leads y el director
+    acceptance_criteria: Documento comercial revisada y validado por equipo directivo involucrado
+    deliverable: Propuesta comercial o materiales comerciales para conversaciones con clientes
+    deliverable_format: PPT
+    frequency: Por evento
+  - title: Soporte comercial — Facturación y temas administrativos
+    text: Dar soporte comercial a través del seguimiento a facturación y temas administrativos en caso de ser requerido
+    acceptance_criteria: No existen pendientes administrativos del proyecto (e.g. contratos, facturas, etc.) por activar o dar seguimiento
+    deliverable: Confirmación status o pendientes por resolver de temas administrativos
+    deliverable_format: Correo
+    frequency: Mensual / Bimestral
+  - title: Soporte comercial — Sesiones presenciales
+    text: Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para desarrollar una relación más cercana y mentener una presencia activa
+    acceptance_criteria: Se alinea con el cliente y con el director la estrategia de sesiones presenciales (frecuencia, foro, tema, equipo presente)
+    deliverable: Sesiones presenciales con cliente
+    deliverable_format: Teams
+    frequency: Quincenal - Mensual
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Llega al sprint planning con estimaciones propias de sus tareas, después de revisar el backlog y los criterios de aceptación.
+
+      • Cumple las fechas que compromete. Cuando no, la desviación es menor y está justificada.
+
+      • Avisa en el daily, o antes, en cuanto detecta que una tarea tomará más de lo estimado, y no el día de la entrega.
+
+      • Cuando le falta información para estimar, pide aclaración o divide la tarea en lugar de dar un número al azar.
+
+      • Si no puede responder en 24 horas, confirma que recibió el mensaje e indica cuándo tendrá la respuesta.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Recibe la retroalimentación sin ponerse a la defensiva: escucha, pregunta para entender y reconoce el punto.
+
+      • Corrige lo señalado en el entregable actual dentro del plazo acordado.
+
+      • No repite en entregables posteriores un error que ya se le señaló.
+
+      • Pide revisión a su Mid o Sr antes de dar un entregable por terminado.
+
+      • Registra la retroalimentación recibida y sus acuerdos en sus checkpoints o 1:1.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'

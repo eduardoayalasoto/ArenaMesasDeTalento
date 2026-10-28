@@ -1,0 +1,784 @@
+source: docs/Checklists/Versión 2027/Checklist de Actividades Científicos de Datos - Octubre 2026.xlsx
+templates:
+- area: CD
+  level: JR
+  questions:
+  - title: Backlog de tareas
+    text: Mantener un backlog de tareas de sus actividades, confirmando prioridades, expectativas de tiempo de entrega y dependencias (técnicas y operativas) de acuerdo con los estándares de la Oficina de PMO.
+    acceptance_criteria: El backlog está actualizado al inicio de cada sprint y refleja prioridades acordadas con el equipo. Cada tarea tiene un responsable, criterio de aceptación y fecha estimada claramente definidos. El DS Jr puede explicar el estado de sus tareas sin necesidad de consultar al PM o DS Mid.
+    deliverable: Backlog actualizado con control de versiones por cada cambio mayor, con banderas de estatus (TBD, Iniciado, On Progress, Delayed, Finished).
+    deliverable_format: Arena OS
+    frequency: Cada sprint.
+    level_expectation: El DS Jr ejecuta las tareas asignadas con la priorización definida por el DS Mid/Sr. Comunica proactivamente (al DS Mid/Sr o PM) cualquier bloqueo o dependencia sin esperar al daily para hacerlo.
+    guidance: En los proyectos donde no haya un DS Sr., el DS de mayor nivel será el encargado de llenar este documento. Las tareas deben tener bandera de estatus.
+  - title: Comunicar el avance
+    text: Actualizar y documentar el avance de sus tareas en la herramienta de seguimiento correspondiente y comunicarlo a producto en la ceremonia correspondiente. Incluir riesgos, dependencias y bloqueos activos.
+    acceptance_criteria: Se refleja el estatus real de las tareas sin necesidad de que el PM o DS Mid lo solicite. Los riesgos y bloqueos están documentados antes de la siguiente ceremonia, no descubiertos en ella. El DS Jr puede explicar verbalmente cualquier punto sin leerlo del documento.
+    deliverable: Estatus actualizado en la herramienta correspondiente, para cada sprint, con riesgos y bloqueos comentados.
+    deliverable_format: Arena OS, Jira, Azure DevOps.
+    frequency: Al inicio de cada sprint y actualización continua.
+    level_expectation: El DS Jr documenta su propio avance con claridad y precisión. No espera ser preguntado para reportar bloqueos. Si algo está en riesgo, lo comunica por escrito (Teams/correo) antes de la siguiente ceremonia.
+    guidance: El DS Jr debe capturar sus cambios de estatus conforme ocurran, sin esperar al daily. Un riesgo es cualquier situación que comprometa tiempos o entregables.
+  - title: Aplicar estándares de desarrollo y buenas prácticas
+    text: Aplicar los estándares de desarrollo y documentación vigentes para el proyecto desde el inicio del mismo.
+    acceptance_criteria: Los entregables del DS Jr cumplen con los estándares definidos sin necesidad de correcciones recurrentes por el mismo punto. El DS Mid no necesita recordarle más de una vez el mismo estándar.
+    deliverable: Evidencia de adopción de estándares en los entregables del sprint (código documentado, nombres de archivos correctos, estructura de carpetas en orden).
+    deliverable_format: Mail, Teams, PPT, PDF, Wiki.
+    frequency: Una vez al inicio del proyecto y confirmado con cada fase de entregas.
+    level_expectation: El DS Jr adopta los estándares desde el primer entregable. Cualquier duda sobre cómo aplicarlos debe resolverse con el DS Mid antes de comenzar a desarrollar, no después de entregar.
+    guidance: Los estándares deben generarse primero en Espacio Arena y luego compartirse.  Si tiene dudas sobre su aplicación, el DS Jr debe preguntar activamente.
+  - title: Diseño de arquitectura de datos
+    text: Entender y documentar el diseño de arquitectura definido por el DS Sr/Lead y aplicarlo correctamente en sus desarrollos. Identificar cuando sus implementaciones se desvían del diseño acordado y comunicarlo de inmediato.
+    acceptance_criteria: El DS Jr no construye componentes fuera del diseño de arquitectura sin previo acuerdo. Cuando detecta una inconsistencia, la levanta antes de continuar el desarrollo. El DS Sr no descubre errores de arquitectura al momento del roll-out.
+    deliverable: Evidencia de que los desarrollos del DS Jr son consistentes con el diseño de arquitectura aprobado. Dudas y desviaciones documentadas en minuta o Teams.
+    deliverable_format: Canva, Jira, PPT, Teams.
+    frequency: Al final del Discovery o a petición expresa de Producto o Negocio.
+    level_expectation: El DS Jr ejecuta dentro del marco de arquitectura definido. Su responsabilidad es preguntar antes de improvisar y detectar inconsistencias temprano, no al final del sprint.
+    guidance: Debe alinearse con el equipo de DE. El DS Jr no define arquitectura, pero debe entenderla completamente para implementar correctamente.
+  - title: QA de soluciones que utilizan IA
+    text: Revisar críticamente el código, cálculos y resultados generados con herramientas de IA generativa en las tareas asignadas, antes de integrarlos a la solución. Verificar que se ejecutan correctamente y que los datos de entrada y salida son consistentes con lo esperado.
+    acceptance_criteria: 'El DS Jr no solo copia lo que genera la IA: entiende qué hace el código y puede explicarlo. Los errores de la herramienta se detectan antes de entregar, no en la revisión del DS Mid. El DS Mid no encuentra en los entregables del DS Jr código generado por IA que nadie revisó.'
+    deliverable: Listado de observaciones y ajustes realizados al código o resultados generados con IA.
+    deliverable_format: Teams, mail, PPT, PDF o Arena OS
+    frequency: De acuerdo con los requerimientos del proyecto
+    guidance: El DS Jr es responsable de todo lo que entrega, aunque lo haya generado una herramienta de IA. Si no entiende una parte del resultado, pregunta al DS Mid antes de integrarla.
+  - title: Excelencia técnica de métodos estadísticos
+    text: Implementar, ejecutar y darle seguimiento, con una base teórica sólida y siguiendo las buenas prácticas del trabajo estadístico, a las distintas pruebas (paramétricas o no), planes de muestreo, pruebas de hipótesis y modelación matemática que requiera el producto, validando cuidadosamente los suspuestos empleados en cada caso.
+    acceptance_criteria: 'El DS Jr no solo captura código: entiende la importancia de los supuestos estadísticos del proyecto y aprende a materializarlos dentro de la solución. Discute la validez de las pruebas, intervalos de confianza, parametrizaciones, errores estadísticos, etc. con el equipo de Ciencia. El DS Mid no descubre valores fuera de los esperados en las reuniones con Negocio.'
+    deliverable: Evidencia de que los desarrollos, pruebas y modelos del DS Jr se apegan a una fundamentación teórica y práctica adecuadas con la naturaleza de la solución. Los supuestos, resultados, desviaciones se documentan en minuta, mail o Teams.
+    deliverable_format: Teams, mail, PPT, PDF, archivos de código (*.R, *.py), repositorios, Latex, Mathlab.
+    frequency: Cada sprint, aunque dependerá de la naturaleza misma del proyecto ajustar su frecuencia o a solicitud expresa de Negocio.
+    guidance: El DS Jr participa activamente al interior del proyecto sobre los aspectos estadísticos y su aplicación. Aprende (de todo el equipo de Ciencia) cómo formular hipótesis de trabajo que se apeguen a la realidad del Negocio, cómo desarrollar un modelo estadístico, hacer pruebas y validar sus resultados. El valor que agrega, al ejecutar una tarea estadística o informática, reside en hacerlo de manera crítica, analizando y proponiendo soluciones con fundamentación teórica. El DS Jr no modela o define pruebas, pero entiende la base teórica para implementarla correctamente.
+  - title: Funcionalidad óptima de código
+    text: Realizar, de manera óptima y de acuerdo con las pautas (técnicas y de infraestructura) establecidas en el proyecto o apoyándose en herramientas de IA el código que ejecute la solución (o una parte de ella) asignada por el DS Mid, siguiendo las buenas práctica, el QA para herramientas de IA y los más altos estándares de calidad en su programación.
+    acceptance_criteria: El DS Jr codifica (en su totalidad o en parte) la solución diseñada por el equipo de proyecto, demostrando su excelencia técnica al programar y cuidando los recursos informáticos de Arena y Negocio. El DS Mid no debuggea el código del DS Jr en las sesiones que muestran los avances del producto a Negocio.
+    deliverable: Evidencia de las distintas fases de desarrollo y código fuente que resuelve de manera efectiva el problema de negocio asignado.
+    deliverable_format: Archivos de código (*.R, *.py, etc.), JSON, ejecutables, carpetas en ZIP, repositorios, etc.
+    frequency: Cada sprint, aunque pueden presentarse revisiones de código a solicitud expresa de Negocio.
+    guidance: El DS Jr incorpora las herramientas más modernas que le permitan ser más eficiente en la generación de código, su ejecución, debuggeo, mantenimiento, documentación y revisión. Conoce a fondo las dependencias y requerimientos del mismo y se anticipa a los riesgos que las actualizaciones o deprecación de bibliotecas le genera. Debe mantenerse actualizado para asegurar su participación en los proyectos que requiere la industria.
+  - title: Documentación de reglas de negocio
+    text: Entender las reglas de negocio definidas y validar que sus implementaciones las incorporan correctamente. Levantar dudas sobre la aplicación de una regla antes de codificarla.
+    acceptance_criteria: El DS Jr no entrega código que ignora o contradice reglas de negocio vigentes. Cuando tiene dudas sobre cómo aplicar una regla, pregunta antes de codificar. El DS Mid no descubre errores de implementación de reglas al momento del QA.
+    deliverable: Evidencia en código o en documento de que las reglas de negocio están correctamente implementadas. Preguntas y aclaraciones documentadas en Teams o minuta.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: En cada sprint planning debe levantarse la incorporación de reglas a los distintos modelos.
+    level_expectation: El DS Jr ejecuta el hardcodeo de reglas bajo supervisión. Su responsabilidad es preguntar activamente cuando una regla no está clara, no asumir y entregar algo incorrecto.
+    guidance: La incorporación de reglas de negocio afecta la comparabilidad del performance de los modelos. El hardcodeo de reglas es responsabilidad del DS Jr con supervisión del Mid.
+  - title: Rutinas de gestión y control interno — Daily
+    text: 'Asistir al daily preparado, comunicando claramente el avance de sus actividades, bloqueos, dependencias y riesgos. No llegar al daily a descubrir sus propios bloqueos: deben estar identificados antes de la sesión.'
+    acceptance_criteria: El DS Jr llega al daily con claridad de lo que hizo ayer, lo que hará hoy y qué le impide avanzar. Sus bloqueos no son una sorpresa para el equipo. No reporta avance ficticio para después corregirlo. Las sesiones duran el tiempo estimado porque el equipo ya llegó preparado.
+    deliverable: Participación activa en sesiones de daily. Evidencia de que los bloqueos fueron comunicados antes de que impactaran un entregable.
+    deliverable_format: Calendario, chat de Teams, mail.
+    frequency: Diaria.
+    level_expectation: El DS Jr reporta estado real, no el estado que quisiera tener. Ante un bloqueo, lo comunica en el momento en que lo detecta, no en el siguiente daily.
+    guidance: Algunas sesiones pueden incluir temas de planning o review. El daily no es el lugar para descubrir problemas, sino para reportarlos y coordinar acciones.
+  - title: Rutinas de gestión y control interno — Touchpoint con DS Lead/Mid
+    text: Asistir al touchpoint o one-on-one interno con el DS Lead/Mid comunicando proactivamente los puntos más críticos de sus actividades, dudas técnicas y personales, y compromisos del período.
+    acceptance_criteria: 'El DS Jr llega al touchpoint con agenda propia: no espera ser preguntado para compartir sus preocupaciones. Los acuerdos del touchpoint anterior están resueltos o tiene una explicación clara de por qué no. El Lead no necesita insistir más de una vez en el mismo punto.'
+    deliverable: Sesiones agendadas, ejecutadas y con acuerdos documentados en Teams o correo.
+    deliverable_format: Calendario, chat de Teams, mail.
+    frequency: Semanal.
+    level_expectation: El DS Jr usa el touchpoint para crecer, no solo para reportar. Trae preguntas técnicas, comparte aprendizajes y es honesto sobre sus áreas de oportunidad.
+    guidance: El seguimiento puntual de compromisos levantados en sesiones previas es lo más importante. Los asuntos internos pueden requerir coordinación con otros del equipo de Analítica.
+  - title: Rutinas de gestión y control interno — Sprint planning
+    text: Asistir al sprint planning preparado, con una propuesta propia de sus actividades, estimaciones de tiempo, criterios de aceptación y dependencias relevantes para el sprint.
+    acceptance_criteria: El DS Jr sale del planning con claridad total de qué debe entregar, cuándo, con qué criterio de aceptación y qué necesita de otros. No hace preguntas básicas durante el sprint sobre lo que se definió en el planning. Su estimación de tiempo se cumple en al menos el 70% de los casos.
+    deliverable: Sesiones agendadas, ejecutadas y con acuerdos de sprint documentados.
+    deliverable_format: Calendario, chat de Teams, mail.
+    frequency: Dependerá del proyecto.
+    level_expectation: El DS Jr debe llegar al planning con al menos una propuesta de actividades y estimaciones, aunque el DS Mid las corrija o revalide. Llegar sin preparación al planning no es una opción.
+    guidance: El planning debe tener nivel de detalle suficiente para que cada nivel sepa su responsabilidad. Las definitions of completeness y readiness deben alinearse con el equipo.
+  - title: Rutinas de gestión y control interno — Sprint review y retro
+    text: Asistir al sprint review y retro preparado, exponiendo los resultados de sus tareas, aprendizajes del sprint y áreas de mejora concretas. Recibir feedback sin ponerse a la defensiva.
+    acceptance_criteria: El DS Jr puede explicar qué completó y qué no, con razones concretas. Sus áreas de mejora del sprint anterior se ven reflejadas en el sprint actual. El feedback del equipo es incorporado, no ignorado. Sale de la retro con al menos un compromiso concreto de mejora.
+    deliverable: Sesiones agendadas, ejecutadas y con aprendizajes documentados.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Cada que finalice un sprint.
+    level_expectation: El DS Jr no llega a la retro a justificar por qué no pudo. Llega a aprender. Expone su curva de aprendizaje honestamente y propone cómo mejorar, no solo qué mejoró.
+    guidance: El review & retro debe ser un espacio seguro. En proyectos largos, esta ceremonia perfila el performance del equipo hacia la excelencia.
+  - title: Checklist de validaciones
+    text: Ejecutar y documentar las validaciones técnicas de cada entregable antes de considerarlo completo. No declarar una tarea como 'done' sin haber ejecutado el checklist correspondiente.
+    acceptance_criteria: El DS Jr no entrega código o modelos sin haber ejecutado las validaciones definidas. El DS Mid no descubre errores básicos de QA en el sprint review. Cuando el DS Jr tiene dudas sobre un criterio de aceptación, pregunta antes de declarar terminado el entregable.
+    deliverable: Checklist de validaciones completado y firmado para cada módulo o entregable del sprint.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: Dependerá de la evolución de los modelos o productos de datos.
+    level_expectation: El DS Jr se hace responsable de la calidad de su propio código antes de pasarlo al DS Mid. 'Done' significa que pasó el checklist, no que terminó de escribir el código.
+    guidance: La validación de datos debe ser parte del ownership de cada DS. No es responsabilidad exclusiva del QA o del DS Mid.
+  - title: Plan de deployment y roll-out
+    text: Entender el plan de despliegue definido y ejecutar las actividades de deployment asignadas siguiendo los lineamientos del DS Sr/Lead. Comunicar cualquier incidente o desviación durante el roll-out de forma inmediata.
+    acceptance_criteria: El DS Jr ejecuta el deployment sin improvisar pasos no contemplados en el plan. Ante cualquier error o comportamiento inesperado, lo comunica de inmediato al DS Sr sin intentar resolverlo solo primero. El roll-out no falla por falta de atención a los pasos definidos.
+    deliverable: Evidencia de ejecución del deployment según el plan. Incidentes y desvíaciones documentados en Teams o correo.
+    deliverable_format: XLS, Arena OS, Azure MLOps, Azure DevOps, Teams, correo.
+    frequency: Una vez por proyecto (aunque puede modificarse o iterarse).
+    level_expectation: El DS Jr ejecuta el plan de deployment con disciplina. No improvisa. Si algo no está en el plan y necesita hacerse, consulta antes de actuar.
+    guidance: Si el producto solo se quedará en DEV, debe constar por escrito con aval de Negocio. El DS Jr ejecuta, no diseña el plan de contingencia.
+  - title: Minuta de reuniones con Negocio
+    text: Apoyar en el registro de acuerdos, definiciones y peticiones de Negocio (relacionadas con Ciencia de Datos) durante sesiones donde participe. Garantizar que los acuerdos relevantes para sus tareas están capturados correctamente.
+    acceptance_criteria: Los acuerdos que afectan las tareas del DS Jr están correctamente documentados. No ejecuta cambios a sus desarrollos basados en acuerdos verbales no documentados. La minuta es clara, sin errores de ortografía, y el DS Mid no necesita rehacerla.
+    deliverable: Minutas con acuerdos documentados, compartidas con Negocio y con aval del PM o DS Mid antes de enviarlas.
+    deliverable_format: Email, XLS, Word, Arena OS, PDF, PPT.
+    frequency: Cada reunión con Negocio donde surjan actividades no registradas en el planning y/o backlog.
+    level_expectation: El DS Jr es responsable de documentar lo que escucha y entiende. Si no entendió un acuerdo, pregunta en el momento, no después.
+    guidance: La minuta debe compartirse con Negocio y contar con su aval. Es mejor revisar los acuerdos internamente antes de presentarlos a Negocio.
+  - title: Checklist de documentación y revisiones de código
+    text: Documentar el código desarrollado siguiendo las buenas prácticas definidas por Arena y los requerimientos de Negocio. La documentación es parte del entregable, no un paso opcional al final.
+    acceptance_criteria: El código del DS Jr puede ser entendido y ejecutado por otro DS sin necesidad de preguntar al autor. La documentación cumple con el checklist acordado. El DS Mid no pide correcciones de documentación en más del 20% de los entregables.
+    deliverable: Código documentado con descripción de funcionalidades, inputs, outputs, rutas de acceso y parámetros. Wiki o documento de referencia actualizado.
+    deliverable_format: XLS, Word, Wiki, PDF, PPT, MP4.
+    frequency: Una sola vez hacia el final del proyecto (aunque puede actualizarse).
+    level_expectation: El DS Jr documenta mientras desarrolla, no al final. 'El código se explica solo' no es aceptable como criterio de documentación en Arena.
+    guidance: Una buena documentación debe ser parte de las habilidades básicas del DS. La documentación cambia entre clientes y proyectos, pero las buenas prácticas de Arena son la base.
+  - title: Plan de KT y legacy
+    text: Ejecutar las sesiones de KT asignadas a su nivel, garantizando que Negocio puede operar los desarrollos del DS Jr de forma autónoma después del cierre del proyecto.
+    acceptance_criteria: Negocio puede ejecutar los componentes desarrollados por el DS Jr sin necesidad de escalarlo a Arena. El código está versionado, dockerizado y documentado según el checklist de legacy. No hay preguntas post-cierre sobre funcionalidades que el DS Jr debió haber explicado.
+    deliverable: Sesiones de KT ejecutadas. Evidencia de que Negocio puede ejecutar end-to-end los componentes bajo responsabilidad del DS Jr.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT, calendario de Teams.
+    frequency: Una sola vez hacia el final del proyecto (aunque puede actualizarse).
+    level_expectation: El DS Jr hace el KT del detalle de las funcionalidades que hizo. Se hace responsable de que quien recibe el código puede ejecutarlo. No considera cerrado el proyecto hasta que Negocio lo confirme.
+    guidance: El KT debe permitir compartir la operación con personas de Negocio sin conocimientos técnicos avanzados. La permanencia de la solución en el tiempo depende de la calidad del legacy.
+  - title: Resumen de herramientas y necesidades técnicas
+    text: Comunicar proactivamente sus necesidades técnicas, de capacitación y accesos requeridos para ejecutar su trabajo en cada sprint. No esperar a que le pregunten si tiene todo lo que necesita.
+    acceptance_criteria: El DS Jr no se queda bloqueado más de 24 horas por falta de un acceso o herramienta sin haberlo comunicado. Sus necesidades están documentadas antes del inicio del sprint, no durante. El equipo no descubre bloqueos evitables porque el DS Jr no los levantó a tiempo.
+    deliverable: Lista actualizada de herramientas, accesos y necesidades técnicas por sprint en el documento compartido del equipo.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: Cada quincena.
+    level_expectation: El DS Jr gestiona proactivamente sus propios accesos y herramientas. Pedir lo que necesitas a tiempo es parte del ownership, no una señal de debilidad.
+    guidance: Este documento permite visualizar al equipo sus objetivos y retos por sprint. Se alinea con el plan de capacitación y desarrollo futuro.
+  - title: Preparación y participación en sesiones con Negocio
+    text: Prepararse para cada sesión con Negocio anticipando preguntas técnicas que puedan surgir sobre los desarrollos bajo su responsabilidad. Llevar respuestas preparadas, no improvisar en sesión.
+    acceptance_criteria: El DS Jr no queda sin respuesta ante preguntas básicas sobre su propio trabajo en sesiones con Negocio. El DS Mid no necesita intervenir para rescatar al DS Jr ante preguntas que debió poder responder. Negocio percibe dominio del DS Jr sobre su scope.
+    deliverable: Lista de al menos 3 preguntas anticipadas y respuestas preparadas antes de cada sesión con Negocio donde participe. Validada con DS Mid antes de la sesión.
+    deliverable_format: Teams, Word, Mail, notas.
+    frequency: Previo a cada sesión con Negocio donde participe.
+    level_expectation: El DS Jr llega a sesiones con Negocio a demostrar lo que construyó, no a descubrir si funciona. La preparación es individual y es obligatoria.
+    guidance: No se trata de memorizar respuestas. Se trata de conocer el propio trabajo lo suficiente para explicarlo. Si no sabes algo, es mejor decirlo honestamente que inventar.
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Llega al sprint planning con estimaciones propias de sus tareas, después de revisar el backlog y los criterios de aceptación.
+
+      • Cumple las fechas que compromete. Cuando no, la desviación es menor y está justificada.
+
+      • Avisa en el daily, o antes, en cuanto detecta que una tarea tomará más de lo estimado, y no el día de la entrega.
+
+      • Cuando le falta información para estimar, pide aclaración o divide la tarea en lugar de dar un número al azar.
+
+      • Si no puede responder en 24 horas, confirma que recibió el mensaje e indica cuándo tendrá la respuesta.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Recibe la retroalimentación sin ponerse a la defensiva: escucha, pregunta para entender y reconoce el punto.
+
+      • Corrige lo señalado en el entregable actual dentro del plazo acordado.
+
+      • No repite en entregables posteriores un error que ya se le señaló.
+
+      • Pide revisión a su Mid o Sr antes de dar un entregable por terminado.
+
+      • Registra la retroalimentación recibida y sus acuerdos en sus checkpoints o 1:1.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: CD
+  level: MID
+  questions:
+  - title: Backlog de tareas
+    text: Mantener y coordinar el backlog de tareas del equipo de Ciencia incluyendo extracciones, ETL, entrenamiento y reentrenamiento de modelos, métricas, sesgo, anomalías, deudas técnicas y validaciones. Coordinar la distribución de tareas con los DS Jr a su cargo.
+    acceptance_criteria: 'El backlog refleja el trabajo real del equipo, no solo el del DS Mid. Las tareas del DS Jr están correctamente definidas, con criterios de aceptación claros. El PM no necesita pedirle al DS Mid que actualice el backlog: lo hace proactivamente antes de cada sprint.'
+    deliverable: Backlog actualizado con control de versiones, con banderas de estatus y responsable por tarea. Distribución de tareas documentada para DS Jr.
+    deliverable_format: Arena OS
+    frequency: Cada sprint.
+    level_expectation: El DS Mid gestiona el backlog como un instrumento de liderazgo, no solo de registro. Es responsable de que las tareas del DS Jr estén bien definidas antes de que las empiece a ejecutar.
+    guidance: El DS Mid encargado alineará el backlog de Ciencia con Producto. Las tareas deben tener bandera de estatus.
+  - title: Comunicar el avance
+    text: Coordinar el plan de actividades, validaciones y responsables del sprint para todo el equipo de Ciencia a su cargo, mantener el avance actualizado en la herramienta de seguimiento correspondiente y comunicarlo a producto en la ceremonia correspondiente. Dar seguimiento a las actividades del DS Jr y detectar desviaciones antes de que impacten entregables.
+    acceptance_criteria: Se refleja el estado real del sprint, no el estado deseado. El DS Mid detecta desviaciones del DS Jr con al menos un día de anticipación antes de que impacten un entregable. El PM no descubre riesgos por primera vez en el weekly status.
+    deliverable: Plan y estatus actualizados en la herramienta correspondiente, con estatus por persona y riesgos y bloqueos comentados.
+    deliverable_format: Arena OS, Jira, Azure DevOps.
+    frequency: Al inicio de cada sprint y actualización continua.
+    level_expectation: 'El DS Mid no solo documenta su propio avance: coordina y da seguimiento al avance de los DS Jr. Detectar un riesgo tarde es una falla de gestión, no una sorpresa inevitable.'
+    guidance: Lo idóneo es que cada elemento del equipo capture sus cambios de estatus conforme ocurran. El DS Mid da seguimiento a los DS Jr o mentees.
+  - title: Aplicar estándares de desarrollo y buenas prácticas
+    text: Aplicar, validar y difundir los estándares de trabajo, desarrollo, buenas prácticas y documentación para los temas de Ciencia dentro del proyecto. Dar seguimiento a su adopción por parte de los DS Jr y corregir desviaciones en el momento en que ocurren.
+    acceptance_criteria: Los DS Jr bajo su cargo aplican los estándares correctamente sin necesidad de correcciones recurrentes por el mismo punto. El DS Mid identifica y corrige desviaciones antes del sprint review, no durante. Un mismo error de estándar no aparece más de dos veces en el mismo DS Jr.
+    deliverable: Estándares documentados y compartidos en Teams. Evidencia de adopción en los entregables de los DS Jr.
+    deliverable_format: Mail, Teams, PPT, PDF, Wiki.
+    frequency: Una vez al inicio del proyecto y confirmado con cada fase de entregas.
+    level_expectation: El DS Mid es el guardián de calidad del equipo. Corregir un error de estándar al final del proyecto tiene un costo mayor que hacerlo cuando ocurre. Debe notarse la capacidad del DS Mid para anticiparse a los errores y omisiones del estándar.
+    guidance: Los estándares deben generarse en Espacio Arena. Las buenas prácticas deben reflejarse en los modelos, pipelines y tableros coordinados por el DS Mid.
+  - title: Diseño de arquitectura de datos
+    text: Alinear con el DS Sr la arquitectura de datos definida y comunicarla con precisión al DS Jr para que la aplique correctamente. Detectar desviaciones de implementación antes del roll-out.
+    acceptance_criteria: El DS Jr no implementa componentes fuera de la arquitectura aprobada por falta de información. El DS Mid puede responder preguntas técnicas de arquitectura del DS Jr sin necesidad de escalarlas al DS Sr en todos los casos. Las desviaciones se detectan durante el sprint, no en el roll-out.
+    deliverable: Comunicación documentada de los lineamientos de arquitectura al DS Jr. Evidencia de revisión de que los desarrollos del DS Jr son consistentes con el diseño.
+    deliverable_format: Canva, Jira, PPT, Teams.
+    frequency: Al final del Discovery o a petición expresa de Producto o Negocio.
+    level_expectation: El DS Mid entiende la arquitectura lo suficiente para comunicarla con claridad y detectar cuando algo se desvía. No es solo un receptor del diseño del DS Sr.
+    guidance: Debe alinearse con el equipo de DE. El DS Mid es el puente de comunicación entre el diseño del Sr y la ejecución del Jr.
+  - title: QA de soluciones que utilizan IA
+    text: Revisar y cuestionar las transformaciones, cálculos y métodos que proponen las herramientas de IA generativa, y validar que son correctos y coherentes con las reglas de negocio. Revisar el QA que hacen los DS Jr a su cargo y corregir desviaciones.
+    acceptance_criteria: El DS Mid no acepta un cálculo o transformación sugerido por la IA sin validarlo contra las reglas de negocio y los datos reales. El DS Sr no descubre en la revisión final cálculos generados por IA que nadie validó.
+    deliverable: Listado de observaciones, mejoras y propuestas. Evidencia de revisión del QA de los DS Jr.
+    deliverable_format: Teams, mail, PPT, PDF o Arena OS
+    frequency: De acuerdo con los requerimientos del proyecto
+    guidance: El DS Mid es el primer filtro de calidad del trabajo del equipo apoyado en IA. Sabe distinguir cuando una respuesta de la herramienta parece correcta pero no aplica al contexto del proyecto.
+  - title: Excelencia técnica de métodos estadísticos
+    text: Coordinar, implementar, ejecutar, evaluar y darle seguimiento, con una base teórica sólida y siguiendo las buenas prácticas del trabajo estadístico, a las distintas pruebas (paramétricas o no), planes de muestreo, pruebas de hipótesis y modelación matemática que requiere el producto, validando cuidadosamente los suspuestos empleados en cada caso.
+    acceptance_criteria: 'El DS Mid no solo integra el código: entiende la fundamentación teórica al elegir un modelo u otro y los justifica con argumentos (frente a Producto o Negocio) dentro de la solución. Discute y propone pruebas, intervalos de confianza, parametrizaciones, errores estadísticos, etc. con el equipo de Ciencia. El DS Sr no descubre desarrollos que no justificaron sólidamente en las reuniones con el equipo de proyecto o con Negocio.'
+    deliverable: Evidencia de que los desarrollos, coordinación, validaciones, pruebas y modelos del DS Mid se apegan a una fundamentación teórica y práctica adecuadas con la naturaleza de la solución. Los supuestos, resultados, desviaciones (y todo lo que forme parte del código) se documentan en minuta, mail o Teams.
+    deliverable_format: Teams, mail, PPT, PDF, archivos de código (*.R, *.py), repositorios, Latex, Mathlab.
+    frequency: Cada sprint, aunque dependerá de la naturaleza misma del proyecto ajustar su frecuencia o a solicitud expresa de Negocio.
+    guidance: 'El DS Mid sabe aplicar la estadística para resolver problemas de negocio y formula hipótesis de trabajo que se apegan a la realidad del proyecto. Sabe coordinar e integrar un modelo estadístico, realizar pruebas (paramétricas o no), corregir desviaciones estadísticas y validar sus supuestos. Participa en las reuniones con Negocio mostrando el avance integrado de la solución y responde preguntas técnicas con veracidad, precisión, espíritu crítico y objetividad: no se espera que lo sepa todo, pero debe saber dónde y qué buscar.'
+  - title: Funcionalidad óptima de código y excelencia técnica en programación
+    text: Coordinar, realizar y supervisar, apegado a las buenas prácticas y requerimientos (técnicos y de infraestructura) establecidos en el proyecto, el código que ejecute la solución (o una parte de ella) definida por Producto o el DS Sr. Dependiendo de la naturaleza del proyecto, integra las soluciones individuales de los DS Jr a su cargo y se cerciora de su correcto funcionamiento y escalabilidad.
+    acceptance_criteria: El DS Mid tiene los conocimientos teóricos y prácticos para integrar la solución ejecutada por su equipo de proyecto, demostrando su excelencia en la programación con sentido de negocio. El DS Sr no encuentra desviaciones al diseño ni fallos en la lógica de la solución en el pase a ambiente productivo.
+    deliverable: Evidencia de las distintas fases de desarrollo e integración, además del código fuente que resuelve el problema de negocio y pasa a ambiente productivo.
+    deliverable_format: Archivos de código (*.R, *.py, etc.), JSON, ejecutables, carpetas en ZIP, repositorios, etc.
+    frequency: Cada sprint, aunque pueden presentarse revisiones de código a solicitud expresa de Negocio.
+    guidance: El DS Mid tiene la responsabilidad de integrar y darle seguimiento a las soluciones individuales del equipo de Ciencia dentro de un proyecto de datos. Su rol como mentor en el ámbito de la programación lo lleva a incorporar prácticas y herramientas que son el estado del arte en la actualidad. Conoce la forma en que está integrada la solución y estructura esta para que Negocio pueda escalarla y mantenerla cuando haya terminado el proyecto.
+  - title: Documentación de reglas de negocio
+    text: Coordinar con el DS Sr la definición de reglas de negocio y distribuir su implementación con el DS Jr. Validar que las reglas están correctamente incorporadas en el pipeline antes del sprint review.
+    acceptance_criteria: Las reglas de negocio están bien definidas y correctamente implementadas antes de llegar al QA formal. El DS Jr no implementa reglas basado en su interpretación propia sin validación del DS Mid. El DS Sr no descubre errores de implementación de reglas al momento del review.
+    deliverable: Documento de reglas de negocio actualizado. Evidencia de revisión de implementación en código del DS Jr.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: En cada sprint planning debe levantarse la incorporación de reglas a los distintos modelos.
+    level_expectation: El DS Mid coordina la distribución del hardcodeo de reglas y valida que la implementación del DS Jr es correcta antes de considerarla done.
+    guidance: Cada regla debe incorporarse antes del pase a productivo. La deprecación de reglas debe considerarse dentro del ciclo de vida del modelo.
+  - title: Rutinas de gestión y control interno — Daily
+    text: Asistir al daily preparado, reportando avance, bloqueos y dependencias de su track y del DS Jr a su cargo. Identificar bloqueos del DS Jr antes de que impacten entregables y gestionarlos activamente.
+    acceptance_criteria: El DS Mid no reporta el mismo bloqueo dos dailys seguidos sin haber tomado una acción. Identifica y comunica bloqueos del DS Jr antes de que el PM los descubra. Sale del daily con acciones claras propias para los bloqueos que dependen de él.
+    deliverable: Participación activa en daily con reporte de avance propio y validación de actividades de los DS Jr. a su cargo. Bloqueos comunicados antes de que impacten entregables.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Diaria.
+    level_expectation: 'El DS Mid da su update de ejecución, coordinación y validación. Levanta y gestiona riesgos activamente: no solo los reporta, toma acción sobre ellos, ya sea dentro de Arena o Negocio.'
+    guidance: Algunas sesiones pueden dedicarse a planning, review o retrospective.
+  - title: Rutinas de gestión y control interno — Touchpoint con DS Lead
+    text: Asistir al touchpoint semanal con el DS Lead preparado, con updates de su track, bloqueos activos, compromisos del período y retro del mentoring con los DS Jr a su cargo.
+    acceptance_criteria: El DS Mid llega con agenda propia al touchpoint. Los compromisos del touchpoint anterior están resueltos o tiene una explicación concreta de por qué no. La retro de mentoring con DS Jr está documentada y refleja acciones concretas y compromisos de ambas partes.
+    deliverable: Sesiones agendadas, ejecutadas y con compromisos documentados. Retro de mentoring documentada.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Semanal.
+    level_expectation: El DS Mid usa el touchpoint para gestionar su carrera y su equipo, no solo para reportar estatus. Demuestra autonomía en la gestión de los DS Jr sin necesitar instrucción constante del Lead.
+    guidance: El seguimiento a compromisos de sesiones previas es lo más importante. Los asuntos internos pueden requerir coordinación con otros del equipo de Analítica.
+  - title: Rutinas de gestión y control interno — Touchpoint con Leads de DE y Producto
+    text: Asistir al touchpoint semanal con los Leads de DE y Producto preparado, con updates de los proyectos que involucran a su equipo, bloqueos inter-equipo y compromisos. Representar al equipo de Ciencia con criterio propio.
+    acceptance_criteria: El DS Mid puede representar al equipo de Ciencia en ausencia del DS Sr sin pérdida de información. Los bloqueos inter-equipo (con DE o Producto) están documentados y en gestión activa. No hay sorpresas de coordinación que impacten el sprint.
+    deliverable: Sesiones agendadas, ejecutadas y con acuerdos documentados en Teams o minuta.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Semanal.
+    level_expectation: El DS Mid representa al equipo de Ciencia con autoridad y criterio. Cuando no tiene respuesta a algo, lo registra y lo resuelve antes de 24 horas.
+    guidance: La frecuencia puede modificarse en función de carga e urgencia. Cuando se acerque el final del período de prueba de un integrante, la sesión de evaluación debe agendarse con 15 días de anticipación.
+  - title: Rutinas de gestión y control interno — Sprint planning
+    text: Asistir al sprint planning preparado, con propuesta de actividades propias y del DS Jr para el sprint, incluyendo estimaciones de tiempo, definitions of completeness, definitions of readiness y dependencias inter-equipo.
+    acceptance_criteria: El DS Mid y el DS Jr salen del planning con claridad total de responsabilidades. Las estimaciones del DS Mid se cumplen en al menos el 75% de los casos. Las actualizaciones al planning se comunican al día, sin esperar al próximo sprint.
+    deliverable: Sesiones agendadas y ejecutadas con distribución de tareas documentada para el DS Jr.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Dependerá del proyecto.
+    level_expectation: 'El DS Mid no solo define sus propias tareas en el planning: define y valida las tareas del DS Jr. Sale del planning con un plan realista y comprometido, no optimista.'
+    guidance: El planning debe tener nivel de detalle suficiente para que cada nivel conozca su responsabilidad. Cualquier actualización debe comunicarse de inmediato.
+  - title: Rutinas de gestión y control interno — Sprint review y retro
+    text: Asistir al sprint review y retro exponiendo resultados propios y del DS Jr, áreas de mejora del equipo y compromisos concretos para el siguiente sprint. Dar retroalimentación honesta y constructiva a los DS Jr.
+    acceptance_criteria: El DS Mid expone resultados con honestidad, incluyendo lo que no se completó y por qué. La retroalimentación al DS Jr es específica, accionable y documentada. Los mismos errores del DS Jr no se repiten sprint a sprint.
+    deliverable: Sesiones agendadas y ejecutadas. Retroalimentación al DS Jr documentada con acuerdos.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Cada que finalice un sprint.
+    level_expectation: El DS Mid da retroalimentación al DS Jr durante la retro, no solo en el touchpoint. 'No tuve tiempo de darle retro' no es una respuesta aceptable.
+    guidance: El review & retro debe perfilar el performance del equipo hacia la excelencia. Debe ser un espacio seguro.
+  - title: Rutinas de gestión y control interno — Biweekly de datos con Negocio
+    text: Preparar y liderar el biweekly de datos con Negocio mostrando avances técnicos, supuestos estadísticos, reglas de negocio y benchmark entre modelos. Llevar respuestas preparadas a preguntas técnicas previsibles.
+    acceptance_criteria: Negocio recibe información técnica clara y accionable. El DS Mid no queda sin respuesta ante preguntas predecibles sobre los modelos bajo su responsabilidad. El DS Sr no necesita intervenir para responder preguntas que el DS Mid debió poder resolver.
+    deliverable: Sesiones ejecutadas con material preparado previamente. Lista de preguntas anticipadas validadas con DS Sr antes de la sesión.
+    deliverable_format: Calendario, chat de Teams, PPT.
+    frequency: Quincenalmente. Puede modificarse a solicitud de Negocio.
+    level_expectation: El DS Mid lidera estas sesiones con preparación y autoridad técnica. No improvisa explicaciones de los modelos ante Negocio.
+    guidance: En estas sesiones puede requerirse la participación del DS Lead. Se espera que sean sesiones técnicas con mucho nivel de detalle.
+  - title: Rutinas de gestión y control interno — Actualización del backlog
+    text: Coordinar y ejecutar las ceremonias de actualización al backlog, justificando adiciones y documentando reducciones con responsable, validador y, cuando aplique, responsable del pase a productivo.
+    acceptance_criteria: Cada actualización al backlog tiene justificación documentada. No hay tareas que 'desaparecen' del backlog sin registro. El PM sabe en todo momento el estado real del backlog sin necesidad de preguntar.
+    deliverable: Sesiones ejecutadas y backlog actualizado con trazabilidad de cambios.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Cada sprint.
+    level_expectation: El DS Mid gestiona el backlog como un contrato del equipo con el proyecto. No agrega ni elimina tareas sin trazabilidad.
+    guidance: Conforme se acerque el final del proyecto será necesario un plan detallado de gestión y priorización del backlog con Producto.
+  - title: Checklist de validaciones
+    text: Definir las pautas de validación del sprint y asegurar que el DS Jr las ejecuta correctamente. Validar los planes de despliegue y el end-to-end de los pipelines desarrollados por el equipo.
+    acceptance_criteria: El DS Jr no entrega componentes sin haber ejecutado el checklist de validaciones. El DS Mid valida el end-to-end del pipeline antes del sprint review. Negocio no descubre errores en la sesión de presentación que debieron detectarse en QA.
+    deliverable: Checklist de validaciones completado por el DS Jr y revisado por el DS Mid. Plan de despliegue y end-to-end del pipeline validados.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: Dependerá de la evolución de los modelos o productos de datos.
+    level_expectation: El DS Mid es el último filtro de calidad antes de que el trabajo llegue al DS Sr o al cliente. No aprueba entregables que no cumplen el checklist.
+    guidance: La validación de datos debe ser parte del ownership del equipo de Ciencia.
+  - title: Plan de deployment y roll-out
+    text: Coordinar y documentar el plan de despliegue y roll-out del equipo de Ciencia, incluyendo respuesta a contingencias y roll-back. Alinearse con el DS Sr para validar el plan antes de ejecutarlo.
+    acceptance_criteria: El plan de roll-out está aprobado por el DS Sr antes de ejecutarse. El DS Jr ejecuta el deployment siguiendo el plan, no improvisando. Ante cualquier contingencia, el equipo sabe exactamente qué hacer porque está documentado.
+    deliverable: Calendario o diagrama de flujo del plan de roll-out con contingencias. Alineación documentada con DS Sr.
+    deliverable_format: XLS, Arena OS, Azure MLOps, Azure DevOps.
+    frequency: Una vez por proyecto (aunque puede modificarse).
+    level_expectation: El DS Mid es responsable de que el plan de roll-out sea realista y que el DS Jr lo entienda completamente antes de ejecutarlo.
+    guidance: El despliegue debe considerarse en la calendarización y planning desde el inicio. Si el producto solo queda en DEV, debe constar con aval de Negocio.
+  - title: Minuta de reuniones con Negocio
+    text: Liderar o apoyar en el registro de acuerdos de sesiones con Negocio. Validar internamente los acuerdos antes de compartirlos con Negocio y asegurar que las actividades derivadas están en el backlog.
+    acceptance_criteria: Las minutas del DS Mid no requieren correcciones de redacción por parte del PM o DS Sr. Los acuerdos de Negocio se convierten en tareas del backlog sin necesidad de un seguimiento adicional del PM. Negocio avala la minuta sin observaciones mayores.
+    deliverable: Minutas claras, revisadas internamente y compartidas con Negocio con su aval. Actividades derivadas reflejadas en backlog.
+    deliverable_format: Email, XLS, Word, Arena OS, PDF, PPT.
+    frequency: Cada reunión con Negocio donde surjan actividades no registradas en el planning y/o backlog.
+    level_expectation: El DS Mid se asegura de que los acuerdos de Negocio no se pierdan entre la sesión y el planning. La minuta es parte de su ownership del proyecto.
+    guidance: La minuta es una herramienta de gestión de acuerdos, no solo un registro. Debe pensarse como algo que se compartirá con Negocio.
+  - title: Checklist de documentación y revisiones de código
+    text: Documentar la arquitectura del pipeline y la integración de módulos que coordine. Revisar la documentación del DS Jr y asegurarse de que cumple el checklist acordado antes de considerarla como entregable.
+    acceptance_criteria: La documentación del DS Jr pasa la revisión del DS Mid sin observaciones mayores en más del 80% de los casos. La arquitectura del pipeline está documentada y puede ser entendida por otro DS sin necesidad de preguntar al DS Mid. Las wikis reflejan el estado actual del producto, no una versión desactualizada.
+    deliverable: Documentación de arquitectura de pipeline e integración de módulos. Revisión de documentación del DS Jr con observaciones y aceptación.
+    deliverable_format: XLS, Word, Wiki, PDF, PPT, MP4.
+    frequency: Una sola vez hacia el final del proyecto (aunque puede actualizarse).
+    level_expectation: El DS Mid hace code reviews y revisiones de documentación como parte regular de su trabajo, no como una actividad extra.
+    guidance: La documentación es competencia del DS Mid y DS Jr principalmente. El DS Sr puede requerirse para wikis con diseño y modelación estadística.
+  - title: Plan de KT y legacy
+    text: Coordinar el KT de Ciencia a Negocio y ser responsable conjunto con el DS Sr del legacy de la solución. Asegurarse de que Negocio puede operar el producto de forma autónoma al final del proyecto.
+    acceptance_criteria: 'El KT no termina cuando Arena dice que terminó: termina cuando Negocio puede operar sin apoyo. El DS Mid no cierra el proyecto con deudas técnicas de legacy no documentadas. Negocio no regresa con preguntas post-cierre sobre funcionalidades básicas.'
+    deliverable: Plan de KT ejecutado. Evidencia de que Negocio puede ejecutar el producto end-to-end. Requisitos técnicos de legacy documentados.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT, calendario de Teams.
+    frequency: Una sola vez hacia el final del proyecto (aunque puede actualizarse).
+    level_expectation: El DS Mid se hace responsable de que la solución sobreviva después de que Arena se vaya. El legacy es un producto, no un checklist.
+    guidance: El KT debe permitir compartir la operación con personas sin conocimientos técnicos avanzados. El legacy asegura la permanencia de la solución.
+  - title: Resumen de herramientas y necesidades técnicas
+    text: Comunicar y gestionar proactivamente las necesidades técnicas del equipo de Ciencia (herramientas, accesos, capacitaciones) por sprint. Dar seguimiento a la retro de su rol como mentor.
+    acceptance_criteria: El equipo de Ciencia no se queda bloqueado por falta de accesos o herramientas que el DS Mid pudo haber anticipado. La retro de mentoring está actualizada y refleja progreso real de los DS Jr. El Lead no descubre necesidades del equipo que el DS Mid sabía.
+    deliverable: Documento actualizado con necesidades del equipo. Retro de mentoring documentada en touchpoints.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: Cada quincena.
+    level_expectation: El DS Mid anticipa las necesidades del equipo antes de que se conviertan en bloqueos. Gestionar proactivamente es parte de su liderazgo.
+    guidance: El documento permite visualizar al equipo quincenalmente. Se alinea con planes de capacitación y desarrollo futuro.
+  - title: Preparación y participación en sesiones con Negocio
+    text: Preparar sesiones con Negocio anticipando preguntas técnicas de nivel medio y alto sobre los modelos bajo su responsabilidad. Traducir resultados técnicos a lenguaje de negocio de forma clara y sin simplificar en exceso.
+    acceptance_criteria: Negocio entiende los resultados y limitaciones de los modelos sin necesidad de que el DS Sr o PM intervenga para aclarar. El DS Mid puede explicar trade-offs técnicos en términos de impacto de negocio. Negocio no hace la misma pregunta dos sesiones seguidas.
+    deliverable: Material de sesión preparado. Lista de preguntas anticipadas y respuestas. Validado con DS Sr antes de sesiones críticas.
+    deliverable_format: Teams, PPT, Word.
+    frequency: Previo a cada sesión con Negocio donde participe.
+    level_expectation: 'El DS Mid es el puente entre la ciencia y el negocio. No solo entiende los modelos: sabe explicar su valor y sus limitaciones en términos que Negocio puede tomar decisiones con ellos.'
+    guidance: La traducción técnica a lenguaje de negocio es una habilidad que se entrena. Practicar la explicación antes de la sesión es obligatorio para el DS Mid.
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Estima sus tareas y las del Jr a su cargo, e incluye dependencias, validaciones y tiempos de respuesta del cliente.
+
+      • Al cierre de cada sprint compara lo estimado contra lo real y ajusta sus siguientes estimaciones.
+
+      • Detecta a tiempo cuando las tareas del Jr están en riesgo y actúa (reprioriza, apoya o escala) antes de que afecten el entregable.
+
+      • Cuando comunica un retraso, lo acompaña de nueva fecha, impacto y alternativas.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide retroalimentación a su líder, a sus pares y al cliente sin esperar la evaluación formal.
+
+      • Convierte la retroalimentación en acciones concretas con fecha y les da seguimiento.
+
+      • Cuando no está de acuerdo, lo argumenta con datos y de forma respetuosa, y después cumple lo acordado.
+
+      • En cada retro propone mejoras concretas a su propio trabajo y muestra avance de un sprint a otro.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: CD
+  level: SNR
+  questions:
+  - title: Backlog de tareas
+    text: Definir y mantener el backlog técnico del equipo de Ciencia, incluyendo deuda técnica, entrenamiento/reentrenamiento de modelos, métricas, sesgo, anomalías y validaciones. Asegurar que el backlog está priorizado de acuerdo con el valor al cliente y la viabilidad técnica, no solo con la urgencia operativa.
+    acceptance_criteria: El DS Sr puede explicar al PM y a Negocio por qué las tareas están priorizadas en ese orden. La priorización refleja criterio técnico, no solo urgencia inmediata. El DS Sr detecta deuda técnica y la incluye en el backlog antes de que se convierta en un riesgo al proyecto.
+    deliverable: Backlog priorizado con control de versiones. Justificación documentada de la priorización técnica. Distribución de tareas validada para DS Mid y DS Jr.
+    deliverable_format: Arena OS
+    frequency: Cada sprint.
+    level_expectation: 'El DS Sr prioriza el backlog con criterio técnico y de negocio. No solo registra tareas: decide qué es urgente, qué es importante y qué puede esperar, y puede defender esa decisión ante Negocio y Producto.'
+    guidance: El DS de mayor nivel será el encargado de llenar y priorizar el backlog en ausencia de DS Lead. Las tareas deben tener bandera de estatus.
+  - title: Comunicar el avance
+    text: Coordinar con el DS Mid la distribución de tareas del sprint y asegurar que el plan refleja las fases de diseño y modelación con el nivel de detalle necesario. Mantener el plan y el avance actualizados en la herramienta de seguimiento correspondiente y comunicarlos a producto en la ceremonia correspondiente. Detectar riesgos estructurales del sprint antes de que ocurran.
+    acceptance_criteria: 'El PM no descubre riesgos técnicos estructurales por primera vez en el weekly status: el DS Sr los comunicó antes. El plan del sprint es realista y ejecutable con el equipo disponible. El DS Mid puede ejecutar el sprint sin supervisión constante del DS Sr.'
+    deliverable: Plan actualizado en la herramienta correspondiente, con fases de diseño y modelación, y riesgos técnicos estructurales identificados y comentados antes del inicio del sprint.
+    deliverable_format: Arena OS, Jira, Azure DevOps.
+    frequency: Al inicio de cada sprint y actualización continua.
+    level_expectation: El DS Sr diseña el sprint, no solo lo aprueba. Su responsabilidad es que el plan sea técnicamente sólido antes de que el equipo lo empiece a ejecutar.
+    guidance: La fase de diseño y modelación debe estar consignada a alto nivel, vinculada con la documentación o wiki correspondiente.
+  - title: Aplicar estándares de desarrollo y buenas prácticas
+    text: Definir los estándares de trabajo, desarrollo y buenas prácticas, aplicarlos y asegurar su adopción en todos los entregables del equipo de Ciencia. Resolver conflictos entre los estándares de Arena y los requerimientos de Negocio con criterio técnico documentado.
+    acceptance_criteria: Los entregables del equipo cumplen con estándares sin necesidad de correcciones recurrentes en el mismo punto. Cuando hay conflicto entre estándares de Arena y requisitos de Negocio, el DS Sr toma una decisión documentada y la comunica al equipo. Los estándares no son negociables por razones de comodidad, sino solo cuando hay justificación técnica.
+    deliverable: Estándares definidos y documentados. Evidencia de revisión de su aplicación en entregables del equipo. Criterio documentado ante conflictos estándar Arena vs. Negocio.
+    deliverable_format: Mail, Teams, PPT, PDF, Wiki.
+    frequency: Una vez al inicio del proyecto y confirmado con cada fase de entregas.
+    level_expectation: El DS Sr es el árbitro técnico de calidad del equipo. Su criterio sobre estándares y buenas prácticas es la referencia para el DS Mid y DS Jr.
+    guidance: El DS Sr aplica el criterio conservador y el principio de parsimonia del trabajo estadístico.
+  - title: Diseño de arquitectura de datos
+    text: Diseñar, documentar y validar con DE y Producto la arquitectura de datos necesaria para el despliegue de soluciones en ambiente productivo. Comunicar explícitamente los componentes que no existen en el ecosistema de Negocio o que implican costos adicionales.
+    acceptance_criteria: El Owner técnico de Negocio entiende la arquitectura y la aprueba formalmente. No hay componentes faltantes descubiertos durante el despliegue. El DS Mid y DS Jr pueden implementar dentro del diseño de arquitectura sin necesidad de preguntar al DS Sr en cada paso.
+    deliverable: Diseño de arquitectura documentado a nivel gráfico y narrativo. Validación documentada con DE y Owner técnico de Negocio. Lista explícita de componentes nuevos o de costo adicional.
+    deliverable_format: Canva, Jira, PPT.
+    frequency: Al final del Discovery o a petición expresa de Producto o Negocio.
+    level_expectation: El DS Sr diseña para producción, no para demo. Su arquitectura debe ser escalable, mantenible y operable por Negocio. No es aceptable un diseño de arquitectura que solo funciona bajo condiciones ideales.
+    guidance: Debe alinearse con el equipo de DE. El DS Sr define la arquitectura de datos, es el documento de mayor responsabilidad técnica del proyecto.
+  - title: QA de soluciones que utilizan IA
+    text: Validar la lógica de las soluciones construidas con IA generativa, los pipelines de datos y la integración de soluciones multiagente antes de aprobar su implementación. Definir los criterios de validación que el equipo debe aplicar (pruebas, evals, casos límite) y cuestionar si la IA es la mejor alternativa para el problema de negocio.
+    acceptance_criteria: Ninguna solución con componentes de IA pasa a productivo sin la aprobación documentada del DS Sr. El equipo aplica los criterios de validación sin supervisión constante. El DS Lead no descubre riesgos (alucinaciones, sesgos, costos, seguridad de datos) que no se discutieron antes.
+    deliverable: Criterios de validación definidos. Observaciones y aprobación documentada antes del pase a productivo.
+    deliverable_format: Teams, mail, PPT, PDF o Arena OS
+    frequency: De acuerdo con los requerimientos del proyecto
+    guidance: El DS Sr es el árbitro técnico de las soluciones con IA. Su visto bueno significa que la solución es confiable, trazable y explicable ante Negocio.
+  - title: Excelencia técnica de métodos estadísticos
+    text: Diseñar, coordinar, implementar, ejecutar, evaluar y criticar, con bases teóricas sólidas y buenas prácticas del trabajo estadístico, todos los aspectos matemáticos o estadísticos (modelos, pruebas de hipótesis, pruebas, muestreo, etc.) que requiera el producto, validando cuidadosamente los suspuestos que defina o elija en cada caso.
+    acceptance_criteria: El DS Sr no solo define modelos y pruebas estadísticas, justifica su elección con solidez teórica frente a Producto y Negocio. Define los supuestos para las distintas pruebas y modelos con el equipo de Analítica. A su expertise técnico, se suma un buen sentido de negocio que le permite flexibilizar el rigor matemático de su propuesta. El DS Lead no descubre problemas estadísticos que no discutieron previamente en las reuniones internas de Ciencia, el equipo de proyecto o con Negocio.
+    deliverable: Evidencia de que su trabajo estadístico y matemático se apega a una fundamentación teórica y práctica adecuadas con la naturaleza del problema de negocio. Las hipótesis, modelos, resultados, desviaciones, etc. se documentan en minuta, mail o Teams.
+    deliverable_format: Teams, mail, PPT, PDF, archivos de código (*.R, *.py), repositorios, Latex, Mathlab.
+    frequency: Cada sprint, aunque dependerá de la naturaleza misma del proyecto ajustar su frecuencia o a solicitud expresa de Negocio.
+    level_expectation: El Ds Sr demuestra su conocimiento y dominio de la Ciencia de Datos respondiendo consultas (internas y externas) que tienen que ver con estadística, programación y gestión de proyectos.
+    guidance: 'El DS Sr usa la estadística para resolver problemas de negocio y propone el plan de trabajomás adecuado para la realidad del proyecto. Define los modelos estadísticos y pruebas (paramétricas o no), anticipando sus desviaciones y  supuestos, dando los criterios para elegir una solución u otra. Participa en las reuniones con Negocio mostrando su conocimiento de la solución y responde preguntas técnicas con veracidad, precisión, espíritu crítico y objetividad: no se espera que lo sepa todo, pero debe saber dónde y qué buscar.'
+  - title: Funcionalidad óptima de código y excelencia técnica en programación
+    text: Diseñar, asignar y supervisar, apegado a las buenas prácticas y requerimientos (técnicos y de staff) establecidos en el proyecto, el pseudocódigo y los algoritmos que resuelven el problema de negocio. Dependiendo de la naturaleza del proyecto, le da seguimiento a la integración de pipelines, soluciones de GenAI, modelos de analítica avanzada y POC, cerciorándose de su correcto funcionamiento, mantenimiento, accesibilidad y escalabilidad.
+    acceptance_criteria: El DS Srtiene los conocimientos teóricos y prácticos, así como el sentido de negocio necesario para diseñar una solución óptima de acuerdo con los lineamientos del problema de negocio. Cuando más de una solución es posible, el DS Sr sabe defender su elección con bases teóricas alineadas con el ecosistema informático y tomando en consideración las métricas más adecuadas a la naturaleza del negocio.
+    deliverable: Evidencia de las distintas fases de diseño, asignación y supervisión, ya sea en términos de pseudocódigo, diagramas de flujo, análisis de algortimos, evals, etc. que resuelven el problema de negocio; así como de su pase a productivo.
+    deliverable_format: PDF, Word, PPT, mail, Teams, etc.
+    frequency: Cada sprint, aunque pueden presentarse revisiones de código a solicitud expresa de Negocio.
+    level_expectation: EL DS Sr es quien, desde el diseño de la solución, establece las pautas de calidad y buenas prácticas informáticas en los productos de datos en Arena.
+    guidance: El DS Sr da seguimiento a las soluciones informáticas de los productos de datos, acompañando al DS Mid en la integración de la solución y el pase a productivo. Él conoce la estructura de la solución y, basado en criterios de optimización informática, orienta y auxilia a Producto en el diseño y la elección de la implementación. Su rol como mentor en el ámbito de la programación lo lleva a mantenerse al día para ofrecer lo más nuevo y lo mejor en el flujo de trabajo del equipo. Sabe cómo integrar los productos de datos de manera escalable, mantenible y documentada para que duren en el tiempo.
+  - title: Documentación de reglas de negocio
+    text: Definir y validar con Negocio y Producto las reglas de negocio dentro de los supuestos estadísticos del proyecto. Supervisar su correcta implementación en el pipeline y gestionar la deprecación de reglas que pierdan vigencia.
+    acceptance_criteria: Las reglas de negocio tienen supuestos explícitos y fechas de revisión. El DS Sr puede defender estadísticamente la incorporación de cada regla ante Negocio. Las reglas deprecadas están documentadas y su eliminación no rompe el pipeline. El DS Mid no implementa reglas sin haber sido revisadas por el DS Sr.
+    deliverable: Documento de reglas de negocio con definición, supuestos, validación, benchmark y fecha de revisión. Evidencia de validación de la implementación en el pipeline.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: En cada sprint planning debe levantarse la incorporación de reglas a los distintos modelos.
+    level_expectation: El DS Sr es el responsable estadístico de las reglas de negocio. Puede explicar matemáticamente por qué una regla es válida y bajo qué condiciones dejaría de serlo.
+    guidance: La incorporación de reglas afecta la comparabilidad del performance de los modelos. Cada regla debe incorporarse antes del pase a productivo.
+  - title: Rutinas de gestión y control interno — Daily
+    text: Asistir al daily reportando su avance en definición, coordinación y validación. Identificar y anticipar riesgos del sprint como principal responsable de la gestión de riesgos técnicos del equipo de Ciencia.
+    acceptance_criteria: El DS Sr no reporta el mismo riesgo técnico dos dailys seguidos sin haber tomado una acción concreta. Los riesgos que levanta el DS Sr son técnicamente fundados, no especulativos. El PM y el DS Lead confían en el juicio del DS Sr para escalar o no un riesgo.
+    deliverable: Participación activa en daily con reporte de avance y riesgos técnicos identificados. Acciones de mitigación comunicadas.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Diaria.
+    level_expectation: 'El DS Sr es el principal responsable de anticipar riesgos técnicos del equipo. No solo los reporta: propone y ejecuta mitigaciones.'
+    guidance: Algunas sesiones pueden dedicarse a planning, review o retrospective.
+  - title: Rutinas de gestión y control interno — Touchpoint con DS Lead
+    text: Asistir al touchpoint semanal con el DS Lead preparado con updates de proyectos, riesgos técnicos, plan de mentoring y compromisos del período. En ausencia del DS Lead, asumir la conducción del touchpoint.
+    acceptance_criteria: El DS Sr puede conducir el touchpoint en ausencia del DS Lead sin pérdida de información. El plan de mentoring del DS Mid está documentado y refleja progreso real. Los compromisos del DS Sr del período anterior están resueltos o tiene explicación concreta.
+    deliverable: Sesiones agendadas y ejecutadas. Plan de mentoring documentado y actualizado.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Semanal.
+    level_expectation: El DS Sr usa el touchpoint para crecer como líder técnico y para dar cuenta de su responsabilidad como mentor del DS Mid. No solo reporta, reflexiona, dialoga y se compromete con el equipo.
+    guidance: El seguimiento a compromisos de sesiones previas es lo más importante. El DS Sr debe incluir su plan de capacitación y expectativa de desarrollo.
+  - title: Rutinas de gestión y control interno — Touchpoint con Leads de DE y Producto
+    text: Asistir al touchpoint con los Leads de DE y Producto representando al equipo de Ciencia con criterio propio. En ausencia del DS Lead, ser el vocero del equipo y documentar los acuerdos inter-equipo.
+    acceptance_criteria: El DS Sr puede tomar decisiones técnicas inter-equipo de manera autónoma dentro del scope del proyecto. La retro del desempeño de los integrantes del equipo está documentada en estas sesiones para que el equipo de Analítica pueda emitir una opinión informada. No hay acuerdos inter-equipo que se pierden por falta de documentación.
+    deliverable: Sesiones agendadas y ejecutadas. Acuerdos inter-equipo documentados. Decisiones técnicas relevantes registradas.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Semanal.
+    level_expectation: El DS Sr es el vocero técnico del equipo de Ciencia. Representa al equipo con criterio, no solo transmitiendo mensajes del DS Lead.
+    guidance: La frecuencia puede modificarse en función de carga e urgencia. En ausencia del DS Lead, el DS Sr asume esta responsabilidad.
+  - title: Rutinas de gestión y control interno — Sprint planning
+    text: Liderar el sprint planning definiendo qué ejecutará, coordinará y validará durante el sprint. Hacer challenge de las actividades del equipo que no estén alineadas, no sean realistas o tengan definiciones incompletas.
+    acceptance_criteria: Ninguna tarea entra al sprint sin definition of completeness y definition of readiness claras. El DS Sr hace challenge de estimaciones irreales antes de comprometerse. El equipo sale del planning con un plan técnicamente ejecutable, no optimista.
+    deliverable: Sesiones ejecutadas con distribución de tareas y definitions of completeness documentadas. Actividades desafiadas y justificación registrada.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Dependerá del proyecto.
+    level_expectation: El DS Sr no permite que el equipo entre a un sprint con definiciones incompletas. Su responsabilidad es asegurar que el planning sea técnicamente sólido.
+    guidance: Cualquier actualización al planning debe comunicarse de inmediato. No es necesario esperar al próximo planning.
+  - title: Rutinas de gestión y control interno — Sprint review y retro
+    text: Exponer su desempeño en el sprint review y retro, identificar áreas de mejora propias y del equipo, y proponer cambios concretos para el siguiente sprint. Dar retroalimentación técnica profunda al DS Mid.
+    acceptance_criteria: Las áreas de mejora identificadas por el DS Sr en la retro se ven reflejadas en cambios concretos en el siguiente sprint. La retroalimentación al DS Mid es técnicamente específica y accionable, no genérica. El DS Sr recibe feedback del equipo sin ponerse a la defensiva.
+    deliverable: Sesiones ejecutadas. Retroalimentación al DS Mid documentada con acuerdos.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Cada que finalice un sprint.
+    level_expectation: El DS Sr modela la cultura de mejora continua del equipo. Si él no recibe feedback bien, el DS Mid tampoco lo hará.
+    guidance: El review & retro debe perfilar el performance del equipo hacia la excelencia. Debe ser un espacio seguro.
+  - title: Rutinas de gestión y control interno — Biweekly de datos con Negocio
+    text: Liderar el biweekly de datos con Negocio mostrando supuestos estadísticos, reglas de negocio, benchmark entre modelos y arquitectura del producto de datos. Validar supuestos con Negocio y documentar acuerdos.
+    acceptance_criteria: Negocio entiende y acepta los supuestos estadísticos del modelo. Las decisiones técnicas del DS Sr están respaldadas por datos y documentadas. Negocio no hace preguntas básicas sobre la arquitectura del producto porque ya fueron respondidas en sesiones anteriores.
+    deliverable: Sesiones ejecutadas con material preparado. Supuestos y acuerdos documentados en minuta.
+    deliverable_format: Calendario, chat de Teams, PPT.
+    frequency: Quincenalmente. Puede modificarse a solicitud de Negocio.
+    level_expectation: El DS Sr lidera estas sesiones como experto, no como facilitador. Su valor es su criterio técnico, no su capacidad de moderar.
+    guidance: El DS Lead puede ser requerido para estas sesiones dependiendo del nivel de complejidad. Se espera mucho nivel de detalle técnico.
+  - title: Rutinas de gestión y control interno — Actualización del backlog
+    text: Supervisar y coordinar las ceremonias de actualización al backlog, asegurando que cualquier redistribución de trabajo esté validada técnicamente y sea realista para el equipo disponible.
+    acceptance_criteria: Las actualizaciones al backlog tienen justificación técnica documentada. El PM sabe que el DS Sr ha evaluado el impacto de cada cambio antes de aprobarlo. No hay tareas en el backlog técnicamente inviables que no hayan sido identificadas como riesgos.
+    deliverable: Sesiones ejecutadas y backlog actualizado con trazabilidad de cambios. Redistribuciones de trabajo validadas con el PM.
+    deliverable_format: Calendario, chat de Teams.
+    frequency: Cada sprint.
+    level_expectation: El DS Sr valida técnicamente toda redistribución de trabajo. No acepta cambios al backlog que no sean técnicamente viables con el equipo y tiempo disponibles.
+    guidance: Conforme se acerque el final del proyecto será necesario un plan detallado de gestión del backlog con Producto.
+  - title: Checklist de validaciones
+    text: Definir los criterios de validación estadística del sprint, incluyendo horizontes de reentrenamiento, QA de modelos y arquitecturas de datos. Ser el árbitro final de la validez de un criterio de aceptación técnico.
+    acceptance_criteria: El DS Sr puede defender estadísticamente cada criterio de aceptación del checklist. Cuando hay duda sobre la validez de un criterio, el DS Sr toma la decisión y la documenta. El pipeline pasa el QA del DS Sr antes de llegar a Negocio.
+    deliverable: Checklist de validaciones con criterios estadísticos definidos. Validación del end-to-end del pipeline aprobada por el DS Sr. y PM.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: Dependerá de la evolución de los modelos o productos de datos.
+    level_expectation: El DS Sr no aprueba un entregable que no puede defender técnicamente. Su firma en el checklist significa que lo revisó, no que confía en que el DS Mid lo revisó.
+    guidance: La validación de hipótesis estadísticas y QA de arquitecturas son competencia del DS Sr. En caso de challenge, debe buscarse validación cruzada con Producto o Negocio.
+  - title: Plan de deployment y roll-out
+    text: Diseñar el plan de despliegue y respuesta a contingencias del equipo de Ciencia. Asesorar al DS Mid y DS Jr sobre el plan de roll-back. Asegurarse de que el plan está alineado con los tiempos de Producto y Negocio.
+    acceptance_criteria: 'El plan de deployment no improvisa ante contingencias: las contempla explícitamente. El DS Mid puede ejecutar el deployment siguiendo el plan sin necesidad de que el DS Sr esté presente en todo momento. Negocio acepta el plan y sus tiempos antes de la ejecución.'
+    deliverable: Plan de deployment y roll-out documentado con diagrama de flujo, contingencias y roll-back. Alineación documentada con Producto y Negocio.
+    deliverable_format: XLS, Arena OS, Azure MLOps, Azure DevOps.
+    frequency: Una vez por proyecto (aunque puede modificarse).
+    level_expectation: El DS Sr diseña un plan de deployment que funciona incluso cuando las cosas salen mal. La robustez del plan ante contingencias es su responsabilidad técnica.
+    guidance: El despliegue debe contemplarse en la calendarización desde el inicio del proyecto. Si el producto solo queda en DEV, debe constar con aval de Negocio.
+  - title: Minuta de reuniones con Negocio
+    text: Liderar sesiones técnicas con Negocio y asegurarse de que los acuerdos de alto impacto técnico están correctamente documentados. Revisar y aprobar internamente las minutas del DS Mid antes de compartirlas con Negocio.
+    acceptance_criteria: Ningún acuerdo técnico de alto impacto llega a Negocio sin haber sido revisado por el DS Sr. Las minutas bajo su responsabilidad son claras, sin ambigüedades técnicas. Negocio avala las minutas sin observaciones sobre imprecisiones técnicas.
+    deliverable: Minutas aprobadas por el DS Sr antes de compartirlas con Negocio cuando involucran definiciones técnicas de alto impacto. Acuerdos reflejados en el backlog.
+    deliverable_format: Email, XLS, Word, Arena OS, PDF, PPT.
+    frequency: Cada reunión con Negocio donde surjan actividades no registradas en el planning y/o backlog.
+    level_expectation: El DS Sr es responsable de que los acuerdos técnicos con Negocio sean precisos y ejecutables. Un acuerdo ambiguo es un riesgo de retrabajo.
+    guidance: Los acuerdos con Negocio deben revisarse internamente antes de presentarlos. La minuta es una herramienta de gestión, no un registro burocrático.
+  - title: Checklist de documentación y revisiones de código
+    text: Definir los requisitos de documentación del proyecto según la expectativa de Negocio y las buenas prácticas de Arena. Hacer la revisión final de código y documentación antes del cierre del proyecto.
+    acceptance_criteria: La documentación final del proyecto cumple con el checklist aprobado sin necesidad de correcciones de última hora. El código revisado por el DS Sr no tiene errores técnicos que comprometan la operación en producción. Negocio puede operar el producto sin necesidad de pedir aclaraciones al equipo post-cierre.
+    deliverable: Checklist de documentación con requisitos aprobados. Revisión final de código y documentación realizada por el DS Sr antes del cierre.
+    deliverable_format: XLS, Word, Wiki, PDF, PPT, MP4.
+    frequency: Una sola vez hacia el final del proyecto (aunque puede actualizarse).
+    level_expectation: El DS Sr hace la última revisión antes de entregar. Su firma en el cierre del proyecto significa que el producto está listo para producción, no que confía en que alguien más lo verificó.
+    guidance: Las revisiones de código deben ser llevadas por el DS Sr para obtener la mayor certeza y evitar retrabajos. El DS Sr define qué debe incluir la documentación.
+  - title: Plan de KT y legacy
+    text: Definir y supervisar el plan de KT y legacy. Asegurar que la solución es escalable, mantenible y operable por Negocio. Participar en las sesiones de KT críticas con Negocio.
+    acceptance_criteria: Negocio puede operar el producto en producción sin necesidad de contactar a Arena. El legacy está correctamente dockerizado y versionado. Las sesiones de KT con el DS Sr añaden valor técnico, no solo presencia.
+    deliverable: Plan de KT y legacy documentado. Sesiones de KT ejecutadas con participación del DS Sr en los momentos críticos. Evidencia de que Negocio puede operar la solución.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT, calendario de Teams.
+    frequency: Una sola vez hacia el final del proyecto (aunque puede actualizarse).
+    level_expectation: El DS Sr define qué legacy deja Arena. La durabilidad y escalabilidad de la solución son su responsabilidad técnica.
+    guidance: El KT debe permitir operar la solución con personas sin conocimientos técnicos avanzados. El legacy asegura la permanencia de la solución.
+  - title: Resumen de herramientas y necesidades técnicas
+    text: Anticipar y comunicar las necesidades técnicas del equipo de Ciencia a nivel de herramientas, licencias y capacidades. Supervisar el avance del plan de mentoring del DS Mid.
+    acceptance_criteria: El DS Sr anticipa las necesidades técnicas del equipo con al menos un sprint de anticipación. El plan de mentoring del DS Mid refleja progreso real y acciones concretas. El DS Lead no descubre necesidades del equipo que el DS Sr sabía.
+    deliverable: Documento actualizado con necesidades técnicas del equipo. Plan de mentoring del DS Mid actualizado y con progreso documentado.
+    deliverable_format: XLS, Word, Arena OS, PDF, PPT.
+    frequency: Cada quincena.
+    level_expectation: El DS Sr anticipa, no reacciona. Sus necesidades técnicas y las del equipo están previstas antes de que se conviertan en bloqueos.
+    guidance: El DS Lead actualiza el documento. El DS Sr aporta las necesidades del equipo y el progreso del mentoring.
+  - title: Preparación y participación en sesiones con Negocio
+    text: Preparar y liderar sesiones con Negocio anticipando preguntas de alto nivel técnico y estratégico sobre los modelos y la arquitectura. Proponer el enfoque correcto cuando Negocio plantea una solución técnicamente inviable o subóptima.
+    acceptance_criteria: Negocio toma decisiones informadas basadas en las recomendaciones técnicas del DS Sr. El DS Sr puede redirigir una solución técnicamente inviable sin generar fricción con Negocio. Los stakeholders de Negocio confían en el criterio técnico del DS Sr.
+    deliverable: Material de sesión preparado con nivel de detalle técnico apropiado para el perfil del stakeholder. Instancias documentadas donde el DS Sr propuso una alternativa técnica mejor a lo solicitado por Negocio.
+    deliverable_format: Teams, PPT, Word.
+    frequency: Previo a cada sesión con Negocio donde participe.
+    level_expectation: El DS Sr es un asesor técnico para Negocio, no solo un ejecutor. Cuando Negocio está equivocado técnicamente, el DS Sr lo dice con datos, pero sin olvidar el tacto.
+    guidance: 'El DS Sr no solo responde preguntas: propone soluciones. Su valor en sesiones con Negocio es su criterio técnico, no su capacidad de presentar.'
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Cuestiona las estimaciones irreales, propias, del equipo o del cliente, antes de comprometerse. El equipo sale del planning con un plan ejecutable, no optimista.
+
+      • Evita que una tarea se comprometa sin definición de terminado y de listo claras.
+
+      • Anticipa los riesgos de plazo (dependencias, accesos, cambios de alcance) y los escala con una acción concreta.
+
+      • Ante cambios de alcance, negocia fechas con el PM o el cliente y explica el impacto en tiempo.
+
+      • Su equipo cumple de forma consistente lo comprometido en cada sprint.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide a su equipo, incluidos Jr y Mid, retroalimentación sobre su forma de trabajar y liderar, y la aplica.
+
+      • Usa la retroalimentación del cliente para ajustar el enfoque del proyecto, no solo el entregable puntual.
+
+      • Muestra cambios sostenidos en las áreas de mejora señaladas en evaluaciones anteriores.
+
+      • Cuando una retroalimentación se repite, la convierte en mejoras al estándar del equipo (checklists, plantillas).
+
+      • Genera espacios (retro, 1:1) donde el equipo puede dar retroalimentación sin temor.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: CD
+  level: LEAD
+  questions:
+  - title: Aseguramiento de calidad técnica del equipo — Seguimiento a checklists
+    text: Realizar seguimiento a los DS Sr/Mid de sus proyectos para evaluar el cumplimiento de sus checklists correspondientes. Documentar hallazgos y dar retro directa en sesión 1:1.
+    acceptance_criteria: Existe una sesión de retroalimentación 1:1 con cada DS evaluado donde se revisan fortalezas, áreas de mejora y acuerdos de acción concretos. El DS Lead puede evidenciar el progreso de cada DS entre una evaluación y la siguiente. Los mismos hallazgos no se repiten en la siguiente evaluación sin una razón documentada.
+    deliverable: Checklist de cada DS evaluado documentado y compartido en sesión de retro. Evidencia de los acuerdos y compromisos de mejora.
+    deliverable_format: Correo, Teams, XLS.
+    frequency: Mensual / Bimestral.
+    level_expectation: 'El DS Lead evalúa a sus DS Sr/Mid con criterio técnico y de liderazgo. Su retroalimentación no solo señala errores: propone cómo mejorar y da seguimiento a que la mejora ocurra.'
+    guidance: El DS Lead es el responsable de que los estándares de calidad técnica de Arena se cumplan en todos los proyectos bajo su cargo. La retro debe ser específica y accionable, no genérica.
+  - title: Aseguramiento de calidad técnica del equipo — Cumplimiento PMO y estándares de arquitectura
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades de la Oficina de PMO y con los estándares técnicos de Arena. Identificar brechas y escalarlas al director de Analítica cuando no puedan resolverse a nivel de proyecto.
+    acceptance_criteria: El equipo de la Oficina de PMO no necesita perseguir al DS Lead para que las actividades se cumplan. Las brechas técnicas identificadas tienen un responsable, una fecha de resolución y seguimiento documentado. El director de Analítica no descubre brechas que el DS Lead ya conocía.
+    deliverable: Actividades de PMO cumplidas en tiempo y forma. Brechas técnicas documentadas y con plan de acción.
+    deliverable_format: Según guía Oficina de PMO, correo, Teams.
+    frequency: Semanal.
+    level_expectation: 'El DS Lead no solo asegura que las actividades de PMO están hechas: asegura que están bien hechas. La diferencia entre entregar y entregar con calidad es su responsabilidad.'
+    guidance: El DS Lead es el puente entre los estándares de Arena y la ejecución de los proyectos. No es un rol operativo, es un rol de aseguramiento.
+  - title: QA de soluciones que utilizan IA
+    text: Evaluar la viabilidad de las soluciones de IA generativa que pueden integrarse al ecosistema, cuidando tiempos, costos y recursos. Asegurar que los proyectos a su cargo aplican prácticas de QA para IA consistentes y alinearlas con los otros leads.
+    acceptance_criteria: Cada decisión de incorporar IA en un proyecto tiene una evaluación documentada de costo, tiempo y riesgo. Todos los proyectos a su cargo aplican el mismo nivel de QA. El director de Analítica no descubre riesgos o costos de soluciones con IA que no se evaluaron antes.
+    deliverable: Evaluación de viabilidad documentada. Lineamientos de QA para IA compartidos con el equipo.
+    deliverable_format: Teams, mail, PPT, PDF o Arena OS
+    frequency: De acuerdo con los requerimientos del proyecto
+    guidance: El DS Lead es el referente de Ciencia para el uso de IA en los proyectos. Decide cuándo una solución de IA agrega valor y cuándo no.
+  - title: Aplicar estándares de desarrollo y buenas prácticas
+    text: Hacer equipo con los leads técnicos de DE, Producto y UX para asegurar que los proyectos aplican los estándares de desarrollo y buenas prácticas, cuentan con los diseños técnicos inter-equipo requeridos y no tienen brechas de integración entre disciplinas.
+    acceptance_criteria: No hay brechas de integración técnica entre equipos que se descubran durante el deployment. Los leads de otras disciplinas confían en el criterio del DS Lead para decisiones técnicas que involucran a Ciencia. Las decisiones de integración están documentadas y son trazables.
+    deliverable: Diseños técnicos inter-equipo validados y documentados. Evidencia de alineación con otros leads.
+    deliverable_format: Correo, Teams, PPT.
+    frequency: Por sprint.
+    level_expectation: El DS Lead trabaja con otros leads como par, no como subordinado. Cuando hay conflicto técnico entre disciplinas, propone y documenta la solución, no espera a que el director lo resuelva.
+    guidance: El DS Lead es el representante técnico de Ciencia ante el resto de los leads. Su criterio en decisiones de integración es la referencia para el equipo.
+  - title: Guía y soporte al equipo de proyecto — Participación en dailys
+    text: Asistir y participar activamente en los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre. Evaluar en cada asistencia la preparación del equipo, el foco y el cumplimiento de agenda y tiempos.
+    acceptance_criteria: El DS Lead participa de forma oral y escrita asegurando que el equipo no pierde de vista los entregables y riesgos críticos. Cuando el DS Lead asiste, el equipo percibe guía técnica concreta, no solo presencia. Sus observaciones en el daily son técnicamente relevantes, no administrativas.
+    deliverable: Reporte de asistencia en Teams. Observaciones técnicas documentadas en Teams o correo cuando aplique.
+    deliverable_format: Correo, Teams.
+    frequency: Al menos 1 daily cada 15 días.
+    level_expectation: El DS Lead asiste a los dailys con criterio, no por obligación. Su presencia debe servir para detectar riesgos que el DS Sr no ve, no para microgestionar.
+    guidance: El DS Lead también evalúa el valor de la reunión, la preparación y foco del equipo y el cumplimiento de objetivo, agenda y tiempos. No asiste a todos los dailys, pero cuando asiste, agrega valor.
+  - title: Guía y soporte al equipo de proyecto — Planning y review
+    text: Asistir y participar activamente en los sprint planning y sprint review de los proyectos bajo su cargo. Hacer challenge técnico de estimaciones, definitions of completeness y alcance comprometido vs propuesta original.
+    acceptance_criteria: El DS Lead hace challenge técnico de estimaciones que no son realistas antes de que el equipo las comprometa con el cliente. Revisa lo comprometido en propuesta vs lo que el equipo está planeando entregar e identifica riesgos de alcance. El PM y DS Sr agradecen su presencia porque agrega criterio técnico, no burocracia.
+    deliverable: Reporte de asistencia en Teams. Observaciones y ajustes al planning documentados.
+    deliverable_format: Teams, PPT, XLS.
+    frequency: Cada sprint.
+    level_expectation: El DS Lead asiste al planning y review para proteger al equipo de comprometer algo técnicamente inviable y para proteger al cliente de recibir menos de lo que contrató.
+    guidance: El DS Lead debe revisar el alcance comprometido por contrato y propuesta vs lo que el equipo está entregando. Esta actividad se recomienda como trabajo previo al sprint planning y review.
+  - title: Guía y soporte al equipo de proyecto — Sesiones críticas con stakeholders senior
+    text: Identificar, validar el material y participar en sesiones críticas con stakeholders senior del cliente que requieran apoyo del DS Lead. Asegurar que el equipo tiene clara la agenda, estructura y objetivo de la sesión antes de construir el material.
+    acceptance_criteria: Todas las sesiones con stakeholders no operativos del cliente cuentan con un pre-read que el equipo y el cliente pueden consultar antes de la sesión. El DS Lead evita retrabajos ayudando al equipo a definir la estructura antes de que construya el material. Los stakeholders senior del cliente perciben solidez técnica y estratégica en las presentaciones.
+    deliverable: Material y presentación de sesiones clave revisados y aprobados por el DS Lead. Pre-read preparado y compartido.
+    deliverable_format: PPT, correo.
+    frequency: Al menos 1 vez por sprint.
+    level_expectation: 'El DS Lead revisa el material de sesiones críticas antes de que llegue al cliente. Su valor no es hacer las correcciones: es enseñarle al DS Sr cómo estructurar una sesión de alto impacto.'
+    guidance: El DS Lead debe ayudar a que el equipo tenga clara la estructura, agenda y objetivos de la sesión antes de que construyan el material para evitar retrabajos.
+  - title: Guía y soporte al equipo de proyecto — Mapeo de stakeholders
+    text: Ayudar al equipo a mapear, entender y gestionar a todos los stakeholders involucrados en el proyecto, incluyendo sus motivaciones, nivel de influencia y postura hacia el proyecto.
+    acceptance_criteria: Todo el equipo de proyecto conoce y entiende el rol y la influencia de todos los stakeholders involucrados. El DS Sr puede anticipar la postura de los stakeholders clave sin necesidad de preguntarle al DS Lead antes de cada sesión.
+    deliverable: Directorio actualizado de stakeholders en la documentación del proyecto con nivel de influencia y postura documentada.
+    deliverable_format: XLS, PPT.
+    frequency: Al menos 1 vez por proyecto, actualizado ante cambios de stakeholders.
+    level_expectation: 'El DS Lead no solo conoce a los stakeholders: enseña al DS Sr cómo leerlos, anticiparlos y gestionarlos. El conocimiento del mapa de poder del cliente no debe quedarse solo en el DS Lead.'
+    guidance: El mapeo de stakeholders es especialmente crítico en proyectos largos o con múltiples unidades de negocio del cliente.
+  - title: Guía y soporte al equipo de proyecto — One-on-ones con stakeholders senior
+    text: Agendar y ejecutar one-on-ones con stakeholders senior del cliente para alinear expectativas, detectar señales tempranas de insatisfacción y generar una relación de confianza y cercanía.
+    acceptance_criteria: Los comentarios principales del one-on-one con el stakeholder senior se comparten al equipo del proyecto en el daily o planning antes del siguiente sprint. El DS Lead detecta señales de insatisfacción del cliente antes de que escalen. El DS Sr sabe qué está preocupando al cliente sin necesidad de que el DS Lead lo filtre todo.
+    deliverable: Sesiones agendadas y ejecutadas en calendario. Resumen de puntos clave compartido al equipo del proyecto en daily o planning.
+    deliverable_format: Reunión Teams / presencial.
+    frequency: Cada sprint.
+    level_expectation: El DS Lead construye la relación con el cliente a nivel estratégico. Cuando el cliente tiene una preocupación que no le diría al DS Sr, se la dice al DS Lead. Esa confianza es un activo que se construye sprint a sprint.
+    guidance: Estas sesiones son críticas para proyectos con señales de riesgo en satisfacción del cliente. El DS Lead comparte lo relevante, no todo.
+  - title: Guía y soporte al equipo de proyecto — Participación del director de Analítica
+    text: Anticipar y coordinar la participación del director de Analítica en momentos y sesiones críticas del proyecto, comunicando con claridad el contexto, la situación y el tipo de apoyo requerido.
+    acceptance_criteria: El director de Analítica recibe comunicaciones claras que le permiten prepararse para apoyar sin necesidad de pedir contexto adicional. El DS Lead no escala problemas sin intentar resolverlos primero. Cuando escala, lo hace con información suficiente para que el director tome una decisión inmediata.
+    deliverable: Mensajes al director de Analítica comunicando necesidad de apoyo con contexto completo (status, situación, qué se necesita).
+    deliverable_format: Teams, correo.
+    frequency: Por evento o al menos 1 vez al mes.
+    level_expectation: El DS Lead sabe exactamente cuándo necesita al director y cuándo puede resolver solo. Escalar sin criterio desperdicia el tiempo del director; no escalar cuando debería pone en riesgo el proyecto.
+    guidance: El DS Lead no debe sobreescalar ni subescalar. Saber cuándo involucrar al director es parte de su criterio de liderazgo.
+  - title: Guía y soporte al equipo de proyecto — Plan de transición y staffing
+    text: Crear y ejecutar un plan de transición, onboarding, KT y seguimiento al staffing del proyecto al inicio, durante y al final, considerando riesgos de rotación y continuidad técnica.
+    acceptance_criteria: El plan de transición está hecho a la medida del proyecto y considera un plan de comunicación interno y con el cliente. El equipo del proyecto entiende y ejecuta el plan con supervisión del DS Lead. No hay pérdida de conocimiento técnico crítico cuando un DS sale del proyecto.
+    deliverable: Plan de transición y onboarding documentado. Accionables de staffing comunicados al director de Analítica.
+    deliverable_format: XLS, PPT.
+    frequency: Al menos 2 veces por proyecto (inicio y cierre). Revisado ante cambios de staffing.
+    level_expectation: El DS Lead no improvisa ante cambios de staffing. Tiene un plan de continuidad técnica que funciona incluso en el escenario de perder a su DS Sr más crítico.
+    guidance: La continuidad técnica de los proyectos es responsabilidad del DS Lead. Un cambio de DS Sr en medio de un proyecto sin plan de transición es un riesgo que el DS Lead debió haber anticipado.
+  - title: Guía y soporte al equipo interno — Mesa de Talento
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Mesa de Talento, incluyendo evaluaciones de desempeño y cierre de evaluaciones antes de que el equipo se mueva a otros proyectos.
+    acceptance_criteria: El equipo de RH no necesita dar seguimiento al DS Lead para que las actividades de talento se cumplan en tiempo. Las evaluaciones de DS Sr/Mid están cerradas antes de que el evaluado se mueva a otro proyecto. El DS Lead conoce el estatus de desempeño de cada DS bajo su cargo sin necesidad de que RH se lo recuerde.
+    deliverable: Formatos y actividades de Mesa de Talento cumplidos en tiempo y forma. Evaluaciones cerradas antes de cambios de staffing.
+    deliverable_format: Según guía de RH / Mesa de Talento.
+    frequency: Semestral.
+    level_expectation: El DS Lead gestiona el talento como parte de su rol, no como una obligación administrativa. Sabe cómo están sus DS Sr/Mid antes de que la evaluación formal lo confirme.
+    guidance: En caso de cierre de proyecto, el DS Lead debe asegurar que las evaluaciones estén cerradas antes de que el equipo se reasigne.
+  - title: Guía y soporte al equipo interno — Planes de capacitación
+    text: Monitorear y dar seguimiento al avance de los planes de capacitación del equipo de Ciencia en sus proyectos. Identificar quién no ha podido avanzar por carga de trabajo y escalar al director de Analítica cuando sea necesario.
+    acceptance_criteria: En los one-on-ones con el equipo directivo, el DS Lead comunica con claridad quién está avanzando en su currícula y quién no, y por qué. El director de Analítica no descubre rezagos de capacitación que el DS Lead ya sabía. Los DS Sr/Mid no se quedan sin capacitación por falta de seguimiento del Lead.
+    deliverable: Comunicación por escrito del avance de planes de capacitación en one-on-ones con el equipo directivo interno.
+    deliverable_format: Correo, Teams.
+    frequency: Mensual / Bimestral.
+    level_expectation: El DS Lead hace seguimiento activo a la capacitación de su equipo, no solo la registra. Si un DS Sr no puede avanzar por carga de trabajo, el DS Lead lo escala y propone una solución.
+    guidance: La capacitación del equipo de Ciencia es una inversión de Arena. El DS Lead es responsable de que esa inversión se ejecute.
+  - title: Guía y soporte al equipo interno — Sesiones de mentoring
+    text: Monitorear la ejecución y calidad de las sesiones de mentoring de los DS Sr/Mid en sus proyectos. Identificar quién no está haciendo mentoring efectivo a su cargo y actuar sobre ello.
+    acceptance_criteria: El director de Analítica recibe una perspectiva del DS Lead sobre el estado del mentoring del equipo, no solo datos. El DS Lead puede identificar cuando el mentoring de un DS Sr al DS Mid es de baja calidad y actúa sobre ello. El mentoring no es una actividad que se reporte, es una que se monitorea y mejora.
+    deliverable: Comunicación por escrito del estatus del mentoring en one-on-ones con el equipo directivo interno.
+    deliverable_format: Correo, Teams.
+    frequency: Mensual / Bimestral.
+    level_expectation: El DS Lead es el guardián de la cultura de desarrollo del equipo de Ciencia. Si el mentoring no está funcionando, es su problema resolverlo, no solo reportarlo.
+    guidance: El DS Lead distingue entre mentoring que ocurre y mentoring que genera desarrollo real en el mentee.
+  - title: Guía y soporte al equipo interno — Vacaciones y ausencias
+    text: Dar seguimiento a la planeación y anticipación de los días de vacaciones y ausencias del equipo de Ciencia en sus proyectos para evitar riesgos en la ejecución de entregables críticos.
+    acceptance_criteria: Todas las vacaciones del equipo están registradas correctamente en Odoo. No hay ausencias que impacten entregables críticos sin haber sido anticipadas y mitigadas por el DS Lead. El PM no descubre una ausencia crítica que el DS Lead ya sabía.
+    deliverable: Vacaciones documentadas y aprobadas en Odoo y correo. Riesgos de ejecución por ausencias comunicados al PM o director con anticipación.
+    deliverable_format: Correo, Odoo.
+    frequency: Por sprint.
+    level_expectation: El DS Lead gestiona las ausencias del equipo como un riesgo de proyecto, no como un trámite administrativo. Un entregable fallido por una ausencia no anticipada es una falla de planificación del Lead.
+    guidance: El DS Lead debe anticipar ausencias con al menos 2 sprints de anticipación para proyectos con entregables críticos.
+  - title: Guía y soporte al equipo interno — Dudas de procedimientos internos
+    text: Ser el punto de referencia para resolver dudas de los procedimientos internos de Arena (PMO, Odoo, Mesa de Talento, vacaciones, etc.) para el equipo de Ciencia bajo su cargo.
+    acceptance_criteria: El equipo de RH y PMO identifica que el DS Lead resuelve dudas de procedimientos internos sin necesidad de que sean intermediados. El equipo de Ciencia no genera fricciones administrativas por desconocimiento de procesos. El DS Lead no escala dudas que puede resolver con el conocimiento que ya tiene.
+    deliverable: Reconocimiento del equipo de que el DS Lead domina y resuelve los procesos internos. Ausencia de escalamientos a RH o PMO por dudas básicas del equipo.
+    deliverable_format: Teams, correo.
+    frequency: Por evento.
+    level_expectation: 'El DS Lead es el primer punto de contacto para dudas internas de su equipo. No deriva todo a RH o PMO: resuelve lo que puede y escala solo lo que genuinamente requiere escalamiento.'
+    guidance: El dominio de los procesos internos de Arena es una expectativa básica del DS Lead. No es opcional.
+  - title: Guía y soporte al equipo interno — Sesiones de aprendizaje técnico
+    text: Planear y ejecutar sesiones de aprendizaje técnico con el equipo de Ciencia. Diseñar sesiones que desarrollen habilidades técnicas o de consultoría del equipo, dejando al equipo con aprendizajes concretos y aplicables.
+    acceptance_criteria: La sesión tiene un objetivo de aprendizaje claro y el equipo sale con algo concreto que puede aplicar. La encuesta de satisfacción refleja valor percibido por el equipo, no solo asistencia. El DS Lead imparte temas en los que tiene dominio experto real, no temas que delegaría en sesión.
+    deliverable: Presentación y sesión ejecutada. Encuesta de satisfacción de salida con calificación alta.
+    deliverable_format: PPT, Teams.
+    frequency: Al menos 1 vez por trimestre.
+    level_expectation: El DS Lead enseña desde la experiencia, no desde el manual. Sus sesiones de aprendizaje son memorables porque combinan criterio técnico con honestidad sobre errores pasados.
+    guidance: 'Ejemplos: fuckup story técnico, workshop de modelación, case study, ''what would you have done'', revisión de una decisión técnica pasada y sus consecuencias. Lo importante es que el DS Lead domine el tema a nivel experto.'
+  - title: Guía y soporte al equipo interno — Mejoras a metodologías y estándares
+    text: Identificar y gestionar la implementación de mejoras a las metodologías, estándares de trabajo y herramientas del equipo de Ciencia, en coordinación con el resto de los leads y el director de Analítica.
+    acceptance_criteria: Las mejoras que el DS Lead propone se implementan de forma sostenible y con una estrategia alineada con la visión del área. El equipo adopta las mejoras sin necesidad de que el DS Lead las persiga. Otros leads reconocen al DS Lead como un agente de mejora, no solo de mantenimiento.
+    deliverable: Evidencia de mejoras implementadas y adoptadas por el equipo. Coordinación documentada con otros leads.
+    deliverable_format: Correo, Teams, PPT.
+    frequency: Por evento, con al menos 1 mejora implementada por semestre.
+    level_expectation: El DS Lead deja al equipo de Ciencia mejor de como lo encontró. Sus mejoras a los estándares y metodologías sobreviven después de que se va del proyecto.
+    guidance: El DS Lead no espera instrucciones para mejorar los procesos del equipo. Identifica oportunidades y las lleva a cabo con criterio y coordinación.
+  - title: Soporte comercial — Identificación de oportunidades
+    text: Dar soporte comercial a través de la identificación de oportunidades de expansión, necesidades no cubiertas del cliente, evolución de soluciones actuales y sensibilización en temas de innovación en data science y analytics.
+    acceptance_criteria: El equipo directivo recibe comunicación del DS Lead respecto a actividades realizadas de búsqueda comercial. No se califica obtener oportunidades, sino estar proactivamente realizando la búsqueda. El DS Lead puede describir al menos 2 oportunidades de expansión identificadas por semestre en los proyectos bajo su cargo.
+    deliverable: Mensajes y sesiones agendadas para explorar oportunidades comerciales. Comunicación al equipo directivo sobre actividades de búsqueda.
+    deliverable_format: Teams, agenda.
+    frequency: Semestral.
+    level_expectation: El DS Lead entiende que su valor comercial no es cerrar deals, sino identificar señales de oportunidad que el director puede convertir en propuestas. Un DS Lead que nunca ve oportunidades de expansión no está leyendo bien a su cliente.
+    guidance: El DS Lead no es vendedor, pero sí es responsable de identificar oportunidades y comunicarlas al director. La detección temprana de necesidades del cliente es una ventaja competitiva de Arena.
+  - title: Soporte comercial — Construcción de propuestas
+    text: Dar soporte comercial a través de la construcción y validación técnica de propuestas en conjunto con otros leads y el director de Analítica.
+    acceptance_criteria: La sección técnica de la propuesta es revisada y validada por el DS Lead antes de presentarla al cliente. El director de Analítica no necesita corregir errores técnicos en la propuesta. El DS Lead puede defender técnicamente cada estimación de esfuerzo y alcance que firmó en la propuesta.
+    deliverable: Propuesta comercial o materiales comerciales con sección técnica revisada y validada por el DS Lead.
+    deliverable_format: PPT.
+    frequency: Por evento.
+    level_expectation: 'El DS Lead firma la viabilidad técnica de las propuestas. No solo revisa: se hace responsable de que lo prometido es entregable con el equipo y tiempo disponibles.'
+    guidance: El DS Lead es responsable de que la promesa técnica de la propuesta sea ejecutable. Si propone algo que el equipo no puede hacer, es su responsabilidad técnica.
+  - title: Soporte comercial — Facturación y temas administrativos
+    text: Dar soporte comercial a través del seguimiento a facturación y temas administrativos del proyecto cuando sea requerido por el director.
+    acceptance_criteria: No existen pendientes administrativos del proyecto (contratos, facturas, etc.) sin atender porque el DS Lead no hizo seguimiento. Cuando el director necesita información administrativa del proyecto, el DS Lead la tiene disponible o sabe exactamente dónde encontrarla.
+    deliverable: Confirmación de status o pendientes por resolver de temas administrativos.
+    deliverable_format: Correo.
+    frequency: Mensual / Bimestral.
+    level_expectation: El DS Lead entiende que los temas administrativos desbloqueados a tiempo son tan importantes como los técnicos para la salud del proyecto.
+    guidance: El DS Lead no es el responsable principal de facturación, pero sí es el puente entre el proyecto y el director cuando hay pendientes administrativos.
+  - title: Soporte comercial — Sesiones presenciales
+    text: Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para desarrollar una relación más cercana y mantener una presencia activa de Arena con el cliente.
+    acceptance_criteria: La estrategia de sesiones presenciales está alineada con el cliente y con el director de Analítica (frecuencia, foro, tema, equipo presente). El DS Lead no improvisa sesiones presenciales sin objetivo claro. El cliente percibe continuidad y atención de parte de Arena más allá de las entregas del sprint.
+    deliverable: Sesiones presenciales ejecutadas con cliente.
+    deliverable_format: Agenda Teams, presencial.
+    frequency: Quincenal / Mensual.
+    level_expectation: El DS Lead cultiva la relación con el cliente en persona. Las relaciones de confianza que sostienen la renovación de proyectos se construyen en presencial, no solo en Teams.
+    guidance: 'Las sesiones presenciales tienen un objetivo específico: no son simplemente ''café con el cliente''. El DS Lead define el objetivo antes de agendar.'
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Las estimaciones de esfuerzo que firma en propuestas comerciales se sostienen durante la ejecución, y puede defenderlas.
+
+      • Revisa que lo comprometido en cada sprint sea consistente con la propuesta original y corrige las desviaciones recurrentes.
+
+      • Usa el histórico de estimado contra real de los proyectos para mejorar cómo estima toda la práctica.
+
+      • Identifica la sobrecarga del equipo y reasigna o escala antes de que comprometa los plazos.
+
+      • Informa al director con anticipación y con una propuesta de solución cuando un proyecto está en riesgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide retroalimentación al director, a otros Leads y a su equipo sobre su gestión, y comunica qué cambió a partir de ella.
+
+      • Traduce la retroalimentación de clientes y proyectos en ajustes a los estándares y procesos de la práctica.
+
+      • Asegura que los acuerdos de mejora de las personas que evalúa queden documentados y se revisen en el siguiente ciclo.
+
+      • Reconoce sus propios errores frente al equipo, para que la apertura se practique desde el liderazgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'

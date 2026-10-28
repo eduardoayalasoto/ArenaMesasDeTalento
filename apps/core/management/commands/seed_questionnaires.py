@@ -64,6 +64,13 @@ class Command(BaseCommand):
         ))
 
     def _seed_ownership_template(self, area, level, questions) -> int:
+        # Si ya hay una versión posterior (p. ej. checklists 2027), la v1 es histórica:
+        # no se reactiva ni se reconstruye (spec 007, FR-015).
+        if QuestionnaireTemplate.objects.filter(
+            kind=QuestionnaireTemplate.Kind.OWNERSHIP, area=area, level=level, version__gt=1,
+        ).exists():
+            self.stdout.write(f"  - {area.code}/{level.code}: ya existe una versión posterior; v1 intacta.")
+            return 0
         template, _ = QuestionnaireTemplate.objects.update_or_create(
             kind=QuestionnaireTemplate.Kind.OWNERSHIP,
             area=area,

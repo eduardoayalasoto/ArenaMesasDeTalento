@@ -1,0 +1,754 @@
+source: docs/Checklists/Versión 2027/Checklist de Actividades UXUI Designer.xlsx
+templates:
+- area: UXUI
+  level: JR
+  questions:
+  - title: Diseño UI alineado a Design System
+    text: Construir pantallas respetando los componentes, tokens y patrones del Design System del proyecto. Si no existe Design System definido, usar el de Figma de Arena como referencia base y documentar cualquier excepción.
+    acceptance_criteria: No hay componentes creados desde cero cuando existe un equivalente en el DS. Cuando el Jr crea una excepción, la justifica en el archivo de Figma antes de que el cliente la vea. Si un stakeholder o cliente señala inconsistencias visuales recurrentes en sesiones de revisión, el Jr revisa y corrige sin que se le pida dos veces por el mismo punto.
+    deliverable: Pantallas versionadas en Figma con componentes del DS aplicados. Excepciones documentadas con justificación.
+    deliverable_format: Figma
+    frequency: Cada sprint
+    level_expectation: El Jr aplica el DS con disciplina. No inventa componentes por conveniencia. Cuando tiene dudas sobre qué componente usar, pregunta antes de diseñar, no después de que el cliente ya lo vio.
+    guidance: El Design System existe para que el equipo no tome decisiones estéticas individuales. Si el Jr lo ignora, genera deuda visual que alguien más tiene que limpiar.
+  - title: Diseño de flujos asignados
+    text: Diseñar los flujos específicos asignados, entregando un user flow completo que incluya todos los estados de la pantalla (normal, vacío, error, loading) y los edge cases identificados. No entregar pantallas sueltas sin flujo.
+    acceptance_criteria: No existen pantallas en el entregable sin un flujo que las contextualice. Los estados de error, vacío y loading están diseñados, no implícitos. Si desarrollo pregunta qué pasa en un escenario específico, la respuesta ya está en el Figma — no en la cabeza del Jr. El cliente no señala estados faltantes en la sesión de revisión.
+    deliverable: User flow completo con todos los estados documentados en Figma.
+    deliverable_format: Figma
+    frequency: Por sprint
+    level_expectation: 'El Jr diseña lo que se le asigna de forma completa. Su entregable no es una pantalla bonita: es un flujo funcional con todos sus estados. Si tiene dudas sobre qué estados cubrir, pregunta antes de entregar.'
+    guidance: El 80% de los bugs de experiencia nacen en estados no explicitados. El Jr los diseña todos, no solo el happy path.
+  - title: Documentación de estados y edge cases
+    text: 'Documentar explícitamente todos los estados de cada pantalla diseñada: estado vacío, estado de error, estado de carga, estado de éxito y edge cases identificados. No asumir que el equipo de desarrollo puede inferir los estados no diseñados.'
+    acceptance_criteria: Cada pantalla del entregable tiene sus estados documentados en el mismo frame o en una sección dedicada de Figma. El equipo de desarrollo no necesita preguntar '¿qué mostramos si no hay datos?' porque la respuesta está en el diseño. El cliente no descubre estados faltantes durante el sprint review.
+    deliverable: Pantallas de estados complementarios documentadas en Figma para cada flujo entregado.
+    deliverable_format: Figma
+    frequency: Por feature
+    level_expectation: El Jr documenta todos los estados de lo que diseña. No declara un flujo como terminado hasta que los estados de error y vacío tienen diseño explícito.
+    guidance: 'Los estados no diseñados no desaparecen: los implementa desarrollo a su criterio, y el resultado casi nunca es lo que el equipo esperaba.'
+  - title: Preparación de handoff a desarrollo
+    text: 'Preparar los archivos de Figma para entrega a desarrollo: nombrar capas correctamente, agrupar componentes, especificar espaciados, tipografías, colores con tokens y anotar reglas de interacción que no son evidentes visualmente.'
+    acceptance_criteria: El equipo de desarrollo puede implementar los diseños del Jr sin necesitar una llamada de aclaración por cada pantalla. Si desarrollo hace preguntas recurrentes sobre el mismo tipo de especificación faltante (ej. siempre preguntan sobre espaciados), el Jr identifica el patrón y lo corrige en el siguiente entregable. El Jr no dice 'es que así se ve en Figma' cuando desarrollo señala una ambigüedad.
+    deliverable: Archivo de Figma organizado, con anotaciones de especificación y listo para que desarrollo implemente sin interpretación creativa.
+    deliverable_format: Figma + Notas
+    frequency: Por sprint
+    level_expectation: El Jr prepara el handoff pensando en quien lo va a recibir, no en quien lo construyó. Un handoff completo elimina preguntas de implementación, no las transfiere.
+    guidance: Si desarrollo te pregunta más de 2 veces por el mismo tipo de duda en el mismo sprint, el handoff estaba incompleto.
+  - title: Documentación del trabajo de diseño
+    text: Documentar en la herramienta de seguimiento del proyecto (Figma, Planner u otra definida) las tareas ejecutadas, el estado de cada pantalla o flujo y el avance del sprint. Actualizar el registro antes del daily, no en el review.
+    acceptance_criteria: Cualquier miembro del equipo puede verificar el estado de avance del Jr sin necesidad de preguntarle. El Jr actualiza el registro antes del daily, no cuando alguien le pregunta. En el sprint review no hay sorpresas sobre el estado de los entregables porque el registro ya lo reflejaba.
+    deliverable: Registro actualizado de tareas y estados de avance en la herramienta del proyecto.
+    deliverable_format: Figma / Planner
+    frequency: Semanal
+    level_expectation: El Jr mantiene su registro actualizado como parte de su rutina, no como respuesta a una solicitud. El registro es la evidencia de su ownership de los entregables.
+    guidance: Documentar el avance no es opcional. Si no está registrado, no existe para el resto del equipo.
+  - title: Pruebas de usabilidad básicas
+    text: 'Ejecutar pruebas de usabilidad básicas bajo el protocolo definido por el Mid o Sr del proyecto, o por el propio Jr si trabaja solo: mostrar el prototipo a al menos 3 usuarios o stakeholders relevantes, documentar observaciones y comunicar hallazgos al equipo antes del handoff a desarrollo.'
+    acceptance_criteria: El Jr ejecuta las pruebas con un protocolo mínimo definido (objetivo, tareas a completar, preguntas de cierre). Los hallazgos están documentados con observaciones concretas, no con impresiones generales ('les gustó / no les gustó'). Si el Jr trabaja solo, define el protocolo básico él mismo antes de ejecutar. El equipo de desarrollo no recibe un diseño que no pasó ninguna validación con usuario.
+    deliverable: Notas de prueba con observaciones de al menos 3 usuarios. Resumen de hallazgos con decisiones tomadas.
+    deliverable_format: Figma, Notas, Mail
+    frequency: Antes de cada handoff a desarrollo
+    level_expectation: El Jr valida sus diseños con usuarios antes de entregarlos a desarrollo. Si opera solo, define el protocolo mínimo y lo ejecuta. No declara un diseño listo para handoff sin evidencia de validación.
+    guidance: Validar antes de desarrollar evita retrabajo de todo el equipo, no solo del Jr. Un hallazgo en prototipo cuesta 0. El mismo hallazgo en producción cuesta sprints.
+  - title: Documentación del plan y avance
+    text: 'Mantener actualizada la estructura de archivos del proyecto en Teams/SharePoint: todos los archivos de trabajo en el canal del proyecto, ningún archivo en un drive personal. Actualizar los indicadores de avance definidos para el proyecto (% avance, actividades completadas) de forma semanal.'
+    acceptance_criteria: Cualquier miembro del equipo o cliente con acceso puede encontrar el archivo que busca sin pedirle al Jr que lo comparta. No hay archivos del proyecto en drives personales del Jr. Los indicadores de avance reflejan el estado real, no el estado que el Jr quisiera tener.
+    deliverable: Canal Teams organizado con archivos accesibles. Indicadores de avance actualizados.
+    deliverable_format: Teams, SharePoint, XLS
+    frequency: Semanal / Inicio de proyecto
+    level_expectation: El Jr mantiene los archivos del proyecto accesibles y los indicadores actualizados. Es parte de su ownership del sprint, no un trámite administrativo.
+    guidance: Un archivo en un drive personal es un archivo que el equipo no puede acceder cuando el Jr no está disponible.
+  - title: Rutinas de gestión — Daily
+    text: 'Asistir al daily preparado: saber qué avanzó desde el día anterior, qué hará hoy y qué le impide avanzar. Comunicar bloqueos antes de que impacten un entregable del sprint.'
+    acceptance_criteria: 'El Jr llega al daily con claridad de sus tres puntos (avance, plan del día, bloqueos). No descubre sus propios bloqueos en el daily: los identifica antes y los comunica. El equipo no se entera de un bloqueo crítico del Jr por primera vez en el sprint review. La sesión dura entre 15 y 20 minutos.'
+    deliverable: Participación activa en el daily con estado real de avance y bloqueos comunicados.
+    deliverable_format: Calendario, Chat
+    frequency: Diaria
+    level_expectation: El Jr llega al daily con estado real, no con el estado que quisiera tener. Su ownership del daily es reportar con honestidad y pedir ayuda cuando la necesita.
+    guidance: El daily no es el lugar para descubrir problemas, sino para reportarlos. Un bloqueo comunicado a tiempo puede resolverse el mismo día.
+  - title: Rutinas de gestión — Sprint Planning
+    text: 'Asistir al sprint planning sabiendo qué puede comprometer para el sprint: revisar el backlog antes de la sesión, tener propuesta de actividades propias y sus estimaciones, y salir de la sesión con claridad total de sus entregables, criterios de aceptación y dependencias.'
+    acceptance_criteria: El Jr sale del planning con claridad de qué debe entregar, con qué criterio de aceptación y en qué fecha. Sus estimaciones se cumplen en al menos el 70% de los sprints. No hace preguntas durante el sprint sobre definiciones que se acordaron en el planning. Si opera sin un nivel superior, define sus propios criterios de aceptación y los comunica al PM o cliente para validación.
+    deliverable: Participación activa en el sprint planning con propuesta de actividades y estimaciones propias.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Jr prepara el planning como si tuviera que defenderlo. Su propuesta de actividades es el punto de partida de la negociación, no una pregunta al vacío.
+    guidance: Llegar al planning sin haber revisado el backlog es no haber llegado al planning.
+  - title: Rutinas de gestión — Sprint Review
+    text: 'Asistir al sprint review preparado para exponer los entregables del sprint: qué completó, qué no completó y por qué. Recibir retroalimentación técnica y de diseño con apertura y documentar los acuerdos de mejora.'
+    acceptance_criteria: 'El Jr puede explicar qué completó y qué no, con razones concretas. No improvisa justificaciones en el review: el estado real de sus entregables ya estaba documentado. Los mismos errores de diseño no aparecen en dos reviews consecutivos sin una razón documentada. Sale del review con al menos un compromiso concreto de mejora.'
+    deliverable: Participación activa en el sprint review con entregables presentados y acuerdos documentados.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Jr llega al review a mostrar lo que construyó, incluyendo lo que no terminó. Recibe la retroalimentación como insumo de mejora, no como ataque personal.
+    guidance: El review no es un examen. Es la oportunidad de mostrar lo que se construyó y aprender de lo que no se pudo completar.
+  - title: Rutinas de gestión — Sprint Retrospectiva
+    text: 'Participar activamente en la retrospectiva: expresar lo que funcionó bien, lo que no funcionó y proponer al menos un ajuste concreto al proceso de trabajo del equipo.'
+    acceptance_criteria: El Jr aporta observaciones concretas sobre el proceso de trabajo del sprint, no solo sobre los resultados. Sus propuestas de mejora son específicas y accionables. Los ajustes acordados en la retro se reflejan en el siguiente sprint.
+    deliverable: Participación activa en la retro con aportaciones documentadas.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: 'El Jr participa en la retro con honestidad y propuestas. Su rol no es solo escuchar: es contribuir a que el equipo trabaje mejor.'
+    guidance: La retro es el espacio para mejorar el proceso, no para quejarse sin proponer. Una retro sin acuerdos concretos es tiempo perdido.
+  - title: Rutinas de gestión — Refinamiento de backlog
+    text: Asistir al refinamiento preparado para aclarar dudas sobre las actividades del backlog antes de que entren al planning. Identificar y comunicar ambigüedades en criterios de aceptación antes de comprometerse a ejecutarlos.
+    acceptance_criteria: El Jr sale del refinamiento con claridad sobre las actividades que entrarán al siguiente sprint. No hace preguntas básicas en el planning sobre actividades que ya pasaron por refinamiento. Identifica y comunica ambigüedades en los criterios de aceptación antes de que el sprint empiece.
+    deliverable: Participación activa en refinamientos con dudas y ambigüedades identificadas.
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento / ante cambios de backlog
+    level_expectation: El Jr usa el refinamiento para resolver dudas antes de comprometerse. No acumula preguntas para el sprint.
+    guidance: Un refinamiento efectivo hace el planning más corto y los sprints más predecibles.
+  - title: Cuestionamiento y validación de resultados
+    text: Preparar y presentar los diseños para revisión y validación con el cliente o stakeholders. Documentar el feedback recibido, los retrabajos solicitados y la percepción del cliente tras cada sesión de revisión.
+    acceptance_criteria: El Jr llega a las sesiones de revisión con los entregables completos y navegables, no con pantallas sueltas. El cliente no señala en los primeros 5 minutos de la sesión errores básicos que el Jr debió haber identificado antes. El feedback del cliente está documentado y los retrabajos solicitados se reflejan en el siguiente sprint sin necesidad de que el cliente los repita.
+    deliverable: Presentación de diseños con feedback documentado y percepción del cliente registrada.
+    deliverable_format: PPT/PDF, Figma
+    frequency: Por sprint
+    level_expectation: El Jr llega a las revisiones con sus entregables listos para ser criticados, no para ser descubiertos. El feedback es información valiosa, no un fracaso personal.
+    guidance: Si el cliente señala el mismo error en dos revisiones consecutivas, el Jr no incorporó el feedback del sprint anterior.
+  - title: Preparación de reuniones
+    text: 'Preparar cada reunión con cliente usando el Formato de Preparación de Reuniones del proyecto: definir objetivo, agenda, material de soporte, posibles preguntas del cliente y acciones críticas a lograr. Completarlo al menos 24 horas antes de la sesión.'
+    acceptance_criteria: El Jr llega a las reuniones con cliente con material preparado y respuestas anticipadas a posibles preguntas. El cliente percibe preparación y dominio de la sesión. No hay reuniones con cliente donde el Jr improvisa el objetivo o la agenda. Si opera sin un nivel superior, completa el formato de preparación por cuenta propia.
+    deliverable: Formato de preparación completado al menos 24 horas antes de cada reunión con cliente.
+    deliverable_format: XLS Formato Prep Reuniones
+    frequency: Obligatorio para cada reunión con cliente
+    level_expectation: El Jr prepara las reuniones con criterio, no como trámite. El formato de preparación existe para que piense antes de llegar, no para llenarlo por obligación.
+    guidance: Una reunión sin preparación es una reunión donde el cliente descubre los problemas del equipo en tiempo real.
+  - title: Seguimiento a acuerdos — Pre-reads y minutas
+    text: Enviar pre-reads con el material de la sesión al menos 24 horas antes de cada reunión con cliente. Documentar y enviar minutas con validaciones, acuerdos y siguientes pasos dentro de las 24 horas posteriores a cada sesión.
+    acceptance_criteria: El cliente recibe el material antes de la sesión y puede llegar con preguntas preparadas. Las minutas son claras, sin errores de ortografía y el cliente las entiende sin necesidad de pedir aclaraciones. Los acuerdos documentados en la minuta se ejecutan en el siguiente sprint. Si el Jr opera solo, es el responsable de enviar tanto el pre-read como la minuta.
+    deliverable: Correos con pre-reads enviados al menos 24 hrs antes. Minutas enviadas dentro de las 24 hrs posteriores a la sesión.
+    deliverable_format: Mail
+    frequency: Por evento / al menos 1 vez por semana
+    level_expectation: El Jr envía pre-reads y minutas como parte de su rutina de comunicación con el cliente. No espera que alguien se lo recuerde.
+    guidance: Una minuta con errores de ortografía invalida la percepción de profesionalismo del equipo completo. El Jr la revisa antes de enviar.
+  - title: Comunicación de avance con stakeholders
+    text: Comunicar el avance del proyecto a los stakeholders relevantes mediante mensajes directos o en chat grupal 2-3 veces por semana, sin esperar a las sesiones formales para dar visibilidad del progreso.
+    acceptance_criteria: Los stakeholders relevantes conocen el estado del proyecto sin necesidad de esperar la siguiente sesión formal. El Jr comunica avances concretos, no actualizaciones genéricas ('todo va bien'). Cuando hay una desviación o riesgo, lo comunica proactivamente antes de que el cliente lo descubra.
+    deliverable: Evidencia de mensajes de avance en chat individual o grupal.
+    deliverable_format: Chat Teams
+    frequency: 2-3 veces por semana
+    level_expectation: El Jr comunica avances reales de forma proactiva. No espera al status report semanal para dar visibilidad al cliente.
+    guidance: La comunicación proactiva genera confianza. El cliente que no recibe actualizaciones empieza a preguntar, y cuando pregunta ya está preocupado.
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Las estimaciones de esfuerzo que firma en propuestas comerciales se sostienen durante la ejecución, y puede defenderlas.
+
+      • Revisa que lo comprometido en cada sprint sea consistente con la propuesta original y corrige las desviaciones recurrentes.
+
+      • Usa el histórico de estimado contra real de los proyectos para mejorar cómo estima toda la práctica.
+
+      • Identifica la sobrecarga del equipo y reasigna o escala antes de que comprometa los plazos.
+
+      • Informa al director con anticipación y con una propuesta de solución cuando un proyecto está en riesgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide retroalimentación al director, a otros Leads y a su equipo sobre su gestión, y comunica qué cambió a partir de ella.
+
+      • Traduce la retroalimentación de clientes y proyectos en ajustes a los estándares y procesos de la práctica.
+
+      • Asegura que los acuerdos de mejora de las personas que evalúa queden documentados y se revisen en el siguiente ciclo.
+
+      • Reconoce sus propios errores frente al equipo, para que la apertura se practique desde el liderazgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: UXUI
+  level: MID
+  questions:
+  - title: Definición del problema de experiencia
+    text: Documentar el problema real que se está resolviendo desde la perspectiva del usuario y del negocio antes de abrir Figma. Formular el problema como hipótesis falsable con una métrica asociada. No aceptar como punto de partida 'necesitamos rediseñar X' sin cuestionarlo.
+    acceptance_criteria: El problema está formulado como hipótesis falsable con métrica asociada. Los stakeholders pueden explicar el problema sin mencionar la solución. El Mid no empieza a diseñar pantallas sin haber documentado y alineado el problema con el cliente. Si un stakeholder define el problema como una solución ('necesitamos un botón de X'), el Mid lo reencuadra y documenta la causa raíz.
+    deliverable: UX Brief validado con hipótesis formulada y métrica asociada (KPI o North Star impactado).
+    deliverable_format: XLS, Planner, Notion
+    frequency: Al inicio de cada iniciativa o feature relevante
+    level_expectation: 'El Mid define el problema antes de diseñar. Su valor no es ejecutar lo que el cliente pide: es asegurar que lo que el cliente pide resuelve el problema correcto.'
+    guidance: Si el documento empieza con 'rediseñar la pantalla de…', el problema está mal planteado. El Mid lo cuestiona antes de comprometerse a ejecutarlo.
+  - title: Investigación y validación de supuestos
+    text: Identificar los supuestos críticos que sostienen la hipótesis de diseño antes de desarrollar pantallas en alta fidelidad. Validarlos con evidencia mínima viable (entrevistas, datos existentes, tests rápidos). Documentar qué se sabe, qué se supone y qué se desconoce.
+    acceptance_criteria: Los supuestos de alto impacto tienen evidencia documentada antes de pasar a high fidelity. El Mid puede explicar qué se sabe con certeza y qué se está asumiendo. No se diseñan pantallas finales basadas en supuestos críticos sin validar. Si el Mid opera sin presupuesto para research formal, documenta qué tipo de evidencia recopiló y con qué limitaciones.
+    deliverable: Lista priorizada de supuestos con clasificación de riesgo y evidencia de validación de los de alto impacto.
+    deliverable_format: XLS, Planner
+    frequency: Antes de pasar a high fidelity
+    level_expectation: El Mid valida sus supuestos antes de comprometerse a un diseño completo. No presenta 'certezas' al cliente cuando son supuestos sin validar.
+    guidance: Diseñar sin validar es apostar el tiempo del equipo en una intuición. El Mid valida antes de construir, aunque sea con evidencia mínima.
+  - title: Diseño de flujo y arquitectura de decisión
+    text: 'Diseñar el journey completo del usuario incluyendo todos los estados, edge cases y microdecisiones críticas. No diseñar pantallas en aislamiento: cada pantalla existe dentro de un flujo que el Mid define de forma explícita.'
+    acceptance_criteria: No hay puntos muertos en el flujo diseñado por el Mid. Todos los estados (vacío, error, loading, éxito) están diseñados. Las reglas de negocio que afectan la experiencia están documentadas en el Figma. El equipo de desarrollo puede implementar el flujo sin tomar decisiones de diseño por su cuenta. Si el Mid opera solo, es el responsable de identificar los edge cases sin apoyo de otro nivel.
+    deliverable: User Flow end-to-end con mapa de estados, edge cases documentados y reglas de negocio explícitas.
+    deliverable_format: Figma, XLS
+    frequency: Por feature o epic
+    level_expectation: El Mid diseña decisiones, no pantallas. Su entregable es un flujo completo y explícito, no una colección de pantallas bonitas.
+    guidance: El 80% del retrabajo en UX no es visual. Es ambigüedad en decisiones de flujo que se resuelve con criterio del desarrollador en lugar del diseñador.
+  - title: Diseño UI con rigor sistémico
+    text: Construir la interfaz visual alineada al Design System, principios cognitivos básicos y accesibilidad mínima (WCAG AA). Justificar funcionalmente las decisiones estéticas. Si no hay Design System definido, proponer los patrones base que el equipo seguirá.
+    acceptance_criteria: El diseño cumple accesibilidad mínima WCAG AA en contraste. No hay componentes inventados sin justificación funcional documentada. La consistencia visual es comprobable entre pantallas del mismo flujo. Si el Mid propone un Design System base, está documentado y es adoptable por quien continúe el proyecto.
+    deliverable: Pantallas en Figma versionadas con uso documentado de componentes y excepciones justificadas.
+    deliverable_format: Figma
+    frequency: Cada sprint de diseño
+    level_expectation: El Mid toma decisiones de diseño con argumento funcional. Su criterio estético tiene una razón de uso, no solo de preferencia.
+    guidance: Si cada feature parece de empresa distinta, hay un problema de criterio sistémico, no solo de estética.
+  - title: Validación de prototipo antes de desarrollo
+    text: Validar el prototipo con al menos 3 usuarios o stakeholders relevantes antes del handoff a desarrollo. Documentar hallazgos, incorporar ajustes y comunicar al equipo qué se validó y qué decisiones se tomaron a partir de la validación.
+    acceptance_criteria: Los usuarios completan las tareas críticas del flujo sin guía del Mid durante el test. Las dudas recurrentes identificadas en el test están resueltas en el diseño antes del handoff. El Mid documenta qué se validó, qué se encontró y qué se decidió. El equipo de desarrollo no recibe un diseño que nunca fue mostrado a un usuario real.
+    deliverable: Prototipo navegable validado. Síntesis de hallazgos con ajustes realizados documentados.
+    deliverable_format: Figma, Mail, Teams
+    frequency: Antes de handoff a desarrollo
+    level_expectation: El Mid valida con usuarios antes de entregar a desarrollo. Si opera solo, define el protocolo de validación y lo ejecuta por cuenta propia. No entrega un diseño que no fue expuesto a ningún usuario.
+    guidance: Validar después de desarrollar es como revisar el paracaídas en el aire. El Mid valida antes del handoff, siempre.
+  - title: Handoff estratégico a desarrollo
+    text: 'Preparar la transferencia del diseño a desarrollo con especificaciones completas: estados, microcopy, reglas de interacción, criterios de aceptación medibles en el backlog. El Mid es responsable de que desarrollo pueda implementar sin ambigüedades.'
+    acceptance_criteria: El equipo de desarrollo implementa el diseño sin necesitar una llamada de aclaración por ambigüedades no anticipadas por el Mid. QA puede testear con un checklist derivado del handoff. Si desarrollo pregunta '¿qué pasa si…?' y la respuesta no está en el Figma, el Mid lo actualiza y lo documenta como deuda de especificación.
+    deliverable: Archivo Figma con especificaciones completas. Criterios de aceptación documentados en el backlog.
+    deliverable_format: Figma, Backlog
+    frequency: Cada entrega a desarrollo
+    level_expectation: El Mid es responsable de que su diseño sea implementable sin interpretación creativa. Un buen handoff elimina preguntas de desarrollo, no las transfiere.
+    guidance: Si desarrollo tiene que suponer cómo debe funcionar algo, el handoff estaba incompleto.
+  - title: Medición post-release
+    text: 'Analizar el impacto de los diseños entregados en las métricas definidas al inicio de la iniciativa. Documentar el aprendizaje y tomar una decisión explícita: iterar, escalar o descartar.'
+    acceptance_criteria: El Mid puede mostrar un cambio medible en la métrica asociada al problema definido al inicio, o documentar por qué no fue medible y qué aprendizaje se obtiene de todas formas. No se considera cerrada una iniciativa sin al menos una ronda de análisis post-release. Si el Mid opera solo, define y ejecuta la medición por su cuenta.
+    deliverable: Reporte con métricas antes/después, insight cualitativo y decisión documentada con siguiente acción.
+    deliverable_format: XLS, PPT/PDF
+    frequency: 1-4 semanas post release
+    level_expectation: El Mid mide el impacto de lo que diseñó. No pasa a la siguiente iniciativa sin saber si la anterior funcionó.
+    guidance: UX sin medición es diseño decorativo. El Mid cierra el ciclo de cada iniciativa con evidencia de impacto.
+  - title: Documentación del proyecto
+    text: 'Mantener la estructura de archivos del proyecto en Teams/SharePoint actualizada y accesible: todos los archivos de trabajo en el canal del proyecto, indicadores de avance actualizados semanalmente, ningún archivo en drives personales.'
+    acceptance_criteria: Cualquier miembro del equipo o cliente con acceso puede encontrar cualquier archivo del proyecto sin pedirle al Mid que lo comparta. Los indicadores de avance reflejan el estado real del proyecto. El Mid actualiza la documentación como parte de su rutina semanal, no solo al cierre del proyecto.
+    deliverable: Canal Teams organizado. Indicadores de avance actualizados. Archivos accesibles a todo el equipo y cliente.
+    deliverable_format: Teams, SharePoint, XLS
+    frequency: Semanal / Inicio de proyecto
+    level_expectation: El Mid mantiene el orden documental del proyecto. Si opera solo, es el único responsable de que el cliente y el equipo tengan acceso a los archivos correctos.
+    guidance: La documentación del proyecto es una responsabilidad de todo el equipo, pero si el Mid es el único nivel presente, es su responsabilidad completa.
+  - title: Rutinas de gestión — Daily
+    text: Facilitar o participar activamente en el daily asegurando que la sesión dura entre 15 y 20 minutos, que cada participante reporta avance real con bloqueos identificados y que los bloqueos críticos se gestionan antes de que impacten el sprint. Si el Mid opera solo, reporta su avance al PM o stakeholder correspondiente.
+    acceptance_criteria: El daily dura entre 15 y 20 minutos. Cada participante reporta avance, plan del día y bloqueos. El Mid no deja que bloqueos críticos se acumulen de un daily al siguiente sin acción. Si opera solo, comunica su avance diario al PM o stakeholder de forma proactiva sin esperar que le pregunten.
+    deliverable: Daily ejecutado con participación documentada. Bloqueos gestionados antes de impactar el sprint.
+    deliverable_format: Calendario, Chat
+    frequency: Diaria
+    level_expectation: El Mid facilita o participa en el daily con criterio de eficiencia. Su rol es asegurar que la sesión genere visibilidad real del avance, no que sea un ritual vacío.
+    guidance: 'El Mid no solo asiste al daily: asegura que sea útil y breve. Si la sesión se extiende por discusiones que no corresponden al daily, las redirige.'
+  - title: Rutinas de gestión — Sprint Planning
+    text: 'Liderar o participar activamente en el sprint planning: proponer actividades y estimaciones propias, asegurar que todas las tareas tienen criterio de aceptación claro antes de comprometerse, y validar que el plan es ejecutable dentro del sprint.'
+    acceptance_criteria: Ninguna tarea entra al sprint sin criterio de aceptación definido. Las estimaciones del Mid se cumplen en al menos el 75% de los sprints. El plan de sprint es técnicamente ejecutable en el tiempo disponible, no optimista. Si opera solo, define sus propios criterios de aceptación y los valida con el PM o cliente antes de comprometerse.
+    deliverable: Sprint planning ejecutado con actividades, criterios de aceptación y estimaciones documentadas.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Mid define el sprint con criterio. No acepta compromisos ambiguos ni planes imposibles. Si opera solo, es el único garante de que el plan es ejecutable.
+    guidance: El Mid hace challenge de estimaciones irreales antes de comprometerse. Un plan de sprint optimista es una promesa rota en el review.
+  - title: Rutinas de gestión — Sprint Review
+    text: 'Exponer los resultados del sprint al equipo y al cliente con honestidad: qué se completó, qué no se completó y por qué. Dar retroalimentación técnica de diseño al equipo si hay niveles Junior. Documentar los acuerdos de mejora.'
+    acceptance_criteria: El Mid presenta resultados reales, incluyendo lo que no se completó y las razones concretas. El cliente no descubre en el review algo que el Mid ya sabía. Si hay Jr en el equipo, el Mid da retroalimentación técnica específica y accionable. Los mismos errores de diseño no se repiten en dos reviews consecutivos.
+    deliverable: Sprint review ejecutado con resultados presentados y acuerdos documentados.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Mid presenta resultados con honestidad. Si opera solo, el review es su momento de accountability con el cliente.
+    guidance: El review es la oportunidad de construir confianza con el cliente mostrando transparencia. No es el momento de descubrir problemas.
+  - title: Rutinas de gestión — Sprint Retrospectiva
+    text: Facilitar o participar activamente en la retrospectiva con aportaciones concretas sobre el proceso de trabajo. Asegurar que los acuerdos de mejora se implementan en el siguiente sprint.
+    acceptance_criteria: La retro produce al menos un acuerdo concreto de mejora con responsable y fecha. Los acuerdos de la retro anterior se implementaron o tienen justificación documentada de por qué no. El Mid facilita la retro con objetividad, no con defensividad.
+    deliverable: Retro ejecutada con aportaciones documentadas y acuerdos con responsable y fecha.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Mid facilita retros que producen cambios reales en el proceso. Si opera solo, identifica sus propias áreas de mejora y las documenta para el siguiente sprint.
+    guidance: Una retro sin acuerdos implementados en el siguiente sprint es una conversación sin consecuencias.
+  - title: Rutinas de gestión — Refinamiento de backlog
+    text: Facilitar o participar en el refinamiento para aclarar criterios de aceptación ambiguos, identificar dependencias y priorizar el backlog antes del planning. No comprometerse a actividades sin criterio de aceptación claro.
+    acceptance_criteria: Ninguna actividad entra al planning sin criterio de aceptación claro. Las dependencias críticas están identificadas antes del sprint. El Mid no acepta actividades ambiguas en el backlog sin aclarar primero el criterio de éxito.
+    deliverable: Backlog refinado con criterios de aceptación actualizados y dependencias identificadas.
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento / ante cambios de backlog
+    level_expectation: El Mid usa el refinamiento para eliminar ambigüedades antes de comprometerse. Un backlog refinado es un sprint más predecible.
+    guidance: El refinamiento hace el planning más corto y los sprints más predecibles. El Mid lo usa estratégicamente, no como trámite.
+  - title: Cuestionamiento y validación de resultados
+    text: Generar y presentar los diseños de solución (a nivel técnico y de negocio) con el nivel de detalle suficiente para obtener un sign-off explícito del cliente. Documentar los retrabajos solicitados y la percepción del cliente en cada sesión.
+    acceptance_criteria: El cliente tiene claro lo que se está construyendo y existe una aprobación documentada por escrito. El Mid no lleva a revisión diseños con errores básicos que debió identificar antes. Las correcciones solicitadas por el cliente en un review se resuelven antes del siguiente review, no se acumulan.
+    deliverable: Diseño de la solución versionado con sign-off documentado. Retrabajos y percepción del cliente registrados.
+    deliverable_format: PPT/PDF, Figma
+    frequency: Por sprint
+    level_expectation: El Mid obtiene sign-off explícito del cliente antes de pasar a desarrollo. No asume que 'lo que no se comentó está aprobado'.
+    guidance: El sign-off del cliente es la garantía de que el equipo construye lo correcto. Sin sign-off documentado, cualquier corrección futura puede ser retrabajo no facturable.
+  - title: Preparación de reuniones
+    text: 'Preparar cada reunión con cliente usando el Formato de Preparación de Reuniones: objetivo, agenda, material de soporte, preguntas anticipadas y acciones críticas a lograr. Completarlo al menos 24 horas antes.'
+    acceptance_criteria: El Mid llega a las reuniones con el objetivo de la sesión claro y material preparado. El cliente percibe dominio y preparación. No hay reuniones donde el Mid improvisa la agenda. Si el cliente hace una pregunta que el Mid no anticipó, documenta la respuesta y hace seguimiento. Si opera solo, prepara el formato de reunión sin apoyo de otros niveles.
+    deliverable: Formato de preparación completado al menos 24 horas antes de cada reunión con cliente.
+    deliverable_format: XLS Formato Prep Reuniones
+    frequency: Obligatorio para cada reunión con cliente
+    level_expectation: El Mid prepara reuniones con criterio. El formato de preparación es una herramienta de pensamiento, no un trámite burocrático.
+    guidance: Una reunión sin preparación es tiempo perdido del cliente y una oportunidad de impresionar desperdiciada.
+  - title: Sesiones 1:1 de retroalimentación con cliente
+    text: Agendar y ejecutar sesiones one-on-one con el cliente para identificar su percepción de calidad, expectativas no explícitas y sugerencias de mejora. Documentar el feedback y comunicarlo al equipo.
+    acceptance_criteria: El cliente siente cercanía para expresar preocupaciones que no expresaría en sesiones formales. El Mid detecta señales de insatisfacción antes de que escalen. El feedback de las sesiones 1:1 se incorpora en el siguiente sprint sin que el cliente tenga que repetirlo.
+    deliverable: Sesiones ejecutadas con evidencia de feedback registrado y comunicado al equipo.
+    deliverable_format: Mail, Chat, Calendario
+    frequency: Al menos cada 3-4 semanas
+    level_expectation: El Mid construye confianza con el cliente a través de los 1:1. Si opera solo, es el único punto de contacto de Arena con el cliente para estos temas.
+    guidance: Los problemas de relación con el cliente se detectan en los 1:1, no en las sesiones formales. El Mid los busca activamente.
+  - title: Comunicación de avance con stakeholders
+    text: Mantener informados a todos los stakeholders relevantes sobre el avance del proyecto mediante mensajes directos o en chat grupal 2-3 veces por semana, sin esperar las sesiones formales.
+    acceptance_criteria: Los stakeholders conocen el estado del proyecto sin esperar el siguiente status report. El Mid comunica avances concretos y proactivamente cuando hay una desviación o riesgo. El cliente no hace preguntas de seguimiento porque ya tiene visibilidad del avance.
+    deliverable: Evidencia de mensajes de avance en chat individual o grupal.
+    deliverable_format: Chat Teams
+    frequency: 2-3 veces por semana
+    level_expectation: El Mid comunica avances reales de forma proactiva. Su comunicación frecuente elimina la ansiedad del cliente por falta de visibilidad.
+    guidance: La comunicación proactiva genera confianza. El Mid no espera al weekly para informar sobre algo que el cliente necesita saber hoy.
+  - title: Seguimiento a acuerdos — Pre-reads y minutas
+    text: Enviar pre-reads con el material de la sesión al menos 24 horas antes de cada reunión con cliente. Documentar y enviar minutas con validaciones, acuerdos y siguientes pasos dentro de las 24 horas posteriores a cada sesión.
+    acceptance_criteria: El cliente recibe el material con anticipación y llega con preguntas preparadas. Las minutas son claras, sin errores de ortografía y documentan acuerdos con responsable y fecha. Los acuerdos de las minutas se ejecutan en el siguiente sprint. El Mid revisa la minuta antes de enviar, siempre.
+    deliverable: Correos con pre-reads enviados 24 hrs antes. Minutas enviadas dentro de las 24 hrs posteriores.
+    deliverable_format: Mail
+    frequency: Por evento / al menos 1 vez por semana
+    level_expectation: El Mid envía pre-reads y minutas como parte de su rutina de comunicación. Si opera solo, es el único responsable de toda la comunicación formal con el cliente.
+    guidance: Una minuta mal redactada invalida la percepción de calidad del equipo. El Mid la revisa con el mismo cuidado que revisa un diseño.
+  - title: Análisis de impactos ante cambios
+    text: Evaluar el impacto en fechas, dependencias y carga del equipo antes de aceptar o ejecutar cambios en el alcance o plan de trabajo. Documentar el análisis y comunicarlo al cliente y al equipo directivo de Arena antes de comprometerse.
+    acceptance_criteria: No se ejecutan cambios de alcance sin evaluación explícita de impacto documentada. El Mid comunica el impacto al cliente antes de comprometerse, no después de haberlo absorbido. El equipo directivo de Arena no descubre cambios de alcance absorbidos sin análisis.
+    deliverable: Documentación escrita del análisis de impacto con decisión y comunicación al cliente.
+    deliverable_format: Mail, Minuta
+    frequency: Por evento
+    level_expectation: 'El Mid evalúa el impacto antes de decir que sí. No absorbe cambios silenciosamente: los analiza y los comunica.'
+    guidance: Aceptar un cambio de alcance sin analizar su impacto es regalar tiempo del equipo sin visibilidad del cliente ni de Arena.
+  - title: Gestión de dependencias
+    text: 'Identificar y gestionar activamente las dependencias que impactan la ejecución del sprint: con desarrollo, con el cliente, con otros equipos de Arena. Comunicar bloqueos por dependencias antes de que afecten un entregable.'
+    acceptance_criteria: Las dependencias críticas no bloquean entregables porque el Mid las anticipó y las gestionó. El PM o equipo directivo no descubre bloqueos por dependencias que el Mid ya conocía. El Mid comunica dependencias de riesgo con al menos un sprint de anticipación.
+    deliverable: Mensajes o correos gestionando dependencias críticas del proyecto.
+    deliverable_format: XLS, Chat, Minuta
+    frequency: Semanal
+    level_expectation: El Mid gestiona dependencias proactivamente. No espera a que un bloqueo impacte el sprint para comunicarlo.
+    guidance: Una dependencia no gestionada es un bloqueo anunciado. El Mid las identifica y las resuelve antes de que impacten.
+  - title: Traducción técnica a stakeholders
+    text: Explicar aspectos técnicos de UX de forma comprensible para stakeholders no técnicos, adaptando el lenguaje y nivel de detalle al perfil del interlocutor en cada sesión.
+    acceptance_criteria: Los stakeholders de negocio entienden qué está construyendo el equipo de UX sin necesitar un intérprete. El Mid no usa jerga técnica de diseño con stakeholders de negocio sin explicarla. El cliente de negocio puede tomar decisiones informadas sobre el diseño basándose en la presentación del Mid.
+    deliverable: Presentaciones de avance con explicaciones técnicas adaptadas al stakeholder.
+    deliverable_format: PPT
+    frequency: Semanal / Por sprint
+    level_expectation: 'El Mid adapta su comunicación al stakeholder. No es responsabilidad del cliente entender el lenguaje del diseñador: es responsabilidad del Mid hablar el lenguaje del cliente.'
+    guidance: Un stakeholder que no entiende lo que se está construyendo no puede dar feedback útil ni tomar decisiones correctas.
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Las estimaciones de esfuerzo que firma en propuestas comerciales se sostienen durante la ejecución, y puede defenderlas.
+
+      • Revisa que lo comprometido en cada sprint sea consistente con la propuesta original y corrige las desviaciones recurrentes.
+
+      • Usa el histórico de estimado contra real de los proyectos para mejorar cómo estima toda la práctica.
+
+      • Identifica la sobrecarga del equipo y reasigna o escala antes de que comprometa los plazos.
+
+      • Informa al director con anticipación y con una propuesta de solución cuando un proyecto está en riesgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide retroalimentación al director, a otros Leads y a su equipo sobre su gestión, y comunica qué cambió a partir de ella.
+
+      • Traduce la retroalimentación de clientes y proyectos en ajustes a los estándares y procesos de la práctica.
+
+      • Asegura que los acuerdos de mejora de las personas que evalúa queden documentados y se revisen en el siguiente ciclo.
+
+      • Reconoce sus propios errores frente al equipo, para que la apertura se practique desde el liderazgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: UXUI
+  level: SNR
+  questions:
+  - title: Definición estratégica del problema de experiencia
+    text: 'Definir el problema estratégico de experiencia antes de cualquier actividad de diseño: conectar el objetivo de negocio con el comportamiento actual del usuario, la brecha deseada y el impacto económico estimado. Priorizar el problema frente a otras iniciativas con criterio explícito.'
+    acceptance_criteria: El problema puede explicarse sin mencionar una solución. Existe métrica asociada con baseline documentado. Los stakeholders aprueban el brief entendiendo el impacto esperado, no solo la solución propuesta. El Sr prioriza la iniciativa frente a otras con criterio explícito de impacto/esfuerzo antes de comprometerse a ejecutarla.
+    deliverable: UX Brief estratégico con hipótesis formulada como experimento, KPI principal con baseline y mapa del punto de fricción en el journey.
+    deliverable_format: XLS, Planner, Notion
+    frequency: Inicio de cada iniciativa relevante o rediseño mayor
+    level_expectation: El Sr define el problema con profundidad estratégica. No acepta puntos de partida que son soluciones disfrazadas de problemas. Su brief es la referencia técnica del proyecto para todos los niveles.
+    guidance: Si el documento empieza con 'rediseñar la pantalla de…', el Sr ya falló en la definición del problema. Su valor es identificar la fricción sistémica antes de proponer cualquier solución.
+  - title: Identificación y validación de supuestos críticos
+    text: Identificar, clasificar por riesgo y validar con evidencia los supuestos que sostienen la hipótesis de diseño. Definir el método de validación adecuado al contexto del proyecto (entrevistas, datos cuantitativos, tests rápidos, shadowing). Documentar qué se sabe y qué se asume con distinción explícita.
+    acceptance_criteria: 'Los supuestos críticos de alto impacto tienen evidencia antes de pasar a prototipo. El Sr puede distinguir claramente entre lo que se sabe con evidencia y lo que se está asumiendo. No se avanza a diseño high-fidelity con supuestos críticos sin validar. La síntesis de research es accionable: no es un transcript, es un insight que guía la decisión de diseño.'
+    deliverable: Matriz de supuestos priorizados con clasificación de riesgo, evidencia documentada por supuesto e insight sintetizado.
+    deliverable_format: XLS, Planner
+    frequency: Antes de pasar a prototipo validado
+    level_expectation: El Sr valida supuestos con el rigor proporcional al riesgo. No sobre-investiga ni sub-investiga. Su criterio para definir qué validar y cómo es parte de su valor diferencial.
+    guidance: Diseñar sin validar supuestos críticos es apostar el tiempo del cliente en una intuición. El Sr define el nivel de evidencia necesario según el riesgo de cada supuesto.
+  - title: Arquitectura de decisión y flujo completo
+    text: 'Diseñar el sistema de decisiones del usuario: user flow end-to-end, mapa de estados, microdecisiones críticas, puntos de abandono potencial y reglas de negocio con implicación de experiencia. El Sr define el flujo completo aunque opere solo.'
+    acceptance_criteria: No existen estados implícitos en el diseño del Sr. El equipo de desarrollo puede implementar el flujo sin tomar decisiones de diseño por su cuenta. QA puede testear con un checklist derivado del flujo. Todos los edge cases identificados están documentados, aunque no todos estén diseñados en alta fidelidad. Las reglas de negocio que afectan la experiencia son explícitas y trazables.
+    deliverable: User Flow detallado, mapa de estados, diagrama de decisiones y documento de reglas UX ligadas a negocio.
+    deliverable_format: Figma, XLS
+    frequency: Por feature o epic relevante
+    level_expectation: El Sr diseña decisiones, no pantallas. Su arquitectura de flujo es la referencia técnica que elimina la ambigüedad de implementación para todo el equipo.
+    guidance: El 70% del retrabajo en producto no es visual. Es ambigüedad en decisiones de flujo que se resuelve con criterio del desarrollador en lugar del diseñador. El Sr elimina esa ambigüedad de raíz.
+  - title: Diseño de interfaz con rigor sistémico
+    text: Construir o supervisar la construcción visual de la interfaz con alineación al Design System, criterios cognitivos, accesibilidad WCAG AA y consistencia cross-product. Definir los patrones de diseño que el equipo seguirá. Justificar funcionalmente todas las decisiones estéticas.
+    acceptance_criteria: El diseño cumple WCAG AA en contraste. No hay deuda visual innecesaria creada por excepciones no justificadas. Las decisiones estéticas tienen argumento funcional documentado. Los patrones definidos por el Sr son adoptados por el Mid y Jr sin necesidad de corrección recurrente en el mismo punto.
+    deliverable: Pantallas en Figma versionadas con componentes documentados, excepciones justificadas y criterios de accesibilidad verificados.
+    deliverable_format: Figma
+    frequency: Cada sprint de diseño
+    level_expectation: El Sr define el rigor sistémico del diseño. Su criterio es el estándar de referencia para el equipo. Una excepción que el Sr aprueba sin justificación funcional es una excepción que el Mid y Jr replicarán sin criterio.
+    guidance: Si cada feature parece de empresa distinta, hay un problema de liderazgo UX, no solo de estética. El Sr define y hace cumplir los patrones.
+  - title: Validación de prototipo antes de desarrollo
+    text: Diseñar el protocolo de validación, ejecutar o supervisar las pruebas con usuarios y sintetizar los aprendizajes en insights accionables. El Sr valida comprensión, confianza, claridad, fluidez de tarea y fricción emocional, no solo si 'se ve bien'.
+    acceptance_criteria: 'Los usuarios completan las tareas críticas sin guía del Sr. Las dudas recurrentes identificadas en el test están resueltas antes del handoff. La síntesis de aprendizajes es accionable: cada hallazgo tiene una decisión de diseño asociada. El Sr puede defender ante el cliente por qué se tomó o no se tomó cada decisión derivada del test.'
+    deliverable: Prototipo navegable validado. Grabaciones o notas de test. Síntesis de aprendizajes con ajustes realizados.
+    deliverable_format: Figma, Mail, Teams
+    frequency: Antes de handoff a desarrollo
+    level_expectation: El Sr valida con rigor proporcional al impacto. No sobre-valida ni sub-valida. Su síntesis de aprendizajes convierte observaciones de usuarios en decisiones de diseño concretas.
+    guidance: Validar después de desarrollar es como testear el paracaídas en el aire. El Sr valida antes, siempre, aunque sea con un test rápido de 30 minutos.
+  - title: Handoff estratégico y criterios de aceptación
+    text: 'Convertir el diseño en especificación ejecutable: definir estados, microcopy, reglas de interacción, animaciones y criterios de aceptación medibles en el backlog. El Sr es responsable de que desarrollo no tenga que suponer nada.'
+    acceptance_criteria: El equipo de desarrollo implementa el diseño sin ambigüedades no anticipadas por el Sr. QA puede testear con un checklist generado directamente del handoff del Sr. El PM entiende el impacto esperado de cada criterio de aceptación. Si el Sr pregunta '¿qué pasa si…?' y no tiene la respuesta en su Figma, actualiza el archivo antes de hacer el handoff.
+    deliverable: Archivo Figma listo para desarrollo con especificaciones completas. Criterios de aceptación en backlog. Sesión de handoff ejecutada.
+    deliverable_format: Figma, Backlog, Teams
+    frequency: Cada entrega a desarrollo
+    level_expectation: El Sr es responsable de la completitud del handoff. Su especificación elimina la ambigüedad de implementación. Un handoff incompleto es un costo que paga el equipo de desarrollo, no el Sr.
+    guidance: Si el dev te pregunta '¿y qué pasa si…?' y no sabes, el error es tuyo, no de dev.
+  - title: Medición post-release y aprendizaje
+    text: 'Analizar el impacto de los diseños en los KPIs definidos al inicio. Sintetizar cambios en comportamiento, feedback cualitativo e impacto sistémico en otros flows. Tomar una decisión documentada: iterar, escalar o descartar.'
+    acceptance_criteria: Existe un cambio medible en el KPI definido al inicio o un aprendizaje claro documentado sobre por qué no fue medible. El Sr comunica el resultado a stakeholders y lo incorpora en el siguiente ciclo de diseño. Si el impacto fue negativo, lo documenta con honestidad y propone ajuste. No cierra una iniciativa sin al menos una ronda de análisis post-release.
+    deliverable: Reporte before/after con métricas, insight accionable, decisión documentada y plan de siguiente iteración.
+    deliverable_format: XLS, PPT/PDF
+    frequency: 1-4 semanas post release
+    level_expectation: El Sr mide el impacto de lo que diseñó y lo comunica con honestidad. Si la iniciativa no generó el impacto esperado, lo dice y propone qué hacer diferente.
+    guidance: Si lanzas y no mides, eres diseñador decorativo. El Sr cierra el ciclo de cada iniciativa con evidencia.
+  - title: Documentación del proyecto
+    text: Garantizar que la estructura de archivos del proyecto en Teams/SharePoint está actualizada, accesible y organizada en todo momento. Si hay Jr o Mid en el equipo, establecer el estándar de organización y revisarlo periódicamente.
+    acceptance_criteria: El Sr puede confirmar en cualquier momento que la documentación del proyecto es suficiente para un handover de emergencia. Un miembro nuevo del equipo puede entender el estado del proyecto solo con la documentación disponible. Si hay Jr o Mid, el Sr establece el estándar de organización y lo revisa, no lo ejecuta.
+    deliverable: Canal Teams organizado con archivos accesibles. Indicadores actualizados. Estructura verificada.
+    deliverable_format: Teams, SharePoint, XLS
+    frequency: Semanal / Inicio de proyecto
+    level_expectation: El Sr garantiza que la documentación del proyecto sea suficiente para un handover sin su presencia. Su criterio de organización es el estándar del equipo.
+    guidance: 'El Sr establece el estándar documental. No ejecuta la documentación de todo el equipo: define cómo debe estar organizada y verifica que se cumpla.'
+  - title: Rutinas de gestión — Daily
+    text: 'Asistir o facilitar el daily con criterio de calidad de ejecución: verificar que el equipo reporta avance real, que los bloqueos se gestionan antes de impactar el sprint y que la sesión dura entre 15 y 20 minutos. Si opera solo, reporta avance al PM o stakeholder.'
+    acceptance_criteria: El Sr no deja que bloqueos críticos se acumulen de un daily al siguiente sin acción. Si el daily pierde foco, lo redirige. Si hay Jr o Mid, el Sr detecta en el daily señales de riesgo técnico de diseño que los niveles inferiores no ven. Si opera solo, su update diario al PM es proactivo, no reactivo.
+    deliverable: Daily ejecutado con participación activa. Bloqueos gestionados. Sesión de 15-20 minutos.
+    deliverable_format: Calendario, Chat
+    frequency: Diaria
+    level_expectation: El Sr usa el daily como herramienta de detección temprana de riesgos de diseño. No lo trata como un trámite de reporte.
+    guidance: El Sr asiste al daily con criterio de riesgo técnico de diseño. Su presencia sirve para anticipar problemas, no para microgestionar la ejecución.
+  - title: Rutinas de gestión — Sprint Planning
+    text: 'Liderar el sprint planning con criterio técnico de UX: desafiar estimaciones irreales, asegurar que todas las tareas tienen definición de terminado clara y que el plan es ejecutable dados los supuestos del proyecto.'
+    acceptance_criteria: Ninguna tarea entra al sprint sin DoD clara. El Sr hace challenge de estimaciones irreales antes de comprometerse con el cliente. El plan de sprint es ejecutable dado el equipo disponible. Si opera solo, define las DoD por su cuenta y las valida con el PM o cliente antes del sprint.
+    deliverable: Sprint planning liderado con estimaciones técnicamente sólidas y DoD definida para todas las tareas.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Sr lidera el planning con criterio técnico. No aprueba compromisos ambiguos ni estimaciones que sabe que no son ejecutables.
+    guidance: El Sr no permite que el equipo entre a un sprint con definiciones incompletas. Su responsabilidad es que el planning sea técnicamente sólido, no optimista.
+  - title: Rutinas de gestión — Sprint Review
+    text: 'Exponer los resultados técnicos del sprint con criterio estratégico: qué se completó, qué impacto tiene en el KPI definido y qué se aprendió. Dar retroalimentación técnica profunda al Mid y Jr si los hay.'
+    acceptance_criteria: El Sr presenta resultados en términos de impacto en el problema definido al inicio, no solo en términos de pantallas entregadas. La retroalimentación al Mid y Jr es técnicamente específica y produce cambios en el siguiente sprint. El cliente percibe que el Sr tiene criterio estratégico, no solo de ejecución.
+    deliverable: Sprint review ejecutado con resultados presentados en términos de impacto. Retroalimentación al equipo documentada.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: El Sr presenta resultados con criterio estratégico. Su review conecta la ejecución del sprint con el problema que se está resolviendo.
+    guidance: El Sr conecta los resultados del sprint con el problema original en cada review. Si el equipo pierde esa conexión, es su responsabilidad recuperarla.
+  - title: Rutinas de gestión — Sprint Retrospectiva
+    text: Facilitar o participar en la retrospectiva identificando los patrones de proceso que generan retrabajo recurrente y proponiendo cambios sistémicos, no solo ajustes puntuales.
+    acceptance_criteria: El Sr identifica en la retro patrones de proceso que se repiten entre sprints y propone cambios sistémicos. Los acuerdos de retro se implementan en el siguiente sprint con seguimiento. Si hay Jr o Mid, el Sr facilita la retro con objetividad y crea un espacio seguro para el feedback.
+    deliverable: Retro ejecutada con análisis de patrones y propuestas de cambio sistémico documentadas.
+    deliverable_format: Calendario, Minuta
+    frequency: Por sprint
+    level_expectation: 'El Sr usa la retro para mejorar el proceso del equipo a nivel sistémico. Sus propuestas van más allá del sprint: cambian la forma de trabajar.'
+    guidance: El Sr no facilita retros donde todo 'salió bien'. Busca activamente los patrones de fricción del equipo y los convierte en mejoras sistémicas.
+  - title: Rutinas de gestión — Refinamiento de backlog
+    text: 'Liderar el refinamiento con criterio técnico de UX: identificar actividades mal definidas, proponer criterios de aceptación técnicamente correctos y priorizar con criterio de impacto en el problema original.'
+    acceptance_criteria: Ninguna actividad ambigua entra al planning sin ser refinada. El Sr propone criterios de aceptación que son verificables y que el equipo puede usar para decidir si algo está terminado. La priorización del backlog está justificada en términos del problema original.
+    deliverable: Backlog refinado con criterios de aceptación técnicamente sólidos y priorización justificada.
+    deliverable_format: Calendario, Minuta
+    frequency: Por evento / ante cambios de backlog
+    level_expectation: El Sr lidera el refinamiento con criterio técnico y estratégico. Su contribución es que el backlog refleje las prioridades correctas y que cada tarea tenga un criterio de aceptación verificable.
+    guidance: El Sr refina el backlog con criterio de impacto, no solo de urgencia. Un backlog priorizado por impacto genera sprints más valiosos.
+  - title: Cuestionamiento y validación de resultados
+    text: Presentar los diseños de solución con el nivel de detalle estratégico suficiente para generar decisiones informadas del cliente, no solo aprobación visual. Obtener sign-off explícito y documentado antes de pasar a desarrollo.
+    acceptance_criteria: El cliente aprueba entendiendo el impacto esperado del diseño, no solo su apariencia. El Sr no lleva a revisión diseños que no pasaron por validación mínima con usuario. Las correcciones del cliente son incorporadas y confirmadas antes del siguiente sprint. Si el cliente propone una solución que el Sr considera incorrecta, lo cuestiona con criterio y documenta la discusión.
+    deliverable: Diseño de solución versionado con sign-off documentado. Decisiones del cliente registradas con justificación.
+    deliverable_format: PPT/PDF, Figma
+    frequency: Por sprint
+    level_expectation: 'El Sr obtiene sign-off con criterio. No lo busca como trámite: lo usa como oportunidad para alinear expectativas y comprometer al cliente con el problema que se está resolviendo.'
+    guidance: El Sr busca sign-off informado, no solo aprobación visual. Un cliente que aprueba sin entender el impacto es un cliente que cuestionará el resultado en producción.
+  - title: Preparación de reuniones
+    text: 'Preparar y liderar la preparación de reuniones críticas usando el Formato de Preparación de Reuniones: definir el objetivo estratégico, la estructura de la sesión, las preguntas clave para el cliente y los posibles escenarios de respuesta.'
+    acceptance_criteria: El Sr llega a las reuniones con el objetivo estratégico claro y el material preparado con criterio. El cliente percibe dominio y preparación desde los primeros minutos. El Sr anticipa los posibles escenarios de respuesta del cliente y tiene una postura clara para cada uno. Si hay Jr o Mid, el Sr revisa el formato de preparación del equipo antes de la sesión.
+    deliverable: Formato de preparación completado al menos 24 horas antes de cada reunión crítica.
+    deliverable_format: XLS Formato Prep Reuniones
+    frequency: Obligatorio para cada reunión estratégica con cliente
+    level_expectation: El Sr prepara reuniones con criterio estratégico. Su formato de preparación anticipa los escenarios difíciles, no solo el escenario ideal.
+    guidance: El Sr no improvisa reuniones con stakeholders senior del cliente. Su preparación establece el estándar de la sesión.
+  - title: Sesiones 1:1 de retroalimentación con cliente
+    text: Agendar y ejecutar sesiones one-on-one con stakeholders clave del cliente para detectar señales tempranas de insatisfacción, alinear expectativas estratégicas y construir una relación de confianza que va más allá del proyecto.
+    acceptance_criteria: El Sr detecta señales de insatisfacción del cliente antes de que escalen a sesiones formales. El cliente expresa preocupaciones al Sr que no expresaría en el weekly status. El feedback de los 1:1 se incorpora en el siguiente sprint y el cliente lo percibe. El Sr comunica al Lead los hallazgos estratégicos de los 1:1.
+    deliverable: Sesiones ejecutadas con evidencia de feedback registrado y comunicado al equipo y al Lead cuando aplica.
+    deliverable_format: Mail, Chat, Calendario
+    frequency: Al menos cada 3-4 semanas
+    level_expectation: El Sr construye confianza con el cliente a nivel estratégico. Sus 1:1 son la fuente más valiosa de información sobre el estado real de la relación con el cliente.
+    guidance: Las señales de riesgo de relación con el cliente se detectan en los 1:1, no en las sesiones formales donde ya es tarde.
+  - title: Comunicación de avance con stakeholders
+    text: Mantener informados a todos los stakeholders relevantes 2-3 veces por semana mediante mensajes directos o en chat grupal. Comunicar proactivamente desviaciones o riesgos antes de que el cliente los descubra.
+    acceptance_criteria: Los stakeholders conocen el estado del proyecto sin esperar el siguiente status report. El Sr comunica desviaciones proactivamente con suficiente anticipación para tomar acciones correctivas. El cliente nunca descubre por su cuenta un riesgo que el Sr ya sabía.
+    deliverable: Evidencia de mensajes de avance en chat individual o grupal.
+    deliverable_format: Chat Teams
+    frequency: 2-3 veces por semana
+    level_expectation: 'El Sr comunica con proactividad estratégica. No solo reporta avances: anticipa y comunica riesgos antes de que impacten al cliente.'
+    guidance: El Sr comunica proactivamente, especialmente cuando hay malas noticias. Un cliente sorprendido por un riesgo que el Sr conocía es un cliente que pierde confianza.
+  - title: Seguimiento a acuerdos — Pre-reads y minutas
+    text: Asegurar que todas las sesiones con cliente tienen pre-read 24 horas antes y minuta dentro de las 24 horas posteriores. Si hay Jr o Mid en el equipo, el Sr establece el estándar de calidad y revisa antes de enviar.
+    acceptance_criteria: El cliente recibe material antes de cada sesión y minuta después. Las minutas del equipo son revisadas por el Sr antes de enviarse cuando hay Jr o Mid. El estándar de redacción y ortografía es uniforme. Los acuerdos de las minutas tienen responsable y fecha. Si el Sr opera solo, envía todo sin apoyo.
+    deliverable: Pre-reads enviados 24 hrs antes. Minutas enviadas dentro de las 24 hrs posteriores, revisadas por el Sr.
+    deliverable_format: Mail
+    frequency: Por evento / al menos 1 vez por semana
+    level_expectation: El Sr establece y mantiene el estándar de comunicación escrita del equipo. Revisa antes de que llegue al cliente.
+    guidance: El Sr establece el estándar de comunicación escrita del equipo. Una minuta mal redactada que llega al cliente con el nombre del equipo de Arena es un problema del Sr, no solo de quien la escribió.
+  - title: Análisis de impactos ante cambios
+    text: Evaluar el impacto estratégico de los cambios de alcance en fechas, dependencias, calidad del diseño y relación con el cliente. Comunicar el análisis al cliente y al equipo directivo de Arena antes de comprometerse a cualquier cambio.
+    acceptance_criteria: No se ejecutan cambios de alcance sin análisis de impacto documentado y comunicado. El equipo directivo de Arena no descubre cambios absorbidos silenciosamente por el Sr. El cliente entiende las implicaciones del cambio antes de solicitarlo formalmente.
+    deliverable: Análisis de impacto documentado con decisión y comunicación al cliente y al equipo directivo.
+    deliverable_format: Mail, Minuta
+    frequency: Por evento
+    level_expectation: El Sr evalúa impactos con criterio estratégico. No dice que sí a cambios de alcance sin saber exactamente qué implican para el proyecto.
+    guidance: El Sr no absorbe cambios de alcance sin análisis. Su criterio para evaluar impacto protege al equipo y al cliente de comprometerse a algo que no es ejecutable.
+  - title: Definición y defensa de límites de alcance
+    text: Establecer y defender el alcance del proyecto en negociaciones sobre entregables, equipo y tiempos. Documentar los acuerdos de alcance y comunicar al equipo directivo los intentos de scope creep.
+    acceptance_criteria: No existe scope creep silencioso en los proyectos del Sr. Cuando el cliente pide algo fuera del alcance, el Sr lo identifica, lo negocia y lo documenta. El equipo directivo de Arena conoce el estado del alcance sin tener que preguntar al Sr.
+    deliverable: Documentación y minutas de acuerdos de alcance. Comunicación al equipo directivo de Arena de intentos de scope creep.
+    deliverable_format: PPT, Minuta
+    frequency: Continuo
+    level_expectation: 'El Sr defiende el alcance con criterio y documenta cada negociación. No absorbe trabajo extra silenciosamente: lo identifica, lo negocia o lo escala.'
+    guidance: El scope creep silencioso es el mayor riesgo financiero de un proyecto de servicios. El Sr lo identifica y lo comunica, siempre.
+  - title: Reencuadre de problemas del cliente
+    text: Cuestionar el problema que el cliente o el equipo busca resolver cuando las actividades propuestas no atacan la causa raíz. Proponer un reencuadre con argumentos de impacto y alinear al cliente en el nuevo enfoque antes de ejecutar.
+    acceptance_criteria: El cliente acepta el ajuste de enfoque del Sr cuando el reencuadre tiene argumentos sólidos de impacto. El Sr no reencuadra el problema sin tener evidencia o criterio técnico que lo respalde. El reencuadre no implica rehacer la propuesta comercial, sino refinar el enfoque dentro del alcance existente.
+    deliverable: Documentación del reencuadre propuesto con argumentos y alineación del cliente documentada.
+    deliverable_format: PPT, Mail
+    frequency: Por evento
+    level_expectation: 'El Sr reencuadra con criterio técnico y con datos. No cuestiona el problema por instinto: lo hace cuando tiene evidencia de que el enfoque actual no generará el impacto esperado.'
+    guidance: 'El Sr cuestiona el problema cuando la solución propuesta no lo resuelve. Su valor no es ejecutar lo que el cliente pide: es asegurar que lo que el cliente pide resuelve el problema correcto.'
+  - title: Intervención temprana en riesgos
+    text: Anticipar, comunicar y actuar ante señales tempranas de riesgo de proyecto (técnicos, de relación con el cliente, de alcance, de calidad) involucrando al equipo de Arena y al cliente según la naturaleza del riesgo.
+    acceptance_criteria: Los riesgos no escalan a crisis porque el Sr los identificó y actuó antes. El equipo directivo de Arena no se entera de un riesgo por primera vez cuando ya es un problema. El Sr puede describir la señal que le indicó el riesgo, no solo el riesgo en sí.
+    deliverable: Comunicación oral o escrita anticipando riesgos y acciones correctivas.
+    deliverable_format: Mail, Chat
+    frequency: Continuo
+    level_expectation: 'El Sr detecta y actúa sobre señales tempranas de riesgo. No espera a tener certeza del problema para comunicarlo: lo comunica cuando ve la señal.'
+    guidance: 'Las señales de riesgo pueden ser cualitativas: un cambio en el tono del cliente, una pregunta inusual, un silencio prolongado. El Sr las lee.'
+  - title: Transferencia de criterio al equipo
+    text: 'Desarrollar el criterio técnico de diseño del Mid y Jr mediante coaching en contexto: retroalimentación técnica en sesiones de diseño, preguntas que desarrollan el razonamiento y espacios para que el equipo proponga soluciones antes de que el Sr las proponga.'
+    acceptance_criteria: El equipo propone soluciones de diseño por su cuenta y el Sr las cuestiona y refina, no las reemplaza. El Jr o Mid no necesita al Sr para tomar decisiones de diseño básicas del nivel que le corresponde. El mismo error de diseño no se repite en el Jr o Mid dos sprints seguidos.
+    deliverable: Retroalimentación técnica documentada y participación del equipo en propuestas de solución evidenciada.
+    deliverable_format: Notas, Mail, Teams
+    frequency: Continuo
+    level_expectation: El Sr transfiere criterio, no solo correcciones. Su coaching hace al equipo más autónomo, no más dependiente de su aprobación.
+    guidance: El Sr no tiene éxito si el equipo depende de él para cada decisión de diseño. Su objetivo es que el Mid sea más autónomo al final del proyecto que al inicio.
+  - title: Posicionamiento como asesor de confianza con el cliente
+    text: Desarrollar una relación de confianza y cercanía con los stakeholders clave del cliente que vaya más allá del entregable del sprint. Identificar necesidades del cliente más allá del proyecto actual y comunicar oportunidades al equipo directivo de Arena.
+    acceptance_criteria: El cliente consulta al Sr sobre temas de experiencia que van más allá del alcance del proyecto actual. El Sr identifica y comunica al menos 1 oportunidad de expansión o necesidad no cubierta por semestre. El equipo directivo recibe esta información del Sr, no al revés.
+    deliverable: Identificación de necesidades del stakeholder más allá del proyecto y oportunidades comunicadas internamente.
+    deliverable_format: Mail, Chat
+    frequency: Quincenal / Mensual
+    level_expectation: 'El Sr construye la relación con el cliente a nivel estratégico. Su rol no termina en el entregable del sprint: es el embajador de Arena ante el cliente de UX.'
+    guidance: La confianza del cliente que genera expansiones comerciales se construye en los espacios informales, no en las sesiones formales.
+  - title: Autonomía en la gestión del proyecto
+    text: Gestionar y entregar el proyecto durante períodos largos sin necesitar apoyo o presencia constante del equipo directivo, manteniendo tiempo, calidad y confianza del cliente.
+    acceptance_criteria: El equipo directivo de Arena puede no estar involucrado en el proyecto por 2-3 semanas sin que el cliente lo perciba negativamente. El Sr escala al equipo directivo solo cuando el riesgo o la decisión supera su nivel de autoridad, no por falta de criterio. El proyecto avanza en tiempo y calidad sin supervisión continua.
+    deliverable: 'Evidencia de gestión autónoma del proyecto: minutas, planes de sprint, comunicación con cliente y resolución de riesgos sin escalamiento innecesario.'
+    deliverable_format: Teams, Mail, Figma
+    frequency: Continuo
+    level_expectation: El Sr opera con autonomía real. El director confía en que el proyecto avanza sin su presencia constante porque el Sr tiene el criterio para gestionarlo.
+    guidance: 'La autonomía del Sr no significa hacer todo solo: significa saber cuándo necesita apoyo y cuándo puede resolverlo por su cuenta.'
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Las estimaciones de esfuerzo que firma en propuestas comerciales se sostienen durante la ejecución, y puede defenderlas.
+
+      • Revisa que lo comprometido en cada sprint sea consistente con la propuesta original y corrige las desviaciones recurrentes.
+
+      • Usa el histórico de estimado contra real de los proyectos para mejorar cómo estima toda la práctica.
+
+      • Identifica la sobrecarga del equipo y reasigna o escala antes de que comprometa los plazos.
+
+      • Informa al director con anticipación y con una propuesta de solución cuando un proyecto está en riesgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide retroalimentación al director, a otros Leads y a su equipo sobre su gestión, y comunica qué cambió a partir de ella.
+
+      • Traduce la retroalimentación de clientes y proyectos en ajustes a los estándares y procesos de la práctica.
+
+      • Asegura que los acuerdos de mejora de las personas que evalúa queden documentados y se revisen en el siguiente ciclo.
+
+      • Reconoce sus propios errores frente al equipo, para que la apertura se practique desde el liderazgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+- area: UXUI
+  level: LEAD
+  questions:
+  - title: Aseguramiento de gestión de proyectos — Seguimiento a PMs
+    text: Realizar seguimiento a los PMs con los que trabaja en el proyecto para evaluar el cumplimiento del checklist correspondiente y definir ajustes
+    acceptance_criteria: Se realiza una sesión de retroalimentación 1:1 con cada PM auditado, donde se revisan fortalezas, áreas de mejora y acuerdos de acción. Existe evidencia del feedback y de los acuerdos (ej. nota en herramienta interna, documento compartido o resumen breve).
+    deliverable: Checklist de cada PM evaluado documentado y compartido al PM en una sesión de retro
+    deliverable_format: Correo
+    frequency: Mensual / Bimestral
+    guidance: Cambio por Luis Becerril
+  - title: Guía y soporte al equipo de proyecto — Dailys
+    text: Asistir y participar activamente a los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre
+    acceptance_criteria: El lead participa de forma oral y escrita por chat o correo asegurando que el equipo no pierde de vista los entregables y riesgos críticos a resolver
+    deliverable: Reporte de asistencia en teams
+    deliverable_format: Teams
+    frequency: Al menos asistencia a 1 daily cada 15 días
+    guidance: El lead también evalúa el valor de la reunión, la preparación y foco del equipo y el cumplimiento en objetivo, agenda y tiempos de la reunión
+  - title: Guía y soporte al equipo de proyecto — Planning y review
+    text: Asistir y participar activamente a los planning y review del proyecto
+    acceptance_criteria: El lead participa de forma oral y escrita por chat o correo asegurando que el equipo no pierde de vista los entregables y riesgos críticos a resolver
+    deliverable: Reporte de asistencia en teams
+    deliverable_format: Teams
+    frequency: Cada sprint
+    guidance: El lead también evalúa el valor de la reunión, la preparación y foco del equipo y el cumplimiento en objetivo, agenda y tiempos de la reunión
+  - title: Guía y soporte al equipo de proyecto — Alineación con alcance
+    text: Asegurar y revisar la alineación recurrente del trabajo del equipo vs el alcance de la propuesta
+    acceptance_criteria: El lead revisa lo comprometido por contrato y propuesta vs lo que el equipo está entregando para identificar riesgos
+    deliverable: Documentación de ajustes o guía en sprint plan y sprint review
+    deliverable_format: Minuta/PPT / Word
+    frequency: Cada sprint
+    guidance: Esta actividad se recomienda como trabajo previo al sprint plan y sprint review para tener elementos que ayuden a dar guía al equipo
+  - title: Guía y soporte al equipo de proyecto — Sesiones críticas con stakeholders senior
+    text: Identificar, validar el material y preparación y participar en sesiones críticas donde asistirán stakeholders senior del cliente que requieran apoyo del lead
+    acceptance_criteria: Todas las sesiones con stakeholders no operativos del proyecto cuentan con un pre-read que el equipo y el cliente puede consultar previo a la sesión
+    deliverable: Material y presentación de sesiones clave
+    deliverable_format: PPT
+    frequency: Al menos 1 vez por sprint
+    guidance: El lead debe ayudar a que el equipo tenga clara la estructura, agenda y objetivos de la sesión antes de que construyan el material para evitar retrabajos
+  - title: Guía y soporte al equipo de proyecto — Mapeo de stakeholders
+    text: Ayudar al equipo a mapear y entender a todos los stakeholders involucrados
+    acceptance_criteria: Todo el equipo de proyecto conoce y entiende el rol de todos los stakeholders involucrados
+    deliverable: Directorio actualizado de stakeholders en la documentación del proyecto
+    deliverable_format: XLS
+    frequency: Al menos 1 vez por proyecto
+  - title: Guía y soporte al equipo de proyecto — One on ones con stakeholders senior
+    text: Agendar one on ones con stakeholders senior del proyecto para alinear expectativas y generar una relación de confianza y cercanía
+    acceptance_criteria: Los comentarios principales del one on one se comparten al equipo del proyecto en daily o planning
+    deliverable: Sesiones agendadas y ejecutadas en calendario
+    deliverable_format: Reunión en teams / presencial
+    frequency: Cada sprint
+  - title: Guía y soporte al equipo de proyecto — Participación de directores
+    text: Anticipar participación de directores en momentos y sesiones críticas, dando claridad de la comunicación o influencia requerida de su parte
+    acceptance_criteria: Explica de forma clara el status, la situación y lo que el equipo requiere por parte del director
+    deliverable: Mensajes a director de proyecto comunicando necesidad de apoyo
+    deliverable_format: Teams
+    frequency: Por evento o al menos 1 vez al mes
+  - title: Guía y soporte al equipo de proyecto — Plan de transición y staffing
+    text: Crear y ejecuta un plan de transición, onboarding, KTs y seguimiento al staffing del proyecto al inicio, durante y al final
+    acceptance_criteria: El plan de transición está hecho a la medida del proyecto y considera un plan de comunicación interna y con cliente, que el equipo del proyecto tiene claro y ejecuta con supervisión del lead
+    deliverable: Plan de trabajo y accionables
+    deliverable_format: XLS/PPT
+    frequency: Al menos 2 veces por proyecto
+  - title: Aseguramiento de gestión de proyectos — Cumplimiento PMO
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Oficina de PMO
+    acceptance_criteria: El equipo de la oficina de PMO no necesita estar recordando y dando seguimiento a que las actividades de la oficina de PMO se cumplan en tiempo y forma
+    deliverable: Actividades comunicadas por la oficina de PMO (e.g. status reports, alta de proyectos, etc.)
+    deliverable_format: Según guía oficina PMO
+    frequency: Semanal
+  - title: Aseguramiento de gestión de proyectos — Leads técnicos
+    text: Identificar y hacer equipo con leads técnicos para asegurar que el proyecto cuenta con las bases y diseños técnicos requeridos
+    acceptance_criteria: Existe un trabajo en equipo y alineación entre los leads asignados al proyecto
+    deliverable: Diseños técnicos validados y documentados
+    deliverable_format: Correo, Teams, Otro
+    frequency: Por Sprint
+  - title: Guía y soporte al equipo interno — Mesa de Talento
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades correspondientes a la Mesa de Talento
+    acceptance_criteria: El equipo de RH no necesita estar recordando y dando seguimiento a que las actividades de la Mesa de Talento se cumplan en tiempo y forma. En caso de cierre de proyecto se asegura que las evaluaciones están cerradas antes de que el equipo se vaya a otros proyectos o iniciativas
+    deliverable: Formatos y actividades comunicadas por RH de Mesa de Talento cumplidas en tiempo y forma
+    deliverable_format: Según guía RH
+    frequency: Semestral
+  - title: Guía y soporte al equipo interno — Planes de capacitación
+    text: Monitorear el avance de los planes de capacitación del equipo de Producto en sus proyectos
+    acceptance_criteria: En los one on ones con equipo directivo interno se comunica el avance de los PMs y las personas que no han podido avanzar por carga de trabajo
+    deliverable: Comunicación por escrito y oral del avance
+    deliverable_format: Correo, Mensaje Teams
+    frequency: Mensual / Bimestral
+  - title: Guía y soporte al equipo interno — Sesiones de mentoring
+    text: Monitorear la ejecución y calidad de las sesiones de mentoring de los equipos de producto en sus proyectos
+    acceptance_criteria: En los one on ones con equipo directivo interno se comunica el avance de los PMs y las personas que no han podido tener mentoring por carga de trabajo
+    deliverable: Comunicación por escrito y oral del avance
+    deliverable_format: Correo, Mensaje Teams
+    frequency: Mensual / Bimestral
+  - title: Guía y soporte al equipo interno — Vacaciones y ausencias
+    text: Dar seguimiento a la planeación y anticipación de los días de vacaciones y ausencias del equipo en sus proyectos para evitar riesgos en la ejecución
+    acceptance_criteria: Todas las vacaciones del equipo se encuentran registradas correctamente en Odoo y correo
+    deliverable: Vacaciones documentadas y aprobadas
+    deliverable_format: Correo, Odoo
+    frequency: Por sprint
+  - title: Guía y soporte al equipo interno — Dudas de procedimientos internos
+    text: Dar seguimiento a resolver directamente dudas de los procedimientos internos de Arena (e.g. PMO, Odoo, Mesa de Talento, Vacaciones, etc.)
+    acceptance_criteria: El equipo de RH identifica que el lead resuelve dudas y domina los procesos internos
+    deliverable: Reconocimiento del equipo del dominio de cómo funciona Arena
+    deliverable_format: Correo, Mensaje Teams
+  - title: Guía y soporte al equipo interno — Sesiones de aprendizaje con PMs
+    text: Planear y ejecutar sesiones de aprendizaje con el equipo de PMs
+    acceptance_criteria: El lead organiza material y presenta una capacitación, foro de trabajo, relato o experiencia que genere en el equipo aprendizaje, desarrolle habilidades de PM y deje al equipo con una encuesta de satisfacción de salida de la sesión con calificación alta
+    deliverable: Presentación y sesión ejecutada
+    deliverable_format: PPT
+    frequency: Al menos 1 vez por trimestre
+    guidance: 'Ejemplos de ideas:
+
+      -Fuckup story, role playing, "what would you have done", workshop de un tema específico, etc.
+
+      Importante que sea de un tema que sientas que domina a nivel experto'
+  - title: Guía y soporte al equipo interno — Directorio de KO y accesos
+    text: Asegurar el mantenimiento del directorio de KO, accesos internos Arena y otros clientes (bajas, altas, cambios de reporte)
+    acceptance_criteria: El equipo asignado a los proyectos está actualizado a los PMs de KO correspondientes y no existen cuentas activas de equipo Arena que ya no está en proyectos de KO
+    deliverable: Correo comunicando al equipo de KO ajustes
+    deliverable_format: Correo, XLS directorio
+    frequency: Por evento (inicio de proyecto, baja, contratación)
+  - title: Guía y soporte al equipo interno — Mejoras a metodologías y estándares
+    text: Identificar y gestionar la implementación de mejoras a las metodologías, estándares de trabajo y herramientas en coordinación con el resto de los leads y del equipo de Arena
+    acceptance_criteria: Se implementan las mejoras al equipo de forma sostenible y con una estrategia en linea con la visión del área
+    deliverable: Evidencia de prácticas implementadas
+    deliverable_format: Correo, Teams, Otro
+    frequency: Por evento (inicio de proyecto, baja, contratación)
+  - title: Soporte comercial — Identificación de oportunidades
+    text: Dar soporte comercial a través de la identificación de oportunidades, necesidades, evolución de soluciones actuales y sensibilización en temas de innovación para el cliente
+    acceptance_criteria: Equipo directivo recibe comunicación respecto a actividades realizadas de búsqueda comercial
+    deliverable: Mensajes y sesiones agendas para explorar oportunidades comerciales
+    deliverable_format: Agenda Teams
+    frequency: Semestral
+    guidance: No se califica el obtener oportunidades o necesidades, se califica el estar proactivamente realizando la búsqueda
+  - title: Soporte comercial — Construcción de propuestas
+    text: Dar soporte comercial a través de la construcción y validación de propuestas en conjunto con otros leads y el director
+    acceptance_criteria: Documento comercial revisada y validado por equipo directivo involucrado
+    deliverable: Propuesta comercial o materiales comerciales para conversaciones con clientes
+    deliverable_format: PPT
+    frequency: Por evento
+  - title: Soporte comercial — Facturación y temas administrativos
+    text: Dar soporte comercial a través del seguimiento a facturación y temas administrativos en caso de ser requerido
+    acceptance_criteria: No existen pendientes administrativos del proyecto (e.g. contratos, facturas, etc.) por activar o dar seguimiento
+    deliverable: Confirmación status o pendientes por resolver de temas administrativos
+    deliverable_format: Correo
+    frequency: Mensual / Bimestral
+  - title: Soporte comercial — Sesiones presenciales
+    text: Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para desarrollar una relación más cercana y mentener una presencia activa
+    acceptance_criteria: Se alinea con el cliente y con el director la estrategia de sesiones presenciales (frecuencia, foro, tema, equipo presente)
+    deliverable: Sesiones presenciales con cliente
+    deliverable_format: Teams
+    frequency: Quincenal - Mensual
+  - title: Estimación y cumplimiento de plazos
+    text: Capacidad para estimar de manera realista el tiempo que requieren sus tareas, cumplir los plazos comprometidos y avisar oportunamente cuando alguno esté en riesgo.
+    acceptance_criteria: '• Las estimaciones de esfuerzo que firma en propuestas comerciales se sostienen durante la ejecución, y puede defenderlas.
+
+      • Revisa que lo comprometido en cada sprint sea consistente con la propuesta original y corrige las desviaciones recurrentes.
+
+      • Usa el histórico de estimado contra real de los proyectos para mejorar cómo estima toda la práctica.
+
+      • Identifica la sobrecarga del equipo y reasigna o escala antes de que comprometa los plazos.
+
+      • Informa al director con anticipación y con una propuesta de solución cuando un proyecto está en riesgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'
+  - title: Apertura y aplicación de la retroalimentación
+    text: Capacidad para recibir la retroalimentación con apertura y sin actitud defensiva, e incorporarla tanto en el trabajo en curso como en proyectos futuros, demostrando adaptabilidad y mejora continua.
+    acceptance_criteria: '• Pide retroalimentación al director, a otros Leads y a su equipo sobre su gestión, y comunica qué cambió a partir de ella.
+
+      • Traduce la retroalimentación de clientes y proyectos en ajustes a los estándares y procesos de la práctica.
+
+      • Asegura que los acuerdos de mejora de las personas que evalúa queden documentados y se revisen en el siguiente ciclo.
+
+      • Reconoce sus propios errores frente al equipo, para que la apertura se practique desde el liderazgo.'
+    frequency: Continua, durante todo el periodo de evaluación.
+    guidance: 'Los indicadores describen el nivel “Cumple” (3) y son acumulativos: cada nivel incluye lo esperado en el anterior. “Excede” (4) = demuestra de forma consistente indicadores del siguiente nivel.'

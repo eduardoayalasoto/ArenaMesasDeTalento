@@ -105,6 +105,18 @@ class Question(models.Model):
     weight = models.DecimalField("peso", max_digits=4, decimal_places=2, default=1)
     allow_na = models.BooleanField("permite N/A", default=True)
     is_required = models.BooleanField("obligatoria", default=True)
+    # Campos del checklist de actividades (spec 007); opcionales, se muestran en "Ver criterio".
+    acceptance_criteria = models.TextField("criterio de aceptación", blank=True)
+    deliverable = models.TextField("entregable", blank=True)
+    deliverable_format = models.TextField("formato", blank=True)
+    frequency = models.TextField("frecuencia", blank=True)
+    level_expectation = models.TextField("expectativa por nivel", blank=True)
+    guidance = models.TextField("comentarios y guía", blank=True)
+
+    CHECKLIST_FIELDS = (
+        "acceptance_criteria", "deliverable", "deliverable_format",
+        "frequency", "level_expectation", "guidance",
+    )
 
     class Meta:
         verbose_name = "pregunta"
@@ -113,6 +125,19 @@ class Question(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def checklist_details(self):
+        """[(etiqueta, texto)] de los campos del checklist con contenido, en orden de despliegue."""
+        return [
+            (self._meta.get_field(name).verbose_name.capitalize(), getattr(self, name))
+            for name in self.CHECKLIST_FIELDS
+            if getattr(self, name)
+        ]
+
+    @property
+    def has_checklist_details(self):
+        return any(getattr(self, name) for name in self.CHECKLIST_FIELDS)
 
 
 class ScaleOption(models.Model):

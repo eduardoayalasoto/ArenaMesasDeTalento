@@ -1,0 +1,974 @@
+source: docs/Checklists/Versión 2027/Checklist de Actividades Ingenieros de Datos - Octubre 2026.xlsx
+templates:
+- area: ID
+  level: JR
+  questions:
+  - title: Notas de alcance
+    text: Ejecutar proceso de discovery para identificar fuentes principales, el flujo E2E de los datos y los primeros pasos a tomar una vez que el proyecto arranca. Levantar dudas antes de empezar a desarrollar, no solo durante.
+    acceptance_criteria: El documento existe, está versionado e incluye objetivos, supuestos, riesgos y próximos pasos. El DE Jr puede explicar verbalmente los diagramas sin leerlos. El DS no descubre inconsistencias de fuentes en el sprint 2 que el DE Jr debió haber identificado en el discovery. Las ambigüedades identificadas están documentadas como riesgos, no ignoradas.
+    deliverable: Diagrama de flujo del proceso E2E y del ciclo de vida de la data.
+    deliverable_format: Excalidraw, Draw.io, etc.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Jr identifica fuentes principales y construye los diagramas con base en lo proporcionado por el cliente. Cuando algo no está claro, lo documenta como supuesto o riesgo y lo escala antes de continuar.
+    guidance: El DE Jr documenta lo que entiende y lo que no entiende con la misma claridad. Una duda no documentada es un riesgo oculto.
+  - title: Documento de alcance técnico
+    text: Redactar las secciones del documento de alcance técnico que corresponden a los componentes que va a desarrollar (conectores, tablas destino y transformaciones), indicando para cada uno qué queda dentro y qué queda fuera del alcance. Enviar esas secciones al DE Mid/Sr para sign-off antes de escribir la primera línea de código. Listar explícitamente los supuestos que asumió al redactarlas.
+    acceptance_criteria: Las secciones contribuidas por el DE Jr están alineadas con las notas de alcance y no generan observaciones de redacción o precisión técnica por parte del DE Mid/Sr. El documento está versionado y accesible al equipo. El DE Jr no desarrolla componentes que no están en el alcance documentado.
+    deliverable: Secciones del documento de alcance técnico correspondientes al DE Jr, con sign-off del DE Sr o Mid.
+    deliverable_format: Notion, Word, email.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Jr contribuye secciones del documento bajo supervisión del DE Mid/Sr. Su responsabilidad es que lo que escribe sea preciso y no requiera rehacerse.
+    guidance: El DE Jr no define el alcance solo, pero sí es responsable de entenderlo completamente antes de comenzar a desarrollar.
+  - title: Checklist de requerimientos
+    text: Completar el checklist de requerimientos técnicos y funcionales para los componentes bajo su responsabilidad, verificando que cada ítem tiene un estado claro (cumple / no cumple / pendiente) y escalando los pendientes críticos antes del inicio del desarrollo.
+    acceptance_criteria: Todos los requerimientos de los componentes del DE Jr están listados y evaluados. No hay requerimientos críticos sin estado definido. El DE Jr escala requerimientos ambiguos o faltantes antes de comenzar a desarrollar, no cuando ya está a la mitad. El DE Mid no descubre requerimientos mal interpretados en el sprint review.
+    deliverable: Checklist de requerimientos validado para los componentes asignados al DE Jr.
+    deliverable_format: Excel, Notion.
+    frequency: Inicio del proyecto y ante cambios de alcance.
+    level_expectation: El DE Jr completa el checklist con criterio, no mecánicamente. Si un requerimiento no está claro, lo pregunta antes de marcarlo como cumplido.
+    guidance: El checklist de requerimientos es el contrato técnico del DE Jr con el proyecto. Firmarlo sin entenderlo completamente es un riesgo.
+  - title: Propuesta de conectividad
+    text: 'Documentar los conectores asignados a su nivel: el medio de acceso a la fuente, la frecuencia de actualización y el método de carga (append, overwrite, delta). Levantar dudas sobre accesos o permisos antes de comenzar el desarrollo.'
+    acceptance_criteria: Los conectores documentados por el DE Jr tienen medio de acceso, frecuencia y método de carga claramente especificados. El DE Sr no descubre conectores mal documentados durante la validación técnica. El DE Jr no empieza a desarrollar un conector sin tener acceso confirmado a la fuente.
+    deliverable: Documentación de conectores asignados al DE Jr dentro de la propuesta de conectividad.
+    deliverable_format: Excalidraw, Draw.io, documento.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Jr documenta los conectores que le asignan. Su responsabilidad es levantar bloqueos de acceso o permisos proactivamente, no al momento del deployment.
+    guidance: El DE Jr no documenta conectores que no ha validado que funcionan. Si no tiene acceso a una fuente, lo comunica antes de asumir que sí lo tiene.
+  - title: Reporte de calidad de datos
+    text: Ejecutar los checks de calidad de datos asignados a su nivel para las fuentes o desarrollos bajo su responsabilidad. Documentar los resultados y comunicar anomalías detectadas de forma inmediata.
+    acceptance_criteria: Los checks ejecutados por el DE Jr son reproducibles y sus resultados están documentados. El DE Jr comunica anomalías detectadas antes de la siguiente ceremonia, no las oculta o ignora. El DE Mid no descubre problemas de calidad de datos en producción que el DE Jr ya había detectado en sus checks.
+    deliverable: Reporte de checks de calidad ejecutados con resultados documentados.
+    deliverable_format: Notebook, Dashboard.
+    frequency: Al conectarse a una fuente o al terminar el desarrollo de una nueva.
+    level_expectation: El DE Jr ejecuta los checks de calidad asignados y reporta resultados, incluyendo los negativos. No declara una fuente como 'lista' sin haber ejecutado los checks.
+    guidance: Detectar un problema de calidad y no comunicarlo es peor que no haberlo detectado.
+  - title: Reportes de pruebas
+    text: Ejecutar los casos de prueba asignados a su nivel, documentando resultados esperados vs obtenidos y registrando issues o errores detectados. No declarar un componente como 'done' sin haber ejecutado, documentado y presentado sus pruebas.
+    acceptance_criteria: Los casos de prueba del DE Jr están documentados con resultado esperado vs obtenido. Los defectos están registrados y clasificados. El DE Jr no declara un componente como terminado sin evidencia de pruebas ejecutadas. El DE Mid no descubre durante el sprint review defectos que el DE Jr debió haber detectado en sus pruebas.
+    deliverable: Reporte de pruebas con casos ejecutados, resultados y defectos registrados.
+    deliverable_format: Documento, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr ejecuta las pruebas asignadas y documenta tanto los casos que pasan como los que no. Un resultado de prueba negativo documentado es más valioso que uno positivo sin evidencia.
+    guidance: '''Done'' significa que pasó las pruebas documentadas, no que el código compila.'
+  - title: Reporte técnico de calidad de datos
+    text: Ejecutar y compartir los reportes de calidad de datos de los componentes bajo su responsabilidad, documentando las reglas aplicadas, los resultados obtenidos y las excepciones encontradas.
+    acceptance_criteria: El reporte del DE Jr incluye las reglas aplicadas, los resultados por regla y las excepciones con sus causas. El DE Jr puede explicar verbalmente cada excepción documentada. El DE Mid no necesita reescribir el reporte para que sea comprensible para el DS o el PM.
+    deliverable: Reporte técnico de calidad con reglas, resultados y excepciones documentadas.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr ejecuta los reportes de calidad y los comparte con el equipo. Su responsabilidad es que el reporte sea legible y completo, no solo correcto.
+    guidance: El reporte de calidad es una herramienta de comunicación, no un trámite. Debe ser comprensible para alguien que no escribió el código.
+  - title: Scripts de validación
+    text: Ejecutar los scripts de validación automática pre y post carga asignados a su nivel. Comunicar de inmediato cuando un script de validación falla o genera resultados inesperados.
+    acceptance_criteria: Los scripts ejecutados por el DE Jr generan resultados reproducibles. Cuando un script falla, el DE Jr lo comunica antes de la siguiente ceremonia con el log o evidencia del error. El DE Jr no reutiliza scripts sin verificar que aplican al contexto del nuevo componente.
+    deliverable: Scripts ejecutados con resultados documentados. Alertas o logs de fallas comunicados al DE Mid.
+    deliverable_format: SQL, Python, lenguaje del proyecto.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr ejecuta los scripts de validación asignados y revisa sus resultados. No asume que si el script corrió sin error, los datos son correctos.
+    guidance: Ejecutar un script de validación sin revisar sus resultados es equivalente a no ejecutarlo.
+  - title: Esquema preliminar de tablas
+    text: Construir el esquema preliminar de tablas para los componentes asignados con base en los comentarios y mockups del DE Sr/Mid/Lead, aplicando correctamente las convenciones de nombres, tipos de datos y claves definidas.
+    acceptance_criteria: El esquema del DE Jr aplica correctamente las convenciones del proyecto sin necesidad de correcciones recurrentes por el mismo punto. El DE Mid no descubre errores de tipado o naming en el sprint review. El DE Jr revisa el esquema con el DE Mid antes de comenzar el desarrollo, no después.
+    deliverable: Esquema de tablas con tipos, claves, particiones y convenciones aplicadas para los componentes asignados.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Jr construye el esquema con los mockups y comentarios que recibe. Si algo no está claro en la convención, pregunta antes de aplicar su propio criterio.
+    guidance: Una convención de nombres inconsistente en el esquema se propaga a todo el desarrollo. El DE Jr debe preguntar antes de improvisar.
+  - title: Notas técnicas
+    text: Registrar una nota por cada decisión técnica que toma sin instrucción previa explícita (elección de tipo de dato, método de carga, manejo de nulos, orden de ejecución, workaround a un bloqueo), indicando opción elegida, alternativa descartada y motivo. Registrar también cada duda escalada, con fecha y respuesta recibida. Publicar las notas en el espacio compartido del proyecto el mismo día en que ocurren, no al cierre del sprint.
+    acceptance_criteria: Las notas del DE Jr son comprensibles para otro DE que no participó en las sesiones. Las dudas están documentadas y tienen respuesta o están escaladas. El DE Jr no toma decisiones técnicas que no están registradas en las notas. El DE Mid no descubre decisiones técnicas del DE Jr que no sabía que se habían tomado.
+    deliverable: Notas técnicas actualizadas y centralizadas, accesibles al equipo.
+    deliverable_format: .doc, .docx, Notion, Teams.
+    frequency: Durante todo el proyecto, actualización continua.
+    level_expectation: El DE Jr toma notas y externaliza sus dudas. No avanza con supuestos no documentados. Si tomó una decisión técnica, la registra.
+    guidance: Una nota técnica que solo entiende quien la escribió no sirve para la transferencia de conocimiento.
+  - title: Scripts, Notebooks y pipelines
+    text: Implementar las tareas de desarrollo asignadas a su nivel siguiendo los estándares de calidad y versionado del proyecto (SOLID, naming conventions, modularidad). No entregar código sin haber ejecutado pruebas básicas.
+    acceptance_criteria: El código del DE Jr es ejecutable sin errores, cumple con los estándares del proyecto y está versionado. El DE Mid no encuentra el mismo error de estándar más de una vez en el mismo DE Jr. El DE Jr no sube código al repositorio sin haber ejecutado al menos una prueba básica end-to-end del componente.
+    deliverable: Desarrollos versionados en el repositorio del proyecto con evidencia de pruebas básicas.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr implementa tareas simples con guía del DE Mid. Su responsabilidad es cumplir estándares y no entregar código que no funcionó ni una vez en su ambiente.
+    guidance: Versionar código con errores de estándar recurrentes es una señal de que el DE Jr no revisó su propio trabajo antes de entregarlo.
+  - title: Checklist de ejecución
+    text: Recorrer los ítems del checklist de ejecución del proyecto, componente por componente, antes de solicitar el despliegue, adjuntando a cada ítem la evidencia de la verificación (captura, log o query ejecutada) y no solo la marca de completado. Registrar los ítems que no se cumplen como bloqueador con responsable y fecha compromiso, y comunicarlos al DE Mid antes de la ventana de despliegue.
+    acceptance_criteria: El DE Jr no declara un componente listo para despliegue sin haber completado el checklist. Los ítems marcados como completos han sido verificados, no solo marcados. El DE Mid no descubre durante el despliegue un bloqueador que el DE Jr ya había identificado pero no resolvió ni comunicó.
+    deliverable: Checklist de ejecución completado y sin bloqueadores críticos abiertos para los componentes del DE Jr.
+    deliverable_format: Documento, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr implementa el checklist con criterio. Un ítem marcado como completo significa que lo verificó, no que asume que está bien.
+    guidance: El checklist de ejecución es el último filtro antes del deployment. No es un trámite, es una garantía.
+  - title: Documentación de scripts
+    text: Documentar el código desarrollado explicando propósito, inputs, outputs, dependencias y consideraciones de uso. La documentación es parte del entregable, no un paso opcional al final.
+    acceptance_criteria: Otro DE puede entender y ejecutar el código del DE Jr sin necesidad de preguntarle al autor. La documentación está actualizada con el código final. El DE Mid no pide correcciones de documentación en más del 20% de los entregables del DE Jr.
+    deliverable: Documentación de scripts con propósito, inputs, outputs y dependencias para cada componente desarrollado.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr realiza la documentación de sus scripts como parte del desarrollo, no como un paso adicional. Si no tiene tiempo para documentar, no tiene tiempo para terminar.
+    guidance: El DE Jr documenta mientras desarrolla, no al final. 'El código se explica solo' no es un criterio aceptable en Arena.
+  - title: Inventario de fuentes
+    text: 'Recopilar la información básica de las fuentes de datos asignadas a su nivel: nombre, owner, frecuencia de actualización, formato y calidad estimada. Escalar cuando una fuente no tiene owner claro o cuando su accesibilidad es incierta.'
+    acceptance_criteria: La información de las fuentes documentada por el DE Jr es precisa y verificada, no estimada sin fundamento. El DE Jr comunica proactivamente cuando una fuente no tiene owner claro o cuando el acceso es incierto. El DE Sr/Mid no descubre fuentes sin documentar que el DE Jr ya conocía.
+    deliverable: 'Tabla con metadatos básicos de las fuentes asignadas al DE Jr: nombre, owner, frecuencia, formato y calidad estimada.'
+    deliverable_format: Documento, Excel.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Jr recopila información básica de las fuentes asignadas. Su responsabilidad es verificar lo que documenta y escalar lo que no puede verificar solo.
+    guidance: Una fuente sin owner documentado es un riesgo de bloqueo para todo el equipo.
+  - title: Diagrama de arquitectura
+    text: Marcar sobre el diagrama de arquitectura del proyecto los componentes que desarrolla, señalando para cada uno su input (fuente o tabla que consume) y su output (tabla, vista o servicio que alimenta). Presentar ese marcado al DE Mid/Sr durante la primera semana del proyecto. Registrar en Teams o minuta, el mismo día en que la detecta, cualquier diferencia entre lo que implementó y lo que muestra el diagrama.
+    acceptance_criteria: El DE Jr puede explicar el rol de sus componentes dentro de la arquitectura end-to-end sin necesidad de consultar el diagrama en cada pregunta. Cuando detecta una inconsistencia entre su implementación y el diseño, la comunica antes de continuar. El DE Sr no descubre desviaciones arquitectónicas en el roll-out que el DE Jr ya había identificado.
+    deliverable: Diagrama de arquitectura con los componentes del DE Jr marcados e inputs/outputs anotados, revisado con el DE Mid/Sr. Desviaciones detectadas documentadas en Teams o minuta.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Jr entiende la arquitectura y sus componentes. No improvisa implementaciones que no están contempladas en el diseño sin antes comunicarlo al DE Mid/Sr.
+    guidance: El DE Jr no diseña arquitectura, pero sí es responsable de implementar dentro del diseño definido sin desviarse.
+  - title: Modelado de datos
+    text: Documentar los campos y tipos de datos de las tablas asignadas correctamente, siguiendo las convenciones del proyecto. Verificar con el DE Mid/Sr/Lead antes de implementar si hay dudas sobre granularidad o relaciones.
+    acceptance_criteria: Los campos y tipos documentados por el DE Jr son correctos y consistentes con el esquema preliminar de tablas. El DE Jr no implementa un campo con un tipo de dato distinto al definido sin antes comunicarlo al DE Mid/Sr. El DE Sr no descubre errores de modelado del DE Jr durante el QA.
+    deliverable: Documentación de campos y tipos para las tablas asignadas al DE Jr, alineada con el esquema aprobado.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Jr documenta campos y tipos correctamente con base en el esquema definido. Si hay algo que no entiende del modelo, pregunta antes de codificar.
+    guidance: Un campo con el tipo de dato incorrecto puede propagarse a todo el pipeline. El DE Jr verifica antes de implementar.
+  - title: Diseño de pipelines
+    text: 'Documentar, para cada pipeline asignado, la secuencia de pasos que va a implementar: input de cada paso, transformación aplicada, output y comportamiento esperado ante falla. Contrastar esa secuencia contra el diseño lógico aprobado y listar por escrito las diferencias encontradas. Comunicar al DE Mid/Sr cualquier ajuste que la implementación exija al diseño antes de codificarlo, no después.'
+    acceptance_criteria: El DE Jr entiende el diseño del pipeline y puede explicar el rol de sus componentes dentro del flujo completo. Cuando detecta que la implementación requiere un ajuste al diseño, lo comunica antes de improvisar. El DE Mid no descubre modificaciones al diseño hechas por el DE Jr sin comunicación previa.
+    deliverable: Documentación de los pasos del pipeline asignados al DE Jr, alineada con el diseño lógico aprobado.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr entiende el diseño y lo documenta. Si algo en el diseño no cuadra con la realidad de la implementación, lo comunica antes de tomar una decisión por su cuenta.
+    guidance: El DE Jr no modifica el diseño de un pipeline sin comunicarlo. Si el diseño no es implementable, lo escala.
+  - title: Desarrollo de pipelines
+    text: 'Implementar las tareas de desarrollo de pipelines asignadas a su nivel: ingestión de datos, transformaciones simples y cargas bajo supervisión del DE Mid/Sr/Lead. No entregar componentes sin haber ejecutado una prueba end-to-end básica.'
+    acceptance_criteria: Los pipelines del DE Jr ejecutan correctamente para los casos de prueba definidos. El DE Mid no descubre errores de implementación básicos en el sprint review. El DE Jr no declara un componente como done sin haberlo ejecutado al menos una vez end-to-end en su ambiente de desarrollo.
+    deliverable: Scripts, notebooks y pipelines versionados en el repositorio para los componentes asignados al DE Jr.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr desarrolla tareas simples con guía del DE Mid. Su responsabilidad es ejecutar y probar lo que desarrolla antes de declararlo terminado.
+    guidance: Un pipeline que nunca corrió en el ambiente del DE Jr antes de llegar al sprint review es un riesgo de retrabajo para todo el equipo.
+  - title: Scripts de validación y calidad de datos
+    text: Ejecutar los scripts de validación técnica y de negocio asignados a su nivel, verificando completitud, unicidad y consistencia básica. Analizar los resultados y comunicar al DE Mid/Sr/Lead cualquier incumplimiento detectado.
+    acceptance_criteria: El DE Jr ejecuta los scripts de validación y analiza sus resultados, no solo los corre y los adjunta. Cuando detecta un incumplimiento, lo comunica antes de la siguiente ceremonia con una descripción del hallazgo. El DE Mid no descubre incumplimientos de validación que el DE Jr ya había detectado pero no comunicó.
+    deliverable: Scripts de validación ejecutados con resultados documentados y análisis inicial de incumplimientos.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr ejecuta scripts y analiza resultados básicos. Su responsabilidad es entender lo que reporta el script, no solo ejecutarlo.
+    guidance: Ejecutar un script de validación y no revisar sus resultados es equivalente a no ejecutarlo.
+  - title: Pruebas técnicas y de integración
+    text: Ejecutar las pruebas unitarias asignadas a su nivel para los componentes bajo su responsabilidad. Documentar los resultados y escalar los defectos encontrados al DE Mid/Sr/Lead con evidencia.
+    acceptance_criteria: Las pruebas unitarias del DE Jr cubren los casos básicos del componente. Los defectos están documentados con evidencia suficiente para que el DE Mid pueda reproducirlos. El DE Jr no escala un defecto sin haber intentado describirlo y aislarlo primero.
+    deliverable: Reporte de pruebas unitarias con casos ejecutados, resultados y defectos documentados.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Jr ejecuta pruebas unitarias y documenta lo que encuentra. Escalar un defecto bien documentado es parte de su ownership del componente.
+    guidance: Un defecto sin evidencia de reproducción es un defecto sin solución posible.
+  - title: Documentación técnica integral
+    text: 'Integrar la documentación de sus componentes al repositorio de documentación del proyecto en el mismo PR o commit que el código, cubriendo cinco puntos: propósito del componente, tablas de entrada y salida, dependencias, parámetros de ejecución y pasos para reejecutarlo ante una falla. Un cambio de código sin su cambio de documentación en el mismo entregable se considera incompleto.'
+    acceptance_criteria: La documentación del DE Jr está actualizada con el código final. Otro DE puede entender y operar los componentes del DE Jr sin necesidad de pedirle explicaciones al autor. El DE Mid no encuentra documentación desactualizada o incompleta del DE Jr durante el cierre del proyecto.
+    deliverable: Documentación de operación de los componentes del DE Jr integrada al repositorio de documentación del proyecto y versionada junto con el código (propósito, tablas de entrada y salida, dependencias, parámetros de ejecución y pasos de reejecución).
+    deliverable_format: Documento, Excel.
+    frequency: Durante todo el proyecto.
+    level_expectation: El DE Jr documenta correctamente sus componentes como parte del desarrollo. No deja la documentación para el final del proyecto.
+    guidance: La documentación es parte del entregable. Un componente sin documentación actualizada no está terminado.
+  - title: Rutinas de gestión — Daily
+    text: 'Asistir al daily preparado, comunicando claramente el avance de sus componentes, bloqueos activos y dependencias. No llegar al daily a descubrir sus propios bloqueos: deben estar identificados y comunicados antes de la sesión.'
+    acceptance_criteria: El DE Jr llega al daily con claridad de lo que hizo, lo que hará y qué le impide avanzar. Sus bloqueos no son una sorpresa para el equipo. No reporta avance ficticio para corregirlo después. Ante un bloqueo técnico (acceso, fuente no disponible, error de ambiente), lo comunica en el momento en que lo detecta, no en el siguiente daily.
+    deliverable: Participación activa en el daily. Bloqueos comunicados antes de que impacten un entregable.
+    deliverable_format: Teams, calendario.
+    frequency: Diaria.
+    level_expectation: El DE Jr reporta estado real, no el estado que quisiera tener. Es responsable de comunicar bloqueos propios sin esperar a que le pregunten.
+    guidance: El daily no es el lugar para descubrir problemas, sino para reportarlos y coordinar acciones. Un bloqueo comunicado a tiempo puede resolverse el mismo día.
+  - title: Rutinas de gestión — Sprint Planning
+    text: Asistir al sprint planning preparado con una propuesta de sus actividades y estimaciones de tiempo para el sprint. No llegar al planning sin haber revisado el backlog y sin saber qué puede comprometer.
+    acceptance_criteria: El DE Jr sale del planning con claridad total de qué debe entregar, con qué criterio de aceptación y qué necesita de otros. Su estimación de tiempo se cumple en al menos el 70% de los casos. No hace preguntas básicas durante el sprint sobre lo que se definió en el planning.
+    deliverable: Participación activa en el sprint planning con propuesta de actividades y estimaciones.
+    deliverable_format: Teams, calendario.
+    frequency: Cada sprint.
+    level_expectation: El DE Jr llega al planning con al menos una propuesta de actividades y estimaciones, aunque el DE Mid las valide o corrija. Prepara el planning como si tuviera que defenderlo.
+    guidance: Llegar al planning sin preparación es inaceptable. El DE Jr debe revisitar el backlog antes del planning.
+  - title: Rutinas de gestión — Sprint Review
+    text: Asistir al sprint review preparado para exponer el resultado de sus componentes, explicar qué completó y qué no, y recibir retroalimentación técnica sin ponerse a la defensiva.
+    acceptance_criteria: El DE Jr puede explicar qué completó y qué no, con razones concretas. Sus áreas de mejora del sprint anterior se ven reflejadas en el sprint actual. El feedback del equipo es incorporado, no ignorado. Sale de la retro con al menos un compromiso concreto de mejora.
+    deliverable: Participación activa en el sprint review con resultados documentados de sus componentes.
+    deliverable_format: Teams, calendario.
+    frequency: Cada sprint.
+    level_expectation: El DE Jr no llega al review a justificar por qué no pudo. Llega a mostrar lo que construyó y a aprender de lo que no. Recibe la retroalimentación técnica como insumo de mejora, no como ataque.
+    guidance: El review no es un examen. Es una oportunidad de mostrar lo que se construyó y aprender de lo que no se pudo.
+  - title: Coordinación con DS y PM
+    text: Alinear con el equipo de Ciencia de Datos los requerimientos de datos y las interfaces de entrega antes de cada fase de desarrollo. No comenzar a desarrollar una exposición de datos sin haber validado el formato y la granularidad esperada con el equipo.
+    acceptance_criteria: El DS no descubre al momento del sprint review que los datos expuestos por el DE Jr tienen un formato o granularidad diferente al acordado. El DE Jr no desarrolla una interfaz de datos basado en su interpretación propia sin validación del DS. Cuando hay un conflicto entre lo que el DS necesita y lo que la fuente puede proveer, el DE Jr lo comunica al DE Mid/Sr y al DS antes de tomar una decisión.
+    deliverable: 'Evidencia de alineación con DS antes de cada fase: mensaje en Teams, minuta o correo con acuerdos documentados.'
+    deliverable_format: Teams, correo, minuta.
+    frequency: Antes de cada fase de desarrollo que involucre exposición de datos al equipo de DS.
+    level_expectation: El DE Jr alinea con el DS lo que va a entregar antes de construirlo. No asume que el DS puede adaptarse a cualquier formato que salga del pipeline.
+    guidance: Un malentendido entre el DE y el DS sobre el formato de datos puede invalidar semanas de trabajo del DS.
+  - title: Cumplimiento de tareas comprometidas
+    text: Cerrar dentro del sprint las tareas que comprometió en el planning, en el alcance acordado. Cuando detecta que una tarea no se va a cumplir en la fecha comprometida, comunicarlo al DE Mid en el momento en que lo detecta, con el motivo y una nueva fecha propuesta, no el día de la entrega.
+    acceptance_criteria: Al menos el 85% de las tareas comprometidas en el planning se cierran dentro del sprint. El 100% de las tareas que no se van a cumplir se avisan con al menos 2 días hábiles de anticipación a la fecha comprometida. Ninguna tarea se reporta como avanzada sin evidencia. El DE Mid no descubre un incumplimiento en el sprint review.
+    deliverable: Tareas del sprint cerradas en el backlog con evidencia del entregable. Registro en el backlog o en Teams de los avisos de riesgo de incumplimiento, con motivo y nueva fecha propuesta.
+    deliverable_format: Backlog del proyecto, Teams.
+    frequency: Cada sprint, con seguimiento diario.
+    level_expectation: El DE Jr responde por el cumplimiento de sus propias tareas. Avisar cuando algo no se va a cumplir es su responsabilidad, no la del DE Mid preguntarle.
+    guidance: Un incumplimiento avisado a tiempo es un problema de plan; un incumplimiento descubierto en el review es un problema de confianza.
+  - title: Estimación de tiempos
+    text: Estimar en horas o días el esfuerzo de las tareas que le asignan antes de comprometerlas en el planning, y registrar el tiempo real dedicado al cerrarlas. Documentar la causa cuando el tiempo real se desvía más del 30% de lo estimado.
+    acceptance_criteria: Toda tarea comprometida tiene estimación antes de iniciarse. Al menos el 70% de las tareas cierran con una desviación menor o igual al 30% respecto a lo estimado. Las desviaciones mayores tienen causa documentada. El DE Jr no repite el mismo error de estimación en tareas del mismo tipo en sprints consecutivos.
+    deliverable: Estimación registrada en el backlog para cada tarea comprometida y tiempo real registrado al cierre. Causa documentada en las desviaciones mayores al 30%.
+    deliverable_format: Backlog del proyecto, Excel.
+    frequency: Cada sprint.
+    level_expectation: El DE Jr estima sus propias tareas, aunque el DE Mid las valide o corrija. Su responsabilidad es registrar el tiempo real y entender por qué se desvió.
+    guidance: Estimar mal no es el problema; no aprender de la desviación sí lo es. La estimación del DE Jr mejora sprint a sprint porque compara lo estimado contra lo real.
+  - title: Apertura a la retroalimentación
+    text: 'Recibir la retroalimentación técnica y de desempeño con apertura y sin actitud defensiva: escuchar hasta el final, preguntar para entender y reconocer el punto. Pedir revisión al DE Mid o Sr antes de dar un entregable por terminado, en lugar de esperar a que la observación llegue en el sprint review. Registrar la retroalimentación recibida y los acuerdos en su checkpoint o 1:1.'
+    acceptance_criteria: El DE Jr escucha la retroalimentación, pregunta para entender y reconoce el punto, sin justificarse ni ponerse a la defensiva. Solicita revisión al DE Mid o Sr antes de declarar terminado cada entregable. Toda retroalimentación recibida queda registrada con su acuerdo en el checkpoint o 1:1. El DE Mid no tiene que repetir una observación porque el DE Jr no la registró.
+    deliverable: Registro de la retroalimentación recibida y de los acuerdos en checkpoints o 1:1. Evidencia de las revisiones solicitadas al DE Mid o Sr antes de declarar terminado un entregable.
+    deliverable_format: Teams, minuta de 1:1, Notion.
+    frequency: Por evento de retroalimentación, con revisión en cada 1:1 o checkpoint.
+    level_expectation: El DE Jr escucha, pregunta y registra. Pedir revisión antes de cerrar un entregable es parte de su trabajo, no una señal de inseguridad.
+    guidance: 'Reconocer el punto no es aceptar una falla de carácter: es entender qué se espera distinto. La retroalimentación que no se registra se olvida.'
+  - title: Aplicación de la retroalimentación
+    text: Corregir lo señalado en el entregable en curso dentro del plazo acordado y evitar que ese mismo señalamiento reaparezca en entregables posteriores. Revisar en cada checkpoint los acuerdos registrados y mostrar dónde se aplicaron.
+    acceptance_criteria: Lo señalado se corrige en el entregable actual dentro del plazo acordado. El DE Jr no repite en entregables posteriores un error que ya se le señaló. Cada acuerdo registrado tiene evidencia de dónde se aplicó. El DE Mid no señala el mismo error al mismo DE Jr en dos entregables consecutivos.
+    deliverable: Correcciones aplicadas al entregable señalado dentro del plazo acordado, con evidencia. Acuerdos de retroalimentación revisados en el siguiente checkpoint, indicando dónde se aplicaron.
+    deliverable_format: Backlog del proyecto, Teams, minuta de 1:1.
+    frequency: Por entregable, con revisión en cada 1:1 o checkpoint.
+    level_expectation: El DE Jr aplica lo acordado en el entregable actual y en los siguientes. Su responsabilidad es que un señalamiento no tenga que hacerse dos veces.
+    guidance: La retroalimentación se mide en el siguiente entregable, no en la conversación. Un error señalado dos veces deja de ser un error de ejecución y pasa a ser uno de atención.
+- area: ID
+  level: MID
+  questions:
+  - title: Notas de alcance
+    text: Liderar el proceso de discovery identificando posibles bloqueos durante la implementación, dependencias entre fuentes y riesgos técnicos. Documentar supuestos críticos y escalar al DE Sr/Lead los que requieran decisión de arquitectura.
+    acceptance_criteria: El diagrama incluye objetivos, supuestos, riesgos y próximos pasos validados con stakeholders técnicos y de negocio. El DE Mid identifica bloqueos potenciales de implementación que el DE Jr no vería. El PM no descubre dependencias críticas entre fuentes por primera vez en el sprint 3 que el DE Mid debió haber identificado en el discovery.
+    deliverable: Diagrama de flujo del proceso E2E y del ciclo de vida de la data, con bloqueos potenciales y dependencias documentadas.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Mid identifica posibles bloqueos durante la implementación, no solo describe el estado actual. Su valor en el discovery es anticipar lo que puede salir mal.
+    guidance: El DE Mid anticipa los problemas que el DE Jr no puede ver. Un discovery sin bloqueos documentados es un discovery incompleto.
+  - title: Documento de alcance técnico
+    text: Redactar el alcance técnico del proyecto, definiendo explícitamente qué se construye y qué queda fuera. Alinear el alcance con las notas de discovery y obtener el sign-off del equipo y del cliente antes de comenzar el desarrollo.
+    acceptance_criteria: El documento define explícitamente qué se construye y qué queda fuera, sin ambigüedades. Está alineado con las notas de alcance y aprobado por el DE Sr. El DE Mid no comienza el desarrollo de componentes que no están en el documento. Negocio avala el documento antes del sprint 1.
+    deliverable: Documento de alcance técnico con sign-off del equipo y de Negocio.
+    deliverable_format: Notion, Word, email.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: 'El DE Mid redacta el alcance técnico con criterio. No es solo un documento que llena: es el mapa que define qué se hace y qué no durante todo el proyecto.'
+    guidance: El alcance técnico es el contrato del equipo con el proyecto. Documentar mal el alcance es acordar hacer algo diferente a lo que el cliente espera.
+  - title: Checklist de requerimientos
+    text: Validar técnicamente los requerimientos del proyecto, identificando ambigüedades, conflictos entre requerimientos y riesgos de implementación. Asegurar que todos los requerimientos críticos tienen estado definido antes del inicio del desarrollo.
+    acceptance_criteria: El DE Mid puede defender técnicamente el estado de cada requerimiento del checklist. No hay requerimientos críticos sin estado definido al inicio del sprint 1. El DE Sr no descubre requerimientos conflictivos o ambiguos durante el desarrollo que el DE Mid debió haber identificado en la validación.
+    deliverable: Checklist de requerimientos validado técnicamente, con todos los ítems con estado y sin requerimientos críticos abiertos.
+    deliverable_format: Excel, Notion.
+    frequency: Inicio del proyecto y ante cambios de alcance.
+    level_expectation: El DE Mid valida técnicamente los requerimientos. Su responsabilidad no es solo listarlos, sino identificar cuáles son implementables tal como están y cuáles necesitan aclaración antes de comenzar.
+    guidance: Un requerimiento marcado como 'cumple' sin haberlo validado técnicamente es un riesgo para todo el sprint.
+  - title: Propuesta de conectividad
+    text: Definir los métodos de carga, frecuencias y características técnicas de los conectores del proyecto. Evaluar opciones de conectividad considerando restricciones de acceso, seguridad y volumen de datos.
+    acceptance_criteria: La propuesta de conectividad define medio de acceso, frecuencia y método de carga para todas las fuentes del proyecto. El DE Mid evalúa al menos dos opciones de conectividad para fuentes críticas antes de recomendar una. La propuesta está validada técnicamente (seguridad, accesos) antes de compartirse con Negocio.
+    deliverable: Diagrama descriptivo y documento de características de la propuesta de conectividad con métodos, frecuencias y consideraciones técnicas.
+    deliverable_format: Excalidraw, Draw.io, documento.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: 'El DE Mid define los métodos de carga con criterio técnico. No solo documenta lo que el cliente propone: evalúa si es la mejor opción dado el contexto.'
+    guidance: El DE Mid define las cargas considerando no solo la viabilidad técnica sino también el impacto en rendimiento y costos.
+  - title: Reporte de calidad de datos
+    text: Ejecutar y analizar los resultados de los reportes de calidad de datos, identificar tendencias, priorizar las acciones de mejora y comunicar hallazgos al equipo con recomendaciones concretas.
+    acceptance_criteria: 'El DE Mid no solo presenta métricas: las interpreta y propone acciones. El DS no descubre problemas de calidad de datos en producción que el DE Mid ya había identificado en sus análisis. Negocio entiende el estado de calidad de sus datos a partir del reporte del DE Mid sin necesidad de que el DE Sr lo traduzca.'
+    deliverable: Reporte de calidad con análisis de resultados, tendencias y recomendaciones priorizadas.
+    deliverable_format: Notebook, Dashboard.
+    frequency: Al conectarse a una fuente o al terminar el desarrollo de una nueva.
+    level_expectation: El DE Mid analiza los resultados de calidad y los convierte en acciones concretas. Su valor no es ejecutar el reporte, sino interpretar qué significan los resultados y qué debe hacerse con ellos.
+    guidance: Un reporte de calidad que solo reporta números sin interpretarlos no ayuda al equipo a tomar decisiones.
+  - title: Reportes de pruebas
+    text: Ejecutar y analizar los resultados de las pruebas del equipo, validar que los defectos detectados están correctamente clasificados y tomar la decisión de si un componente está listo para producción.
+    acceptance_criteria: El DE Mid puede justificar la decisión de liberar o no liberar cada componente con base en la evidencia de pruebas. Los defectos clasificados como críticos no pasan a producción sin resolverse. El DE Jr no declara componentes como done sin el aval del DE Mid.
+    deliverable: Reporte de pruebas consolidado con decisión de liberación documentada.
+    deliverable_format: Documento, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid analiza los resultados de pruebas con criterio. Su firma en el reporte significa que revisó la evidencia, no que confía en que el DE Jr lo hizo bien.
+    guidance: La decisión de liberar un componente a producción es responsabilidad del DE Mid, no del DE Jr.
+  - title: Reporte técnico de calidad de datos
+    text: Ejecutar y analizar los resultados de calidad, dar seguimiento al incremento de los indicadores entre períodos y asegurar que las recomendaciones del reporte anterior se implementaron.
+    acceptance_criteria: El reporte del DE Mid incluye comparativa con el período anterior y tiene una sección de seguimiento a recomendaciones previas. Las recomendaciones son accionables y tienen responsable asignado. El DE Sr no descubre en producción problemas de calidad que el DE Mid ya había identificado en el reporte.
+    deliverable: Reporte técnico con análisis de resultados, comparativo con período anterior y seguimiento a recomendaciones.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid analiza los resultados y da seguimiento al incremento de los indicadores. Su responsabilidad es que el equipo actúe sobre los hallazgos, no solo que los documente.
+    guidance: Un reporte de calidad que no da seguimiento a sus propias recomendaciones no es útil como herramienta de mejora continua.
+  - title: Scripts de validación
+    text: Desarrollar los scripts de validación automática pre y post carga, asegurando que las fallas generan alertas o logs claros y que los scripts están integrados al flujo de ejecución.
+    acceptance_criteria: Los scripts del DE Mid ejecutan validaciones pre y post carga con resultados reproducibles. Las fallas generan alertas o logs que cualquier miembro del equipo puede interpretar. Los scripts están integrados al flujo de ejecución, no son pasos manuales opcionales. El DE Jr puede ejecutar los scripts del DE Mid sin necesidad de pedirle instrucciones adicionales.
+    deliverable: Scripts de validación versionados, integrados al pipeline y con alertas configuradas.
+    deliverable_format: SQL, Python, lenguaje del proyecto.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid desarrolla los scripts de validación con criterio de mantenibilidad. Otro DE debe poder entender, ejecutar e interpretar sus scripts sin necesidad de explicación.
+    guidance: Un script de validación que requiere intervención manual para interpretarse no es un script de validación automatizada.
+  - title: Esquema preliminar de tablas
+    text: Revisar el esquema de tablas constantemente, dar retroalimentación al equipo sobre inconsistencias detectadas y asegurar que el esquema está alineado con el modelo lógico antes del inicio del desarrollo.
+    acceptance_criteria: 'El DE Mid detecta inconsistencias en el esquema durante la revisión, no durante el deployment. La retroalimentación al DE Jr es específica y accionable: no señala el problema sin proponer la corrección. El mismo error de esquema no aparece más de una vez en el DE Jr.'
+    deliverable: Esquema de tablas con revisión y retroalimentación al DE Jr documentada. Alineación con modelo lógico verificada.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Mid revisa el esquema con criterio técnico y da retroalimentación clara al DE Jr. Su responsabilidad es que el esquema esté correcto antes de que el equipo empiece a desarrollar sobre él.
+    guidance: Un error en el esquema de tablas que llega al deployment puede invalidar días de desarrollo.
+  - title: Notas técnicas
+    text: Consolidar en un único repositorio las notas técnicas del equipo, cerrando cada duda levantada con una respuesta escrita, su fecha y quién la respondió. Convertir en tarea del backlog toda decisión técnica que implique trabajo, con título, responsable y criterio de aceptación, y dejar en la nota la referencia a esa tarea. Revisar el repositorio al cierre de cada sprint para cerrar las dudas que siguen abiertas.
+    acceptance_criteria: Las notas técnicas del proyecto están centralizadas y son accesibles al equipo. Las dudas del DE Jr tienen respuesta documentada. Las decisiones técnicas relevantes están en las notas y su derivación en tareas del backlog es trazable. El PM no descubre decisiones técnicas relevantes que no están documentadas ni en las notas ni en el backlog.
+    deliverable: Notas técnicas consolidadas y centralizadas. Tareas derivadas de notas registradas en el backlog.
+    deliverable_format: .doc, .docx, Notion, Teams.
+    frequency: Durante todo el proyecto, actualización continua.
+    level_expectation: 'El DE Mid no solo toma notas: coordina que las notas del equipo se consoliden y que las decisiones técnicas relevantes deriven en tareas concretas.'
+    guidance: Las notas técnicas deben convertirse en acciones concretas. Una nota sin derivación en tarea o acuerdo es una nota sin valor operativo.
+  - title: Scripts, Notebooks y pipelines
+    text: Definir y ejecutar el orden de ejecución de los pipelines del equipo (dependencias, disparadores y ventanas de tiempo) y probar el flujo completo end-to-end en ambiente de desarrollo antes del sprint review. Registrar los problemas de modularidad o duplicación de código que detecte en las revisiones, con el refactor propuesto, y darles seguimiento hasta su cierre.
+    acceptance_criteria: Los componentes del DE Jr funcionan correctamente dentro del pipeline orquestado por el DE Mid. El DE Mid detecta problemas de modularidad o reutilización durante el sprint, no durante el deployment. El DE Sr no descubre en el sprint review problemas de integración que el DE Mid debió haber detectado.
+    deliverable: Pipelines orquestados con evidencia de corrida end-to-end en desarrollo. Registro de refactors propuestos con estado de cierre.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid orquesta pipelines con criterio de integración. Su responsabilidad es que el flujo completo funcione, no solo que cada componente funcione de forma aislada.
+    guidance: 'La orquestación de pipelines no es solo ensamblar componentes: es asegurar que el flujo completo funciona correctamente de principio a fin.'
+  - title: Checklist de ejecución
+    text: Revisar ítem por ítem el checklist de ejecución que entrega cada DE Jr, verificando que cada marca de completado tiene evidencia adjunta y devolviendo por escrito los ítems que no la tienen. Aprobar el despliegue únicamente cuando todos los ítems tienen evidencia y los bloqueadores abiertos están clasificados con responsable y fecha compromiso. Dejar registrada la aprobación con fecha y versión desplegada.
+    acceptance_criteria: 'El DE Mid no aprueba el despliegue de componentes con bloqueadores críticos abiertos. La retroalimentación al DE Jr sobre el checklist es específica: no señala qué está mal sin indicar cómo corregirlo. El DE Sr no descubre durante el deployment ítems del checklist que el DE Mid debió haber verificado.'
+    deliverable: Checklist de ejecución revisado con observaciones devueltas por escrito. Aprobación de despliegue registrada con fecha y versión desplegada.
+    deliverable_format: Documento, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid revisa el checklist y da retroalimentación concreta. Su aprobación del despliegue significa que revisó la evidencia, no que confía en la palabra del DE Jr.
+    guidance: Aprobar el checklist de ejecución sin haberlo revisado es asumir la responsabilidad de lo que falle en producción.
+  - title: Documentación de scripts
+    text: 'Revisar la documentación que entrega el equipo contra una lista fija de puntos: propósito, tablas de entrada y salida, dependencias, parámetros de ejecución y pasos de reejecución. Devolver por escrito los puntos faltantes antes de aceptar el entregable. Documentar además la integración entre pipelines: orden de ejecución, dependencias entre componentes y qué se rompe si uno de ellos falla.'
+    acceptance_criteria: La documentación revisada por el DE Mid no tiene observaciones de completitud básica en más del 20% de los casos. La documentación de integración de pipelines puede ser entendida por otro DE sin necesidad de preguntar al DE Mid. El DE Mid hace la revisión de documentación como parte regular del sprint, no como actividad de cierre.
+    deliverable: Documentación de integración de pipelines y revisión de documentación con observaciones y aceptación.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: 'El DE Mid revisa la documentación del DE Jr con criterio y da retroalimentación específica. No la aprueba solo porque existe: la aprueba porque cumple el estándar.'
+    guidance: El DE Mid que no revisa la documentación de su equipo está asumiendo que otro lo hará.
+  - title: Inventario de fuentes
+    text: Analizar la estructura, frecuencia, volumen y calidad de las fuentes de datos del proyecto. Identificar riesgos y limitaciones de cada fuente y documentarlos con propuestas de mitigación.
+    acceptance_criteria: 'El inventario del DE Mid no solo lista fuentes: analiza su viabilidad y riesgos. El DE Sr no descubre limitaciones de fuentes durante el desarrollo que el DE Mid debió haber identificado en el inventario. Negocio y el equipo técnico pueden tomar decisiones de alcance basadas en el inventario.'
+    deliverable: Inventario de fuentes con análisis de estructura, frecuencia, volumen, calidad estimada, riesgos y propuestas de mitigación.
+    deliverable_format: Documento, Excel.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Mid analiza las fuentes con criterio técnico. Su valor en el inventario es identificar lo que puede salir mal con cada fuente, no solo catalogarla.
+    guidance: Una fuente con riesgos no documentados es una bomba de tiempo para el sprint.
+  - title: Diagrama de arquitectura
+    text: Presentar el diagrama de arquitectura al equipo en una sesión al inicio del proyecto, dejando registrado quién asistió y qué acuerdos se tomaron. Revisar al menos una vez por sprint que los componentes implementados coinciden con el diagrama, y documentar cada desviación con su impacto y la corrección propuesta. Escalar al DE Sr/Lead las desviaciones que requieran cambio de diseño, antes del roll-out.
+    acceptance_criteria: El DE Jr no implementa componentes fuera del diseño de arquitectura por falta de información. El DE Mid puede responder preguntas técnicas de arquitectura del DE Jr sin escalarlas todas al DE Sr. Las desviaciones se detectan durante el sprint, no en el roll-out.
+    deliverable: Minuta de la sesión de arquitectura con asistentes y acuerdos. Bitácora de desviaciones por sprint con impacto, corrección propuesta y estado.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Mid entiende la arquitectura suficientemente para comunicarla y para detectar cuando el DE Jr se desvía. No es solo un receptor del diseño del DE Sr.
+    guidance: El DE Mid es el puente entre el diseño del DE Sr y la ejecución del DE Jr. Su responsabilidad es que el DE Jr entienda y aplique la arquitectura correctamente.
+  - title: Modelado de datos
+    text: Diseñar las tablas del proyecto y validar la granularidad correcta con el equipo. Asegurar que el modelo de datos es coherente con las métricas y entidades de negocio definidas.
+    acceptance_criteria: El modelo diseñado por el DE Mid es técnicamente coherente y está alineado con los requerimientos de negocio. La granularidad de las tablas es la correcta para las métricas definidas por el DS. El DE Sr valida el modelo sin observaciones de diseño mayores.
+    deliverable: Esquema de tablas y relaciones con granularidades, tipos y métricas definidas y validadas con el lead.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Mid diseña las tablas con criterio y valida la granularidad con el DE Sr. No asume que el modelo es correcto sin haberlo revisado con alguien de mayor experiencia.
+    guidance: Un modelo de datos con granularidad incorrecta invalida el trabajo del DS sobre esos datos.
+  - title: Diseño de pipelines
+    text: 'Diseñar los pipelines estándar del proyecto: pasos, dependencias, manejo de errores, reintentos y ventanas de tiempo. Asegurar que el diseño es consistente con la arquitectura definida y aprobado antes del desarrollo.'
+    acceptance_criteria: El diseño del pipeline del DE Mid es implementable sin ambigüedades por el DE Jr. La estrategia de manejo de errores y reintentos está documentada antes de que el DE Jr comience a desarrollar. El DE Sr aprueba el diseño antes del inicio del sprint de desarrollo.
+    deliverable: Diseño lógico de pipelines con pasos, dependencias, estrategia de errores y reintentos documentada. Aprobación del lead.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid diseña pipelines estándar con criterio de robustez. Su diseño debe funcionar no solo en el camino feliz sino también cuando algo falla.
+    guidance: Un pipeline sin estrategia de manejo de errores documentada es un pipeline que falla en producción sin plan de respuesta.
+  - title: Desarrollo de pipelines
+    text: 'Implementar pipelines completos: ingestión, transformaciones, cargas incrementales e historificación. Asegurar que los pipelines del desarrollo están correctamente integrados en el flujo completo.'
+    acceptance_criteria: Los pipelines del DE Mid ejecutan correctamente incluyendo cargas incrementales e historificación. La integración de los componentes del DE Jr en el flujo completo está verificada antes del sprint review. El DE Sr no descubre errores de integración entre componentes en el sprint review.
+    deliverable: Pipelines completos versionados y documentados. Integración de componentes verificada.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid implementa pipelines completos con ownership del flujo end-to-end. No considera un pipeline terminado hasta haberlo ejecutado completo.
+    guidance: 'Un pipeline completo no es la suma de componentes que funcionan de forma aislada: es un flujo que funciona de extremo a extremo.'
+  - title: Scripts de validación y calidad de datos
+    text: Desarrollar los scripts de validación técnica y de negocio del proyecto. Asegurar que los resultados son auditables y que las alertas son accionables por cualquier miembro del equipo.
+    acceptance_criteria: 'Las reglas de validación del DE Mid cubren completitud, unicidad, validez, consistencia y frescura. Los resultados son auditables: cualquier miembro del equipo puede verificar de dónde viene cada número. Las alertas son accionables: cuando se disparan, el equipo sabe exactamente qué hacer.'
+    deliverable: Scripts de validación automatizados, con resultados auditables y alertas configuradas.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid desarrolla scripts de validación con criterio de operabilidad. Sus alertas deben poder ser atendidas por el DE Jr sin necesidad de escalar al DE Mid en cada ocurrencia.
+    guidance: Una alerta que nadie sabe cómo atender es una alerta inútil.
+  - title: Pruebas técnicas y de integración
+    text: Ejecutar las pruebas de integración del proyecto, verificando que los pipelines funcionan correctamente de forma conjunta. Asegurar que los casos críticos y los escenarios de error están cubiertos.
+    acceptance_criteria: Las pruebas de integración del DE Mid cubren los casos críticos y al menos 3 escenarios de error documentados. El DE Sr puede tomar la decisión de liberar a producción basado en el reporte del DE Mid sin necesidad de ejecutar pruebas adicionales.
+    deliverable: Reporte de pruebas de integración con casos críticos y escenarios de error documentados.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid ejecuta pruebas de integración con criterio de cobertura. Su reporte debe dar suficiente evidencia para que el DE Sr pueda decidir si el sistema está listo para producción.
+    guidance: Las pruebas de integración deben incluir escenarios de error, no solo el camino feliz.
+  - title: Optimización de pipelines
+    text: Analizar el desempeño de los pipelines e identificar oportunidades de optimización en tiempo de ejecución, consumo de recursos y costos. Implementar optimizaciones conocidas y documentar el impacto con métricas comparativas.
+    acceptance_criteria: Las optimizaciones del DE Mid tienen métricas comparativas documentadas que demuestran mejora. Las optimizaciones no afectan los resultados funcionales del pipeline. El DE Sr puede validar el impacto de la optimización sin necesidad de reejecutar las pruebas desde cero.
+    deliverable: Pipelines optimizados con métricas comparativas (antes vs después) documentadas.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid aplica optimizaciones conocidas con evidencia de impacto. No declara un pipeline como 'optimizado' sin tener métricas que lo demuestren.
+    guidance: Una optimización sin métricas comparativas es una opinión, no una mejora demostrada.
+  - title: Runbooks
+    text: Actualizar y mantener los runbooks operativos del proyecto, asegurando que los procedimientos ante fallas son claros y utilizables por personal no desarrollador.
+    acceptance_criteria: Los runbooks del DE Mid pueden ser seguidos por personal no desarrollador sin necesidad de preguntar al DE Mid. Los procedimientos ante fallas están documentados para al menos los 5 escenarios de falla más frecuentes. El DE Mid actualiza el runbook cada vez que el pipeline cambia significativamente.
+    deliverable: Runbooks operativos actualizados con procedimientos ante fallas, contactos y escalamiento definidos.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Mid actualiza los procedimientos del runbook con cada cambio relevante al pipeline. Su runbook debe poder usarse a las 2am por alguien que no diseñó el sistema.
+    guidance: 'Un runbook desactualizado es peor que no tener runbook: genera falsa confianza.'
+  - title: Documentación técnica integral
+    text: 'Verificar al cierre de cada sprint que la documentación técnica del proyecto cubre los componentes liberados en ese sprint, y registrar los faltantes como tarea del backlog con responsable. Ejecutar al menos una vez antes del cierre del proyecto una prueba de handover: una persona ajena al desarrollo intenta operar el pipeline usando solo la documentación, y sus preguntas se registran como brechas a cerrar.'
+    acceptance_criteria: La documentación técnica del proyecto es consistente con el estado actual del código en todo momento, no solo al cierre. El DE Mid puede confirmar que la documentación está lista para handover en cualquier momento del proyecto, no solo al final. Un auditor externo puede entender el sistema sin necesidad de preguntar al DE Mid.
+    deliverable: Revisión de documentación por sprint con faltantes registrados en el backlog. Resultado de la prueba de handover con las brechas identificadas y su cierre.
+    deliverable_format: Documento, Excel.
+    frequency: Durante todo el proyecto.
+    level_expectation: El DE Mid mantiene la documentación actualizada como parte regular de su trabajo. No espera al cierre del proyecto para documentar lo que construyó durante meses.
+    guidance: 'La documentación técnica no es un entregable de cierre: es un artefacto vivo que refleja el estado del sistema en tiempo real.'
+  - title: Informe de transición
+    text: Ejecutar la transición formal del producto de datos a operación o al equipo receptor. Asegurar que el conocimiento técnico, los riesgos conocidos y las responsabilidades están claramente documentados y aceptados por el receptor.
+    acceptance_criteria: El equipo receptor acepta formalmente el informe de transición. No hay preguntas post-cierre sobre funcionalidades básicas que el DE Mid debió haber incluido en el KT. El DE Sr aprueba el informe antes de que el DE Mid lo presente al equipo receptor.
+    deliverable: Informe de transición aprobado por el equipo receptor con conocimiento técnico transferido, riesgos documentados y responsables definidos.
+    deliverable_format: Documento, Excel.
+    frequency: Al cierre del proyecto.
+    level_expectation: El DE Mid ejecuta la transición con criterio. Su responsabilidad es que el receptor pueda operar el sistema sin necesidad de contactar a Arena.
+    guidance: 'La transición no termina cuando Arena dice que terminó: termina cuando el equipo receptor puede operar sin apoyo.'
+  - title: Rutinas de gestión — Daily
+    text: Asistir al daily preparado, reportando el avance propio y el del equipo a su cargo. Identificar bloqueos del equipo antes de que impacten entregables y gestionarlos activamente.
+    acceptance_criteria: El DE Mid no reporta el mismo bloqueo dos dailys seguidos sin haber tomado una acción concreta. Identifica bloqueos del DE Jr antes de que el PM los descubra. Sale del daily con acciones propias para los bloqueos que dependen de él.
+    deliverable: Participación activa en el daily con reporte de avance propio y del equipo. Bloqueos gestionados antes de que impacten entregables.
+    deliverable_format: Teams, calendario.
+    frequency: Diaria.
+    level_expectation: 'El DE Mid da su update de ejecución, coordinación y validación. No solo reporta bloqueos: toma acciones sobre ellos.'
+    guidance: 'El DE Mid no solo reporta su propio avance: gestiona activamente los bloqueos del DE Jr.'
+  - title: Rutinas de gestión — Sprint Planning
+    text: Asistir al sprint planning preparado con propuesta de actividades propias y del equipo a su cargo, incluyendo estimaciones, definitions of completeness y dependencias inter-equipo.
+    acceptance_criteria: El DE Mid y el DE Jr salen del planning con claridad total de responsabilidades. Las estimaciones del DE Mid se cumplen en al menos el 75% de los casos. El DE Jr no hace preguntas básicas durante el sprint sobre lo que se definió en el planning.
+    deliverable: Participación activa en el sprint planning con distribución de tareas documentada para el DE Jr.
+    deliverable_format: Teams, calendario.
+    frequency: Cada sprint.
+    level_expectation: El DE Mid llega al planning con propuesta de actividades para él y para el DE Jr. No delega la preparación del planning al DE Jr ni al DE Sr.
+    guidance: 'El DE Mid no solo define sus propias tareas en el planning: define y valida las del DE Jr. Sale del planning con un plan realista, no optimista.'
+  - title: Rutinas de gestión — Sprint Review
+    text: Asistir al sprint review exponiendo resultados propios, identificando qué se completó y qué no. Dar retroalimentación técnica honesta y documentada al equipo.
+    acceptance_criteria: El DE Mid expone resultados con honestidad, incluyendo lo que no se completó y por qué. La retroalimentación al DE Jr es específica, accionable y documentada. Los mismos errores del DE Jr no se repiten sprint a sprint.
+    deliverable: Participación activa en el sprint review. Retroalimentación al DE Jr documentada con acuerdos.
+    deliverable_format: Teams, calendario.
+    frequency: Cada sprint.
+    level_expectation: El DE Mid da retroalimentación técnica al DE Jr en el review, no solo en los touchpoints. Su feedback es específico y derivado de la evidencia del sprint.
+    guidance: '''No tuve tiempo de darle retro al DE Jr'' no es una respuesta aceptable.'
+  - title: Coordinación con DS y PM
+    text: Alinear con el equipo de Ciencia de Datos los requerimientos de datos, interfaces y formatos de entrega antes de cada fase. Comunicar al PM cuando un cambio técnico en las fuentes impacta el plan de entrega.
+    acceptance_criteria: El DS no descubre al momento del sprint review que los datos tienen formato o granularidad distinta a la acordada. El PM no descubre cambios técnicos que impactan el plan por primera vez en el weekly status. El DE Mid comunica impactos en el plan con al menos un sprint de anticipación.
+    deliverable: Evidencia de alineación con DS antes de cada fase. Comunicación al PM de impactos técnicos en el plan documentada en Teams o correo.
+    deliverable_format: Teams, correo, minuta.
+    frequency: Antes de cada fase de desarrollo que involucre exposición de datos al DS. Por evento ante cambios que impacten el plan.
+    level_expectation: El DE Mid es el punto de contacto técnico entre el equipo de Ingeniería y el equipo de Ciencia. Su responsabilidad es que ambos equipos estén alineados antes de desarrollar, no después.
+    guidance: 'La coordinación DE-DS no es un lujo: es un requisito para que el pipeline y los modelos sean compatibles.'
+  - title: Cumplimiento de tareas comprometidas
+    text: Cerrar dentro del sprint las tareas propias comprometidas y responder por el cumplimiento de las tareas asignadas al DE Jr a su cargo. Replanificar y comunicar al DE Sr/Lead y al PM en cuanto detecta que un compromiso del sprint está en riesgo, con el impacto y una propuesta de recuperación.
+    acceptance_criteria: Al menos el 90% de las tareas propias y el 85% de las del DE Jr se cierran dentro del sprint. Los riesgos de incumplimiento se comunican con al menos 3 días hábiles de anticipación al cierre del sprint. El DE Sr/Lead no descubre en el review un incumplimiento del equipo del DE Mid que no se haya comunicado antes.
+    deliverable: Tareas propias y del DE Jr cerradas en el backlog. Registro de los riesgos de incumplimiento con impacto, propuesta de recuperación y fecha de comunicación.
+    deliverable_format: Backlog del proyecto, Teams.
+    frequency: Cada sprint, con seguimiento diario.
+    level_expectation: El DE Mid responde por su propio cumplimiento y por el del DE Jr a su cargo. Es responsable de replanificar, no solo de reportar el atraso.
+    guidance: 'El DE Mid no solo entrega: responde por lo que entrega su DE Jr. Un incumplimiento del Jr que no se comunicó es un incumplimiento del Mid.'
+  - title: Estimación de tiempos
+    text: Estimar el esfuerzo de sus tareas y revisar las estimaciones del DE Jr antes del compromiso del sprint, corrigiendo las que no son realistas. Comparar al cierre del sprint lo estimado contra lo real del equipo y documentar las causas de las desviaciones.
+    acceptance_criteria: Todas las tareas del DE Mid y del DE Jr tienen estimación revisada antes del compromiso. La desviación agregada del sprint es menor o igual al 20%. Las tareas con desviación mayor al 30% tienen causa documentada. El DE Mid no compromete un sprint con una estimación que él mismo considera inviable.
+    deliverable: Estimaciones propias y estimaciones del DE Jr revisadas, registradas en el backlog. Comparativo de estimado vs real del sprint con causas de desviación.
+    deliverable_format: Backlog del proyecto, Excel.
+    frequency: Cada sprint.
+    level_expectation: El DE Mid estima lo propio y hace challenge a lo del DE Jr. Es responsable de que el compromiso del sprint sea alcanzable, no solo de reportar la desviación.
+    guidance: Aceptar una estimación irreal del DE Jr para no incomodar el planning es trasladar el problema al sprint review.
+  - title: Apertura a la retroalimentación
+    text: Pedir retroalimentación al DE Sr/Lead, a sus pares y al cliente sin esperar la evaluación formal. Cuando no está de acuerdo con una observación, argumentarlo con datos y de forma respetuosa en el momento de la conversación, no después ni con terceros.
+    acceptance_criteria: El DE Mid solicita retroalimentación al menos una vez por sprint, sin esperar la evaluación formal, y a más de una fuente (líder, pares, cliente). Cuando no está de acuerdo, lo argumenta con datos y de forma respetuosa dentro de la conversación, no fuera de ella. El DE Sr/Lead no tiene que buscar al DE Mid para darle una retroalimentación que él ya debió haber pedido.
+    deliverable: Solicitudes de retroalimentación documentadas (1:1, retro, mensaje al cliente o al par) con lo recibido. Desacuerdos planteados con datos y su resolución registrada.
+    deliverable_format: Teams, minuta de 1:1 y retro, correo.
+    frequency: Cada sprint.
+    level_expectation: 'El DE Mid no espera la retroalimentación: la busca, y en más de una dirección. Discrepar con argumentos es parte de su nivel.'
+    guidance: Pedir retroalimentación antes de la evaluación formal es la diferencia entre corregir a tiempo y enterarse tarde. Estar en desacuerdo es válido y se argumenta con datos, no con incomodidad.
+  - title: Aplicación de la retroalimentación
+    text: Convertir la retroalimentación recibida en acciones concretas con fecha y responsable, y darles seguimiento hasta su cierre. Cumplir lo acordado una vez tomada la decisión, incluso cuando no estuvo de acuerdo, y proponer en cada retro mejoras concretas a su propio trabajo.
+    acceptance_criteria: Cada retroalimentación recibida se convierte en una acción con fecha y responsable, y se le da seguimiento hasta su cierre. Cuando el DE Mid no estuvo de acuerdo, cumple lo acordado una vez tomada la decisión. En cada retro propone mejoras concretas a su propio trabajo y muestra avance verificable de un sprint al siguiente. Ninguna acción derivada de retroalimentación queda abierta más de dos sprints sin explicación.
+    deliverable: Acciones derivadas de la retroalimentación registradas con fecha y seguimiento hasta el cierre. Propuestas de mejora al propio trabajo presentadas en cada retro, con avance verificable entre sprints.
+    deliverable_format: Backlog del proyecto, Teams, minuta de retro.
+    frequency: Cada sprint.
+    level_expectation: El DE Mid convierte la retroalimentación en acciones con fecha. Es responsable de mostrar el avance entre sprints, no de explicar por qué no lo hubo.
+    guidance: Argumentar y después no cumplir lo acordado erosiona más la confianza que no haber argumentado. El avance entre sprints es la única evidencia de que la retroalimentación se aplicó.
+- area: ID
+  level: SNR
+  questions:
+  - title: Notas de alcance
+    text: Liderar el discovery identificando fuentes críticas a nivel de negocio, diseñando la estrategia de implementación escalable y mapeando fuentes legacy y dependencias entre fuentes. Anticipar riesgos de implementación que no son visibles para el DE Mid.
+    acceptance_criteria: 'El diagrama está validado por stakeholders técnicos y de negocio. El PM no descubre fuentes legacy o dependencias críticas durante el sprint 2 que el DE Sr debió haber identificado en el discovery. El diseño es escalable: puede manejar el crecimiento del volumen de datos sin rediseño completo.'
+    deliverable: Diagrama de flujo del proceso E2E y del ciclo de vida de la data, con fuentes críticas, dependencias entre fuentes y riesgos de implementación documentados.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Sr identifica fuentes críticas a nivel negocio, diseña para escalabilidad y mapea fuentes legacy y dependencias. Su discovery previene problemas en producción, no solo documenta el estado actual.
+    guidance: 'El DE Sr identifica lo que otros no ven en el discovery. Su valor no es completar el diagrama: es anticipar lo que hará fallar la implementación.'
+  - title: Esquemas de Bases de datos
+    text: Realizar el diagrama entidad-relación de las tablas fuente y de las tablas destino, con campos tipificados, formatos y relaciones (PK/FK) claramente definidas. Asegurar que las reglas de negocio están correctamente interpretadas, modeladas y alineadas con la arquitectura.
+    acceptance_criteria: Los diagramas ER de fuentes y destinos están completos y todas las tablas incluyen campos, tipos de dato y formatos. Las relaciones (PK/FK) están claramente definidas. El DE Sr puede defender campo a campo la implementación de las reglas de negocio. El equipo técnico aprueba el esquema sin observaciones de diseño mayores.
+    deliverable: Diagrama ER de fuentes y destinos completo con campos, tipos, formatos y relaciones. Validación de reglas de negocio campo a campo.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Sr asegura que las reglas de negocio estén correctamente interpretadas, modeladas y alineadas con la arquitectura. Implementa, detalla y valida técnicamente las reglas campo a campo asegurando que sean ejecutables, eficientes y mantenibles.
+    guidance: El DE Sr es el responsable de que las reglas de negocio estén correctamente interpretadas en el esquema. Un campo mal tipificado en el esquema se propaga a todo el desarrollo.
+  - title: Matriz de trazabilidad
+    text: Construir y mantener la matriz de trazabilidad que mapea las reglas de transformación entre fuentes y destinos. Compartirla con el equipo y explicar su funcionamiento para que el DE Mid y DE Jr puedan utilizarla como referencia durante el desarrollo.
+    acceptance_criteria: Todas las tablas y campos destino tienen fuente identificada y regla de transformación documentada. La matriz es consistente con los esquemas de bases de datos y el modelo de datos. El DE Mid puede responder preguntas básicas sobre la trazabilidad de un campo sin necesidad de consultar al DE Sr en todos los casos.
+    deliverable: Matriz de trazabilidad con fuentes, campos destino y reglas de transformación documentadas. Sesión de explicación con el equipo evidenciada.
+    deliverable_format: Excel.
+    frequency: 1 vez al inicio del proyecto, actualizada ante cambios.
+    level_expectation: El DE Sr construye la matriz de trazabilidad, la comparte con el equipo y explica su funcionamiento. Su responsabilidad es que el equipo pueda usarla, no solo que exista.
+    guidance: La matriz de trazabilidad es el contrato técnico de las transformaciones. Un campo sin regla documentada es un campo que se implementará distinto por cada DE.
+  - title: Documento de alcance técnico
+    text: Definir los límites técnicos del proyecto con criterio, identificar riesgos de alcance y alinear el documento con todos los stakeholders técnicos y de negocio antes del inicio del desarrollo.
+    acceptance_criteria: El documento define explícitamente qué se construye y qué no, con justificación técnica de los límites. Los riesgos de alcance están documentados antes de comenzar el desarrollo. Negocio y el equipo técnico aprueban el documento sin observaciones mayores de precisión.
+    deliverable: Documento de alcance técnico con límites, riesgos y sign-off de stakeholders técnicos y de negocio.
+    deliverable_format: Notion, Word, email.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Sr define límites y riesgos con criterio y los alinea con stakeholders. Su firma en el documento de alcance significa que lo que está adentro es técnicamente viable y lo que está afuera tiene una razón documentada.
+    guidance: 'El DE Sr define los límites del proyecto con criterio técnico. No todo lo que el cliente pide cabe en el alcance: identificar y documentar lo que no cabe es parte de su responsabilidad.'
+  - title: Checklist de requerimientos
+    text: Identificar riesgos técnicos en los requerimientos y asegurar que la alineación entre negocio y el equipo técnico es completa antes del inicio del desarrollo. Escalar al cliente los requerimientos que son técnicamente inviables tal como están definidos.
+    acceptance_criteria: El DE Sr puede identificar qué requerimientos son técnicamente inviables tal como están definidos y proponer alternativas antes de comprometerse a implementarlos. El PM no descubre requerimientos técnicamente inviables durante el sprint 2 que el DE Sr debió haber identificado en la validación. Negocio entiende los límites técnicos de los requerimientos.
+    deliverable: Checklist de requerimientos con riesgos técnicos identificados y alineación negocio-técnico documentada.
+    deliverable_format: Excel, Notion.
+    frequency: Inicio del proyecto y ante cambios de alcance.
+    level_expectation: El DE Sr identifica riesgos y asegura alineación negocio-técnico. Cuando un requerimiento no es técnicamente viable, lo dice con datos y propone una alternativa.
+    guidance: El DE Sr no firma requerimientos que no son técnicamente implementables. Su valor en la validación de requerimientos es su criterio técnico, no su capacidad de llenar un checklist.
+  - title: Propuesta de conectividad
+    text: Evaluar las opciones de conectividad considerando costos, performance, seguridad y escalabilidad. Aprobar la propuesta final y asegurar su alineación con la arquitectura definida.
+    acceptance_criteria: La propuesta de conectividad aprobada por el DE Sr considera al menos dos opciones evaluadas con criterios de costo, performance y seguridad. El equipo de infraestructura del cliente no rechaza la propuesta por consideraciones de seguridad o acceso que el DE Sr debió haber contemplado. La propuesta es implementable con las herramientas disponibles en el proyecto.
+    deliverable: Propuesta de conectividad aprobada con evaluación de costos, performance y seguridad documentada.
+    deliverable_format: Excalidraw, Draw.io, documento.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El DE Sr evalúa costos y performance para la aprobación de la propuesta de conectividad. No recomienda una opción de conectividad sin haber evaluado sus implicaciones económicas y de escalabilidad.
+    guidance: El DE Sr evalúa costos y performance de las opciones de conectividad antes de recomendar una. No propone una solución sin haber considerado sus implicaciones económicas.
+  - title: Reporte de calidad de datos
+    text: Proponer las reglas de calidad del proyecto y definir el framework de data quality que el equipo implementará. Asegurar que el framework es adoptado consistentemente por el DE Mid y DE Jr.
+    acceptance_criteria: El framework de DQ está documentado y el equipo lo implementa consistentemente. El DE Sr puede defender técnicamente cada regla de calidad propuesta. El equipo técnico y Negocio entienden qué significa cada métrica de calidad y qué acciones desencadena.
+    deliverable: Framework de data quality documentado con reglas propuestas y criterios de adopción.
+    deliverable_format: Notebook, Dashboard.
+    frequency: Al conectarse a una fuente o al terminar el desarrollo de una nueva.
+    level_expectation: 'El DE Sr propone las reglas de calidad y define el framework de DQ. No solo ejecuta checks: define qué se mide, por qué y qué se hace cuando falla.'
+    guidance: El framework de DQ del DE Sr es la referencia de calidad para todo el proyecto. Sin un framework definido, cada DE implementa calidad de forma diferente.
+  - title: Reportes de pruebas
+    text: Revisar el reporte de pruebas consolidado del DE Mid y verificar que los casos críticos y los escenarios de error definidos en la estrategia de testing están cubiertos y ejecutados. Emitir por escrito la decisión de liberar o no liberar a producción, con la justificación técnica y los riesgos aceptados. Si libera con defectos abiertos, dejarlos listados con severidad, responsable y fecha de corrección.
+    acceptance_criteria: El DE Sr toma la decisión de liberar a producción con base en evidencia técnica documentada, no por presión de tiempo. Cuando decide no liberar, documenta las condiciones que deben cumplirse antes de la siguiente liberación. El PM recibe la decisión del DE Sr con justificación suficiente para comunicarla al cliente.
+    deliverable: Decisión de liberación a producción documentada con justificación técnica.
+    deliverable_format: Documento, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr propone las reglas de calidad y monitorea resultados. Su firma en la liberación a producción es la garantía técnica del proyecto.
+    guidance: La decisión de liberar a producción es la decisión técnica de mayor impacto en el proyecto. El DE Sr la toma con criterio, no por presión.
+  - title: Reporte técnico de calidad de datos
+    text: Analizar los resultados de calidad del período, dar retroalimentación constante al equipo y asegurar que las métricas mejoran entre períodos. Escalar a Negocio cuando los problemas de calidad tienen impacto en los modelos del DS.
+    acceptance_criteria: Las métricas de calidad muestran tendencia de mejora entre períodos. El DS no descubre en sus modelos problemas de calidad de datos que el DE Sr ya había identificado en sus reportes. Negocio recibe comunicación del DE Sr sobre problemas de calidad que impactan los modelos con suficiente anticipación para tomar decisiones.
+    deliverable: Reporte técnico con análisis de resultados, tendencias, retroalimentación al equipo y escalamiento a Negocio cuando aplica.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr analiza resultados y da retroalimentación constante. Su responsabilidad es que la calidad de los datos mejore, no solo que se mida.
+    guidance: 'El DE Sr no solo reporta calidad: asegura que mejora. Si las métricas no mejoran entre períodos, es su responsabilidad identificar por qué.'
+  - title: Scripts de validación
+    text: Optimizar y estandarizar los scripts de validación del proyecto. Definir las librerías comunes de validación que el equipo reutilizará en futuros desarrollos.
+    acceptance_criteria: Los scripts del DE Sr son reutilizables por el DE Mid en futuros proyectos sin necesidad de reescribirlos desde cero. La librería común de validaciones está documentada y accesible al equipo. El DE Sr puede demostrar que sus scripts son más eficientes que la versión anterior con métricas comparativas.
+    deliverable: Scripts de validación optimizados y estandarizados. Librería común de validaciones documentada.
+    deliverable_format: SQL, Python, lenguaje del proyecto.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr optimiza, estandariza y define librerías comunes. Su contribución es que el equipo no tenga que resolver el mismo problema de validación dos veces.
+    guidance: 'El DE Sr no solo escribe scripts correctos: escribe scripts que el equipo puede reutilizar. El valor de su experiencia está en los patrones que establece para el equipo.'
+  - title: Esquema preliminar de tablas
+    text: Construir el mockup del esquema inicial, compartirlo con el equipo y dar seguimiento constante al cumplimiento de las convenciones durante el desarrollo. Realizar la revisión final del esquema antes del deployment.
+    acceptance_criteria: El esquema inicial del DE Sr es adoptado sin modificaciones de convención por el equipo. El DE Sr detecta desviaciones de convención durante el sprint, no durante el deployment. La revisión final del esquema no encuentra errores de naming o tipado que debieron corregirse durante el desarrollo.
+    deliverable: Esquema inicial documentado y compartido. Evidencia de seguimiento de cumplimiento durante el desarrollo. Revisión final aprobada.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: 'El DE Sr construye el mockup inicial, lo comparte con el equipo y da seguimiento al cumplimiento. No diseña el esquema y lo abandona: lo defiende como estándar durante todo el proyecto.'
+    guidance: 'El DE Sr no solo diseña el esquema: da seguimiento a que el equipo lo aplique correctamente durante todo el desarrollo.'
+  - title: Notas técnicas
+    text: Consolidar las notas técnicas del equipo y cerrar por escrito cada duda levantada, con fecha y responsable de la respuesta. Registrar como tarea del backlog toda decisión técnica que cambie arquitectura, modelo de datos, método de carga o el contrato de datos con el DS, indicando responsable y criterio de aceptación. Verificar al cierre de cada sprint que las decisiones tomadas en el sprint quedaron registradas.
+    acceptance_criteria: Ninguna decisión técnica relevante del proyecto queda sin documentar. El DE Sr puede rastrear cualquier decisión técnica hasta su nota de origen. El PM y el DS pueden consultar las notas técnicas sin necesidad de que el DE Sr las interprete.
+    deliverable: Notas técnicas consolidadas, centralizadas y accesibles. Decisiones técnicas relevantes derivadas en tareas del backlog.
+    deliverable_format: .doc, .docx, Notion, Teams.
+    frequency: Durante todo el proyecto, actualización continua.
+    level_expectation: El DE Sr concentra las notas del equipo y esclarece las dudas. Su responsabilidad es que ninguna decisión técnica relevante del proyecto quede sin documentar.
+    guidance: Una decisión técnica no documentada es una decisión que se repetirá con diferente resultado la próxima vez.
+  - title: Scripts, Notebooks y pipelines
+    text: Definir por escrito los patrones de desarrollo del proyecto (estructura de carpetas, modularidad, manejo de parámetros, manejo de errores y convenciones de nombres) y publicarlos antes del primer sprint de desarrollo. Revisar el código del equipo contra esos patrones al menos una vez por sprint, dejando las observaciones en el PR. Registrar en el backlog los refactors que las revisiones hagan necesarios.
+    acceptance_criteria: 'Los patrones definidos por el DE Sr son adoptados por el DE Mid sin necesidad de corrección recurrente. Los desarrollos del equipo son modulares y reutilizables: el DE Mid puede extender un pipeline del proyecto anterior sin reescribirlo desde cero. El DE Sr puede demostrar con métricas que sus optimizaciones mejoran el performance.'
+    deliverable: Documento de patrones de desarrollo publicado antes del primer sprint. Observaciones de revisión de código registradas en PR y refactors derivados en el backlog.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr optimiza, escala y define patrones de desarrollo. Su valor técnico no está en ejecutar, sino en establecer los estándares de calidad que elevan a todo el equipo.
+    guidance: El DE Sr define patrones, no solo los aplica. Su experiencia debe quedar codificada en estándares que el equipo pueda seguir sin supervisión constante.
+  - title: Checklist de ejecución
+    text: Revisar el cumplimiento del checklist de ejecución y dar retroalimentación al equipo sobre desviaciones detectadas. Aprobar el despliegue solo cuando todos los ítems están verificados.
+    acceptance_criteria: El DE Sr no aprueba un despliegue con ítems del checklist incompletos, independientemente de la presión de tiempo. La retroalimentación al equipo sobre el checklist es específica y accionable. El mismo ítem del checklist no falla dos veces en el mismo proyecto.
+    deliverable: Revisión del checklist con retroalimentación documentada al equipo. Aprobación de despliegue con justificación técnica.
+    deliverable_format: Documento, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr revisa el cumplimiento del checklist y da retroalimentación al equipo. Su aprobación del despliegue es la garantía técnica del proyecto.
+    guidance: El checklist de ejecución no es negociable bajo presión de tiempo. Si algo no está listo, no se despliega.
+  - title: Documentación de scripts
+    text: Revisar la documentación que entrega el DE Mid contra la lista de puntos definida en el proyecto (propósito, entradas y salidas, dependencias, parámetros de ejecución y pasos de reejecución) y devolver por escrito los puntos faltantes antes de aceptarla. Rechazar el entregable cuando falte cualquiera de esos puntos, en lugar de aceptarlo con observaciones pendientes.
+    acceptance_criteria: La documentación revisada por el DE Sr cumple el estándar del proyecto sin observaciones de calidad técnica mayores. El DE Sr puede confirmar en cualquier momento del proyecto que la documentación es suficiente para un handover de emergencia. Un auditor externo puede entender el sistema sin preguntar al equipo.
+    deliverable: Revisión de documentación con puntos faltantes devueltos por escrito y evidencia de su cierre antes de la aceptación.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: 'El DE Sr revisa la documentación del equipo y garantiza su completitud y calidad. Su revisión no es formal: es sustantiva.'
+    guidance: 'El DE Sr revisa la documentación con criterio de handover: ¿Podría alguien operar este sistema mañana con solo la documentación disponible?'
+  - title: Inventario de fuentes
+    text: Evaluar la calidad, estabilidad y riesgos técnicos de las fuentes del proyecto. Identificar fuentes con historial de inestabilidad o problemas de calidad y proponer estrategias de mitigación.
+    acceptance_criteria: El DE Sr identifica fuentes con riesgo de inestabilidad antes de que fallen en producción. Las estrategias de mitigación propuestas son técnicamente viables e implementables con el equipo disponible. Negocio entiende los riesgos de las fuentes identificadas y sus implicaciones para el proyecto.
+    deliverable: Inventario de fuentes con evaluación de calidad, estabilidad, riesgos y estrategias de mitigación propuestas.
+    deliverable_format: Documento, Excel.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Sr evalúa calidad, estabilidad y riesgos de las fuentes. Su valor en el inventario es su capacidad de identificar qué fuentes representan un riesgo para el proyecto antes de que fallen.
+    guidance: El DE Sr evalúa la estabilidad histórica de las fuentes, no solo su estado actual. Una fuente que funciona hoy puede ser un riesgo mañana.
+  - title: Diagrama de arquitectura
+    text: Refinar el diseño de arquitectura para escalabilidad y operación en producción. Aprobar la arquitectura final y comunicarla al equipo con suficiente detalle para que el DE Mid pueda implementar sin ambigüedades.
+    acceptance_criteria: La arquitectura definida por el DE Sr funciona en producción, no solo en demo. El DE Mid puede implementar dentro del diseño sin necesidad de preguntar al DE Sr en cada componente. El DS no descubre limitaciones de arquitectura durante el sprint de modelado que el DE Sr debió haber contemplado.
+    deliverable: Diagrama de arquitectura end-to-end refinado y aprobado. Comunicación al equipo con detalle suficiente para implementación.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Sr refina el diseño para escalabilidad y operación. Su arquitectura debe sobrevivir a la realidad del ambiente productivo del cliente, no solo al ambiente de desarrollo.
+    guidance: El DE Sr diseña para producción. Una arquitectura que funciona en DEV pero no en producción es una arquitectura incompleta.
+  - title: Modelado de datos
+    text: Definir el modelo de datos completo y la granularidad correcta para las métricas del negocio. Validar la alineación del modelo con el negocio y con la arquitectura definida.
+    acceptance_criteria: El modelo de datos del DE Sr soporta todas las métricas de negocio definidas con la granularidad correcta. El DS puede construir sus modelos sobre el modelo de datos del DE Sr sin encontrar limitaciones de granularidad o relaciones. Negocio valida el modelo sin observaciones de alineación con sus procesos.
+    deliverable: Modelo de datos completo con entidades, relaciones, granularidades y métricas definidas. Validación de alineación con negocio y arquitectura documentada.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El DE Sr define el modelo completo y la granularidad correcta. Su modelo debe soportar las necesidades del DS y de Negocio sin compromisos de diseño que limiten el análisis futuro.
+    guidance: Un modelo de datos con granularidad incorrecta no puede corregirse en producción sin un rediseño completo.
+  - title: Diseño de pipelines
+    text: Validar el diseño de pipelines del DE Mid considerando fallos, escalabilidad y escenarios de error. Aprobar el diseño final antes del inicio del desarrollo.
+    acceptance_criteria: El diseño aprobado por el DE Sr contempla al menos 3 escenarios de fallo con estrategia de respuesta documentada. El DE Mid no necesita rediseñar el pipeline durante el desarrollo por limitaciones que el DE Sr debió haber identificado en la revisión. El diseño es escalable al doble del volumen actual de datos.
+    deliverable: Diseño de pipelines revisado con observaciones de fallos y escalabilidad. Aprobación del diseño final documentada.
+    deliverable_format: Excalidraw, Draw.io.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr valida el diseño considerando fallos y escalabilidad. No aprueba un diseño que solo funciona en el camino feliz.
+    guidance: 'El DE Sr valida el diseño del DE Mid con criterio de producción: ¿Qué pasa cuando falla? ¿Cómo se recupera? ¿Escala?'
+  - title: Desarrollo de pipelines
+    text: Ejecutar los refactors de los pipelines del equipo que la revisión de código haya clasificado como bloqueantes para escalar u operar el proyecto, dejando registrado en el PR qué se cambió y por qué. Verificar antes del pase a producción que los pipelines corren end-to-end en ambiente de pruebas con el volumen esperado de producción.
+    acceptance_criteria: Los estándares definidos por el DE Sr son adoptados por el equipo sin necesidad de corrección recurrente por el mismo punto. Los pipelines refactorizados tienen métricas comparativas de performance. El DE Mid puede mantener los pipelines del proyecto sin necesidad de que el DE Sr esté presente.
+    deliverable: Refactors ejecutados con evidencia en PR. Corrida end-to-end en ambiente de pruebas con volumen de producción documentada.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr refactoriza, optimiza y define estándares. Su contribución al desarrollo es que el equipo pueda mantener lo que construyó sin depender de él.
+    guidance: El DE Sr refactoriza para que el código sea mantenible por el DE Mid, no solo para que sea más eficiente.
+  - title: Scripts de validación y calidad de datos
+    text: Diseñar las reglas de calidad robustas del proyecto y aprobar el enfoque y cobertura de los scripts del DE Mid. Asegurar que las reglas cubren los escenarios de negocio más críticos.
+    acceptance_criteria: Las reglas de calidad diseñadas por el DE Sr cubren los escenarios de negocio más críticos y son técnicamente implementables. El DS no descubre en sus modelos violaciones de reglas de calidad que el DE Sr debió haber contemplado. El DE Mid puede implementar las reglas del DE Sr sin ambigüedades de interpretación.
+    deliverable: Reglas de calidad robustas diseñadas. Revisión y aprobación de enfoque y cobertura del DE Mid documentada.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr diseña reglas de calidad robustas y aprueba el enfoque del DE Mid. Su valor es su capacidad de anticipar qué puede salir mal con los datos en producción.
+    guidance: El DE Sr diseña las reglas de calidad que importan al negocio, no solo las técnicamente correctas.
+  - title: Pruebas técnicas y de integración
+    text: Diseñar la estrategia de testing del proyecto y aprobar los resultados finales antes del pase a producción. Asegurar que los casos críticos y los escenarios de error están cubiertos.
+    acceptance_criteria: La estrategia de testing del DE Sr cubre casos críticos y escenarios de error antes de que el equipo los implemente. El DE Sr toma la decisión de pase a producción con base en evidencia técnica, no por presión de tiempo. Los defectos encontrados en producción después del pase son cero o mínimos y estaban documentados como riesgos aceptados.
+    deliverable: Estrategia de testing documentada. Aprobación de resultados finales para producción con justificación técnica.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr diseña la estrategia de testing y aprueba los resultados finales. Su firma en el pase a producción es la garantía técnica más alta del proyecto.
+    guidance: La estrategia de testing se define antes del desarrollo, no después. El DE Sr no improvisa casos de prueba cuando ya el código está escrito.
+  - title: Optimización de pipelines
+    text: Optimizar el performance y los costos de los pipelines del proyecto. Validar el impacto técnico y financiero de las optimizaciones del DE Mid.
+    acceptance_criteria: Las optimizaciones del DE Sr tienen impacto documentado en tiempo de ejecución o costo. El DE Sr puede defender ante Negocio el impacto financiero de sus optimizaciones con métricas concretas. Las optimizaciones del DE Mid son validadas por el DE Sr antes de implementarse en producción.
+    deliverable: Pipelines optimizados con métricas de performance y costo documentadas. Validación de impacto de optimizaciones del DE Mid.
+    deliverable_format: .py, .ipynb, .json, .sql.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr optimiza performance y costos y valida el impacto del DE Mid. Su optimización tiene valor económico demostrable para el cliente.
+    guidance: El DE Sr optimiza con criterio económico, no solo técnico. Una optimización que no tiene impacto en el costo o en el tiempo del usuario final tiene bajo valor de negocio.
+  - title: Runbooks
+    text: Diseñar los flujos de soporte y definir los SLAs y niveles de soporte del proyecto. Asegurar que los runbooks son suficientemente completos para que el equipo de operaciones del cliente pueda operar sin apoyo de Arena.
+    acceptance_criteria: Los runbooks diseñados por el DE Sr permiten al equipo de operaciones del cliente resolver al menos el 80% de los incidentes sin escalar a Arena. Los SLAs definidos son realistas y acordados con el cliente. El DE Sr puede demostrar que los runbooks fueron probados con personal del cliente antes del cierre.
+    deliverable: Runbooks con flujos de soporte, SLAs y niveles de soporte definidos. Validación de que son operables por el equipo del cliente.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El DE Sr diseña los flujos de soporte y define los SLAs. Su runbook debe hacer que Arena sea prescindible para la operación diaria del cliente.
+    guidance: Un runbook que no fue probado con el equipo de operaciones del cliente es un runbook que fallará en producción.
+  - title: Documentación técnica integral
+    text: 'Ejecutar antes del cierre del proyecto una revisión de handover de la documentación técnica: verificar que existe documentación vigente para cada componente en producción, que los diagramas corresponden a lo implementado y que los runbooks describen procedimientos ejecutables. Registrar las brechas encontradas con responsable y fecha, y cerrar el proyecto solo cuando no queden brechas abiertas.'
+    acceptance_criteria: La documentación técnica del proyecto supera una revisión de coherencia técnica del DE Sr sin observaciones mayores. Un nuevo DE puede entender y operar el sistema completo con solo la documentación disponible. El DE Sr confirma la completitud de la documentación antes del cierre formal del proyecto.
+    deliverable: Revisión de handover ejecutada con inventario de componentes en producción, brechas registradas con responsable y fecha, y confirmación de cierre sin brechas abiertas.
+    deliverable_format: Documento, Excel.
+    frequency: Durante todo el proyecto, con revisión final antes del cierre.
+    level_expectation: El DE Sr valida la coherencia técnica y garantiza la completitud. Su revisión final de documentación es el último filtro de calidad antes del cierre del proyecto.
+    guidance: El DE Sr valida coherencia técnica. No aprueba documentación que no cumpliría una auditoría externa.
+  - title: Informe de transición
+    text: Asegurar que la transferencia de conocimiento técnico está completa y aprobar el cierre del proyecto. Garantizar que el equipo receptor puede operar sin apoyo de Arena.
+    acceptance_criteria: El DE Sr aprueba el cierre del proyecto solo cuando tiene evidencia de que el equipo receptor puede operar sin apoyo. Los riesgos conocidos están documentados y el equipo receptor los acepta formalmente. No hay deudas técnicas de KT no documentadas al momento del cierre.
+    deliverable: Informe de transición aprobado por el DE Sr. Evidencia de que el equipo receptor puede operar el sistema de forma autónoma.
+    deliverable_format: Documento, Excel.
+    frequency: Al cierre del proyecto.
+    level_expectation: El DE Sr asegura la transferencia de conocimiento y aprueba el cierre. Su firma en el informe de transición significa que el cliente puede operar solo.
+    guidance: 'El cierre del proyecto no es una fecha en el calendario: es la evidencia de que el receptor puede operar sin apoyo.'
+  - title: Rutinas de gestión — Daily
+    text: Asistir al daily reportando avance propio en definición, coordinación y validación. Identificar y anticipar riesgos técnicos del equipo como principal responsable de la gestión de riesgos técnicos del proyecto.
+    acceptance_criteria: El DE Sr no reporta el mismo riesgo técnico dos dailys seguidos sin haber tomado una acción concreta. Los riesgos que levanta son técnicamente fundados, no especulativos. El PM confía en el juicio del DE Sr para decidir si un riesgo debe escalarse o gestionarse internamente.
+    deliverable: Participación activa en el daily con reporte de avance y riesgos técnicos identificados. Acciones de mitigación comunicadas.
+    deliverable_format: Teams, calendario.
+    frequency: Diaria.
+    level_expectation: El DE Sr anticipa riesgos técnicos y propone mitigaciones. Su valor en el daily no es reportar su avance personal, sino asegurar que el equipo no tiene riesgos técnicos no gestionados.
+    guidance: 'El DE Sr es el principal responsable de anticipar riesgos técnicos del equipo. No solo los reporta: propone y ejecuta mitigaciones.'
+  - title: Rutinas de gestión — Sprint Planning
+    text: Asistir al sprint planning liderando la definición de actividades técnicas del equipo. Hacer challenge de estimaciones no realistas y asegurar que todas las tareas tienen definition of completeness antes de comprometerse.
+    acceptance_criteria: Ninguna tarea técnica entra al sprint sin definition of completeness clara. El DE Sr hace challenge de estimaciones irreales antes de comprometerse con el cliente. El equipo sale del planning con un plan técnicamente ejecutable, no optimista.
+    deliverable: Participación activa en el sprint planning con definición de actividades técnicas y definitions of completeness para el equipo.
+    deliverable_format: Teams, calendario.
+    frequency: Cada sprint.
+    level_expectation: 'El DE Sr lidera la definición técnica del sprint planning. No solo aprueba el plan: lo construye con el equipo y lo hace ejecutable.'
+    guidance: El DE Sr no permite que el equipo entre a un sprint con definiciones incompletas. Su responsabilidad es que el planning sea técnicamente sólido.
+  - title: Rutinas de gestión — Sprint Review
+    text: Exponer resultados técnicos del equipo en el sprint review, identificar áreas de mejora propias y del equipo, y dar retroalimentación técnica profunda al DE Mid.
+    acceptance_criteria: Las áreas de mejora identificadas por el DE Sr en la retro se reflejan en cambios concretos en el siguiente sprint. La retroalimentación al DE Mid es técnicamente específica y accionable. El DE Sr recibe feedback del equipo sin ponerse a la defensiva.
+    deliverable: Participación activa en el sprint review. Retroalimentación al DE Mid documentada con acuerdos.
+    deliverable_format: Teams, calendario.
+    frequency: Cada sprint.
+    level_expectation: El DE Sr expone resultados técnicos con criterio y da retroalimentación profunda al DE Mid. Su feedback debe ser técnicamente específico, no genérico.
+    guidance: El DE Sr modela la cultura de mejora continua del equipo. Si él no recibe feedback bien, el DE Mid tampoco lo hará.
+  - title: Coordinación con DS y PM
+    text: Liderar la alineación técnica con el equipo de Ciencia de Datos definiendo las interfaces de datos, formatos y granularidades que el pipeline proveerá. Comunicar al PM impactos técnicos que afecten el plan con suficiente anticipación para renegociar con el cliente.
+    acceptance_criteria: El DS no descubre limitaciones técnicas del pipeline durante el sprint de modelado que el DE Sr debió haber comunicado antes. El PM recibe comunicación del DE Sr sobre impactos en el plan con suficiente anticipación para renegociar con el cliente sin crisis. El DE Sr puede proponer alternativas técnicas cuando la solución original no es viable.
+    deliverable: Interfaces de datos, formatos y granularidades acordadas con el DS documentadas. Comunicación al PM de impactos técnicos en el plan con al menos un sprint de anticipación.
+    deliverable_format: Teams, correo, minuta, PPT.
+    frequency: Antes de cada fase de desarrollo que involucre exposición de datos al DS. Por evento ante cambios que impacten el plan.
+    level_expectation: El DE Sr lidera la alineación técnica con el DS y comunica proactivamente al PM los impactos técnicos en el plan. Su valor en la coordinación inter-equipo es su criterio técnico, no su disponibilidad.
+    guidance: El DE Sr es el arquitecto de la interfaz entre el pipeline y los modelos del DS. Si esa interfaz falla, todo el trabajo del DS sobre los datos puede ser inútil.
+  - title: Cumplimiento de tareas comprometidas
+    text: Responder por el cumplimiento de los compromisos técnicos del equipo del proyecto en cada sprint. Ajustar asignaciones y prioridades cuando el cumplimiento está en riesgo, y comunicar al PM y al DE Lead el impacto en el plan con anticipación suficiente para renegociar con el cliente.
+    acceptance_criteria: Al menos el 90% de los compromisos técnicos del sprint se cumplen. Los compromisos en riesgo se comunican al PM antes del cierre del sprint, con impacto y opciones. Ningún hito del plan se incumple sin haber sido señalado como riesgo en el sprint anterior.
+    deliverable: Reporte de cumplimiento del sprint por integrante del equipo. Comunicación documentada al PM y al DE Lead de los compromisos en riesgo, con impacto en el plan y acciones tomadas.
+    deliverable_format: Backlog del proyecto, Teams, correo.
+    frequency: Cada sprint y ante cada hito del plan.
+    level_expectation: El DE Sr responde por el cumplimiento del equipo técnico del proyecto. Su responsabilidad no es explicar el atraso, sino haberlo anticipado y ofrecido opciones.
+    guidance: El DE Sr debe ser el primero en saber que un hito no se va a cumplir, y el PM el segundo. Si el cliente lo descubre primero, la falla es de gestión, no de ejecución.
+  - title: Estimación de tiempos
+    text: 'Definir y mantener la base de estimación del proyecto: referencias de esfuerzo por tipo de componente (conector, pipeline, modelo, validación) construidas con los datos reales de sprints anteriores. Hacer challenge a las estimaciones del equipo y validar que el plan por fase es alcanzable antes de comprometerlo.'
+    acceptance_criteria: Existe una base de estimación documentada y actualizada con los datos reales de al menos los dos sprints anteriores. La desviación entre lo estimado y lo real por fase del proyecto es menor o igual al 15%. Toda estimación del equipo que el DE Sr considera inviable queda registrada con su ajuste y justificación.
+    deliverable: Base de estimación del proyecto documentada con referencias por tipo de componente. Comparativo de estimado vs real por fase, con los ajustes hechos a las referencias.
+    deliverable_format: Excel, Backlog del proyecto.
+    frequency: Al inicio del proyecto, con actualización por sprint.
+    level_expectation: El DE Sr define cómo se estima en el proyecto, no solo estima. Es responsable de que el plan comprometido tenga fundamento en datos reales, no en optimismo.
+    guidance: Estimar sin referencias históricas es adivinar. La base de estimación es el activo que hace que el siguiente proyecto se estime mejor que este.
+  - title: Apertura a la retroalimentación
+    text: Pedir a su equipo, incluidos DE Jr y Mid, retroalimentación sobre su forma de trabajar y de liderar, además de la que recibe de su líder y del cliente. Generar y sostener espacios (retro, 1:1) donde el equipo pueda dar retroalimentación hacia arriba sin temor a consecuencias.
+    acceptance_criteria: El DE Sr solicita retroalimentación sobre su forma de trabajar y liderar a su equipo, incluidos DE Jr y Mid, al menos una vez por ciclo. Los espacios de retro y 1:1 se sostienen con la periodicidad definida y no se cancelan por carga de trabajo. El equipo da retroalimentación al DE Sr sin que él tenga que insistir. Ningún integrante reporta en evaluación una observación que nunca pudo plantear en un espacio del equipo.
+    deliverable: Retroalimentación del equipo recabada y documentada, incluida la de DE Jr y Mid. Espacios de retro y 1:1 realizados, con evidencia de retroalimentación hacia arriba.
+    deliverable_format: Teams, minuta de retro y 1:1, formatos del equipo.
+    frequency: Cada sprint y en cada ciclo de evaluación.
+    level_expectation: El DE Sr recibe retroalimentación hacia arriba y hacia abajo. Es responsable de crear las condiciones para que su equipo pueda dársela, no solo de estar disponible.
+    guidance: 'Un equipo que no le da retroalimentación a su DE Sr no es un equipo sin observaciones: es un equipo que no se siente seguro de darlas.'
+  - title: Aplicación de la retroalimentación
+    text: Aplicar la retroalimentación recibida y comunicar al equipo qué cambió a partir de ella. Usar la retroalimentación del cliente para ajustar el enfoque del proyecto y no solo el entregable puntual, y convertir en mejoras al estándar del equipo (checklists, plantillas, guías) toda retroalimentación que se repite.
+    acceptance_criteria: El DE Sr comunica al equipo qué cambió a partir de la retroalimentación recibida. La retroalimentación del cliente se traduce en ajustes al enfoque del proyecto, no solo al entregable señalado. Las áreas de mejora de evaluaciones anteriores muestran cambios sostenidos, no puntuales. Toda retroalimentación que aparece dos veces se convierte en una mejora documentada al estándar del equipo.
+    deliverable: Cambios aplicados a partir de la retroalimentación, comunicados al equipo. Ajustes al enfoque del proyecto originados en retroalimentación del cliente. Checklists, plantillas o guías actualizadas a partir de retroalimentación recurrente.
+    deliverable_format: Teams, minuta de retro, checklists y plantillas del equipo.
+    frequency: Cada sprint y en cada ciclo de evaluación.
+    level_expectation: El DE Sr responde por que lo señalado deje de depender de las personas y quede incorporado al estándar del equipo.
+    guidance: 'Una retroalimentación que se repite ya no es un caso individual: es una falla del estándar. Corregirla persona por persona es tratar el síntoma.'
+- area: ID
+  level: LEAD
+  questions:
+  - title: Aseguramiento de calidad técnica del equipo — Seguimiento a checklists
+    text: Realizar seguimiento a los DE Sr/Mid de sus proyectos para evaluar el cumplimiento de sus checklists correspondientes. Documentar hallazgos y dar retro directa en sesión 1:1.
+    acceptance_criteria: Existe una sesión de retroalimentación 1:1 con cada DE evaluado donde se revisan fortalezas, áreas de mejora y acuerdos concretos. El DE Lead puede evidenciar el progreso de cada DE entre una evaluación y la siguiente. Los mismos hallazgos no se repiten en la siguiente evaluación sin una razón documentada.
+    deliverable: Checklist de cada DE evaluado documentado y compartido en sesión de retro. Evidencia de acuerdos y compromisos de mejora.
+    deliverable_format: Correo, Teams, XLS.
+    frequency: Mensual / Bimestral.
+    level_expectation: 'El DE Lead evalúa a sus DE Sr/Mid con criterio técnico y de liderazgo. Su retroalimentación no solo señala errores: propone cómo mejorar y da seguimiento a que la mejora ocurra.'
+    guidance: El DE Lead es responsable de que los estándares de calidad técnica de Arena se cumplan en todos los proyectos bajo su cargo. La retro debe ser específica y accionable, no genérica.
+  - title: Aseguramiento de calidad técnica del equipo — Cumplimiento PMO y estándares de arquitectura
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades de la Oficina de PMO y con los estándares de arquitectura de datos de Arena. Identificar brechas técnicas y escalarlas al director de Analítica cuando no puedan resolverse a nivel de proyecto.
+    acceptance_criteria: El equipo de la Oficina de PMO no necesita perseguir al DE Lead para que las actividades se cumplan. Las brechas de arquitectura tienen responsable, fecha de resolución y seguimiento documentado. El director de Analítica no descubre brechas técnicas que el DE Lead ya conocía.
+    deliverable: Actividades de PMO cumplidas en tiempo y forma. Brechas de arquitectura documentadas con plan de acción y responsable.
+    deliverable_format: Según guía Oficina de PMO, correo, Teams.
+    frequency: Semanal.
+    level_expectation: 'El DE Lead no solo asegura que las actividades de PMO están hechas: asegura que las decisiones de arquitectura son correctas. La diferencia entre cumplir y cumplir bien es su responsabilidad.'
+    guidance: El DE Lead es el puente entre los estándares de arquitectura de Arena y la ejecución de los proyectos. No es un rol operativo, es un rol de aseguramiento.
+  - title: Aseguramiento de calidad técnica del equipo — Alineación de integración con otros leads
+    text: Sostener una sesión de diseño de integración con los leads de DS, Producto y UX por cada proyecto a su cargo, al inicio y ante cada cambio de alcance, para acordar qué entrega el pipeline y con qué formato y granularidad. Dejar el acuerdo documentado y confirmado por los leads participantes. Registrar como riesgo, con responsable y fecha, cada brecha entre lo que el pipeline puede entregar y lo que el DS necesita.
+    acceptance_criteria: No hay brechas de integración entre el pipeline de DE y los modelos de DS que se descubran durante el sprint de modelado. Los leads de DS confían en el criterio del DE Lead para las decisiones de arquitectura que afectan sus modelos. Las decisiones de integración están documentadas y son trazables.
+    deliverable: Acuerdo de integración documentado y confirmado por los leads de DS, Producto y UX. Brechas registradas como riesgo con responsable y fecha.
+    deliverable_format: Correo, Teams, PPT.
+    frequency: Por sprint.
+    level_expectation: El DE Lead trabaja con otros leads como par. Cuando hay conflicto técnico entre el pipeline y los modelos del DS, propone y documenta la solución. No espera a que el director lo resuelva.
+    guidance: El DE Lead es el representante técnico de Ingeniería ante el resto de los leads. Su criterio en decisiones de integración de datos es la referencia para el equipo.
+  - title: Guía y soporte al equipo de proyecto — Participación en dailys
+    text: Asistir y participar activamente en los dailys al inicio del proyecto, en fases de entregables críticos y en el cierre. Evaluar en cada asistencia la preparación del equipo, el foco técnico y el cumplimiento de agenda y tiempos.
+    acceptance_criteria: El DE Lead participa de forma oral y escrita asegurando que el equipo no pierde de vista los entregables y riesgos técnicos críticos. Cuando asiste, detecta riesgos de arquitectura o integración que el DE Sr no vio. Sus observaciones son técnicamente relevantes, no administrativas.
+    deliverable: Reporte de asistencia en Teams. Observaciones técnicas documentadas cuando aplique.
+    deliverable_format: Teams.
+    frequency: Al menos 1 daily cada 15 días.
+    level_expectation: El DE Lead asiste a los dailys con criterio de arquitectura. Su presencia sirve para detectar riesgos técnicos que el DE Sr no ve todavía, no para microgestionar la ejecución.
+    guidance: El DE Lead también evalúa el valor de la reunión, la preparación y foco técnico del equipo y el cumplimiento de objetivo, agenda y tiempos. No asiste a todos los dailys, pero cuando asiste, agrega valor.
+  - title: Guía y soporte al equipo de proyecto — Participación en sprint planning y review
+    text: Asistir y participar activamente en los sprint planning y sprint review. Hacer challenge técnico de estimaciones de pipeline, diseños de arquitectura comprometidos y consistencia entre lo que se planea construir y la propuesta original.
+    acceptance_criteria: El DE Lead hace challenge de estimaciones de pipeline que no son realistas antes de que el equipo las comprometa con el cliente. Revisa lo comprometido en propuesta vs lo que el equipo planea entregar e identifica riesgos de alcance técnico. El PM y DE Sr agradecen su presencia porque agrega criterio de arquitectura, no burocracia.
+    deliverable: Reporte de asistencia en Teams. Observaciones y ajustes al planning documentados.
+    deliverable_format: Teams, PPT, XLS.
+    frequency: Cada sprint.
+    level_expectation: El DE Lead asiste al planning y review para proteger al equipo de comprometer pipelines técnicamente inviables en el tiempo acordado y para proteger al cliente de recibir una arquitectura de datos que no escala.
+    guidance: El DE Lead revisa el alcance técnico comprometido en la propuesta vs lo que el equipo está planeando entregar. Se recomienda como trabajo previo al planning.
+  - title: Guía y soporte al equipo de proyecto — Aprobación de material técnico para cliente
+    text: Revisar y aprobar el material técnico de toda sesión con stakeholders senior del cliente (nivel director o superior, o equipos de arquitectura e infraestructura) al menos 24 horas antes de la sesión. Confirmar con el equipo la agenda y el objetivo técnico antes de que empiecen a construir el material, no después. Dejar registro de la versión aprobada y de los comentarios devueltos.
+    acceptance_criteria: Las sesiones con stakeholders de tecnología del cliente cuentan con pre-read técnico. El DE Lead evita retrabajos ayudando al equipo a definir la estructura técnica de la presentación antes de que la construya. Los stakeholders de tecnología del cliente perciben solidez técnica en los diseños presentados.
+    deliverable: Versión aprobada del material técnico con fecha de aprobación (mínimo 24 horas antes de la sesión). Pre-read técnico compartido y comentarios devueltos al equipo.
+    deliverable_format: PPT, correo.
+    frequency: Al menos 1 vez por sprint en proyectos con stakeholders técnicos senior.
+    level_expectation: El DE Lead revisa el material técnico de sesiones críticas. Su valor es enseñarle al DE Sr cómo estructurar una sesión de arquitectura de alto impacto, no hacerle las correcciones.
+    guidance: El DE Lead debe ayudar a que el equipo defina el objetivo técnico de la sesión antes de construir el material. Una sesión con el CTO del cliente sin objetivo claro es un riesgo de relación.
+  - title: Guía y soporte al equipo de proyecto — Mapeo de stakeholders
+    text: Ayudar al equipo a mapear y entender todos los stakeholders técnicos y de negocio involucrados en el proyecto, incluyendo sus motivaciones, nivel de influencia y postura hacia las decisiones de arquitectura.
+    acceptance_criteria: Todo el equipo conoce el rol y la influencia de los stakeholders clave. El DE Sr puede anticipar la postura del CTO o del equipo de infraestructura del cliente antes de una sesión crítica sin preguntarle al DE Lead.
+    deliverable: Directorio de stakeholders técnicos y de negocio con nivel de influencia y postura documentada.
+    deliverable_format: XLS, PPT.
+    frequency: Al menos 1 vez por proyecto, actualizado ante cambios.
+    level_expectation: 'El DE Lead no solo conoce a los stakeholders técnicos: enseña al DE Sr cómo leerlos y gestionarlos. El mapa de influencia del área de tecnología del cliente no debe quedarse solo en el DE Lead.'
+    guidance: En proyectos de datos, los stakeholders de tecnología del cliente (CTO, arquitectos, equipo de infraestructura) son tan críticos como los de negocio. El DE Lead debe mapearlos a ambos.
+  - title: Guía y soporte al equipo de proyecto — One-on-ones con stakeholders técnicos senior
+    text: Agendar y ejecutar one-on-ones con stakeholders técnicos senior del cliente (CTO, arquitectos, equipo de infraestructura) para alinear expectativas técnicas, anticipar restricciones de ambiente y construir una relación de confianza técnica.
+    acceptance_criteria: Los puntos clave del one-on-one con el stakeholder técnico senior se comparten al equipo antes del siguiente sprint. El DE Lead detecta restricciones de infraestructura del cliente antes de que bloqueen el desarrollo. El DE Sr sabe qué está preocupando al equipo de tecnología del cliente sin que el DE Lead lo filtre todo.
+    deliverable: Sesiones agendadas y ejecutadas. Resumen de puntos clave compartido al equipo del proyecto en daily o planning.
+    deliverable_format: Reunión Teams / presencial.
+    frequency: Cada sprint.
+    level_expectation: El DE Lead construye la relación técnica con el cliente a nivel estratégico. Cuando el CTO tiene una restricción que no le diría al DE Sr, se la dice al DE Lead. Esa confianza técnica se construye sprint a sprint.
+    guidance: Las relaciones con el equipo de tecnología del cliente son críticas para proyectos que requieren acceso a infraestructura, fuentes o ambientes productivos. El DE Lead las construye desde el inicio.
+  - title: Guía y soporte al equipo de proyecto — Participación del director de Analítica
+    text: Anticipar y coordinar la participación del director de Analítica en momentos críticos del proyecto (revisiones de arquitectura, escalamientos de cliente, decisiones de alcance técnico), comunicando con claridad el contexto y el tipo de apoyo requerido.
+    acceptance_criteria: El director recibe comunicaciones que le permiten prepararse sin pedir contexto adicional. El DE Lead no escala problemas sin intentar resolverlos primero. Cuando escala, lo hace con información suficiente para que el director tome una decisión inmediata.
+    deliverable: Mensajes al director de Analítica con contexto completo (status, situación, qué se necesita).
+    deliverable_format: Teams, correo.
+    frequency: Por evento o al menos 1 vez al mes.
+    level_expectation: El DE Lead sabe exactamente cuándo necesita al director y cuándo puede resolver solo. Escalar sin criterio desperdicia el tiempo del director; no escalar cuando debería pone en riesgo el proyecto.
+    guidance: Saber cuándo involucrar al director y cuándo resolver internamente es parte del criterio de liderazgo del DE Lead. Sobreescalar es tan problemático como no escalar.
+  - title: Guía y soporte al equipo de proyecto — Plan de transición y staffing
+    text: Crear y ejecutar un plan de transición, onboarding técnico, KT y seguimiento al staffing del proyecto al inicio, durante y al final, considerando riesgos de pérdida de conocimiento de arquitectura ante cambios de equipo.
+    acceptance_criteria: 'El plan de transición contempla los riesgos de pérdida de conocimiento de arquitectura y pipeline ante cambios de staffing. El equipo nuevo puede operar y extender el pipeline sin necesidad de reconstruirlo. El DE Lead no improvisa ante la salida de un DE Sr: tiene un plan de continuidad técnica ejecutable.'
+    deliverable: Plan de transición técnica documentado. Accionables de staffing comunicados al director de Analítica.
+    deliverable_format: XLS, PPT.
+    frequency: Al menos 2 veces por proyecto (inicio y cierre). Revisado ante cambios de staffing.
+    level_expectation: El DE Lead no improvisa ante cambios de staffing. Tiene un plan de continuidad de arquitectura que funciona incluso en el escenario de perder al DE Sr más crítico del proyecto.
+    guidance: En proyectos de datos, la pérdida de conocimiento de arquitectura es el riesgo más alto ante cambios de staffing. El DE Lead lo gestiona proactivamente.
+  - title: Guía y soporte al equipo interno — Cumplimiento de Mesa de Talento
+    text: Asegurar que los proyectos a su cargo cumplen con las actividades de la Mesa de Talento, incluyendo evaluaciones de desempeño cerradas antes de que el equipo se reasigne a otros proyectos.
+    acceptance_criteria: El equipo de RH no necesita dar seguimiento al DE Lead para que las actividades de talento se cumplan. Las evaluaciones de DE Sr/Mid están cerradas antes de que el evaluado se reasigne. El DE Lead conoce el estatus de desempeño de cada DE bajo su cargo sin que RH se lo recuerde.
+    deliverable: Formatos y actividades de Mesa de Talento cumplidos en tiempo y forma. Evaluaciones cerradas antes de cambios de staffing.
+    deliverable_format: Según guía de RH / Mesa de Talento.
+    frequency: Semestral.
+    level_expectation: El DE Lead gestiona el talento como parte de su rol, no como una obligación administrativa. Sabe cómo están sus DE Sr/Mid antes de que la evaluación formal lo confirme.
+    guidance: En caso de cierre de proyecto, el DE Lead debe asegurar que las evaluaciones estén cerradas antes de que el equipo se reasigne.
+  - title: Guía y soporte al equipo interno — Seguimiento a planes de capacitación
+    text: Monitorear el avance de los planes de capacitación técnica del equipo de Ingeniería en sus proyectos. Identificar quién no puede avanzar por carga de trabajo y escalar al director de Analítica con propuesta de solución.
+    acceptance_criteria: El director de Analítica no descubre rezagos de capacitación que el DE Lead ya sabía. El DE Lead comunica quién está avanzando y quién no, y por qué. Los DE Sr/Mid no se quedan sin capacitación técnica por falta de seguimiento del Lead.
+    deliverable: Comunicación del avance de planes de capacitación en one-on-ones con el equipo directivo.
+    deliverable_format: Correo, Teams.
+    frequency: Mensual / Bimestral.
+    level_expectation: El DE Lead hace seguimiento activo a la capacitación técnica de su equipo. Si un DE Sr no puede avanzar por carga de trabajo, lo escala y propone una solución, no solo lo reporta.
+    guidance: La capacitación técnica del equipo de DE es especialmente crítica dado el ritmo de evolución de las herramientas de datos. El DE Lead es responsable de que el equipo no quede rezagado.
+  - title: Guía y soporte al equipo interno — Supervisión de mentoring del equipo
+    text: 'Revisar cada mes la evidencia de las sesiones de mentoring de los DE Sr/Mid a su cargo: sesiones realizadas contra agendadas, temas cubiertos y compromisos del mentee. Cuando un mentee no muestra avance en sus compromisos durante dos ciclos consecutivos, acordar con el mentor un cambio concreto (de plan, de frecuencia o de mentor) y darle seguimiento hasta el siguiente ciclo.'
+    acceptance_criteria: El director de Analítica recibe una perspectiva del DE Lead sobre el estado del mentoring, no solo datos. El DE Lead puede identificar cuando el mentoring de un DE Sr al DE Mid es de baja calidad y actúa sobre ello. El mentoring se monitorea y mejora, no solo se reporta.
+    deliverable: Revisión mensual de mentoring documentada con sesiones realizadas contra agendadas y avance de compromisos. Cambios acordados y su seguimiento registrados.
+    deliverable_format: Correo, Teams.
+    frequency: Mensual / Bimestral.
+    level_expectation: El DE Lead es el guardián de la cultura de desarrollo técnico del equipo de Ingeniería. Si el mentoring no está funcionando, es su problema resolverlo, no solo reportarlo.
+    guidance: El DE Lead distingue entre mentoring que ocurre y mentoring que genera desarrollo técnico real en el mentee.
+  - title: Guía y soporte al equipo interno — Gestión de vacaciones y ausencias
+    text: Dar seguimiento a la planeación y anticipación de vacaciones y ausencias del equipo de DE en sus proyectos, gestionándolas como riesgo de continuidad de pipeline, no como trámite administrativo.
+    acceptance_criteria: Todas las vacaciones del equipo están registradas en Odoo. No hay ausencias que impacten pipelines críticos en producción sin haber sido anticipadas y mitigadas. El PM no descubre una ausencia crítica que el DE Lead ya sabía.
+    deliverable: Vacaciones documentadas y aprobadas en Odoo. Riesgos de continuidad de pipeline por ausencias comunicados al PM con anticipación.
+    deliverable_format: Correo, Odoo.
+    frequency: Por sprint.
+    level_expectation: El DE Lead gestiona las ausencias como un riesgo de continuidad operativa. Un pipeline fallido por una ausencia no anticipada es una falla de planificación del Lead.
+    guidance: En proyectos con pipelines en producción, la ausencia no planificada de un DE Sr puede impactar directamente al cliente. El DE Lead anticipa este riesgo con al menos 2 sprints de anticipación.
+  - title: Guía y soporte al equipo interno — Referencia de procedimientos internos
+    text: Responder las dudas del equipo de DE sobre procedimientos internos de Arena (PMO, Odoo, Mesa de Talento, vacaciones) dentro de las 24 horas hábiles, escalando a RH o PMO únicamente los casos que requieren una excepción a la política. Mantener vigente un documento con las respuestas a las dudas recurrentes y compartirlo en el onboarding de cada nuevo integrante.
+    acceptance_criteria: 'El equipo de RH y PMO identifica que el DE Lead resuelve dudas de procedimientos sin intermediación. El equipo de DE no genera fricciones administrativas por desconocimiento de procesos. El DE Lead no deriva todo a RH: resuelve lo que puede y escala solo lo que genuinamente requiere escalamiento.'
+    deliverable: Documento de procedimientos internos vigente y compartido en cada onboarding. Registro de casos escalados a RH o PMO con el motivo de la excepción.
+    deliverable_format: Teams, correo.
+    frequency: Por evento.
+    level_expectation: 'El DE Lead es el primer punto de contacto para dudas internas del equipo de DE. No todos los procesos de Arena son intuitivos: su experiencia evita que el equipo pierda tiempo en trámites innecesarios.'
+    guidance: El dominio de los procesos internos de Arena es una expectativa básica del DE Lead. No es opcional.
+  - title: Guía y soporte al equipo interno — Sesiones de aprendizaje técnico
+    text: Planear y ejecutar al menos una sesión de aprendizaje técnico por trimestre con el equipo de DE, sobre un tema de arquitectura, ingeniería de datos o consultoría técnica derivado de una brecha observada en proyectos. Cerrar cada sesión con un ejercicio o accionable que el asistente pueda aplicar en su proyecto y con la encuesta de salida.
+    acceptance_criteria: 'La sesión tiene un objetivo de aprendizaje técnico claro y el equipo sale con algo concreto y aplicable. La encuesta refleja valor percibido, no solo asistencia. El DE Lead imparte temas en los que tiene dominio experto real: no delega el tema en sesión.'
+    deliverable: Sesión ejecutada por trimestre con material, accionable aplicable al proyecto y encuesta de salida con calificación promedio de al menos 4 de 5.
+    deliverable_format: PPT, Teams.
+    frequency: Al menos 1 vez por trimestre.
+    level_expectation: El DE Lead enseña desde la experiencia técnica, no desde el manual. Sus sesiones son memorables porque combinan criterio de arquitectura con honestidad sobre errores cometidos en proyectos reales.
+    guidance: 'Ejemplos: fuckup técnico de arquitectura, workshop de diseño de pipelines, revisión de una decisión de modelado pasada y sus consecuencias, comparativa de herramientas de orquestación. Lo importante es que el DE Lead domine el tema a nivel experto.'
+  - title: Guía y soporte al equipo interno — Mejora de metodologías y estándares de DE
+    text: 'Proponer al menos una mejora por semestre a las metodologías, estándares de arquitectura o herramientas del equipo de DE, partiendo de un problema observado en proyectos, y llevarla hasta su adopción: propuesta acordada con los demás leads y el director de Analítica, documento del estándar actualizado y comunicación al equipo. Registrar la fecha de adopción y qué proyectos ya la aplican.'
+    acceptance_criteria: Las mejoras que el DE Lead propone se implementan de forma sostenible con una estrategia alineada con la visión del área. El equipo adopta las mejoras sin que el DE Lead las persiga. Los demás leads reconocen al DE Lead como un agente de mejora de estándares, no solo de mantenimiento.
+    deliverable: Mejora propuesta y adoptada por semestre, con estándar actualizado, comunicación al equipo, fecha de adopción y proyectos que la aplican.
+    deliverable_format: Correo, Teams, PPT.
+    frequency: Por evento, con al menos 1 mejora de estándar implementada por semestre.
+    level_expectation: El DE Lead deja al equipo de Ingeniería mejor de como lo encontró. Sus mejoras a los estándares de arquitectura y desarrollo de pipelines sobreviven después de que se va del proyecto.
+    guidance: El DE Lead no espera instrucciones para mejorar los estándares de arquitectura del equipo. Los identifica y los lleva a cabo con criterio.
+  - title: Soporte comercial — Oportunidades de expansión
+    text: 'Identificar oportunidades de expansión del trabajo de DE en los proyectos: nuevas fuentes de datos, modernización de arquitecturas legacy, automatización de procesos manuales del cliente o expansión de la cobertura del pipeline actual.'
+    acceptance_criteria: El equipo directivo recibe comunicación del DE Lead sobre actividades de búsqueda comercial. No se califica obtener oportunidades, sino estar proactivamente buscándolas. El DE Lead puede describir al menos 2 oportunidades de expansión técnica identificadas por semestre.
+    deliverable: Mensajes y sesiones agendadas para explorar oportunidades comerciales de ingeniería de datos. Comunicación al equipo directivo sobre actividades realizadas.
+    deliverable_format: Teams, agenda.
+    frequency: Semestral.
+    level_expectation: El DE Lead entiende que su valor comercial es identificar señales de oportunidad técnica que el director puede convertir en propuestas. Un DE Lead que nunca ve oportunidades de expansión no está leyendo bien a su cliente.
+    guidance: El DE Lead tiene visibilidad técnica del cliente que el director no tiene. Las oportunidades de expansión más valiosas las ve quien trabaja con los datos del cliente, no quien los visita ocasionalmente.
+  - title: Soporte comercial — Validación técnica de propuestas
+    text: 'Dar soporte en la construcción y validación técnica de propuestas de ingeniería de datos: viabilidad de arquitectura, estimaciones de esfuerzo de pipeline, alcance técnico y dependencias con el cliente.'
+    acceptance_criteria: La sección técnica de la propuesta es validada por el DE Lead antes de presentarla al cliente. El director no necesita corregir errores de estimación o viabilidad técnica de pipeline. El DE Lead puede defender técnicamente cada estimación de esfuerzo que firmó.
+    deliverable: Propuesta comercial con sección técnica de ingeniería revisada y validada por el DE Lead.
+    deliverable_format: PPT.
+    frequency: Por evento.
+    level_expectation: 'El DE Lead firma la viabilidad técnica de las propuestas de ingeniería. No solo revisa: se hace responsable de que lo prometido es construible con el equipo y el tiempo disponibles.'
+    guidance: El DE Lead firma la viabilidad técnica del pipeline propuesto. Si propone una arquitectura que el equipo no puede construir en el tiempo acordado, es su responsabilidad.
+  - title: Soporte comercial — Seguimiento a facturación y administración
+    text: Dar soporte en el seguimiento a facturación y temas administrativos del proyecto cuando sea requerido por el director.
+    acceptance_criteria: No hay pendientes administrativos del proyecto sin atender por falta de seguimiento del DE Lead. Cuando el director necesita información administrativa, el DE Lead la tiene disponible o sabe dónde encontrarla.
+    deliverable: Confirmación de status o pendientes administrativos resueltos.
+    deliverable_format: Correo.
+    frequency: Mensual / Bimestral.
+    level_expectation: El DE Lead entiende que los pendientes administrativos desbloqueados a tiempo son tan importantes como los técnicos para la salud del proyecto.
+    guidance: El DE Lead no es el responsable principal de facturación, pero sí es el puente con el director cuando hay pendientes que requieren contexto del proyecto.
+  - title: Soporte comercial — Sesiones presenciales con el cliente
+    text: Coordinar y tener sesiones presenciales en las oficinas del cliente o de Arena para fortalecer la relación técnica y mantener una presencia activa de Arena con el equipo de tecnología del cliente.
+    acceptance_criteria: La estrategia de sesiones presenciales está alineada con el cliente y con el director (frecuencia, foro, tema, equipo presente). El DE Lead no improvisa sesiones sin objetivo técnico claro. El cliente percibe continuidad y atención técnica más allá de las entregas del sprint.
+    deliverable: Sesiones presenciales ejecutadas con cliente.
+    deliverable_format: Agenda Teams, presencial.
+    frequency: Quincenal / Mensual.
+    level_expectation: El DE Lead cultiva la relación técnica con el cliente en persona. La confianza del equipo de tecnología del cliente que permite acceso a fuentes y ambientes se construye en presencial.
+    guidance: Las sesiones presenciales con el equipo de tecnología del cliente construyen la confianza técnica que facilita el acceso a ambientes, fuentes y decisiones de infraestructura. El DE Lead las gestiona con ese objetivo.
+  - title: Gestión de compromisos y estimación — Cumplimiento de compromisos de los proyectos
+    text: Dar seguimiento al cumplimiento de los compromisos técnicos de los proyectos a su cargo, identificando patrones de incumplimiento por proyecto y por persona. Intervenir cuando un proyecto acumula dos sprints consecutivos por debajo del umbral de cumplimiento, y escalar al director de Analítica los casos que requieren cambios de staffing o renegociación de alcance.
+    acceptance_criteria: Todos los proyectos a su cargo tienen cumplimiento medido por sprint. Al menos el 90% de los compromisos técnicos se cumplen por proyecto. Ningún proyecto acumula dos sprints consecutivos por debajo del umbral sin una intervención documentada. El director de Analítica no se entera de un incumplimiento crítico por el cliente.
+    deliverable: Tablero de cumplimiento por proyecto y por sprint. Intervenciones documentadas con causa, acción tomada y resultado. Escalamientos al director de Analítica con propuesta de solución.
+    deliverable_format: Excel, Teams, Backlog de los proyectos.
+    frequency: Cada sprint, con corte mensual por proyecto.
+    level_expectation: El DE Lead responde por el cumplimiento agregado de sus proyectos. Su valor está en anticipar el patrón, no en reportar el dato.
+    guidance: 'El DE Lead no persigue tareas: detecta el patrón detrás de los incumplimientos. Dos sprints en rojo son un problema estructural, no mala suerte.'
+  - title: Gestión de compromisos y estimación — Estimación de tiempos y calibración de propuestas
+    text: Mantener las referencias históricas de esfuerzo por tipo de proyecto de ingeniería de datos y usarlas para validar las estimaciones de las propuestas comerciales. Comparar al cierre de cada proyecto lo estimado en la propuesta contra lo realmente ejecutado, y actualizar las referencias con ese resultado.
+    acceptance_criteria: Toda propuesta de ingeniería de datos se estima con las referencias históricas vigentes. La desviación entre el esfuerzo estimado en la propuesta y el ejecutado es menor o igual al 20%. Cada proyecto cerrado alimenta las referencias antes de su cierre administrativo. Ninguna propuesta se compromete con una estimación que el DE Lead considera inviable sin dejar su observación documentada.
+    deliverable: Referencias históricas de esfuerzo por tipo de proyecto actualizadas. Comparativo de propuesta vs ejecución real al cierre de cada proyecto, con los ajustes a las referencias documentados.
+    deliverable_format: Excel, propuestas comerciales.
+    frequency: Por propuesta y al cierre de cada proyecto.
+    level_expectation: El DE Lead calibra cómo estima toda el área, no solo un proyecto. Es responsable de que la estimación comercial y la capacidad real de ejecución coincidan.
+    guidance: Una propuesta mal estimada se paga durante todo el proyecto. El DE Lead es el último filtro técnico antes de que Arena se comprometa con una fecha.
+  - title: Guía y soporte al equipo interno — Apertura a la retroalimentación
+    text: Pedir retroalimentación sobre su gestión al director de Analítica, a otros Leads y a su equipo en cada ciclo. Reconocer sus propios errores frente al equipo cuando ocurren, para que la apertura se practique desde el liderazgo y no solo se exija hacia abajo.
+    acceptance_criteria: El DE Lead solicita retroalimentación sobre su gestión al director de Analítica, a otros Leads y a su equipo al menos una vez por ciclo, y la documenta. Reconoce sus propios errores frente al equipo cuando ocurren, sin trasladar la responsabilidad. Los integrantes del equipo pueden señalar al DE Lead un problema de gestión sin que eso tenga consecuencias para ellos.
+    deliverable: Retroalimentación sobre su gestión recabada del director de Analítica, de otros Leads y de su equipo, documentada por ciclo.
+    deliverable_format: Teams, minuta de 1:1, formatos de evaluación del área.
+    frequency: Cada ciclo de evaluación.
+    level_expectation: 'El DE Lead pide retroalimentación en las tres direcciones: hacia arriba, a pares y hacia abajo. Reconocer un error propio frente al equipo es parte de su función, no una excepción.'
+    guidance: La apertura a la retroalimentación no se pide, se demuestra. Un Lead que nunca reconoce un error frente a su equipo le está enseñando al equipo a no reconocer los suyos.
+  - title: Guía y soporte al equipo interno — Aplicación de la retroalimentación
+    text: Comunicar al equipo qué cambió en su gestión a partir de la retroalimentación recibida. Traducir la retroalimentación de clientes y proyectos en ajustes a los estándares y procesos de la práctica, y asegurar que los acuerdos de mejora de las personas que evalúa queden documentados y se revisen en el ciclo siguiente.
+    acceptance_criteria: El DE Lead comunica al equipo qué cambió a partir de la retroalimentación recibida sobre su gestión. La retroalimentación de clientes y proyectos se traduce en ajustes documentados a los estándares o procesos de la práctica, con fecha de adopción. El 100% de los acuerdos de mejora de las personas que evalúa quedan documentados y se revisan en el ciclo siguiente.
+    deliverable: Cambios de gestión comunicados al equipo. Ajustes documentados a estándares y procesos de la práctica, originados en retroalimentación. Acuerdos de mejora de las personas evaluadas, documentados y revisados en el ciclo siguiente.
+    deliverable_format: Teams, documentos de estándares y procesos del área, formatos de evaluación.
+    frequency: Cada ciclo de evaluación, con revisión en los 1:1.
+    level_expectation: El DE Lead responde por que la retroalimentación cambie los estándares de la práctica, no solo las conversaciones individuales.
+    guidance: El indicador del DE Lead no es cuánta retroalimentación recibe, sino cuánto cambió visiblemente a partir de ella. Un acuerdo de mejora que nadie revisa enseña que los acuerdos no importan.
