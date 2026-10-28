@@ -92,6 +92,11 @@
               <div>
                 <h3 class="font-semibold text-base-content">{{ card.project.name }}</h3>
                 {% if card.project.client %}<p class="text-base text-base-content/60">{{ card.project.client }}</p>{% endif %}
+                {% if not card.project.is_active %}
+                  <span class="badge badge-sm bg-base-200 text-base-content/60 mt-1">Proyecto cerrado</span>
+                {% elif card.project.target_close and card.project.target_close < today %}
+                  <span class="badge badge-sm bg-base-200 text-base-content/60 mt-1">Terminó el {{ card.project.target_close|date:"d/m/Y" }}</span>
+                {% endif %}
               </div>
               {% if card.evaluation %}
                 {% include "partials/status_badge.html" with status=card.evaluation.status label=card.evaluation.get_status_display %}
@@ -115,6 +120,8 @@
             <div class="mt-5 pt-4 border-t border-base-200">
               {% if card.evaluation and card.evaluation.is_submitted %}
                 <a href="{% url 'evaluations:ownership_view' pk=card.evaluation.pk %}" class="btn btn-outline btn-primary w-full">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver evaluación cerrada</a>
+              {% elif card.evaluation and card.historical %}
+                <a href="{% url 'evaluations:ownership_view' pk=card.evaluation.pk %}" class="btn btn-outline btn-primary w-full">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver evaluación</a>
               {% elif card.evaluation %}
                 <a href="{% url 'evaluations:ownership_edit' pk=card.evaluation.pk %}" class="btn btn-primary w-full">{% include "partials/icon.html" with name="arrow-right" cls="w-4 h-4" %} Continuar</a>
               {% else %}

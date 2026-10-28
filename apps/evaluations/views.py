@@ -9,6 +9,7 @@ from django.db.models import Prefetch, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 
@@ -85,26 +86,17 @@ def ownership_list(request):
 
     cards = []
     if period:
-        memberships = request.user.memberships.select_related("project").filter(
-            project__is_active=True
-        )
-        evals = {
-            e.project_id: e
-            for e in OwnershipEvaluation.objects.filter(user=request.user, period=period)
-        }
-        for m in memberships:
-            ev = evals.get(m.project_id)
-            answered = total = 0
-            if ev:
-                answered, total, _ = _progress(ev)
-            cards.append({"project": m.project, "evaluation": ev,
-                          "answered": answered, "total": total})
+        for card in ownership_flow.ownership_cards(request.user, period):
+            ev = card["evaluation"]
+            card["answered"], card["total"] = _progress(ev)[:2] if ev else (0, 0)
+            cards.append(card)
     return render(request, "evaluations/ownership_list.html", {
         "page_title": "Mis evaluaciones",
         "period": period,
         "periods": EvaluationPeriod.objects.all() if permissions.sees_all_ownership(request.user) else None,
         "is_lead": False,
         "cards": cards,
+        "today": timezone.localdate(),
     })
 
 
@@ -119,8 +111,10 @@ def ownership_start(request, project_id):
     if not period:
         messages.error(request, "No hay un periodo abierto en este momento.")
         return redirect("evaluations:ownership_list")
+    # Solo proyectos vigentes: los cerrados quedan como histórico (consulta, no inicio).
     membership = get_object_or_404(
-        request.user.memberships.select_related("project"), project_id=project_id
+        request.user.memberships.select_related("project"),
+        project_id=project_id, project__is_active=True,
     )
 
     existing = OwnershipEvaluation.objects.filter(

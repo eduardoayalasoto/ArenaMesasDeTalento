@@ -109,6 +109,32 @@ def remove_evaluator(evaluation, user):
     OwnershipEvaluator.objects.filter(evaluation=evaluation, user=user, is_primary=False).delete()
 
 
+def ownership_cards(user, period):
+    """Tarjetas de "Mis evaluaciones" de un colaborador (no Lead) en un periodo.
+
+    - Las evaluaciones ya creadas en el periodo siempre aparecen (histórico consultable),
+      aunque el proyecto esté cerrado.
+    - Solo en el periodo ABIERTO se ofrecen para iniciar los proyectos vigentes del colaborador.
+    Devuelve [{"project", "evaluation", "historical"}] ordenado por nombre de proyecto.
+    """
+    from apps.catalog.models import EvaluationPeriod
+    from apps.evaluations.models import OwnershipEvaluation
+
+    evals = {
+        e.project_id: e
+        for e in OwnershipEvaluation.objects.filter(
+            user=user, period=period, project__isnull=False
+        ).select_related("project", "template")
+    }
+    cards = {}
+    if period.status == EvaluationPeriod.Status.ABIERTO:
+        for m in user.memberships.select_related("project").filter(project__is_active=True):
+            cards[m.project_id] = {"project": m.project, "evaluation": evals.get(m.project_id), "historical": False}
+    for project_id, ev in evals.items():
+        cards.setdefault(project_id, {"project": ev.project, "evaluation": ev, "historical": True})
+    return sorted(cards.values(), key=lambda c: c["project"].name)
+
+
 @transaction.atomic
 def sync_evaluation_template(evaluation) -> bool:
     """Cambia el cuestionario de una evaluación cuando al colaborador le cambiaron área o nivel.

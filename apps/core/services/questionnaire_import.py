@@ -68,6 +68,11 @@ def import_version(area_code, level_code, questions, version, publish=False):
     if base is None:
         raise ImportRejected(f"{area_code}/{level_code}: no existe la v1 de la cual copiar la escala.")
 
+    newer = siblings.filter(version__gt=version, status=T.Status.PUBLICADO).first()
+    if newer:
+        # Ya hay una versión posterior vigente (p. ej. CD/JR v3): nunca se publica una menor encima.
+        return ImportResult(area_code, level_code, version, 0, f"omitido (v{newer.version} publicada)", [])
+
     template = siblings.filter(version=version).first()
     if template and _has_answers(template):
         raise ImportRejected(

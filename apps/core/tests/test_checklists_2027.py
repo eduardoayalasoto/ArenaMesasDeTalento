@@ -111,6 +111,13 @@ def test_import_is_idempotent_and_rejects_when_answered(v1, collaborator, period
         _import()
     assert Question.objects.filter(section__template=v2).count() == 2
 
+    # Con una versión posterior publicada, la carga de una menor se omite (no la desplaza).
+    v3 = questionnaire_editor.duplicate_as_new_version(v2)
+    questionnaire_editor.publish_template(v3)
+    assert "omitido" in questionnaire_import.import_version("ID", "JR", V2_QUESTIONS, 2, publish=True).status
+    v3.refresh_from_db()
+    assert v3.status == T.Status.PUBLICADO
+
 
 @pytest.mark.django_db
 def test_view_shows_criteria_and_editor_handles_checklist_fields(
@@ -144,3 +151,36 @@ def test_view_shows_criteria_and_editor_handles_checklist_fields(
     client.post(url, {"action": "publish"})
     draft.refresh_from_db()
     assert draft.status == T.Status.BORRADOR
+
+
+@pytest.mark.django_db
+def test_mis_evaluaciones_keeps_history_and_only_offers_active_projects(
+    client, v1, collaborator, period, project_finite, project_indefinite,
+):
+    """Proyecto cerrado: su evaluación del periodo pasado sigue visible; no se ofrece para iniciar."""
+    from datetime import date
+
+    from apps.catalog.models import ProjectMembership
+
+    ProjectMembership.objects.create(project=project_finite, user=collaborator)
+    ProjectMembership.objects.create(project=project_indefinite, user=collaborator)
+    old = _answered_eval(collaborator, period, project_finite, v1)
+    EvaluationPeriod.objects.filter(pk=period.pk).update(status=EvaluationPeriod.Status.CERRADO)
+    s2 = EvaluationPeriod.objects.create(
+        name="2026-S2", start_date=date(2026, 7, 1), end_date=date(2026, 12, 31),
+        status=EvaluationPeriod.Status.ABIERTO,
+    )
+    project_finite.is_active = False
+    project_finite.save()
+
+    past = ownership_flow.ownership_cards(collaborator, EvaluationPeriod.objects.get(pk=period.pk))
+    assert [(c["project"], c["evaluation"], c["historical"]) for c in past] == [(project_finite, old, True)]
+    current = ownership_flow.ownership_cards(collaborator, s2)
+    assert [(c["project"], c["evaluation"]) for c in current] == [(project_indefinite, None)]
+
+    collaborator.photo_data, collaborator.photo_mime = b"x", "image/jpeg"
+    collaborator.save()
+    client.force_login(collaborator)
+    html = client.get(reverse("evaluations:ownership_list") + f"?periodo={period.pk}").content.decode()
+    assert project_finite.name in html and "Proyecto cerrado" in html
+    assert client.get(reverse("evaluations:ownership_start", args=[project_finite.pk])).status_code == 404
