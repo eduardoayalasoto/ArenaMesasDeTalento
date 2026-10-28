@@ -53,3 +53,7 @@ Simulación previa (`--dry-run`) contra producción: 16/16 válidos.
 - PM/SNR: el reactivo «Posicionamiento como asesor de confianza con stakeholder» no tiene criterio de aceptación en el Excel; se puede completar desde el editor creando una versión nueva.
 - Los textos se importaron tal como vienen (incluidos errores menores de redacción del Excel, p. ej. "suspuestos", "buenas práctica"); su corrección es de contenido y se hace en el editor.
 - La versión 2025 (CD Mid con textos de Jr) queda corregida por la v2.
+
+## Ajuste posterior (2026-10-28)
+
+CD/JR: la versión 2027 se renumeró a **v3** (publicada) y la copia de prueba de la v1 a **v2** (archivada), a petición del usuario. La importación omite un puesto si ya existe una versión posterior publicada.
