@@ -2,7 +2,7 @@
 {% comment %}
 Navbar -- COPIA del de arena-crm (templates/_navbar.html, daisyUI `navbar`/`dropdown`/`menu`
 con `<details>` en acordeón, campana con `indicator`, menú de usuario con modo oscuro): mismas
-clases, anchos, colores (activo = `bg-secondary/15 text-secondary`), separadores y comportamiento
+clases, anchos, colores (activo = `bg-primary text-primary-content`, píldora morada sobre el navy), separadores y comportamiento
 (una categoría abierta a la vez, sin auto-expandir), incluidas sus correcciones de contraste
 (`text-neutral-content` explícito en cada `btn-ghost`, separadores `border-neutral-content/10`,
 `navbar-end w-auto`, `class="contents"` en el wrapper del contador de la campana).
@@ -43,7 +43,7 @@ clases, anchos, colores (activo = `bg-secondary/15 text-secondary`), separadores
                   {% if cat.key == "inicio" %}
                     {% for item in cat.items %}
                     <li><a href='{{ item.url }}' @click='menuOpen = false'
-                           class='{% if item.active %}bg-secondary/15 text-secondary{% endif %}'>{{ item.label }}</a></li>
+                           class='{% if item.active %}bg-primary text-primary-content font-semibold{% endif %}'>{{ item.label }}</a></li>
                     {% endfor %}
                     <li class='my-1 border-t border-neutral-content/10' aria-hidden='true'></li>
                   {% else %}
@@ -54,7 +54,7 @@ clases, anchos, colores (activo = `bg-secondary/15 text-secondary`), separadores
                                 {% for item in cat.items %}
                                   {% ifchanged item.group %}{% if item.group %}<li class='menu-title text-neutral-content/50'>{{ item.group }}</li>{% endif %}{% endifchanged %}
                                   <li><a href='{{ item.url }}' @click='menuOpen = false'
-                                         class='{% if item.active %}bg-secondary/15 text-secondary{% endif %}'>{{ item.label }}</a></li>
+                                         class='{% if item.active %}bg-primary text-primary-content font-semibold{% endif %}'>{{ item.label }}</a></li>
                                 {% endfor %}
                             </ul>
                         </details>

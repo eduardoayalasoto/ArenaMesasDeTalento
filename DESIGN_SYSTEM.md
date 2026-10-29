@@ -20,8 +20,7 @@ local de UI) + Lucide. Entrada: `static/src/input.css`; salida versionada: `stat
   Prohibidos hex sueltos y la paleta cruda de Tailwind (`slate-*`, `gray-*`, `emerald-*`…): el
   navy legado `arena-*` ya no existe (se migró a `primary` el 2026-10-08).
 - **Acento de producto: naranja «talento»** — `talento-300 #FFB45A` → `talento-600 #F2711C`
-  (degradado). **Solo en la marca.** Todo lo demás (estado activo del menú = `bg-secondary/15
-  text-secondary`, contadores = `badge-error`) es idéntico al CRM.
+  (degradado). **Solo en la marca.** Estado activo del menú = `bg-primary text-primary-content` (píldora morada); contadores = `badge-error`.
 - Modo oscuro (`business`) disponible con el mismo toggle del menú de usuario que el CRM
   (`static/js/theme_toggle.js`, clave `arena_talento_theme`). **Por defecto SIEMPRE claro**
   (2026-10-08): no se hereda la preferencia del sistema operativo; el oscuro solo si la persona
@@ -41,7 +40,7 @@ Lockup **«arenatalento»**: `{% include "components/_brand_mark.html" %}` — �
 - Hamburguesa → `dropdown` → `menu` con categorías plegables en acordeón: **Inicio · Arena Learn ·
   Mesa de Talento · Administración**. Mesa de Talento usa subtítulos (Mi evaluación · Por validar ·
   Comité, con `menu-title`). Igual que el CRM: una categoría abierta a la vez, sin auto-expandir;
-  ítem activo `bg-secondary/15 text-secondary`; contenedor `max-w-6xl`.
+  ítem activo `bg-primary text-primary-content` (píldora morada; navy sobre navy no se veía); contenedor `max-w-6xl`.
 - **El menú es datos**: `apps/core/navigation.py`. Cada ítem declara su permiso de la matriz
   (spec 005) y, si aplica, una regla de relación. Agregar una pantalla al menú =
   agregar un `NavItem` ahí; **nunca** condiciones de menú en plantillas.
