@@ -2,10 +2,7 @@
 {% load learning_tags %}
 {% block content %}
 
-<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-  <a href="{% url 'dashboards:talent_table' %}" class="inline-flex items-center gap-1.5 text-base text-primary hover:text-primary">
-    <i data-lucide="arrow-left" class="w-4 h-4"></i> Mesa de Talento
-  </a>
+<div class="mb-4 flex flex-wrap items-center justify-end gap-3">
   {% if periods %}
     <form method="get" class="flex items-center gap-2">
       <label class="text-base text-base-content/60" for="periodo-select">Periodo</label>

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-2"><a href="{% url 'catalog:project_admin' %}" class="text-base text-primary hover:text-primary">&larr; Proyectos</a></div>
   <h2 class="text-xl font-semibold text-base-content mb-6">{% if project %}{{ project.name }}{% else %}Nuevo proyecto{% endif %}</h2>
 
   <div class="grid gap-6 lg:grid-cols-3">

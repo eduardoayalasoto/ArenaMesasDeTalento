@@ -1,33 +1,49 @@
 {% comment %}
-Breadcrumb único del proyecto -- prohibido codificar uno a mano en una vista.
-Uso: {% include "components/_breadcrumb.html" with trail=trail current="Componentes" %}
-  trail: lista de {"label", "url", "icon"} para niveles intermedios
-    (opcional) -- "icon" es opcional por item, nombre de ícono lucide
-    (ver DESIGN_SYSTEM.md § 4, prohibido emoji).
-  current: label de la página actual (obligatorio)
+Breadcrumb único -- MISMO archivo en arena-talento y arena-crm (solo cambia la URL de inicio).
+Prohibido codificar uno a mano en una vista.
+Uso: {% include "components/_breadcrumb.html" with trail=trail current="Componentes" current_icon="box" %}
+  trail: lista de {"label", "url", "icon"} para niveles intermedios (opcional). Un nivel sin
+    "url" (p. ej. una categoría del menú) se muestra como texto, no como liga.
+  current: label de la página actual (si no hay trail ni current, no se pinta nada)
   current_icon: ícono lucide opcional para el nivel actual
-daisyUI `breadcrumbs` con íconos (DESIGN_SYSTEM.md § 5, patrón oficial
-https://daisyui.com/components/breadcrumbs/ -- "breadcrumbs with icons"),
-pedido explícito del usuario, 2026-09-23.
+  class: clases extra del contenedor (p. ej. margen)
+arena-talento lo pinta en TODAS las pantallas desde templates/base.html con las migas que arma
+apps/core/navigation.py (`nav_breadcrumb`); una vista lo personaliza con `breadcrumb_trail` /
+`breadcrumb_current` o con {% block breadcrumb %}.
+daisyUI `breadcrumbs` con íconos Lucide. Discreto: `text-sm` (11 px en la escala compartida),
+tono `base-content/75` (contraste AA) y el nivel actual en `text-secondary`.
 {% endcomment %}
-<div class="breadcrumbs text-base text-base-content/60">
+{% if trail or current %}
+<nav class="breadcrumbs text-sm text-base-content/75 py-0 {{ class }}" aria-label="Ruta de navegación">
   <ul>
     <li>
-      <a href="{% url 'dashboards:home' %}" aria-label="Inicio">
-        <i data-lucide="home" class="w-4 h-4"></i>
+      <a href="{% url 'dashboards:home' %}" aria-label="Inicio" class="hover:text-primary">
+        <i data-lucide="house" class="w-3.5 h-3.5" aria-hidden="true"></i>
       </a>
     </li>
     {% for item in trail %}
       <li>
-        <a href="{{ item.url }}">
-          {% if item.icon %}<i data-lucide="{{ item.icon }}" class="w-4 h-4"></i>{% endif %}
-          {{ item.label }}
-        </a>
+        {% if item.url %}
+          <a href="{{ item.url }}" class="inline-flex items-center gap-1.5 hover:text-primary">
+            {% if item.icon %}<i data-lucide="{{ item.icon }}" class="w-3.5 h-3.5" aria-hidden="true"></i>{% endif %}
+            {{ item.label }}
+          </a>
+        {% else %}
+          <span class="inline-flex items-center gap-1.5">
+            {% if item.icon %}<i data-lucide="{{ item.icon }}" class="w-3.5 h-3.5" aria-hidden="true"></i>{% endif %}
+            {{ item.label }}
+          </span>
+        {% endif %}
       </li>
     {% endfor %}
-    <li class="text-secondary font-medium">
-      {% if current_icon %}<i data-lucide="{{ current_icon }}" class="w-4 h-4"></i>{% endif %}
-      {{ current }}
-    </li>
+    {% if current %}
+      <li class="text-secondary font-medium" aria-current="page">
+        <span class="inline-flex items-center gap-1.5">
+          {% if current_icon %}<i data-lucide="{{ current_icon }}" class="w-3.5 h-3.5" aria-hidden="true"></i>{% endif %}
+          {{ current }}
+        </span>
+      </li>
+    {% endif %}
   </ul>
-</div>
+</nav>
+{% endif %}

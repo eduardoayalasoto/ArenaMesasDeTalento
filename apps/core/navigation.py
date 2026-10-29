@@ -137,7 +137,7 @@ NAV: tuple[NavCategory, ...] = (
                 also_active=("learning:catalog_detail", "learning:catalog_create", "learning:catalog_edit",
                              "learning:tag_list")),
         NavItem("Personas", "learning:people_list", "users", ("learn.public.view", P),
-                also_active=("learning:person_profile", "learning:course_public")),
+                also_active=("learning:person_profile", "learning:course_public", "learning:person_plan")),
         NavItem("Seguimiento", "learning:tracking", "chart-no-axes-column", ("learn.tracking.view", AR),
                 also_active=("learning:historic_create", "learning:settings_edit")),
         NavItem("Avance de planes", "learning:plan_tracking", "chart-gantt", ("learn.plans.tracking", A)),
@@ -187,8 +187,27 @@ def _visible(item: NavItem, user) -> bool:
     return True
 
 
+def _breadcrumb(category, item, exact: bool) -> dict:
+    """Migas derivadas del registro del menú (la misma fuente que el navbar).
+
+    - Pantalla del menú: Inicio › Categoría › Ítem (actual).
+    - Subpantalla (`also_active`): Inicio › Categoría › Ítem (liga) › título de la página.
+    - "Inicio" no repite categoría (el ícono de casa ya la representa).
+    El título de una subpantalla lo pone la plantilla base (`page_title` o `breadcrumb_current`).
+    """
+    if item is None:
+        return {"trail": [], "current": "", "current_icon": ""}
+    # "Inicio" no repite categoría (ya está la casa) ni una categoría homónima de su ítem (Mesa de Talento).
+    skip_cat = category["key"] == "inicio" or category["label"] == item["label"]
+    trail = [] if skip_cat else [{"label": category["label"], "icon": category["icon"], "url": ""}]
+    if exact:
+        return {"trail": trail, "current": item["label"], "current_icon": item["icon"]}
+    return {"trail": trail + [{"label": item["label"], "icon": item["icon"], "url": item["url"]}],
+            "current": "", "current_icon": ""}
+
+
 def build_nav(request) -> dict:
-    """Categorías visibles para el usuario, con estado activo y contadores."""
+    """Categorías visibles para el usuario, con estado activo, categoría abierta y migas de pan."""
     user = request.user
     try:
         rm = request.resolver_match
@@ -196,6 +215,7 @@ def build_nav(request) -> dict:
     except AttributeError:
         current = ""
     categories, flat = [], []
+    active_cat = active_item = None
     for cat in NAV:
         items = []
         for it in cat.items:
@@ -211,6 +231,14 @@ def build_nav(request) -> dict:
             items.append(entry)
             flat.append(entry)
         if items:
-            categories.append({"key": cat.key, "label": cat.label, "icon": cat.icon, "items": items,
-                               "active": any(i["active"] for i in items)})
-    return {"nav_categories": categories, "nav_items": flat}
+            category = {"key": cat.key, "label": cat.label, "icon": cat.icon, "items": items,
+                        "active": any(i["active"] for i in items)}
+            categories.append(category)
+            if category["active"] and active_item is None:
+                active_cat, active_item = category, next(i for i in items if i["active"])
+    return {
+        "nav_categories": categories,
+        "nav_items": flat,
+        "nav_active_category": active_cat["key"] if active_cat else "",
+        "nav_breadcrumb": _breadcrumb(active_cat, active_item, bool(active_item) and active_item["name"] == current),
+    }

@@ -3,7 +3,8 @@
 Navbar -- COPIA del de arena-crm (templates/_navbar.html, daisyUI `navbar`/`dropdown`/`menu`
 con `<details>` en acordeón, campana con `indicator`, menú de usuario con modo oscuro): mismas
 clases, anchos, colores (activo = `bg-primary text-primary-content`, píldora morada sobre el navy), separadores y comportamiento
-(una categoría abierta a la vez, sin auto-expandir), incluidas sus correcciones de contraste
+(una categoría abierta a la vez; al abrir, la categoría de la pantalla actual ya viene desplegada --
+componente `components/_nav_menu.html`, con íconos Lucide por categoría e ítem), incluidas sus correcciones de contraste
 (`text-neutral-content` explícito en cada `btn-ghost`, separadores `border-neutral-content/10`,
 `navbar-end w-auto`, `class="contents"` en el wrapper del contador de la campana).
 
@@ -29,8 +30,7 @@ clases, anchos, colores (activo = `bg-primary text-primary-content`, píldora mo
         {% if user.is_authenticated %}
         <div class='dropdown'
              :class="{ 'dropdown-open': menuOpen }"
-             x-data='{ menuOpen: false, openCategory: null,
-                        toggleCategory(name) { this.openCategory = (this.openCategory === name ? null : name) } }'
+             x-data='{ menuOpen: false }'
              @keydown.escape.window='menuOpen = false'
              @click.outside='menuOpen = false'>
             <button type='button' @click='menuOpen = !menuOpen' :aria-expanded='menuOpen.toString()' aria-label='Abrir menu de navegacion'
@@ -38,30 +38,9 @@ clases, anchos, colores (activo = `bg-primary text-primary-content`, píldora mo
                 <i data-lucide='menu' class='w-5 h-5'></i>
             </button>
 
-            <ul tabindex='0' class='dropdown-content menu flex-nowrap bg-neutral text-neutral-content rounded-box w-64 max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shadow-lg mt-2 p-2 text-base'>
-                {% for cat in nav_categories %}
-                  {% if cat.key == "inicio" %}
-                    {% for item in cat.items %}
-                    <li><a href='{{ item.url }}' @click='menuOpen = false'
-                           class='{% if item.active %}bg-primary text-primary-content font-semibold{% endif %}'>{{ item.label }}</a></li>
-                    {% endfor %}
-                    <li class='my-1 border-t border-neutral-content/10' aria-hidden='true'></li>
-                  {% else %}
-                    <li>
-                        <details :open='openCategory === "{{ cat.key }}"'>
-                            <summary @click.prevent='toggleCategory("{{ cat.key }}")'>{{ cat.label }}</summary>
-                            <ul>
-                                {% for item in cat.items %}
-                                  {% ifchanged item.group %}{% if item.group %}<li class='menu-title text-neutral-content/50'>{{ item.group }}</li>{% endif %}{% endifchanged %}
-                                  <li><a href='{{ item.url }}' @click='menuOpen = false'
-                                         class='{% if item.active %}bg-primary text-primary-content font-semibold{% endif %}'>{{ item.label }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </details>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-            </ul>
+            <div tabindex='0' class='dropdown-content bg-neutral text-neutral-content rounded-box w-72 max-h-[80vh] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden shadow-lg mt-2 p-2 text-base'>
+                {% include "components/_nav_menu.html" with on_navigate="menuOpen = false" menu_class="p-0" %}
+            </div>
         </div>
         {% endif %}
 

@@ -1,0 +1,64 @@
+{% comment %}
+Menú de navegación reutilizable (daisyUI `menu` + `<details>` anidados), multinivel:
+Categoría (con ícono) › Grupo (`menu-title`, opcional) › Ítem (con ícono).
+Datos: `nav_categories` de apps/core/navigation.py (filtrado por la matriz de permisos).
+Nunca condiciones de menú aquí -- todo sale del registro.
+
+Comportamiento:
+- Al abrir, la categoría de la pantalla actual ya está desplegada (`nav_active_category`) y el
+  ítem actual resaltado (píldora morada `bg-primary`, `aria-current="page"`), en línea con el
+  breadcrumb (misma fuente de datos).
+- Acordeón: una categoría abierta a la vez; la categoría activa lleva un punto morado.
+Params:
+  categories: lista de categorías (default `nav_categories`)
+  active_category: clave de la categoría activa (default `nav_active_category`)
+  on_navigate: expresión Alpine opcional al elegir un ítem (p. ej. "menuOpen = false")
+  menu_class: clases extra del <ul> raíz (ancho, fondo, scroll)
+Sobre fondo oscuro (`bg-neutral`) los textos usan `text-neutral-content`; el ítem activo usa
+`bg-primary text-primary-content` (contraste 6.75:1).
+{% endcomment %}
+<ul class="menu flex-nowrap w-full gap-0.5 {{ menu_class }}"
+    x-data='{ openCategory: "{{ active_category|default:nav_active_category }}",
+              toggle(key) { this.openCategory = (this.openCategory === key ? null : key) } }'>
+  {% for cat in categories|default:nav_categories %}
+    {% if cat.key == "inicio" %}
+      {% for item in cat.items %}
+        <li>
+          <a href="{{ item.url }}" {% if on_navigate %}@click="{{ on_navigate }}"{% endif %}
+             class="gap-3 {% if item.active %}menu-active bg-primary text-primary-content font-semibold{% else %}hover:bg-neutral-content/10{% endif %}"
+             {% if item.active %}aria-current="page"{% endif %}>
+            <i data-lucide="{{ item.icon }}" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+      {% endfor %}
+      <li class="my-1 border-t border-neutral-content/10" aria-hidden="true"></li>
+    {% else %}
+      <li>
+        <details :open='openCategory === "{{ cat.key }}"' {% if cat.active %}open{% endif %}>
+          <summary @click.prevent='toggle("{{ cat.key }}")'
+                   class="gap-3 hover:bg-neutral-content/10 {% if cat.active %}font-semibold text-neutral-content{% endif %}">
+            <i data-lucide="{{ cat.icon }}" class="w-4 h-4 shrink-0" aria-hidden="true"></i>
+            <span class="flex-1">{{ cat.label }}</span>
+            {% if cat.active %}<span class="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true"></span><span class="sr-only">(sección actual)</span>{% endif %}
+          </summary>
+          <ul>
+            {% for item in cat.items %}
+              {% ifchanged item.group %}{% if item.group %}
+                <li class="menu-title text-neutral-content/70 text-xs uppercase tracking-wide pt-3 pb-1">{{ item.group }}</li>
+              {% endif %}{% endifchanged %}
+              <li>
+                <a href="{{ item.url }}" {% if on_navigate %}@click="{{ on_navigate }}"{% endif %}
+                   class="gap-3 {% if item.active %}menu-active bg-primary text-primary-content font-semibold{% else %}text-neutral-content/85 hover:bg-neutral-content/10 hover:text-neutral-content{% endif %}"
+                   {% if item.active %}aria-current="page"{% endif %}>
+                  <i data-lucide="{{ item.icon }}" class="w-4 h-4 shrink-0 {% if not item.active %}opacity-70{% endif %}" aria-hidden="true"></i>
+                  <span>{{ item.label }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </details>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

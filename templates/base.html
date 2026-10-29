@@ -68,6 +68,9 @@
           });
         </script>
       {% endif %}
+      {% block breadcrumb %}
+        {% include "components/_breadcrumb.html" with trail=breadcrumb_trail|default:nav_breadcrumb.trail current=breadcrumb_current|default:nav_breadcrumb.current|default:page_title|cut:" · Arena Learn"|cut:"Mesa de Talento · " current_icon=nav_breadcrumb.current_icon class="mb-4" %}
+      {% endblock %}
       {% block content %}{% endblock %}
     </main>
     {% endblock %}

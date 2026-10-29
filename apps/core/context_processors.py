@@ -22,7 +22,7 @@ def navigation(request):
     """
     user = getattr(request, "user", None)
     if not user or not user.is_authenticated:
-        return {"nav_categories": [], "nav_items": []}
+        return {"nav_categories": [], "nav_items": [], "nav_active_category": "", "nav_breadcrumb": {}}
     from apps.core.navigation import build_nav
 
     return build_nav(request)

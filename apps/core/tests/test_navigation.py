@@ -46,3 +46,32 @@ def test_menu_by_profile_and_active_state(learn_area, learn_levels, client):
     client.force_login(colab)
     html = client.get(reverse("dashboards:home")).content.decode()
     assert "from-talento-300" in html and "Mesa de Talento" in html and "Administración" not in html
+
+
+@pytest.mark.django_db
+def test_breadcrumb_and_open_category_follow_the_current_screen(learn_area, learn_levels, client):
+    """Migas y menú salen del mismo registro: categoría activa desplegada e ítem resaltado."""
+    talento = make_learn_user("talento.bc@arena-analytics.com", role="TALENTO")
+    nav = _nav(talento, "catalog:project_admin")
+    assert nav["nav_active_category"] == "admin"
+    assert nav["nav_breadcrumb"] == {"trail": [{"label": "Administración", "icon": "settings", "url": ""}],
+                                     "current": "Proyectos", "current_icon": "folder"}
+    sub = _nav(talento, "catalog:project_create")["nav_breadcrumb"]
+    assert [c["label"] for c in sub["trail"]] == ["Administración", "Proyectos"] and sub["trail"][1]["url"]
+    assert _nav(talento)["nav_breadcrumb"]["trail"] == []  # Inicio no repite categoría
+
+    talento.photo_data, talento.photo_mime = b"x", "image/jpeg"
+    talento.save()
+    client.force_login(talento)
+    html = client.get(reverse("catalog:project_create")).content.decode()
+    assert 'aria-label="Ruta de navegación"' in html and 'openCategory: "admin"' in html
+    assert 'aria-current="page"' in html and "Nuevo proyecto" in html
+
+
+def test_breadcrumb_skips_category_with_same_name_as_item():
+    from apps.core.navigation import _breadcrumb
+
+    cat = {"key": "mesa", "label": "Mesa de Talento", "icon": "table-2"}
+    item = {"label": "Mesa de Talento", "icon": "layout-list", "url": "/mesa/", "name": "dashboards:talent_table"}
+    assert _breadcrumb(cat, item, True)["trail"] == []
+    assert [c["label"] for c in _breadcrumb(cat, item, False)["trail"]] == ["Mesa de Talento"]
