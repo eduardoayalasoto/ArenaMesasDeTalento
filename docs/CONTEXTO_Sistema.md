@@ -122,7 +122,7 @@ Desplegado en **Vercel** (entrypoint `api/wsgi.py`, builder Django, sin `vercel.
 ## Actualización 2026-S2 (2026-10-28)
 
 - Fuente: *Evaluadores por colaborador.ods* (Talento, 122 renglones colaborador × proyecto con actividad entre 01/07 y 31/12/2026).
-- **Área nueva `CONS` — Consultoría** (13 personas; Natalia Peña y Carlos Alejandro Rodríguez Ochoa = Lead, resto Jr por definir). **Sin cuestionario de Ownership por decisión del usuario**: sus integrantes no inician evaluación de Ownership.
+- **Área nueva `CONS` — Consultoría** (13 personas; Natalia Peña y Carlos Alejandro Rodríguez Ochoa = Lead, Carolina Palacio = Snr, resto Jr por definir). **Sin cuestionario de Ownership por decisión del usuario**: sus integrantes no inician evaluación de Ownership.
 - Ana Paula Badelt = Producto/Mid; Alexis Noé Muñoz Chávez = Ingeniería de Datos/Jr.
 - 13 altas (11 de Consultoría + Ana Paula y Alexis) con correo `nombre.apellido@arena-analytics.com` (por confirmar) y cambio de contraseña obligatorio en el primer ingreso.
 - Proyectos: 9 nuevos (Distribution Agreements, RGM Ops, Migración 360 a 720 Fase 2, LATAM Product Intelligence Registry, Infra Optimización de Transporte, Naming Descriptions & Wiki Hub, Naseda, Ragasa, Fondo Semillas); fechas de inicio/fin del archivo; equipos = personas del archivo. Cerrados los 8 sin actividad en S2.

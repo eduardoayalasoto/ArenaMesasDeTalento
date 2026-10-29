@@ -14,7 +14,7 @@ Tailwind v4 (`tailwindcss.exe` standalone, `.\build_css.ps1`) + **daisyUI 5.7.43
 local de UI) + Lucide. Entrada: `static/src/input.css`; salida versionada: `static/css/app.css`.
 
 ## 2. Tema y color
-- Tema **`arena`** (copia fiel del de arena-crm): `data-theme="arena"` en `<html>`.
+- Tema **`arena`**: `data-theme="arena"` en `<html>`. **Colores = paleta oficial de Arena** (`../arena-os/DESIGN_KIT.md` §1, desde 2026-10-28 a pedido del usuario, porque el verde menta del CRM no daba contraste): `primary` = morado `#804971`, `secondary` = navy `#3A4263`, `accent` = teal `#6AB6A1`, `success` `#08875D`, `info` `#3274A3`, `warning` `#F3B843`, `error` `#E02D3C` (texto blanco ≥ 4.5:1). Oscuro (`business`): `primary` `#D984CE`. **Diferencia deliberada con arena-crm** (que conserva el verde) hasta que se decida igualarlo; el resto del tema (radios, tipografía, componentes) sigue idéntico.
 - **Solo tokens semánticos** en código nuevo: `bg-base-100/200/300`, `text-base-content(/60)`,
   `bg-neutral`/`text-neutral-content` (navy `#242D51`), `btn-primary`, `badge-success`, etc.
   Prohibidos hex sueltos y la paleta cruda de Tailwind (`slate-*`, `gray-*`, `emerald-*`…): el

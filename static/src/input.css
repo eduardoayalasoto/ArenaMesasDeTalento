@@ -60,22 +60,25 @@
   --color-base-200: oklch(93% 0 0);
   --color-base-300: oklch(86% 0 0);
   --color-base-content: oklch(35.519% 0.032 262.988);
-  --color-primary: oklch(76.662% 0.135 153.45);
-  --color-primary-content: oklch(33.387% 0.04 162.24);
-  --color-secondary: oklch(61.302% 0.202 261.294);
-  --color-secondary-content: oklch(100% 0 0);
-  --color-accent: oklch(72.772% 0.149 33.2);
-  --color-accent-content: oklch(0% 0 0);
+  /* Paleta oficial de Arena (design kit, ../arena-os/DESIGN_KIT.md §1, 2026-10-28 a pedido
+     del usuario: el verde menta no daba contraste). primary = morado secondary-700,
+     secondary = navy primary-800; estados con los 700 del kit. Contraste AA con texto blanco. */
+  --color-primary: #804971;
+  --color-primary-content: #FFFFFF;
+  --color-secondary: #3A4263;
+  --color-secondary-content: #FFFFFF;
+  --color-accent: #6AB6A1;
+  --color-accent-content: #0A0D14;
   --color-neutral: #242d51; /* azul navbar de arena-os (primary-900), no del generador -- ver comentario arriba */
   --color-neutral-content: oklch(98.462% 0.001 247.838);
-  --color-info: oklch(72.06% 0.191 231.6);
-  --color-info-content: oklch(0% 0 0);
-  --color-success: oklch(64.8% 0.15 160);
-  --color-success-content: oklch(0% 0 0);
-  --color-warning: oklch(84.71% 0.199 83.87);
-  --color-warning-content: oklch(0% 0 0);
-  --color-error: oklch(71.76% 0.221 22.18);
-  --color-error-content: oklch(0% 0 0);
+  --color-info: #3274A3;
+  --color-info-content: #FFFFFF;
+  --color-success: #08875D;
+  --color-success-content: #FFFFFF;
+  --color-warning: #F3B843;
+  --color-warning-content: #1D2433;
+  --color-error: #E02D3C;
+  --color-error-content: #FFFFFF;
   --radius-selector: 1rem;
   --radius-field: 0.5rem;
   --radius-box: 1rem;
@@ -97,8 +100,8 @@
   --color-base-200: oklch(22.648% 0 0);
   --color-base-300: oklch(20.944% 0 0);
   --color-base-content: oklch(84.87% 0 0);
-  --color-primary: oklch(41.703% 0.099 251.473);
-  --color-primary-content: oklch(88.34% 0.019 251.473);
+  --color-primary: #D984CE; /* morado/rosa del kit (accent-pink-700), legible sobre fondo oscuro */
+  --color-primary-content: #1D2433;
   --color-secondary: oklch(64.092% 0.027 229.389);
   --color-secondary-content: oklch(12.818% 0.005 229.389);
   --color-accent: oklch(67.271% 0.167 35.791);
