@@ -2,9 +2,12 @@
 
 **Ley para todo cambio visual.** arena-talento comparte el sistema de diseño de **arena-crm**
 (`../arena-crm/DESIGN_SYSTEM.md`, daisyUI 5 desde 2026-09-22): mismo stack, tema, tipografía,
-componentes y reglas. **Decisión (2026-10-08): ambos sistemas se ven EXACTAMENTE igual.** Shell,
-navbar, login, tema, escala tipográfica, modo oscuro, vendors y componentes son copia literal del
-CRM; las únicas diferencias son la palabra «talento» (naranja) y el contenido del menú. Este
+componentes y reglas. **Decisión (2026-10-08, reafirmada 2026-10-28): ambos sistemas se ven
+EXACTAMENTE igual.** Shell, navbar, login, tema (paleta oficial de Arena), escala tipográfica, modo
+oscuro, vendors y componentes son los mismos; las únicas diferencias son el acento de la marca
+(«talento» naranja / «crm» teal), el contenido del menú y la URL de inicio. **Archivos idénticos en
+ambos repos** (cambiar uno = cambiar el otro): `components/_nav_menu.html` y
+`components/_breadcrumb.html` (este último solo difiere en la URL de inicio). Este
 archivo fija solo eso; donde no diga nada, aplica el documento de arena-crm. Plan y estado de la migración:
 `docs/PLAN_MIGRACION_DISENO.md`.
 
@@ -14,13 +17,29 @@ Tailwind v4 (`tailwindcss.exe` standalone, `.\build_css.ps1`) + **daisyUI 5.7.43
 local de UI) + Lucide. Entrada: `static/src/input.css`; salida versionada: `static/css/app.css`.
 
 ## 2. Tema y color
-- Tema **`arena`**: `data-theme="arena"` en `<html>`. **Colores = paleta oficial de Arena** (`../arena-os/DESIGN_KIT.md` §1, desde 2026-10-28 a pedido del usuario, porque el verde menta del CRM no daba contraste): `primary` = morado `#804971`, `secondary` = navy `#3A4263`, `accent` = teal `#6AB6A1`, `success` `#08875D`, `info` `#3274A3`, `warning` `#F3B843`, `error` `#E02D3C` (texto blanco ≥ 4.5:1). Oscuro (`business`): `primary` `#D984CE`. **Diferencia deliberada con arena-crm** (que conserva el verde) hasta que se decida igualarlo; el resto del tema (radios, tipografía, componentes) sigue idéntico.
+- Tema **`arena`**: `data-theme="arena"` en `<html>`. **Colores = paleta oficial de Arena**
+  (`../arena-os/DESIGN_KIT.md` §1, desde 2026-10-28; el verde menta anterior daba ~2:1 de
+  contraste). Mismos valores en arena-crm:
+
+  | Token | Claro (`arena`) | Uso |
+  |---|---|---|
+  | `primary` | morado `#804971` (texto blanco, 6.75:1) | botones, ligas, foco de campos, ítem activo del menú, paneles informativos |
+  | `secondary` | navy `#3A4263` (texto blanco) | nivel actual del breadcrumb, selección en selectores, avatar |
+  | `accent` | teal `#6AB6A1` | acentos puntuales |
+  | `neutral` | navy `#242D51` | navbar y menú desplegable |
+  | `success` / `info` / `warning` / `error` | `#08875D` / `#3274A3` / `#F3B843` / `#E02D3C` | estados (siempre con ícono o texto) |
+
+  Oscuro (`business`): `primary` `#D984CE` con texto `#1D2433`. **Nunca** usar `text-secondary` /
+  `text-primary` sobre `bg-neutral` (navy sobre navy): sobre el navbar los textos van en
+  `text-neutral-content(/70–/85)` y el activo como píldora `bg-primary text-primary-content`.
+  Atenuados mínimos para AA: `text-base-content/75` sobre blanco, `text-neutral-content/70` sobre navy.
 - **Solo tokens semánticos** en código nuevo: `bg-base-100/200/300`, `text-base-content(/60)`,
   `bg-neutral`/`text-neutral-content` (navy `#242D51`), `btn-primary`, `badge-success`, etc.
   Prohibidos hex sueltos y la paleta cruda de Tailwind (`slate-*`, `gray-*`, `emerald-*`…): el
   navy legado `arena-*` ya no existe (se migró a `primary` el 2026-10-08).
 - **Acento de producto: naranja «talento»** — `talento-300 #FFB45A` → `talento-600 #F2711C`
-  (degradado). **Solo en la marca.** Estado activo del menú = `bg-primary text-primary-content` (píldora morada); contadores = `badge-error`.
+  (degradado). **Solo en la marca** (en arena-crm el acento de marca es el teal de «crm»; es lo
+único verde de ese sistema). Contadores = `badge-error`.
 - Modo oscuro (`business`) disponible con el mismo toggle del menú de usuario que el CRM
   (`static/js/theme_toggle.js`, clave `arena_talento_theme`). **Por defecto SIEMPRE claro**
   (2026-10-08): no se hereda la preferencia del sistema operativo; el oscuro solo si la persona
@@ -36,14 +55,38 @@ Lockup **«arenatalento»**: `{% include "components/_brand_mark.html" %}` — �
 (navbar, panel de login). Nunca recrear el logo a mano.
 
 ## 5. Navegación
-**Navbar superior** portado de arena-crm (`templates/_navbar.html`), sin sidebar:
-- Hamburguesa → `dropdown` → `menu` con categorías plegables en acordeón: **Inicio · Arena Learn ·
-  Mesa de Talento · Administración**. Mesa de Talento usa subtítulos (Mi evaluación · Por validar ·
-  Comité, con `menu-title`). Igual que el CRM: una categoría abierta a la vez, sin auto-expandir;
-  ítem activo `bg-primary text-primary-content` (píldora morada; navy sobre navy no se veía); contenedor `max-w-6xl`.
-- **El menú es datos**: `apps/core/navigation.py`. Cada ítem declara su permiso de la matriz
-  (spec 005) y, si aplica, una regla de relación. Agregar una pantalla al menú =
-  agregar un `NavItem` ahí; **nunca** condiciones de menú en plantillas.
+**Navbar superior** (`templates/_navbar.html`), sin sidebar; contenedor `max-w-6xl`.
+
+### 5.1 Menú — componente `components/_nav_menu.html` (idéntico en arena-crm)
+- Hamburguesa → `dropdown` (`bg-neutral`, `w-72`) → `{% include "components/_nav_menu.html" with
+  on_navigate="menuOpen = false" menu_class="p-0" %}`.
+- daisyUI `menu` multinivel: **Categoría** (`<details>`, ícono Lucide) › **grupo** opcional
+  (`menu-title`, p. ej. Mi evaluación · Por validar · Comité en Mesa de Talento) › **ítem** (ícono
+  Lucide). La categoría `inicio` se pinta como accesos directos, sin desplegable.
+- **Al abrir, la categoría de la pantalla actual ya está desplegada** (`nav_active_category`) y el
+  ítem actual es la píldora morada `menu-active bg-primary text-primary-content` con
+  `aria-current="page"`; la categoría activa lleva un punto morado (+ texto `sr-only`).
+  Acordeón: una categoría abierta a la vez (Alpine, estado local).
+- **El menú es datos**: `apps/core/navigation.py` (`NavCategory` / `NavItem` con `icon`, `group`,
+  permiso de la matriz de la spec 005, regla de relación opcional y `also_active` = subpantallas
+  que marcan ese ítem). Agregar una pantalla al menú = agregar un `NavItem`; una subpantalla
+  nueva = agregar su ruta a `also_active`. **Nunca** condiciones de menú en plantillas.
+
+### 5.2 Breadcrumb — componente `components/_breadcrumb.html` (mismo archivo que arena-crm)
+- **En TODAS las pantallas, automático**: `templates/base.html` lo pinta con `nav_breadcrumb`, que
+  `build_nav` deriva del mismo registro del menú:
+  - pantalla del menú → Inicio › Categoría › **Ítem**
+  - subpantalla (`also_active`) → Inicio › Categoría › Ítem (liga) › **título de la página**
+    (`page_title`, sin sufijos « · Arena Learn» / prefijo «Mesa de Talento · »)
+  - pantalla fuera del menú → Inicio › **título de la página**
+  - no repite la categoría en «Inicio» ni cuando se llama igual que su ítem.
+- Personalizar: la vista pasa `breadcrumb_trail` (lista de `{"label","url","icon"}`) y/o
+  `breadcrumb_current`, o la plantilla redefine `{% block breadcrumb %}`.
+- Estilo discreto: `text-sm`, `text-base-content/75`, íconos Lucide `w-3.5`, casa (`house`) como
+  inicio, niveles sin liga (categorías) como texto, actual en `text-secondary` con `aria-current`.
+- **Prohibido** escribir migas a mano o enlaces «← Volver» que repitan la miga. Solo se conserva un
+  «Volver» cuando regresa a un estado que la miga no tiene (p. ej. `?periodo=` o la lista de origen
+  de una evaluación a la que se llega desde varias pantallas).
 - Sin buscador Ctrl+K ni contadores en el menú (el CRM no los tiene). Campana de pendientes con
   `indicator` y menú de usuario (modo oscuro · Mi perfil · Centro de ayuda · Cerrar sesión por
   POST). Diferencias inevitables: avatar con la foto real (`{% nice_avatar %}`) y Cerrar sesión
@@ -77,7 +120,8 @@ Clases canónicas (las mismas del CRM, sin equivalente legado):
 - Prohibido `style=` inline, emojis como íconos y CSS nuevo fuera de `static/src/input.css`.
 - htmx para interacción con el servidor (la vista devuelve un parcial HTML); Alpine solo para
   estado local; nunca `fetch` dentro de Alpine.
-- Accesibilidad AA: `aria-label` en botones de solo ícono, foco visible, contraste en ambos temas.
+- Accesibilidad AA: `aria-label` en botones de solo ícono, foco visible, contraste ≥ 4.5:1 en ambos
+  temas (ver tabla de §2; medir al introducir un color o una opacidad nueva).
 - Permisos en plantillas: `{% load access_tags %}` y `request.user|can:"clave"`.
 
 ## 8. Capa legada `ui-*` (eliminada)
