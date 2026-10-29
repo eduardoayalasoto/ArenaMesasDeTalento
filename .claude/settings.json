@@ -26,6 +26,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .claude/hooks/stop_checks.py",
+            "statusMessage": "Verificaciones de cierre (paridad, CSS, migraciones)..."
+          }
+        ]
+      }
     ]
   }
 }

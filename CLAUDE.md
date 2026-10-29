@@ -6,6 +6,8 @@
 Lucide, sin emojis).
 
 ## Documentos que mandan (en este orden)
+0. `.specify/memory/constitution.md` — principios I–VII (permisos, servicios, integridad de
+   evaluaciones, diseño único con arena-crm, pruebas, datos de producción, idioma).
 1. `DESIGN_SYSTEM.md` — **ley para todo cambio visual** (daisyUI 5, tema `arena`, componentes, navbar).
 2. `docs/CONTEXTO_Sistema.md` — panorama del sistema (apps, modelos, flujos, URLs, despliegue).
 3. `docs/PLAN_MIGRACION_DISENO.md` — migración del frontend al sistema de arena-crm (por fases).
@@ -26,6 +28,9 @@ Lucide, sin emojis).
   `select_related`/`prefetch_related` en listados.
 - **Pruebas compactas por escenario** (pytest contra Neon, `--reuse-db`, nunca en paralelo); usuarios
   de prueba con `password=None`. No cambiar la infraestructura de pruebas a SQLite.
+  Local: `.\.venv\Scripts\python.exe scripts/pytest_changed.py [extra]` (tests modificados +
+  guardas, ≤ 3 min). La **suite completa la corre CI** (`.github/workflows/tests.yml`, Postgres local
+  del runner) en cada push a `main`: revisar que quede en verde (`gh run list`).
 
 ## Entorno
 - Windows + OneDrive, **sin Node**. CSS: `.\build_css.ps1` (tailwindcss.exe v4 standalone +
@@ -44,6 +49,14 @@ Lucide, sin emojis).
 - Favicon: `static/img/favicon.svg` = `sprout` de Lucide sobre el degradado naranja de "talento"
   (`talento-300` #FFB45A → `talento-600` #F2711C).
 - UI y textos en español (México); código en inglés.
+
+## Harness del agente
+- Hooks (`.claude/settings.json`): `codegraph prompt-hook` (contexto), `design_kit_reminder.py`
+  (aviso al editar plantillas/CSS) y **`stop_checks.py` (Stop, bloquea una vez)**: componente
+  compartido distinto de arena-crm, CSS compilado más viejo que las plantillas, o `models.py` sin
+  migración. Mismo script en arena-crm.
+- Componentes **idénticos en ambos repos**: `templates/components/_nav_menu.html` y
+  `_breadcrumb.html` (solo cambia la URL de inicio); `test_shared_components.py` lo verifica.
 
 ## Agentes y skills del proyecto
 `.claude/agents/frontend-web-engineer.md` (implementa frontend), `frontend-auditor.md` (audita,

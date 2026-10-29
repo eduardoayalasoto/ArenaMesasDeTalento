@@ -1,0 +1,48 @@
+# Suite completa de arena-talento en cada push/PR (constitución, principio V).
+# Localmente las pruebas corren contra el Postgres de pruebas en Neon y solo por archivo
+# (tope de 3 min); aquí corre TODO contra un Postgres local del runner, sin secretos.
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: talento
+          POSTGRES_PASSWORD: talento
+          POSTGRES_DB: talento
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U talento" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgres://talento:talento@localhost:5432/talento
+      DB_SSLMODE: disable
+      DB_SCHEMA: ""          # sin esquema propio: el runner no comparte BD con otros sistemas
+      DJANGO_DEBUG: "1"
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Chequeos de Django
+        run: python manage.py check
+      - name: Migraciones al día
+        run: python manage.py makemigrations --check --dry-run
+      - name: pytest (suite completa)
+        run: python -m pytest -p no:warnings
