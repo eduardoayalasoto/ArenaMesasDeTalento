@@ -36,11 +36,11 @@ class EmailAuthenticationForm(AuthenticationForm):
     """Login por correo electrónico (el USERNAME_FIELD es el email)."""
 
     username = forms.EmailField(
-        label="Correo electrónico",
+        label="Correo",
         widget=forms.EmailInput(
             attrs={
                 "autofocus": True,
-                "autocomplete": "email",
+                "autocomplete": "username",
                 "placeholder": "nombre@arena-analytics.com",
                 "class": INPUT_CLASSES,
             }
@@ -48,8 +48,8 @@ class EmailAuthenticationForm(AuthenticationForm):
     )
 
     error_messages = {
-        "invalid_login": "El correo o la contraseña no son correctos. "
-        "Verifica e intenta de nuevo.",
+        # Genérico (no revela si el correo existe), en una línea -- igual que arena-crm.
+        "invalid_login": "Correo o contraseña incorrectos.",
         "inactive": "Tu cuenta está desactivada. Contacta a Talento y Cultura.",
     }
 

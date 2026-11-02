@@ -13,9 +13,11 @@ Uso: {% include "components/_brand_mark.html" %}
 Props:
   icon_class: clases de tamaño del ícono (default "h-7")
   text_class: clases de tamaño del texto (default "text-lg")
+  hide_icon: True para mostrar solo el wordmark (ej. login, donde el
+    ícono va aparte en su propia tarjeta)
 {% endcomment %}
 <span class="inline-flex items-center gap-2">
-  <img src="{% static 'img/arena-mark.png' %}" alt="" class="{{ icon_class|default:'h-7' }} w-auto">
+  {% if not hide_icon %}<img src="{% static 'img/arena-mark.png' %}" alt="" class="{{ icon_class|default:'h-7' }} w-auto">{% endif %}
   <span class="font-heading font-bold {{ text_class|default:'text-lg' }} leading-none tracking-tight whitespace-nowrap">
     <span class="text-primary-100">arena</span><span class="bg-gradient-to-r from-talento-300 to-talento-600 bg-clip-text text-transparent">talento</span>
   </span>
