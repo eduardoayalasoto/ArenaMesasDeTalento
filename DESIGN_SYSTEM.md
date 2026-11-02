@@ -100,6 +100,14 @@ fase 2: `_button`, `_icon_button`, `_form_field`, `_modal`, `_confirm`, `_table`
 `_breadcrumb`, `_empty_state`, `_toast_container`, `_spinner`, `_avatar`, más `_tabs`, `_stat`,
 `_page_header`, `_filters`, `_star_rating`). Antes de escribir markup, busca el componente.
 
+**Callouts / avisos en línea (2026-11-02)**: todo aviso lleva **ícono Lucide según su tono** y se
+escribe con el tag `{% load callout_tags %}{% callout "tono" [title=…] [icon=…] [cls=…] %}…{% endcallout %}`
+(markup único en `components/_callout.html`; `partials/info_panel.html` delega en él). Íconos por
+tono: `info` → `info` (contexto, instrucciones) · `success` → `circle-check` · `warning` →
+`triangle-alert` (requiere atención) · `error` → `circle-alert` · `neutral` → `info`. `icon=` solo
+cuando el estado es más específico: `lock` para cerrado/solo lectura, `megaphone` para anuncios
+generales. Prohibido escribir la caja a mano (`apps/core/tests/test_callout.py` lo vigila).
+
 Clases canónicas (las mismas del CRM, sin equivalente legado):
 - **Card**: `bg-base-100 border border-base-300 rounded-2xl shadow-sm` (la `shadow-sm` es la
   única adición sobre el CRM, aprobada 2026-10-08).

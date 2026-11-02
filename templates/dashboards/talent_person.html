@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% load learning_tags %}
 {% block content %}
 
@@ -17,9 +18,9 @@
   {% endif %}
 </div>
 {% if read_only %}
-  <div class="rounded-lg bg-base-200 border border-base-300 px-4 py-3 mb-5 text-base text-base-content/80">
+  {% callout "neutral" icon="lock" cls="mb-5" %}
     Estás viendo el periodo <b>{{ period.name }}</b>, ya Cerrado: histórico, de solo lectura.
-  </div>
+  {% endcallout %}
 {% endif %}
 
 {# Resultados con hero card sticky #}

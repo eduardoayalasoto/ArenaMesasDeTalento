@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
   <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
     <div>
@@ -19,9 +20,9 @@
     {% endif %}
   </div>
   {% if period and period.is_closed %}
-    <div class="rounded-lg bg-primary/10 border border-primary/25 px-4 py-3 mb-5 text-base text-primary">
+    {% callout "neutral" icon="lock" cls="mb-5" %}
       Estás viendo el periodo <b>{{ period.name }}</b>, ya Cerrado: histórico, de solo lectura.
-    </div>
+    {% endcallout %}
   {% endif %}
 
   {% if not primary_cards and not secondary_cards and not own_cards and not all_cards %}

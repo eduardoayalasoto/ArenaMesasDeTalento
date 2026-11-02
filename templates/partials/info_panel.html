@@ -1,9 +1,3 @@
-{% comment %}Panel de instrucciones/guía colapsable. Params: title (def. "¿Cómo funciona?"), tone (info|warning). Contenido en el bloque caller via {% include with body=... %} o usar como include con 'text'.{% endcomment %}
-<div class="rounded-lg px-4 py-3 mb-6 text-base flex gap-3
-  {% if tone == 'warning' %}bg-warning/10 border border-warning/25 text-warning{% else %}bg-primary/10 border border-primary/15 text-primary{% endif %}">
-  <div class="shrink-0 mt-0.5">{% include "partials/icon.html" with name="info" cls="w-5 h-5" %}</div>
-  <div>
-    {% if title %}<p class="font-medium mb-0.5">{{ title }}</p>{% endif %}
-    <div class="space-y-1">{{ text|safe }}</div>
-  </div>
-</div>
+{% comment %}Panel de instrucciones/guía. Params: title, tone (info|warning), text (HTML de confianza escrito en la plantilla).
+Delega en components/_callout.html para que todos los avisos compartan markup e ícono.{% endcomment %}
+{% include "components/_callout.html" with tone=tone|default:"info" title=title body=text|safe cls="mb-6" icon=None %}

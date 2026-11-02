@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
   <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
     <div>
@@ -24,9 +25,9 @@
     {% endif %}
   </div>
 
-  <div class="rounded-lg bg-primary/10 border border-primary/15 px-4 py-3 mb-6 text-base text-primary">
+  {% callout "info" cls="mb-6" %}
     Captura tus respuestas y revísalas en tu sesión con tu evaluador; tu evaluador las cierra cuando estén listas.
-  </div>
+  {% endcallout %}
 
   {% if not period %}
     {% include "partials/empty_state.html" with icon="calendar" title="No hay un periodo abierto" message="Tus evaluaciones se habilitarán cuando Talento abra el periodo." %}
@@ -87,37 +88,67 @@
     {% else %}
       <div class="grid gap-4 sm:grid-cols-2">
         {% for card in cards %}
-          <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col">
+          {% with p=card.project %}
+          <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col h-full">
             <div class="flex items-start justify-between gap-3">
-              <div>
-                <h3 class="font-semibold text-base-content">{{ card.project.name }}</h3>
-                {% if card.project.client %}<p class="text-base text-base-content/60">{{ card.project.client }}</p>{% endif %}
-                {% if not card.project.is_active %}
-                  <span class="badge badge-sm bg-base-200 text-base-content/60 mt-1">Proyecto cerrado</span>
-                {% elif card.project.target_close and card.project.target_close < today %}
-                  <span class="badge badge-sm bg-base-200 text-base-content/60 mt-1">Terminó el {{ card.project.target_close|date:"d/m/Y" }}</span>
+              <div class="min-w-0">
+                <h3 class="font-semibold text-base-content truncate" title="{{ p.name }}">{{ p.name }}</h3>
+                <p class="text-base text-base-content/60 truncate">{{ p.client|default:"Sin cliente" }}</p>
+              </div>
+              <div class="shrink-0">
+                {% if card.evaluation %}
+                  {% include "partials/status_badge.html" with status=card.evaluation.status label=card.evaluation.get_status_display %}
+                {% else %}
+                  <span class="badge bg-base-200 text-base-content/60">Sin iniciar</span>
                 {% endif %}
               </div>
-              {% if card.evaluation %}
-                {% include "partials/status_badge.html" with status=card.evaluation.status label=card.evaluation.get_status_display %}
+            </div>
+
+            <dl class="mt-4 grid grid-cols-3 gap-3 rounded-xl bg-base-200/50 px-4 py-3">
+              <div class="min-w-0">
+                <dt class="flex items-center gap-1.5 text-sm text-base-content/60">{% include "partials/icon.html" with name="user" cls="w-3.5 h-3.5" %} Owner</dt>
+                <dd class="mt-0.5 text-base font-medium text-base-content truncate" title="{{ p.owner.full_name }}">{{ p.owner.full_name|default:"—" }}</dd>
+              </div>
+              <div class="min-w-0">
+                <dt class="flex items-center gap-1.5 text-sm text-base-content/60">{% include "partials/icon.html" with name="play" cls="w-3.5 h-3.5" %} Kick-off</dt>
+                <dd class="mt-0.5 text-base font-medium text-base-content tabular-nums">{{ p.kickoff|date:"d/m/Y"|default:"—" }}</dd>
+              </div>
+              <div class="min-w-0">
+                <dt class="flex items-center gap-1.5 text-sm text-base-content/60">{% include "partials/icon.html" with name="calendar" cls="w-3.5 h-3.5" %} Cierre</dt>
+                <dd class="mt-0.5 text-base font-medium text-base-content tabular-nums">
+                  {% if not p.is_finite %}Indefinido{% else %}{{ p.target_close|date:"d/m/Y"|default:"—" }}{% endif %}
+                </dd>
+              </div>
+            </dl>
+
+            <div class="mt-3 flex items-center gap-2 text-sm text-base-content/60 min-h-6">
+              {% if not p.is_active %}
+                <span class="badge badge-sm bg-base-200 text-base-content/60">Proyecto cerrado</span>
+              {% elif p.target_close and p.target_close < today %}
+                <span class="badge badge-sm bg-base-200 text-base-content/60">Terminó el {{ p.target_close|date:"d/m/Y" }}</span>
+              {% elif p.status == "DELAYED" %}
+                <span class="badge badge-sm badge-warning badge-soft">{{ p.get_status_display }}</span>
               {% else %}
-                <span class="badge bg-base-200 text-base-content/60">Sin iniciar</span>
+                <span class="badge badge-sm badge-success badge-soft">{{ p.get_status_display }}</span>
               {% endif %}
             </div>
 
-            {% if card.evaluation %}
-              <div class="mt-4">
-                <div class="flex items-center justify-between text-base text-base-content/70 mb-1">
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-base text-base-content/70 mb-1">
+                {% if card.evaluation %}
                   <span>{{ card.answered }}/{{ card.total }} respondidas</span>
                   {% if card.evaluation.score %}<span class="font-semibold text-base-content tabular-nums">{{ card.evaluation.score }}</span>{% endif %}
-                </div>
-                <div class="h-2 rounded-full bg-base-200 overflow-hidden">
-                  <div class="h-full bg-primary" style="width: {% widthratio card.answered card.total 100 %}%"></div>
-                </div>
+                {% else %}
+                  <span>Aún no la comienzas</span>
+                {% endif %}
               </div>
-            {% endif %}
+              <div class="h-2 rounded-full bg-base-200 overflow-hidden">
+                {% if card.evaluation %}<div class="h-full bg-primary" style="width: {% widthratio card.answered card.total 100 %}%"></div>{% endif %}
+              </div>
+            </div>
 
-            <div class="mt-5 pt-4 border-t border-base-200">
+            <div class="mt-auto pt-5">
+            <div class="pt-4 border-t border-base-200">
               {% if card.evaluation and card.evaluation.is_submitted %}
                 <a href="{% url 'evaluations:ownership_view' pk=card.evaluation.pk %}" class="btn btn-outline btn-primary w-full">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver evaluación cerrada</a>
               {% elif card.evaluation and card.historical %}
@@ -128,7 +159,9 @@
                 <a href="{% url 'evaluations:ownership_start' project_id=card.project.pk %}" class="btn btn-primary w-full">{% include "partials/icon.html" with name="play" cls="w-4 h-4" %} Comenzar evaluación</a>
               {% endif %}
             </div>
+            </div>
           </div>
+          {% endwith %}
         {% endfor %}
       </div>
     {% endif %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
   <div class="mb-2">
     <a href="{% url 'dashboards:feedback_session_list' %}{% if period.is_closed %}?periodo={{ period.pk }}{% endif %}" class="text-base text-primary hover:text-primary">&larr; Retroalimentación</a>
@@ -47,33 +48,35 @@
   </div>
 
   {% if note.feedback_agreed %}
-    <div class="rounded-lg bg-success/10 border border-success/25 px-4 py-3 mb-5 text-base text-success flex items-center justify-between gap-3 flex-wrap">
-      <span>
-        <strong>Acordada y cerrada</strong> el {{ note.feedback_agreed_at|date:"d/m/Y H:i" }}{% if note.feedback_agreed_by %} por {{ note.feedback_agreed_by.full_name }}{% endif %}. Ya no puede editarse.
-      </span>
-      {% if can_reopen %}
-        <form method="post" class="flex items-center gap-2">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="reopen">
-          {% if can_correct_closed %}
-            <input type="text" name="reason" class="input w-full" placeholder="Motivo (queda auditado)" required>
-          {% endif %}
-          <button type="submit" class="btn btn-sm btn-soft btn-primary">Reabrir</button>
-        </form>
-      {% endif %}
-    </div>
+    {% callout "success" icon="lock" cls="mb-5" %}
+      <div class="flex flex-wrap items-center gap-3">
+        <span>
+          <strong>Acordada y cerrada</strong> el {{ note.feedback_agreed_at|date:"d/m/Y H:i" }}{% if note.feedback_agreed_by %} por {{ note.feedback_agreed_by.full_name }}{% endif %}. Ya no puede editarse.
+        </span>
+        {% if can_reopen %}
+          <form method="post" class="flex items-center gap-2 ml-auto">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="reopen">
+            {% if can_correct_closed %}
+              <input type="text" name="reason" class="input w-full" placeholder="Motivo (queda auditado)" required>
+            {% endif %}
+            <button type="submit" class="btn btn-sm btn-soft btn-primary">Reabrir</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endcallout %}
   {% endif %}
 
   {% if period.is_closed %}
-    <div class="rounded-lg bg-base-200 border border-base-300 px-4 py-3 mb-5 text-base text-base-content/80">
+    {% callout "neutral" icon="lock" cls="mb-5" %}
       El periodo <b>{{ period.name }}</b> ya está Cerrado: esta retroalimentación es histórica, de solo lectura
       {% if can_correct_closed %}salvo la corrección excepcional de Talento (con motivo, quedará auditada){% endif %}.
-    </div>
+    {% endcallout %}
   {% elif not can_edit %}
-    <div class="rounded-lg bg-primary/10 border border-primary/25 px-4 py-3 mb-5 text-base text-primary">
+    {% callout "info" cls="mb-5" %}
       Esta es tu retroalimentación de Mesa de Talento del periodo {{ period.name }}. Solo puedes consultarla; la
       captura quien esté asignado como tu responsable de retroalimentación.
-    </div>
+    {% endcallout %}
   {% endif %}
 
   <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 space-y-5">

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% load learning_tags %}
 {% block content %}
 {% include "learning/_subnav.html" %}
@@ -12,11 +13,12 @@
 </div>
 
 {% if pending %}
-  <div class="rounded-lg bg-warning/10 border border-warning/25 px-4 py-3 mb-5 text-base text-warning flex flex-wrap items-center gap-2">
-    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-    <span>Antes de enviar otra solicitud, cierra <strong>{{ pending.name }}</strong> con tu evidencia y reseña.</span>
-    <a href="{% url 'learning:request_complete' pending.pk %}" class="btn btn-sm btn-soft btn-primary ml-auto">Cerrar curso</a>
-  </div>
+  {% callout "warning" cls="mb-5" %}
+    <div class="flex flex-wrap items-center gap-3">
+      <span>Antes de enviar otra solicitud, cierra <strong>{{ pending.name }}</strong> con tu evidencia y reseña.</span>
+      <a href="{% url 'learning:request_complete' pending.pk %}" class="btn btn-sm btn-soft btn-primary ml-auto">Cerrar curso</a>
+    </div>
+  {% endcallout %}
 {% endif %}
 
 <form method="get" class="mb-6">

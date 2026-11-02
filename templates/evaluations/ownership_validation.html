@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% load access_tags %}
 {% block content %}
   <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
@@ -20,9 +21,9 @@
     {% endif %}
   </div>
   {% if period and not period.is_open and request.user|can_scope:"ownership.validate:TODOS" %}
-    <div class="rounded-lg bg-base-200 border border-base-300 px-4 py-3 mb-5 text-base text-base-content/80">
+    {% callout "neutral" icon="lock" cls="mb-5" %}
       Consultando el periodo <b>{{ period.name }}</b>: se muestran todas las evaluaciones de ese periodo, no solo las tuyas como evaluador.
-    </div>
+    {% endcallout %}
   {% endif %}
   {% include "partials/info_panel.html" with title="Cómo validar" text="<p>1. Revisa con cada persona su autoevaluación en una sesión conjunta, ajustando lo que sea necesario.</p><p>2. Cualquier evaluador puede complementar Fortalezas, Oportunidades y Comentarios, y cerrar la evaluación.</p><p>3. Una vez cerrada, queda inmutable; si hubo un error, Talento puede reabrirla.</p>" %}
 

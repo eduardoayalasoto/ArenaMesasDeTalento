@@ -1,0 +1,27 @@
+{% comment %}
+Callout (aviso en línea) -- SIEMPRE con ícono Lucide según el tono (DESIGN_SYSTEM.md § 6).
+No se incluye directo: se usa el tag de bloque, que admite contenido rico (enlaces, botones):
+
+  {% load callout_tags %}
+  {% callout "info" %}Texto del aviso.{% endcallout %}
+  {% callout "warning" title="Te pidieron ajustes" %}...{% endcallout %}
+  {% callout "success" icon="lock" %}Evaluación cerrada...{% endcallout %}
+
+Tonos -> ícono por defecto (semántico, no decorativo):
+  info    -> info            (contexto, instrucciones, solo lectura)
+  success -> circle-check    (completado, cerrado con éxito)
+  warning -> triangle-alert  (requiere atención o acción)
+  error   -> circle-alert    (falló, bloqueado)
+  neutral -> info            (nota secundaria)
+`icon` lo sobrescribe solo cuando el estado es más específico (lock, megaphone para anuncios).
+Con botón de acción: envolver el cuerpo en `<div class="flex flex-wrap items-center gap-3">` y
+darle `ml-auto` al botón.
+{% endcomment %}
+<div role="{% if tone == 'error' or tone == 'warning' %}alert{% else %}status{% endif %}"
+     class="rounded-lg border px-4 py-3 text-base flex items-start gap-3 {% if tone == 'success' %}bg-success/10 border-success/25 text-success{% elif tone == 'warning' %}bg-warning/10 border-warning/25 text-warning{% elif tone == 'error' %}bg-error/10 border-error/25 text-error{% elif tone == 'neutral' %}bg-base-200 border-base-300 text-base-content/80{% else %}bg-primary/10 border-primary/25 text-primary{% endif %}{% if cls %} {{ cls }}{% endif %}">
+  <i data-lucide="{% if icon %}{{ icon }}{% elif tone == 'success' %}circle-check{% elif tone == 'warning' %}triangle-alert{% elif tone == 'error' %}circle-alert{% else %}info{% endif %}" class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"></i>
+  <div class="min-w-0 flex-1">
+    {% if title %}<p class="font-semibold">{{ title }}</p>{% endif %}
+    {{ body }}
+  </div>
+</div>

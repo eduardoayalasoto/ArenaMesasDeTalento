@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
   <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
     <a href="{% url 'dashboards:my_area' %}{% if period.is_closed %}?periodo={{ period.pk }}{% endif %}" class="text-base text-primary hover:text-primary">&larr; Mi área</a>
@@ -20,9 +21,9 @@
     {% include "partials/empty_state.html" with icon="calendar" title="No hay periodo abierto" message="No hay resultados que consultar por ahora." %}
   {% else %}
     {% if period.is_closed %}
-      <div class="rounded-lg bg-primary/10 border border-primary/25 px-4 py-3 mb-5 text-base text-primary">
+      {% callout "neutral" icon="lock" cls="mb-5" %}
         Estás viendo el periodo <b>{{ period.name }}</b>, ya Cerrado: histórico, de solo lectura.
-      </div>
+      {% endcallout %}
     {% endif %}
     {% include "dashboards/_results_body.html" with subject=target final=final weight=weight projects=projects feedback=feedback arena_notes=arena_notes period=period detail_links=True %}
   {% endif %}

@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
   <h2 class="text-xl font-semibold text-base-content mb-6">{{ page_title }}</h2>
 
   <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6 space-y-4">
     {% csrf_token %}
     {% for e in form.non_field_errors %}
-      <p class="rounded-lg bg-error/10 border border-error/25 px-3 py-2 text-base text-error">{{ e }}</p>
+      {% callout "error" %}{{ e }}{% endcallout %}
     {% endfor %}
     <div>
       <label class="fieldset-legend" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>

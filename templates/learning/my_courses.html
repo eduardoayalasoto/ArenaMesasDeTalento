@@ -1,13 +1,15 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
 {% include "learning/_subnav.html" %}
 
 {% if pending %}
-  <div class="rounded-lg bg-warning/10 border border-warning/25 px-4 py-3 mb-6 text-base text-warning flex flex-wrap items-center gap-2">
-    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-    <span>Para solicitar otro curso, primero cierra <strong>{{ pending.name }}</strong> con tu evidencia y reseña.</span>
-    <a href="{% url 'learning:request_complete' pending.pk %}" class="btn btn-sm btn-soft btn-primary ml-auto">Cerrar curso</a>
-  </div>
+  {% callout "warning" cls="mb-6" %}
+    <div class="flex flex-wrap items-center gap-3">
+      <span>Para solicitar otro curso, primero cierra <strong>{{ pending.name }}</strong> con tu evidencia y reseña.</span>
+      <a href="{% url 'learning:request_complete' pending.pk %}" class="btn btn-sm btn-soft btn-primary ml-auto">Cerrar curso</a>
+    </div>
+  {% endcallout %}
 {% endif %}
 
 {% if has_any %}

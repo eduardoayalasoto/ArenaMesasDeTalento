@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
 <div>
   <div class="mb-5">
@@ -43,13 +44,12 @@
   {% endif %}
 
   {% if out_of_profile %}
-    <section class="mt-6 rounded-lg bg-warning/10 border border-warning/25 p-4">
-      <h3 class="text-base font-semibold text-warning flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4"></i> Asignaciones fuera de perfil</h3>
+    {% callout "warning" title="Asignaciones fuera de perfil" cls="mt-6" %}
       <p class="text-base text-warning mb-2">Siguen vigentes, pero hoy el perfil de esa persona ya no permite asignarla así. Decide si cambias la asignación o el perfil.</p>
       <ul class="text-base text-warning space-y-1">
         {% for row in out_of_profile %}<li><strong>{{ row.label }}</strong> · {{ row.count }}: {{ row.examples|join:"; " }}</li>{% endfor %}
       </ul>
-    </section>
+    {% endcallout %}
   {% endif %}
 
   {% if recent %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load callout_tags %}
 {% block content %}
   {% with locked=vd.status|stringformat:"s" %}
   <div class="mb-2"><a href="{% url 'evaluations:value_delivery_list' %}{% if period %}?periodo={{ period.pk }}{% endif %}" class="text-base text-primary hover:text-primary">&larr; Entrega de Valor</a></div>
@@ -10,27 +11,27 @@
     {% include "partials/status_badge.html" with status=vd.status label=vd.get_status_display %}
   </div>
 
-  <div class="rounded-lg bg-primary/10 border border-primary/15 px-4 py-3 mb-6 text-base text-primary">
+  {% callout "info" cls="mb-6" %}
     Esta calificación se aplicará a las <span class="font-semibold">{{ members_count }}</span> personas del equipo del proyecto.
-  </div>
+  {% endcallout %}
 
   {% if period.is_closed %}
-    <div class="rounded-lg bg-base-200 border border-base-300 px-4 py-3 mb-6 text-base text-base-content/80">
+    {% callout "neutral" icon="lock" cls="mb-6" %}
       El periodo <b>{{ period.name }}</b> ya está Cerrado: esta Entrega de Valor es histórica, de solo lectura
       {% if can_correct_closed %}salvo la corrección excepcional de Talento (con motivo, queda auditada){% endif %}.
-    </div>
+    {% endcallout %}
   {% endif %}
 
   {% if vd.rejection_comment %}
-  <div class="rounded-lg bg-warning/10 border border-warning/25 px-4 py-3 mb-6 text-base text-warning">
+  {% callout "warning" cls="mb-6" %}
     El director regresó esta evaluación: “{{ vd.rejection_comment }}”
-  </div>
+  {% endcallout %}
   {% endif %}
 
   <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 space-y-6">
     {% csrf_token %}
     {% if vd.status == 'VALIDADA' %}
-      <p class="text-base text-success bg-success/10 border border-success/25 rounded-lg px-4 py-3">Validada. Calificación: <span class="font-semibold">{{ vd.score }}</span>.</p>
+      {% callout "success" %}Validada. Calificación: <span class="font-semibold">{{ vd.score }}</span>.{% endcallout %}
     {% endif %}
 
     {% if can_correct_closed %}
