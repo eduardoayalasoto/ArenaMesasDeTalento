@@ -11,11 +11,11 @@
     <div class="flex items-center gap-2">
       {% if editable %}
         <form method="post"><input type="hidden" name="action" value="publish">{% csrf_token %}
-          <button type="submit" class="btn btn-primary">Publicar versión</button>
+          <button type="submit" class="btn btn-sm btn-primary">Publicar versión</button>
         </form>
       {% else %}
         <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
-          <button type="submit" class="btn btn-primary">Crear nueva versión para editar</button>
+          <button type="submit" class="btn btn-sm btn-primary">Crear nueva versión para editar</button>
         </form>
       {% endif %}
     </div>

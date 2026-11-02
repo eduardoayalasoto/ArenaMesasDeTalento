@@ -22,7 +22,7 @@
     <div class="flex flex-wrap items-center gap-2">
       {% if other_plans %}
         <div class="dropdown dropdown-end">
-          <button type="button" tabindex="0" class="btn btn-ghost"><i data-lucide="map" class="w-4 h-4" aria-hidden="true"></i> Otros planes</button>
+          <button type="button" tabindex="0" class="btn btn-sm btn-ghost"><i data-lucide="map" class="w-4 h-4" aria-hidden="true"></i> Otros planes</button>
           <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-300 rounded-box shadow-sm w-64 z-30 max-h-72 overflow-y-auto flex-nowrap">
             {% for p in other_plans %}<li><a href="{% url 'learning:plan_detail' p.pk %}">{{ p.area.name }} · {{ p.year }}{% if p.status != "PUBLICADO" %} <span class="text-base-content/50">({{ p.get_status_display|lower }})</span>{% endif %}</a></li>{% endfor %}
             <li><a href="{% url 'learning:plan_list' %}?todos=1">Ver todos</a></li>
@@ -32,12 +32,12 @@
       {% if can_manage_plans %}
         <a href="{% url 'learning:plan_edit' plan.pk %}" class="btn btn-outline btn-primary"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</a>
         {% if plan.status == "BORRADOR" %}
-          <form method="post" action="{% url 'learning:plan_status' plan.pk %}">{% csrf_token %}<input type="hidden" name="action" value="publish"><button type="submit" class="btn btn-primary"><i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i> Publicar</button></form>
+          <form method="post" action="{% url 'learning:plan_status' plan.pk %}">{% csrf_token %}<input type="hidden" name="action" value="publish"><button type="submit" class="btn btn-sm btn-primary"><i data-lucide="send" class="w-4 h-4" aria-hidden="true"></i> Publicar</button></form>
         {% elif plan.status == "PUBLICADO" %}
           {% url 'learning:plan_status' plan.pk as status_url %}
           {% with unpublish_url=status_url|add:"?action=unpublish" archive_url=status_url|add:"?action=archive" %}
-            {% include "components/_confirm.html" with confirm_id="plan-unpublish" title="Regresar a borrador" message="El plan dejará de verse para los colaboradores hasta que lo publiques de nuevo. Mi plan de cada persona no cambia." confirm_url=unpublish_url trigger_label="Regresar a borrador" trigger_icon="undo-2" trigger_size="md" confirm_label="Regresar a borrador" %}
-            {% include "components/_confirm.html" with confirm_id="plan-archive" title="Archivar plan" message="Queda como histórico de solo consulta: ya no se podrán agregar sus cursos a Mi plan." confirm_url=archive_url trigger_label="Archivar" trigger_icon="archive" trigger_size="md" confirm_label="Archivar" %}
+            {% include "components/_confirm.html" with confirm_id="plan-unpublish" title="Regresar a borrador" message="El plan dejará de verse para los colaboradores hasta que lo publiques de nuevo. Mi plan de cada persona no cambia." confirm_url=unpublish_url trigger_label="Regresar a borrador" trigger_icon="undo-2" trigger_size="sm" confirm_label="Regresar a borrador" %}
+            {% include "components/_confirm.html" with confirm_id="plan-archive" title="Archivar plan" message="Queda como histórico de solo consulta: ya no se podrán agregar sus cursos a Mi plan." confirm_url=archive_url trigger_label="Archivar" trigger_icon="archive" trigger_size="sm" confirm_label="Archivar" %}
           {% endwith %}
         {% else %}
           <form method="post" action="{% url 'learning:plan_status' plan.pk %}">{% csrf_token %}<input type="hidden" name="action" value="reopen"><button type="submit" class="btn btn-ghost">Volver a publicar</button></form>

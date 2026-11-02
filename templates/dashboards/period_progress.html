@@ -19,7 +19,7 @@
         </form>
       {% endif %}
       {% if period %}
-        <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn btn-outline btn-primary">
+        <a href="{% url 'dashboards:export_scores_xlsx' %}" class="btn btn-sm btn-outline btn-primary">
           {% include "partials/icon.html" with name="download" cls="w-4 h-4" %} Exportar Excel
         </a>
       {% endif %}

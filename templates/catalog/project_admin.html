@@ -6,7 +6,7 @@
       <h2 class="text-xl font-semibold text-base-content">Proyectos</h2>
       <p class="text-base-content/70">Crea y edita proyectos, asigna Owner, Responsable, Validador y equipo.</p>
     </div>
-    <a href="{% url 'catalog:project_create' %}" class="btn btn-primary">Nuevo proyecto</a>
+    <a href="{% url 'catalog:project_create' %}" class="btn btn-sm btn-primary">Nuevo proyecto</a>
   </div>
 
   {% include "partials/info_panel.html" with title="Tipo de duración y Entrega de Valor" text="<p>El <strong>tipo de duración</strong> del proyecto define qué criterio de tiempo aparece en su Entrega de Valor: los proyectos <strong>finitos</strong> evalúan el cumplimiento de la fecha de entrega; los <strong>indefinidos</strong>, la consistencia del servicio.</p>" %}

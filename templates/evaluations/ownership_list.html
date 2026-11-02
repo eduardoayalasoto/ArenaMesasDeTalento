@@ -36,7 +36,8 @@
     {% if not lead_projects %}
       {% include "partials/empty_state.html" with icon="folder" title="Aún no tienes proyectos asignados" message="Cuando Talento te asigne a proyectos, verás aquí tu evaluación de Ownership." %}
     {% else %}
-      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col h-full">
         <div class="flex items-start justify-between gap-3 mb-4">
           <div>
             <h3 class="font-semibold text-base-content">Ownership · Todos tus proyectos</h3>
@@ -70,7 +71,7 @@
           </div>
         {% endif %}
 
-        <div class="pt-4 border-t border-base-200">
+        <div class="mt-auto pt-4 border-t border-base-200">
           {% if lead_eval and lead_eval.is_submitted %}
             <a href="{% url 'evaluations:ownership_view' pk=lead_eval.pk %}" class="btn btn-outline btn-primary w-full">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver evaluación cerrada</a>
           {% elif lead_eval %}
@@ -79,6 +80,7 @@
             <a href="{% url 'evaluations:ownership_lead_start' %}" class="btn btn-primary w-full">{% include "partials/icon.html" with name="play" cls="w-4 h-4" %} Comenzar evaluación</a>
           {% endif %}
         </div>
+      </div>
       </div>
     {% endif %}
 
@@ -148,7 +150,7 @@
             </div>
 
             <div class="mt-auto pt-5">
-            <div class="pt-4 border-t border-base-200">
+            <div class="mt-auto pt-4 border-t border-base-200">
               {% if card.evaluation and card.evaluation.is_submitted %}
                 <a href="{% url 'evaluations:ownership_view' pk=card.evaluation.pk %}" class="btn btn-outline btn-primary w-full">{% include "partials/icon.html" with name="eye" cls="w-4 h-4" %} Ver evaluación cerrada</a>
               {% elif card.evaluation and card.historical %}
