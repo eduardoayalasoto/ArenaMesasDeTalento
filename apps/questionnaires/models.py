@@ -67,6 +67,56 @@ class QuestionnaireTemplate(models.Model):
         return Question.objects.filter(section__template=self).count()
 
 
+class Category(models.Model):
+    """Categoría de pregunta (spec 008): catálogo común a todas las áreas.
+
+    El peso de cada categoría dentro de un cuestionario vive en `TemplateCategory`.
+    «General» es la categoría de arranque de los cuestionarios existentes.
+    """
+
+    GENERAL_CODE = "general"
+
+    code = models.SlugField("clave", max_length=40, unique=True)
+    name = models.CharField("nombre", max_length=80)
+    order = models.PositiveSmallIntegerField("orden", default=1)
+    is_active = models.BooleanField("activa", default=True)
+
+    class Meta:
+        verbose_name = "categoría"
+        verbose_name_plural = "categorías"
+        ordering = ["order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+class TemplateCategory(models.Model):
+    """Peso (en %, un decimal) de una categoría dentro de un cuestionario. Σ = 100.0."""
+
+    template = models.ForeignKey(
+        QuestionnaireTemplate, on_delete=models.CASCADE,
+        related_name="template_categories", verbose_name="cuestionario",
+    )
+    category = models.ForeignKey(
+        Category, on_delete=models.PROTECT,
+        related_name="template_links", verbose_name="categoría",
+    )
+    weight_pct = models.DecimalField("peso (%)", max_digits=4, decimal_places=1, default=0)
+
+    class Meta:
+        verbose_name = "categoría del cuestionario"
+        verbose_name_plural = "categorías del cuestionario"
+        ordering = ["template", "category__order"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["template", "category"], name="unique_template_category"
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.template} · {self.category} {self.weight_pct}%"
+
+
 class Section(models.Model):
     """Sección temática del cuestionario."""
 
@@ -102,7 +152,16 @@ class Question(models.Model):
     qtype = models.CharField(
         "tipo", max_length=12, choices=Type.choices, default=Type.SCALE
     )
+    # Sin uso desde la spec 008 (el peso real es `weight_pct`); se retirará en un spec posterior.
     weight = models.DecimalField("peso", max_digits=4, decimal_places=2, default=1)
+    category = models.ForeignKey(
+        "Category", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="questions", verbose_name="categoría",
+    )
+    weight_pct = models.DecimalField(
+        "peso en su categoría (%)", max_digits=4, decimal_places=1, null=True, blank=True,
+        help_text="Vacío = partes iguales; 0 = se califica pero no pondera.",
+    )
     allow_na = models.BooleanField("permite N/A", default=True)
     is_required = models.BooleanField("obligatoria", default=True)
     # Campos del checklist de actividades (spec 007); opcionales, se muestran en "Ver criterio".

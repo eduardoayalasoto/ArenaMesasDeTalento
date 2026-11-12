@@ -1,3 +1,4 @@
+{% load core_extras %}
 {% comment %}Tarjeta unificada de sesión de retroalimentación, usada en las 4 secciones
 de feedback_session_list.html (doy · principal, asisto · secundario, recibo, y
 —para Talento/superusuario— todas).
@@ -7,7 +8,7 @@ Espera `card`: {note, target, final, projects, givers, viewer_role, can_reopen}{
     {% include "partials/avatar.html" with subject=card.target size="w-10 h-10" %}
     <div class="min-w-0 flex-1">
       <p class="font-medium text-base-content truncate">{{ card.target.full_name }}</p>
-      <p class="text-base text-base-content/60 truncate">{{ card.target.area.name|default:"Sin área" }}{% if card.target.level %} · {{ card.target.level.name }}{% endif %}</p>
+      <p class="text-base text-base-content/60 truncate">{{ card.target.area.name|default:"Sin área" }}{% if card.target.level %} · {{ card.target|puesto }}{% endif %}</p>
     </div>
     <span class="badge text-base shrink-0
       {% if card.viewer_role == 'Principal' %}bg-primary/10 text-primary

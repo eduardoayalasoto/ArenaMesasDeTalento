@@ -43,6 +43,8 @@ SEED_MATRIX = {
     "periods.manage":                 (N,   N,   N,   T),
     "areas.manage":                   (N,   N,   N,   T),
     "scenarios.manage":               (N,   N,   N,   T),
+    "catalog.positions.manage":       (N,   N,   N,   T),
+    "catalog.categories.manage":      (N,   N,   N,   T),
     "questionnaires.manage":          (N,   N,   N,   T),
     "weights.manage":                 (N,   N,   N,   T),
     "access.manage":                  (N,   N,   N,   T),

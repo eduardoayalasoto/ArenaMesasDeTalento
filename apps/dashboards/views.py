@@ -19,7 +19,7 @@ from apps.catalog.models import Area, EvaluationPeriod, Project, ProjectMembersh
 from apps.access import services as access
 from apps.access.decorators import requires, requires_any
 from apps.access.registry import Scope
-from apps.core.services import final_flow, period_lifecycle, permissions
+from apps.core.services import final_flow, period_lifecycle, permissions, scoring
 from apps.evaluations.models import (
     FeedbackResponsible,
     FinalScore,
@@ -47,6 +47,10 @@ def build_results(subject, period):
     """
     final = final_flow.recompute_final_score(subject, period)
     weight = getattr(subject.level, "weight", None)
+    # Desglose del pilar Ownership por categoría (spec 008): solo si hay más de una.
+    ownership_categories = scoring.ownership_pillar_breakdown(subject, period)
+    if len(ownership_categories) < 2:
+        ownership_categories = []
 
     from apps.evaluations.models import ArenaImpactScore, TalentSessionNote
     impact = ArenaImpactScore.objects.filter(user=subject, period=period).first()
@@ -93,6 +97,7 @@ def build_results(subject, period):
             "feedback": feedback, "arena_notes": arena_notes,
             "lead_eval": lead_eval, "vd_comment_rows": vd_comment_rows,
             "feedback_session": feedback_session,
+            "ownership_categories": ownership_categories,
         }
 
     # Colaborador normal
@@ -127,6 +132,7 @@ def build_results(subject, period):
         "feedback": feedback, "arena_notes": arena_notes,
         "lead_eval": None, "vd_comment_rows": vd_comment_rows,
         "feedback_session": feedback_session,
+        "ownership_categories": ownership_categories,
     }
 
 

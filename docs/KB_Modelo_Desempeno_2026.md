@@ -175,8 +175,10 @@ score_evaluacion = SUM(respuestas numéricas 1–4) / COUNT(respuestas numérica
 ```
 
 - **Las respuestas N/A se EXCLUYEN** del numerador y del denominador (regla de negocio confirmada; estaba implícita en el proceso original).
-- Todas las preguntas pesan igual (promedio simple; las secciones no tienen peso propio).
-- Resultado con 2 decimales (redondeo half-up).
+- **Ponderación por categorías (spec 008, 2026-11):** cada pregunta de escala pertenece a una **categoría** (catálogo común) y cada cuestionario define el peso (%) de sus categorías y, dentro de cada una, el de sus preguntas. `score_categoría` = promedio ponderado de sus preguntas calificadas (N/A fuera); `score_evaluación` = Σ `score_categoría` × peso de la categoría, redistribuyendo el peso de las categorías sin calificar. Un peso de pregunta 0 significa «se califica pero no pondera».
+- **Los pesos siempre suman exactamente 100.0%** (un decimal como máximo): el editor lo valida en vivo y el servidor lo exige al guardar, publicar e importar.
+- Los cuestionarios sin pesos (los checklists de Analítica) usan una sola categoría «General» al 100% con preguntas en partes iguales: **equivale exactamente al promedio simple anterior**.
+- Resultado con 2 decimales (redondeo half-up, **un solo redondeo al final**).
 - Rango posible: 1.00 – 4.00.
 
 Score del pilar en el periodo:
@@ -389,7 +391,7 @@ Cada colaborador puede consultar en una sola vista: Calificación Final, Score O
 | RN-01 | Existen exactamente 4 áreas y 4 niveles de seniority; cada colaborador tiene exactamente un área y un nivel vigentes. |
 | RN-02 | Cada combinación área×nivel tiene un checklist de Ownership propio; el colaborador solo puede responder el checklist de su puesto. |
 | RN-03 | Las respuestas de escala valen 1, 2, 3, 4 o N/A. **Los N/A se excluyen de todos los promedios** (no cuentan como 0 ni en el denominador). |
-| RN-04 | El score de una evaluación de Ownership es el promedio simple de sus respuestas numéricas, a 2 decimales. |
+| RN-04 | El score de una evaluación de Ownership es el promedio ponderado por categorías de sus respuestas numéricas, a 2 decimales; con una sola categoría «General» y sin pesos de pregunta es el promedio simple (spec 008). |
 | RN-05 | Cada evaluación de Ownership está ligada a un proyecto y a su líder; un colaborador con N proyectos en el periodo genera hasta N evaluaciones de Ownership, y su score del pilar es el promedio simple de ellas. |
 | RN-06 | Una evaluación de Ownership solo puede enviarse con la confirmación "revisé con mi líder" = Sí, y con Fortalezas y Oportunidades capturadas. Tras el envío es inmutable para el evaluado (solo Talento/admin puede reabrirla). |
 | RN-07 | La evaluación de Entrega de Valor es por proyecto y por periodo: una sola por proyecto-periodo, capturada por el líder del proyecto y validada por el director. |
@@ -406,6 +408,8 @@ Cada colaborador puede consultar en una sola vista: Calificación Final, Score O
 | RN-18 | El nivel Trainee está fuera del alcance del modelo y del sistema. |
 | RN-19 | Ponderaciones vigentes: Jr 60/20/20, Mid 50/25/25, Snr 40/30/30, Lead 30/35/35 (Ownership/Entrega de Valor/Impacto Arena). |
 | RN-20 | Bandas de interpretación de la calificación final: ≥3.50 Excede; 3.00–3.49 Cumple; 2.00–2.99 Cumple parcial; <2.00 No cumple. |
+| RN-21 | Los pesos de categorías de un cuestionario suman exactamente 100.0%; los pesos de las preguntas de una categoría, todos nulos (partes iguales) o todos definidos y sumando 100.0% (spec 008). |
+| RN-22 | El nombre visible del puesto sale del catálogo de Puestos (área × nivel); el nivel global (Jr/Mid/Snr/Lead) sigue definiendo la ponderación de pilares (spec 008). |
 
 ---
 

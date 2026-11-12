@@ -1,0 +1,754 @@
+source: Matriz de Competencias y Pesos por Puesto v1.1.xlsx
+templates:
+- area: CONS
+  level: JR
+  scale_note: Califica cada competencia del 1 al 4 contra el nivel esperado para tu puesto (3 = cumple
+    satisfactoriamente). «Apego a los valores» se califica pero no pondera en el score.
+  scale:
+  - value: 1
+    label: No cumple
+    order: 1
+    description: No cumple con lo mínimo esperado para su rol en el proyecto.
+  - value: 2
+    label: Necesita mejorar
+    order: 2
+    description: Cumple parcialmente con lo esperado para su rol en el proyecto.
+  - value: 3
+    label: Cumple satisfactoriamente
+    order: 3
+    description: Cumple en su totalidad y de manera satisfactoria con lo esperado para su rol. La descripción
+      del nivel esperado está redactada contra esta calificación.
+  - value: 4
+    label: Excede
+    order: 4
+    description: Excede frecuentemente las expectativas de acuerdo a su rol y/o cumple funciones de un
+      rol superior al actual.
+  - value: null
+    label: N/A
+    order: 5
+    description: No aplica en este periodo por razones justificadas. No entra al promedio.
+  categories:
+  - code: delivery_cliente
+    name: Delivery al cliente
+    weight: 13.6
+  - code: desarrollo_producto
+    name: Desarrollo de producto
+    weight: 22.7
+  - code: herramientas_gestion
+    name: Herramientas de gestión
+    weight: 18.2
+  - code: actitud_persona
+    name: Actitud y persona
+    weight: 45.5
+  questions:
+  - title: Habilidad de comunicación
+    category: delivery_cliente
+    weight: 33.4
+    text: Redacta de manera adecuada y concisa. Se expresa de forma clara, de acuerdo al nivel requerido
+      por la audiencia. Organiza y ejecuta con calidad el trabajo de campo (entrevistas, focus group o
+      workshop) siguiendo el guión definido con mínima supervisión del Consultor o Consultor Senior
+    level_expectation: N1 · Expuesto
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Comprensión del alcance
+    category: delivery_cliente
+    weight: 33.3
+    text: Entiende el alcance de sus tareas, el tiempo que dispone para realizarlas y las herramientas
+      e información requeridas para hacerlas correctamente
+    level_expectation: N1 · Expuesto
+    guidance: 'Skills: Definición de alcance y no-alcance · Estimación de complejidad · Priorización MoSCoW
+      · Validación de supuestos de datos · Bloque: Dimensionamiento de alcance y complejidad'
+  - title: Nivel de relación con el cliente
+    category: delivery_cliente
+    weight: 33.3
+    text: Trabaja directamente con determinados miembros del equipo del cliente
+    level_expectation: N1 · Expuesto
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Capacidad de análisis
+    category: desarrollo_producto
+    weight: 40.0
+    text: Comienza a identificar diferencias en los análisis básicos con ayuda del Consultor / Consultor
+      Senior. Valora, con supervisión del Consultor/ Consultor Senior, la calidad de las fuentes de información
+      básicas-usuales. Comprueba la validez del análisis con juicio crítico antes de entregarlo
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: Capacidad de síntesis
+    category: desarrollo_producto
+    weight: 20.0
+    text: Comienza a interpretar y sintetizar la información obtenida con ayuda del Consultor / Consultor
+      Senior. Comprueba la validez de la síntesis con juicio crítico antes de entregarlo
+    level_expectation: N1 · Expuesto
+    guidance: 'Skills: Modelado conceptual de entidades y grano · Redacción de criterios de aceptación
+      · Trazabilidad requerimiento–regla–criterio · Lectura de arquitectura de solución · Bloque: Especificación
+      y modelado del problema'
+  - title: Dominio de herramientas
+    category: desarrollo_producto
+    weight: 40.0
+    text: Entiende, a nivel general, la funcionalidad de Excel, PowerPoint, Power BI y los procesos que
+      soportan
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: IA como productividad
+    category: desarrollo_producto
+    weight: 0.0
+    text: Usa IA para acelerar sus propios análisis, la redacción de artefactos y la documentación con
+      instrucciones estructuradas. Verifica la fuente de todo lo que publica antes de entregarlo. Produce
+      con revisión previa de su líder.
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Prompting estructurado · Revisión crítica de salida de IA · Automatización de tareas
+      propias · Bloque: IA como productividad'
+  - title: Planificación del trabajo
+    category: herramientas_gestion
+    weight: 50.0
+    text: Facilita el seguimiento del plan de trabajo documentando con frecuencia y claridad el grado
+      de avance. Comienza a identificar y aplica mejoras en la gestión de su tiempo
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Generación de conocimiento
+    category: herramientas_gestion
+    weight: 50.0
+    text: Se encarga, con ayuda del Consultor / Consultor Senior de documentar los benchmarks que corresponden
+      a su área de trabajo
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Disciplina de forma de trabajo
+    category: herramientas_gestion
+    weight: 0.0
+    text: Opera el esquema de versionado MAJOR.MINOR y la bitácora en su propio trabajo, con revisión
+      previa. Carga y mantiene su trabajo en el backlog único del proyecto. Puede generar retrabajo ocasional
+      en el gate.
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Apego a los valores de Arena Analytics
+    category: actitud_persona
+    weight: 0.0
+    text: Tiene conocimiento y claridad de los valores de Arena Analytics. Actúa, en todo momento, de
+      acuerdo a ellos y los identifica como pilar para desempeñar su trabajo
+    level_expectation: No pondera (filtro)
+    guidance: 'Se califica de 1 a 4 (3 = cumple). No pondera en el score: sirve como filtro de valores;
+      una calificación baja se ve en el informe. · Bloque: — (filtro de valores)'
+  - title: Proactividad
+    category: actitud_persona
+    weight: 20.0
+    text: Tiene un comportamiento o actitud anticipatoria ante las situaciones que pudieran surgir durante
+      el proyecto y lo comunica a sus líderes
+    level_expectation: N2 · Contribuye
+    guidance: 'Bloque: Competencia de persona'
+  - title: Búsqueda de la excelencia
+    category: actitud_persona
+    weight: 20.0
+    text: Su trabajo alcanza, con cierta autonomía, la calidad esperada. Se asegura de cumplir con las
+      expectativas
+    level_expectation: N2 · Contribuye
+    guidance: 'Bloque: Competencia de persona'
+  - title: Innovación y creatividad
+    category: actitud_persona
+    weight: 20.0
+    text: Muestra curiosidad por aprender las diferentes metodologías de análisis y de desarrollo
+    level_expectation: N2 · Contribuye
+    guidance: 'Bloque: Competencia de persona'
+  - title: Contribución al equipo
+    category: actitud_persona
+    weight: 20.0
+    text: Brinda su apoyo al equipo, cuando es necesario
+    level_expectation: N2 · Contribuye
+    guidance: 'Bloque: Competencia de persona'
+  - title: Orientación a resultados
+    category: actitud_persona
+    weight: 20.0
+    text: Se centra en cumplir con los objetivos y/o resultados esperados en su área de trabajo, con apoyo
+      y supervisión del Consultor / Consultor Senior
+    level_expectation: N2 · Contribuye
+    guidance: 'Bloque: Competencia de persona'
+- area: CONS
+  level: MID
+  scale_note: Califica cada competencia del 1 al 4 contra el nivel esperado para tu puesto (3 = cumple
+    satisfactoriamente). «Apego a los valores» se califica pero no pondera en el score.
+  scale:
+  - value: 1
+    label: No cumple
+    order: 1
+    description: No cumple con lo mínimo esperado para su rol en el proyecto.
+  - value: 2
+    label: Necesita mejorar
+    order: 2
+    description: Cumple parcialmente con lo esperado para su rol en el proyecto.
+  - value: 3
+    label: Cumple satisfactoriamente
+    order: 3
+    description: Cumple en su totalidad y de manera satisfactoria con lo esperado para su rol. La descripción
+      del nivel esperado está redactada contra esta calificación.
+  - value: 4
+    label: Excede
+    order: 4
+    description: Excede frecuentemente las expectativas de acuerdo a su rol y/o cumple funciones de un
+      rol superior al actual.
+  - value: null
+    label: N/A
+    order: 5
+    description: No aplica en este periodo por razones justificadas. No entra al promedio.
+  categories:
+  - code: delivery_cliente
+    name: Delivery al cliente
+    weight: 30.2
+  - code: desarrollo_producto
+    name: Desarrollo de producto
+    weight: 20.9
+  - code: herramientas_gestion
+    name: Herramientas de gestión
+    weight: 14.0
+  - code: actitud_persona
+    name: Actitud y persona
+    weight: 34.9
+  questions:
+  - title: Habilidad de comunicación
+    category: delivery_cliente
+    weight: 23.1
+    text: Redacta de manera adecuada y concisa. Se expresa de forma clara, de acuerdo al nivel requerido
+      por la audiencia.Tiene buena actitud en el trabajo de campo (entrevista, focus group o workshop)
+      y genera empatía con los interlocutores. Improvisa nuevas preguntas para obtener mejor información.
+      Presenta con calidad frente al cliente
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Comprensión del alcance
+    category: delivery_cliente
+    weight: 15.4
+    text: Comprende el alcance de sus tareas y, en general, de las tareas asignadas a todo el equipo.
+      Identifica las herramientas e información requeridas para hacerlas correctamente
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Definición de alcance y no-alcance · Estimación de complejidad · Priorización MoSCoW
+      · Validación de supuestos de datos · Bloque: Dimensionamiento de alcance y complejidad'
+  - title: Nivel de relación con el cliente
+    category: delivery_cliente
+    weight: 23.1
+    text: Consigue movilizar a diferentes niveles de la organización del cliente para asegurar el cumplimiento
+      de los objetivos
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Transformación organizacional
+    category: delivery_cliente
+    weight: 15.4
+    text: Entiende los requerimientos para lograr una implementación exitosa, plantea y obtiene dichos
+      requerimientos oportunamente. Explica al cliente, con ayuda del Consultor Senior / Gerente los beneficios
+      de cambiar la rutina o hábito de trabajo
+    level_expectation: N2 · Contribuye
+    guidance: 'Skills: Diseño de transferencia de conocimiento · Medición de adopción · Diagnóstico de
+      resistencia e intervención · Bloque: Gestión del cambio y adopción'
+  - title: Sentido de negocio
+    category: delivery_cliente
+    weight: 23.0
+    text: Comprende a profundidad la operación y la situación actual de la organización, de tal forma,
+      que es capaz de ofrecer soluciones oportunas
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Levantamiento de proceso operativo · Redacción de reglas de negocio · Identificación
+      de reglas multi-paso · Cuantificación del caso de valor · Metodologías de diagnóstico y diseño ·
+      Bloque: Diagnóstico y análisis de negocio'
+  - title: Capacidad de análisis
+    category: desarrollo_producto
+    weight: 33.4
+    text: Identifica los recursos clave y estima los esfuerzos necesarios para la realización del análisis,
+      con ayuda del Consultor Senior / Gerente. Utiliza las fuentes de información más fiables en los
+      análisis que realiza
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: Capacidad de síntesis
+    category: desarrollo_producto
+    weight: 33.3
+    text: Identifica recursos clave y estima los esfuerzos necesarios para la realización de la síntesis,
+      con ayuda del Consultor Senior / Gerente
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Modelado conceptual de entidades y grano · Redacción de criterios de aceptación
+      · Trazabilidad requerimiento–regla–criterio · Lectura de arquitectura de solución · Bloque: Especificación
+      y modelado del problema'
+  - title: Dominio de herramientas
+    category: desarrollo_producto
+    weight: 33.3
+    text: Domina la funcionalidad de Excel y Power BI. Comienza a entender uno (o más) lenguaje de programación
+      (VBA, SQL, Python, R) y de Power Point
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: IA como productividad
+    category: desarrollo_producto
+    weight: 0.0
+    text: 'Reduce el tiempo de un ciclo de artefacto usando IA sin aumentar el retrabajo en el gate. Cero
+      filas publicadas sin verificación de fuente: los errores se detectan antes del gate, no en él. Tiene
+      al menos una tarea recurrente propia automatizada y documentada para uso del equipo.'
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Prompting estructurado · Revisión crítica de salida de IA · Automatización de tareas
+      propias · Bloque: IA como productividad'
+  - title: Planificación del trabajo
+    category: herramientas_gestion
+    weight: 50.0
+    text: Anticipa posibles riesgos para asegurar el cumplimiento al plan de trabajo bajo la supervisión
+      del Consultor Senior / Gerente
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Generación de conocimiento
+    category: herramientas_gestion
+    weight: 50.0
+    text: Es capaz de registrar procesos de análisis de su área de trabajo
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Disciplina de forma de trabajo
+    category: herramientas_gestion
+    weight: 0.0
+    text: Cero cambios de contenido sin fila de bitácora. Ningún par MAJOR.MINOR reutilizado ni saltado.
+      Cero trabajo en backlog que no pasó por la sesión de validación del viernes. Los cambios de negocio
+      a media semana entran al ciclo siguiente, nunca al vigente.
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Apego a los valores de Arena Analytics
+    category: actitud_persona
+    weight: 0.0
+    text: Tiene conocimiento y claridad de los valores de Arena Analytics. Actúa, en todo momento, de
+      acuerdo a ellos y los identifica como pilar para desempeñar su trabajo y los transmite a otros
+    level_expectation: No pondera (filtro)
+    guidance: 'Se califica de 1 a 4 (3 = cumple). No pondera en el score: sirve como filtro de valores;
+      una calificación baja se ve en el informe. · Bloque: — (filtro de valores)'
+  - title: Proactividad
+    category: actitud_persona
+    weight: 20.0
+    text: Tiene un comportamiento o actitud anticipatoria ante las situaciones que pudieran surgir durante
+      el proyecto y lo comunica a sus líderes. Propone y busca el autoaprendizaje. No requiere de instrucciones
+      detalladas
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Búsqueda de la excelencia
+    category: actitud_persona
+    weight: 20.0
+    text: Busca la excelencia en cada etapa de su línea de trabajo, esforzándose por alcanzarla. Se asegura
+      de cumplir con las expectativas
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Innovación y creatividad
+    category: actitud_persona
+    weight: 20.0
+    text: Es capaz de aplicar las metodologías y enfoques propuestos bajo supervisión de su responsable
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Contribución al equipo
+    category: actitud_persona
+    weight: 20.0
+    text: Brinda ampliamente su apoyo al equipo y los desarrolla de manera indirecta trasmitiendo su conocimiento
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Orientación a resultados
+    category: actitud_persona
+    weight: 20.0
+    text: Comienza a plantear soluciones que se orientan a lograr resultados prácticos y tangibles
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+- area: CONS
+  level: SNR
+  scale_note: Califica cada competencia del 1 al 4 contra el nivel esperado para tu puesto (3 = cumple
+    satisfactoriamente). «Apego a los valores» se califica pero no pondera en el score.
+  scale:
+  - value: 1
+    label: No cumple
+    order: 1
+    description: No cumple con lo mínimo esperado para su rol en el proyecto.
+  - value: 2
+    label: Necesita mejorar
+    order: 2
+    description: Cumple parcialmente con lo esperado para su rol en el proyecto.
+  - value: 3
+    label: Cumple satisfactoriamente
+    order: 3
+    description: Cumple en su totalidad y de manera satisfactoria con lo esperado para su rol. La descripción
+      del nivel esperado está redactada contra esta calificación.
+  - value: 4
+    label: Excede
+    order: 4
+    description: Excede frecuentemente las expectativas de acuerdo a su rol y/o cumple funciones de un
+      rol superior al actual.
+  - value: null
+    label: N/A
+    order: 5
+    description: No aplica en este periodo por razones justificadas. No entra al promedio.
+  categories:
+  - code: delivery_cliente
+    name: Delivery al cliente
+    weight: 32.7
+  - code: desarrollo_producto
+    name: Desarrollo de producto
+    weight: 18.2
+  - code: herramientas_gestion
+    name: Herramientas de gestión
+    weight: 21.8
+  - code: actitud_persona
+    name: Actitud y persona
+    weight: 27.3
+  questions:
+  - title: Habilidad de comunicación
+    category: delivery_cliente
+    weight: 22.2
+    text: Redacta de manera adecuada y concisa. Se expresa de forma clara y de acuerdo al nivel requerido
+      por la audiencia. Lidera con autonomía el trabajo de campo (entrevista, focus group, workshop) a
+      realizar por parte del cliente. Consigue no perder en ningún momento la atención de la audiencia
+      durante la presentación. Presenta con calidad frente a cualquier nivel de gestión del cliente
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Comprensión del alcance
+    category: delivery_cliente
+    weight: 16.7
+    text: Domina el alcance de sus tareas y las tareas asignadas a todo el equipo. Identifica las herramientas
+      e información requeridas y se enfoca en el resultado. Es capaz de impulsar oportunidades para otros
+      proyectos dentro del alcance
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Definición de alcance y no-alcance · Estimación de complejidad · Priorización MoSCoW
+      · Validación de supuestos de datos · Bloque: Dimensionamiento de alcance y complejidad'
+  - title: Nivel de relación con el cliente
+    category: delivery_cliente
+    weight: 22.2
+    text: Ayuda al Analista / Consultor a movilizar cualquier nivel de la organización del cliente para
+      asegurar los objetivos del proyecto
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Transformación organizacional
+    category: delivery_cliente
+    weight: 16.7
+    text: Entiende los requerimientos para lograr una implementación exitosa, plantea y obtiene dichos
+      requerimientos oportunamente. Logra que personal del cliente (a nivel operativos, supervisión o
+      gerencia) elimine una rutina / hábito de trabajo y lo sustituya por otro de acuerdo a los requerimientos
+      del proyecto
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Diseño de transferencia de conocimiento · Medición de adopción · Diagnóstico de
+      resistencia e intervención · Bloque: Gestión del cambio y adopción'
+  - title: Sentido de negocio
+    category: delivery_cliente
+    weight: 22.2
+    text: Domina el comportamiento de la industria  y su relación directa con la toma de decisiones  en
+      el corto, mediano y largo plazo para ofrecer soluciones apegadas a las necesidades y realidad de
+      la empresa
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Levantamiento de proceso operativo · Redacción de reglas de negocio · Identificación
+      de reglas multi-paso · Cuantificación del caso de valor · Metodologías de diagnóstico y diseño ·
+      Bloque: Diagnóstico y análisis de negocio'
+  - title: Capacidad de análisis
+    category: desarrollo_producto
+    weight: 30.0
+    text: Identifica análisis complementarios que refuerzan la consistencia de los resultados. Valora
+      la idoneidad de los modelos analíticos sin supervisión por parte del Gerente. Orienta a otros miembros
+      del equipo mas júnior a estructurar y presentar los análisis de forma clara y ordenada
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: Capacidad de síntesis
+    category: desarrollo_producto
+    weight: 40.0
+    text: Identifica información complementaria que refuerza la consistencia de los resultados. Orienta
+      a otros miembros del equipo más júnior a estructurar y presentar los análisis de forma clara, ordenada
+      y sintetizada
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Modelado conceptual de entidades y grano · Redacción de criterios de aceptación
+      · Trazabilidad requerimiento–regla–criterio · Lectura de arquitectura de solución · Bloque: Especificación
+      y modelado del problema'
+  - title: Dominio de herramientas
+    category: desarrollo_producto
+    weight: 30.0
+    text: Domina la funcionalidad de Excel, Power BI, lenguaje de programación  (VBA, SQL, Python, R)
+      y Power Point
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: IA como productividad
+    category: desarrollo_producto
+    weight: 0.0
+    text: Reduce el tiempo de un ciclo de artefacto usando IA sin aumentar el retrabajo en el gate. Cero
+      filas publicadas sin verificación de fuente. Tiene al menos una tarea recurrente automatizada y
+      documentada para uso del equipo, y la comparte en el catálogo interno.
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Prompting estructurado · Revisión crítica de salida de IA · Automatización de tareas
+      propias · Bloque: IA como productividad'
+  - title: Planificación del trabajo
+    category: herramientas_gestion
+    weight: 33.4
+    text: Es capaz de reorganizar la priorización del proyecto en caso necesario
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Generación de conocimiento
+    category: herramientas_gestion
+    weight: 33.3
+    text: Colabora, en cierta forma, con la estrategia de administración de conocimiento de AAN, creando,
+      consultando y actualizando la información principalmente en cuanto a metodologías
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Administración de recursos
+    category: herramientas_gestion
+    weight: 33.3
+    text: Ayuda al Gerente a supervisar que la carga de trabajo de los integrantes del equipo sea adecuada
+      a sus capacidades y crecimiento
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Disciplina de forma de trabajo
+    category: herramientas_gestion
+    weight: 0.0
+    text: 'Cumple el estándar sin excepción y además lo hace cumplir: revisa la bitácora y el backlog
+      de su línea de trabajo, y los desvíos se corrigen antes del gate, no en él. Entrena a los perfiles
+      junior en la disciplina del ciclo.'
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Apego a los valores de Arena Analytics
+    category: actitud_persona
+    weight: 0.0
+    text: Tiene conocimiento y claridad de los valores de Arena Analytics. Actúa, en todo momento, de
+      acuerdo a ellos y los identifica como pilar para desempeñar su trabajo y los transmite a otros
+    level_expectation: No pondera (filtro)
+    guidance: 'Se califica de 1 a 4 (3 = cumple). No pondera en el score: sirve como filtro de valores;
+      una calificación baja se ve en el informe. · Bloque: — (filtro de valores)'
+  - title: Proactividad
+    category: actitud_persona
+    weight: 20.0
+    text: Tiene una alta capacidad de respuesta, iniciativa y disposición ante cualquier circunstancia.
+      Transmite este tipo de comportamiento al Analista y Consultor
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Búsqueda de la excelencia
+    category: actitud_persona
+    weight: 20.0
+    text: Contribuye, de forma significativa, en la alta calidad de los resultados de otros miembros más
+      júnior del equipo
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Innovación y creatividad
+    category: actitud_persona
+    weight: 20.0
+    text: Tiene un gran conocimiento técnico de distintas metodologías aunque, necesita supervisión o
+      consejo de su responsable para implementarlas. Presenta, no sólo de manera sobresaliente los outputs
+      de las metodologías usadas durante el proyecto, sino que aporta creatividad en cuanto a los diferentes
+      escenarios futuros
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Contribución al equipo
+    category: actitud_persona
+    weight: 20.0
+    text: Da apoyo a miembros más junior del equipo y los guía en el desarrollo de sus capacidades y áreas
+      oportunidad
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+  - title: Orientación a resultados
+    category: actitud_persona
+    weight: 20.0
+    text: Supervisa la calidad de los resultados del equipo
+    level_expectation: N3 · Autónomo
+    guidance: 'Bloque: Competencia de persona'
+- area: CONS
+  level: LEAD
+  scale_note: Califica cada competencia del 1 al 4 contra el nivel esperado para tu puesto (3 = cumple
+    satisfactoriamente). «Apego a los valores» se califica pero no pondera en el score.
+  scale:
+  - value: 1
+    label: No cumple
+    order: 1
+    description: No cumple con lo mínimo esperado para su rol en el proyecto.
+  - value: 2
+    label: Necesita mejorar
+    order: 2
+    description: Cumple parcialmente con lo esperado para su rol en el proyecto.
+  - value: 3
+    label: Cumple satisfactoriamente
+    order: 3
+    description: Cumple en su totalidad y de manera satisfactoria con lo esperado para su rol. La descripción
+      del nivel esperado está redactada contra esta calificación.
+  - value: 4
+    label: Excede
+    order: 4
+    description: Excede frecuentemente las expectativas de acuerdo a su rol y/o cumple funciones de un
+      rol superior al actual.
+  - value: null
+    label: N/A
+    order: 5
+    description: No aplica en este periodo por razones justificadas. No entra al promedio.
+  categories:
+  - code: delivery_cliente
+    name: Delivery al cliente
+    weight: 32.3
+  - code: desarrollo_producto
+    name: Desarrollo de producto
+    weight: 16.1
+  - code: herramientas_gestion
+    name: Herramientas de gestión
+    weight: 19.3
+  - code: actitud_persona
+    name: Actitud y persona
+    weight: 32.3
+  questions:
+  - title: Habilidad de comunicación
+    category: delivery_cliente
+    weight: 20.0
+    text: Redacta de manera adecuada y concisa. Se expresa de forma clara y de acuerdo al nivel requerido
+      por la audiencia. Sobrelleva los objetivos del trabajo de campo en entornos complejos y adversos.
+      Revisa al equipo en la ejecución, documentación de las entrevistas e interpretación de las conclusiones.
+      Es un referente para el equipo en la realización de presentaciones, consiguiendo que la audiencia
+      crea en los mensajes transmitidos
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Comprensión del alcance
+    category: delivery_cliente
+    weight: 20.0
+    text: Domina el alcance las tareas asignadas a cada miembro del equipo. Es reponsable de explicar
+      el alcance del proyecto y se asegura de que cada miembro del equipo tenga claridad. Es capaz de
+      impulsar oportunidades para otros proyectos o extensiones fuera del alcance
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Definición de alcance y no-alcance · Estimación de complejidad · Priorización MoSCoW
+      · Validación de supuestos de datos · Bloque: Dimensionamiento de alcance y complejidad'
+  - title: Nivel de relación con el cliente
+    category: delivery_cliente
+    weight: 20.0
+    text: Su imagen y comportamiento con el cliente es un modelo de referencia para el equipo. Logra confianza
+      y credibilidad en todos los niveles de la organización
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Mapeo de actores y RACI · Facilitación de sesiones con cliente · Defensa de alcance
+      y conversaciones difíciles · Obtención de VOBO · Bloque: Gestión de cliente y stakeholders'
+  - title: Transformación organizacional
+    category: delivery_cliente
+    weight: 20.0
+    text: Domina cómo la estructura de la organización habilita la ejecución de los procesos de negocio
+      necesarios para lograr sus objetivos. Es capaz de diseñar la organización más adecuada para habilitar
+      la ejecución de los procesos de negocio a lo largo del tiempo y de implementar el cambio
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Diseño de transferencia de conocimiento · Medición de adopción · Diagnóstico de
+      resistencia e intervención · Bloque: Gestión del cambio y adopción'
+  - title: Sentido de negocio
+    category: delivery_cliente
+    weight: 20.0
+    text: Domina el comportamiento de la industria  y su relación directa con la toma de decisiones  en
+      el corto, mediano y largo plazo para ofrecer soluciones apegadas a las necesidades y realidad de
+      la empresa. Es capaz de definir un plan de desarrollo y maduración para el crecimiento del cliente
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Levantamiento de proceso operativo · Redacción de reglas de negocio · Identificación
+      de reglas multi-paso · Cuantificación del caso de valor · Metodologías de diagnóstico y diseño ·
+      Bloque: Diagnóstico y análisis de negocio'
+  - title: Capacidad de análisis
+    category: desarrollo_producto
+    weight: 30.0
+    text: Supervisa el análisis del equipo e identifica rápidamente mejoras en los resultados y análisis
+      complementarios que refuerzan la consistencia de los resultados. Ofrece guía al equipo de cómo presentar
+      los resultados
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: Capacidad de síntesis
+    category: desarrollo_producto
+    weight: 40.0
+    text: Es un referente para el equipo en la correcta síntesis de la totalidad de análisis realizados
+      por el equipo lo cuál le permite tomar decisiones adecuadas
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Modelado conceptual de entidades y grano · Redacción de criterios de aceptación
+      · Trazabilidad requerimiento–regla–criterio · Lectura de arquitectura de solución · Bloque: Especificación
+      y modelado del problema'
+  - title: Dominio de herramientas
+    category: desarrollo_producto
+    weight: 30.0
+    text: Domina las herramientas de gestión de proyectos para la óptima distribución de las cargas de
+      trabajo entre el equipo y del flujo del proyecto
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Exploración y perfilado de datos · Consulta de datos con SQL · Definición y auditoría
+      de indicadores · Lectura crítica de resultados de modelo · Bloque: Análisis de datos y validación'
+  - title: IA como productividad
+    category: desarrollo_producto
+    weight: 0.0
+    text: Reduce el tiempo de un ciclo de artefacto usando IA sin aumentar el retrabajo en el gate. Cero
+      filas publicadas sin verificación de fuente. Exige la verificación como condición de entrega en
+      su equipo y mantiene vivo el catálogo interno de automatizaciones.
+    level_expectation: N3 · Autónomo
+    guidance: 'Skills: Prompting estructurado · Revisión crítica de salida de IA · Automatización de tareas
+      propias · Bloque: IA como productividad'
+  - title: Planificación del trabajo
+    category: herramientas_gestion
+    weight: 33.4
+    text: Se encarga de definir el plan de trabajo del proyecto y de su seguimiento. Establece los mecanismos
+      de control necesarios para garantizar los plazos. Domina todos los frentes del plan de trabajo
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Generación de conocimiento
+    category: herramientas_gestion
+    weight: 33.3
+    text: Colabora activamente con la estrategia de administración de conocimiento de AAN, creando, consultando
+      y actualizando la información en metodologías y soluciones
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Administración de recursos
+    category: herramientas_gestion
+    weight: 33.3
+    text: Domina el número y tipo de recursos necesarios para el proyecto (tanto en personas como de carácter  administrativo),
+      de acuerdo a las capacidades y potencial de crecimiento de cada miembro
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Disciplina de forma de trabajo
+    category: herramientas_gestion
+    weight: 0.0
+    text: Define y arbitra el estándar de disciplina del ciclo en sus proyectos. Ningún ciclo cierra con
+      bitácora incompleta o backlog sin validar. Protege el ciclo vigente de los cambios a media semana
+      frente al cliente.
+    level_expectation: N4 · Referente
+    guidance: 'Skills: Versionado y bitácora · Operación de Arena Ops · Control de cambios · Bloque: Disciplina
+      de WoW y gestión'
+  - title: Apego a los valores de Arena Analytics
+    category: actitud_persona
+    weight: 0.0
+    text: Tiene conocimiento y claridad de los valores de Arena Analytics. Actúa, en todo momento, de
+      acuerdo a ellos y los identifica como pilar para desempeñar su trabajo y los transmite a otros
+    level_expectation: No pondera (filtro)
+    guidance: 'Se califica de 1 a 4 (3 = cumple). No pondera en el score: sirve como filtro de valores;
+      una calificación baja se ve en el informe. · Bloque: — (filtro de valores)'
+  - title: Proactividad
+    category: actitud_persona
+    weight: 20.0
+    text: Identifica posibles riesgos o desviaciones y propone proactivamente soluciones
+    level_expectation: N4 · Referente
+    guidance: 'Bloque: Competencia de persona'
+  - title: Búsqueda de la excelencia
+    category: actitud_persona
+    weight: 20.0
+    text: Alcanza niveles de excelencia en el desarrollo del proyecto, siendo un referente para el equipo
+      de trabajo. Inculca al resto del equipo la necesidad de trabajar orientados en la búsqueda de la
+      excelencia
+    level_expectation: N4 · Referente
+    guidance: 'Bloque: Competencia de persona'
+  - title: Innovación y creatividad
+    category: actitud_persona
+    weight: 20.0
+    text: Es un referente para el equipo por su amplio conocimiento de las técnicas y herramientas en
+      distintas metodologías, así como en la presentación de los outputs de las diferentes metodologías
+      usadas durante el proyecto
+    level_expectation: N4 · Referente
+    guidance: 'Bloque: Competencia de persona'
+  - title: Contribución al equipo
+    category: actitud_persona
+    weight: 20.0
+    text: Genera un ambiente de alto sentido de pertenencia, compromiso y orgullo de participar en el
+      equipo. Logra una sinergia entre todos los miembros, intercambia información y avances y permite
+      una adecuada resolución de conflictos
+    level_expectation: N4 · Referente
+    guidance: 'Bloque: Competencia de persona'
+  - title: Orientación a resultados
+    category: actitud_persona
+    weight: 20.0
+    text: Establece soluciones que aseguran el éxito del proyecto. Cumple con el 100% de los resultados
+      e indicadores esperados
+    level_expectation: N4 · Referente
+    guidance: 'Bloque: Competencia de persona'

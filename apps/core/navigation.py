@@ -173,6 +173,8 @@ NAV: tuple[NavCategory, ...] = (
         NavItem("Áreas", "catalog:area_admin", "map", ("areas.manage", P)),
         NavItem("Escenarios", "catalog:scenario_admin", "layers", ("scenarios.manage", P),
                 also_active=("catalog:scenario_create", "catalog:scenario_edit")),
+        NavItem("Puestos", "catalog:position_admin", "briefcase", ("catalog.positions.manage", P)),
+        NavItem("Categorías", "catalog:category_admin", "tags", ("catalog.categories.manage", P)),
         NavItem("Cuestionarios", "questionnaires:admin_list", "list-checks", ("questionnaires.manage", P),
                 also_active=("questionnaires:template_edit",)),
     )),

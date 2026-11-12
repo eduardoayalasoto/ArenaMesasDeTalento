@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load core_extras %}
 {% block content %}
   <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div>
@@ -57,7 +58,7 @@
                   <a href="{% url 'dashboards:user_results' pk=row.user.pk %}{% if period.is_closed %}?periodo={{ period.pk }}{% endif %}" class="font-medium text-primary hover:text-primary hover:underline">{{ row.user.full_name }}</a>
                   <p class="text-base text-base-content/60">{{ row.user.area.name|default:"Sin área" }}</p>
                 </td>
-                <td class="px-3 py-2 text-base-content/70">{{ row.user.level.name|default:"—" }}</td>
+                <td class="px-3 py-2 text-base-content/70">{{ row.user|puesto|default:"—" }}</td>
                 <td class="px-3 py-2 text-center tabular-nums">{{ row.submitted }}</td>
                 <td class="px-3 py-2 text-center tabular-nums">{{ row.final.ownership_score|default:"—" }}</td>
                 <td class="px-3 py-2 text-center tabular-nums">{{ row.final.value_delivery_score|default:"—" }}</td>

@@ -164,6 +164,16 @@ class UserCreateForm(forms.ModelForm):
     def clean_email(self):
         return self.cleaned_data["email"].strip().lower()
 
+    def clean(self):
+        cleaned = super().clean()
+        area, level = cleaned.get("area"), cleaned.get("level")
+        if area and level:
+            from apps.core.services import positions
+
+            if not positions.position_defined(area, level):
+                self.add_error("level", f"No existe un puesto activo para {area.name} · {level.name} (Catálogos → Puestos).")
+        return cleaned
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])

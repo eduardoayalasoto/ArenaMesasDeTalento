@@ -3,6 +3,8 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
+from apps.core.services import ownership_weights
+
 
 @transaction.atomic
 def duplicate_as_new_version(template):
@@ -12,6 +14,7 @@ def duplicate_as_new_version(template):
         QuestionnaireTemplate,
         ScaleOption,
         Section,
+        TemplateCategory,
     )
 
     next_version = (
@@ -25,6 +28,10 @@ def duplicate_as_new_version(template):
         version=next_version, status=QuestionnaireTemplate.Status.BORRADOR,
         scale_note=template.scale_note,
     )
+    TemplateCategory.objects.bulk_create([
+        TemplateCategory(template=copy, category_id=link.category_id, weight_pct=link.weight_pct)
+        for link in template.template_categories.all()
+    ])
     for section in template.sections.all():
         new_section = Section.objects.create(
             template=copy, title=section.title, order=section.order
@@ -33,6 +40,7 @@ def duplicate_as_new_version(template):
             Question.objects.create(
                 section=new_section, order=q.order, title=q.title, text=q.text,
                 qtype=q.qtype, weight=q.weight, allow_na=q.allow_na, is_required=q.is_required,
+                category_id=q.category_id, weight_pct=q.weight_pct,
                 **{name: getattr(q, name) for name in Question.CHECKLIST_FIELDS},
             )
     for opt in template.scale_options.filter(question__isnull=True):
@@ -58,7 +66,19 @@ def validate_for_publish(template):
         errors.append("Hay títulos repetidos: " + ", ".join(f"«{t}»" for t in repeated) + ".")
     if not template.scale_options.filter(question__isnull=True).exists():
         errors.append("El cuestionario no tiene escala de respuestas.")
+    if template.kind == template.Kind.OWNERSHIP:
+        errors.extend(ownership_weights.validate_template_weights(template))
+        errors.extend(_position_errors(template))
     return errors
+
+
+def _position_errors(template):
+    """Un cuestionario solo se publica para una combinación área × nivel definida (spec 008, FR-020)."""
+    from apps.core.services import positions
+
+    if template.area_id and template.level_id and not positions.position_defined(template.area, template.level):
+        return [f"No existe un puesto activo para {template.area.name} · {template.level.name} en Catálogos → Puestos."]
+    return []
 
 
 @transaction.atomic

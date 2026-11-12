@@ -164,6 +164,15 @@ def user_admin(request):
                 new_lead_id = int(lead_raw) if lead_raw.isdigit() and int(lead_raw) in lead_ids else None
                 if new_lead_id == user.id:
                     new_lead_id = None
+            if new_area and new_level and (new_area.id, new_level.id) != (user.area_id, user.level_id):
+                from apps.core.services import positions
+
+                if not positions.position_defined(new_area, new_level):
+                    profile_errors.append(
+                        f"{user.full_name}: no existe un puesto activo para {new_area.name} · {new_level.name} "
+                        "(Catálogos → Puestos); no se cambió su área ni su nivel."
+                    )
+                    new_area, new_level = user.area, user.level
             if (user.area_id != (new_area.id if new_area else None)
                     or user.level_id != (new_level.id if new_level else None)
                     or user.role != role

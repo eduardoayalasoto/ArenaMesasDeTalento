@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load callout_tags %}
+{% block content %}
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-base-content">Puestos</h2>
+      <p class="text-base-content/75">
+        Cada área nombra su propia escalera. El nivel global (Jr, Mid, Sr, Lead) sigue definiendo la ponderación de los pilares;
+        el nombre del puesto es lo que ven las personas en pantalla.
+      </p>
+    </div>
+    {% if missing %}
+      <form method="post">
+        {% csrf_token %}<input type="hidden" name="action" value="complete">
+        <button type="submit" class="btn btn-sm btn-primary">Completar {{ missing }} puesto{{ missing|pluralize }} faltante{{ missing|pluralize }}</button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% for block in blocks %}
+    <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm mb-6 overflow-hidden">
+      <h3 class="px-4 py-3 font-semibold text-base-content border-b border-base-200">
+        {{ block.area.name }} <span class="text-base font-normal text-base-content/75">· {{ block.area.code }}</span>
+      </h3>
+      <div class="divide-y divide-base-200">
+        {% for row in block.rows %}
+          <form method="post" class="flex flex-wrap items-center justify-between gap-3 p-4">
+            {% csrf_token %}
+            <input type="hidden" name="area" value="{{ block.area.pk }}">
+            <input type="hidden" name="level" value="{{ row.level.pk }}">
+            <div class="w-40">
+              <p class="text-base text-base-content/75">Nivel {{ row.level.name }}</p>
+              {% if not row.position %}<span class="badge badge-warning">Sin definir</span>{% endif %}
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+              <label class="sr-only" for="pos-{{ block.area.pk }}-{{ row.level.pk }}">Nombre del puesto para {{ block.area.name }}, nivel {{ row.level.name }}</label>
+              <input id="pos-{{ block.area.pk }}-{{ row.level.pk }}" type="text" name="name" maxlength="60" required
+                     value="{% if row.position %}{{ row.position.name }}{% else %}{{ row.level.name }}{% endif %}" class="input w-64">
+              <label class="flex items-center gap-2 text-base">
+                <input type="checkbox" name="is_active" class="checkbox checkbox-sm" {% if not row.position or row.position.is_active %}checked{% endif %}>
+                Activo
+              </label>
+              <button type="submit" class="btn btn-sm btn-soft btn-primary">{% if row.position %}Guardar{% else %}Crear{% endif %}</button>
+            </div>
+          </form>
+        {% endfor %}
+      </div>
+    </section>
+  {% empty %}
+    <p class="text-base text-base-content/75">No hay áreas registradas.</p>
+  {% endfor %}
+{% endblock %}

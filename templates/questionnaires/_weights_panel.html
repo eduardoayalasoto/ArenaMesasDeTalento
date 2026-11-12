@@ -1,0 +1,141 @@
+{% load callout_tags %}
+{% comment %}
+Panel «Categorías y pesos» del editor de cuestionarios de Ownership (spec 008).
+Cada grupo de pesos lleva su total en vivo (décimas enteras, sin errores de coma flotante) y no
+permite guardar mientras no sume exactamente 100%. El servidor repite la misma validación.
+{% endcomment %}
+
+<section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mb-6">
+  <h3 class="font-semibold text-base-content">Categorías y pesos</h3>
+  <p class="text-base text-base-content/75 mt-1">
+    Cada pregunta pertenece a una categoría. El score del cuestionario es la suma del score de cada categoría por su peso.
+    Los pesos deben sumar exactamente 100%.
+  </p>
+
+  {% if editable and weights_errors %}
+    {% callout "warning" icon="info" cls="mt-4" title="Antes de publicar" %}
+      <ul class="list-disc ml-5">{% for e in weights_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+    {% endcallout %}
+  {% endif %}
+
+  {# --- Pesos de las categorías --- #}
+  <form method="post" class="mt-5"
+        x-data="weightGroup('categories', [{% for g in weight_groups %}'{{ g.weight }}'{% if not forloop.last %}, {% endif %}{% endfor %}])">
+    {% csrf_token %}<input type="hidden" name="action" value="save_category_weights">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead><tr><th>Categoría</th><th class="text-center">Preguntas</th><th class="text-right">Peso (%)</th><th></th></tr></thead>
+        <tbody>
+          {% for g in weight_groups %}
+            <tr>
+              <td class="font-medium text-base-content">{{ g.link.category.name }}</td>
+              <td class="text-center tabular-nums">{{ g.questions|length }}</td>
+              <td class="text-right">
+                {% if editable %}
+                  <input type="text" inputmode="decimal" name="w_{{ g.link.pk }}" x-model="vals[{{ forloop.counter0 }}]"
+                         class="input w-24 text-right tabular-nums" :class="parse(vals[{{ forloop.counter0 }}]) === null ? 'input-error' : ''"
+                         aria-label="Peso de {{ g.link.category.name }}">
+                {% else %}
+                  <span class="tabular-nums">{{ g.weight }}%</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                {% if editable and not g.questions %}
+                  <button type="submit" form="remove-cat-{{ g.link.pk }}" class="btn btn-ghost btn-sm text-error">Quitar</button>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="text-base-content/75">Este cuestionario aún no tiene categorías.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if editable %}
+      <div class="mt-3 flex flex-wrap items-center gap-3" role="status" aria-live="polite">
+        <span class="badge badge-success" x-show="ok" x-cloak>Suma 100.0%</span>
+        <span class="badge badge-warning" x-show="!ok" x-cloak>
+          <span x-show="!hasInvalid">Suma actual <span x-text="totalLabel"></span>% — debe llegar a 100% (<span x-text="gapLabel"></span>)</span>
+          <span x-show="hasInvalid">Revisa los pesos: usa números de 0 a 100 con un solo decimal</span>
+        </span>
+        <button type="button" class="btn btn-ghost btn-sm" @click="equalize()">Repartir en partes iguales</button>
+        <button type="submit" class="btn btn-primary btn-sm" :disabled="!ok">Guardar pesos</button>
+      </div>
+    {% endif %}
+  </form>
+  {% for g in weight_groups %}{% if editable and not g.questions %}
+    <form id="remove-cat-{{ g.link.pk }}" method="post">{% csrf_token %}<input type="hidden" name="action" value="remove_template_category"><input type="hidden" name="link" value="{{ g.link.pk }}"></form>
+  {% endif %}{% endfor %}
+
+  {% if editable and available_categories %}
+    <form method="post" class="mt-4 flex flex-wrap items-end gap-2">
+      {% csrf_token %}<input type="hidden" name="action" value="add_template_category">
+      <div>
+        <label class="fieldset-legend" for="add-category">Agregar categoría (entra con peso 0%)</label>
+        <select id="add-category" name="category" class="select">
+          {% for c in available_categories %}<option value="{{ c.pk }}">{{ c.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-outline btn-primary">Agregar</button>
+    </form>
+  {% endif %}
+
+  {# --- Pesos de las preguntas dentro de cada categoría --- #}
+  {% for g in weight_groups %}{% if g.questions %}
+    <div class="mt-6 border-t border-base-300 pt-4" x-data="{ open: {% if g.custom %}true{% else %}false{% endif %} }">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <p class="font-medium text-base-content">{{ g.link.category.name }} · {{ g.questions|length }} pregunta{{ g.questions|length|pluralize }}</p>
+          <p class="text-base text-base-content/75">
+            {% if g.custom %}Pesos personalizados dentro de la categoría.{% else %}Todas las preguntas pesan lo mismo (partes iguales).{% endif %}
+          </p>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" @click="open = !open" :aria-expanded="open">
+          <span x-text="open ? 'Ocultar pesos' : 'Ver pesos de las preguntas'"></span>
+        </button>
+      </div>
+
+      <div x-show="open" x-cloak class="mt-3">
+        <form method="post"
+              x-data="weightGroup('cat-{{ g.link.pk }}', [{% for row in g.questions %}'{{ row.value }}'{% if not forloop.last %}, {% endif %}{% endfor %}])">
+          {% csrf_token %}<input type="hidden" name="action" value="save_question_weights"><input type="hidden" name="link" value="{{ g.link.pk }}">
+          <div class="overflow-x-auto">
+            <table class="table">
+              <tbody>
+                {% for row in g.questions %}
+                  <tr>
+                    <td>{{ row.question.title }}</td>
+                    <td class="text-right w-40">
+                      {% if editable %}
+                        <input type="text" inputmode="decimal" name="q_{{ row.question.pk }}" x-model="vals[{{ forloop.counter0 }}]"
+                               class="input w-24 text-right tabular-nums" :class="parse(vals[{{ forloop.counter0 }}]) === null ? 'input-error' : ''"
+                               aria-label="Peso de {{ row.question.title }}">
+                      {% else %}
+                        <span class="tabular-nums">{{ row.value }}%</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% if editable %}
+            <div class="mt-3 flex flex-wrap items-center gap-3" role="status" aria-live="polite">
+              <span class="badge badge-success" x-show="ok" x-cloak>Suma 100.0%</span>
+              <span class="badge badge-warning" x-show="!ok" x-cloak>
+                <span x-show="!hasInvalid">Suma actual <span x-text="totalLabel"></span>% — debe llegar a 100% (<span x-text="gapLabel"></span>)</span>
+                <span x-show="hasInvalid">Revisa los pesos: usa números de 0 a 100 con un solo decimal</span>
+              </span>
+              <button type="button" class="btn btn-ghost btn-sm" @click="equalize()">Repartir en partes iguales</button>
+              <button type="submit" class="btn btn-primary btn-sm" :disabled="!ok">Guardar pesos</button>
+              {% if g.custom %}
+                <button type="submit" name="action" value="clear_question_weights" class="btn btn-outline btn-sm">Volver a partes iguales</button>
+              {% endif %}
+            </div>
+            <p class="label mt-2">Un peso de 0 significa que la pregunta se califica pero no pondera en el score.</p>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  {% endif %}{% endfor %}
+</section>

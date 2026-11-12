@@ -6,7 +6,7 @@
 <div class="flex flex-wrap items-end justify-between gap-3 mb-4">
   <div>
     <h3 class="text-lg font-semibold text-base-content">{% if is_me %}Mi plan {{ year }}{% else %}Plan {{ year }} de {{ owner.full_name }}{% endif %}</h3>
-    <p class="text-base text-base-content/60">{% if is_me %}Los cursos que elegiste para este año. El avance se actualiza solo con tus solicitudes y registros de Arena Learn.{% else %}{{ owner.area.name|default:"Sin área" }}{% if owner.level %} · {{ owner.level.name }}{% endif %} · solo lectura{% endif %}</p>
+    <p class="text-base text-base-content/60">{% if is_me %}Los cursos que elegiste para este año. El avance se actualiza solo con tus solicitudes y registros de Arena Learn.{% else %}{{ owner.area.name|default:"Sin área" }}{% if owner.level %} · {{ owner|puesto }}{% endif %} · solo lectura{% endif %}</p>
   </div>
   <div class="flex flex-wrap items-center gap-2">
     {% if years|length > 1 %}

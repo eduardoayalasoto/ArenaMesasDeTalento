@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load access_tags %}
+{% load access_tags core_extras %}
 {% block content %}
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
@@ -62,6 +62,7 @@
                     <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
                   </div>
                 </div>
+                {% if u.level %}<p class="mt-0.5 text-sm text-base-content/60">Puesto: {{ u|puesto }}</p>{% endif %}
               </td>
 
               <td class="px-4 py-2.5">

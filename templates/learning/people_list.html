@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load core_extras %}
 {% block content %}
 {% include "learning/_subnav.html" %}
 
@@ -21,7 +22,7 @@
       {% endif %}
       <div class="min-w-0">
         <p class="font-medium text-base-content truncate">{{ p.full_name }}</p>
-        <p class="text-base text-base-content/60 truncate">{{ p.area.name|default:"Sin área" }}{% if p.level %} · {{ p.level.name }}{% endif %}</p>
+        <p class="text-base text-base-content/60 truncate">{{ p.area.name|default:"Sin área" }}{% if p.level %} · {{ p|puesto }}{% endif %}</p>
       </div>
       <span class="ml-auto text-base text-base-content/60 shrink-0 inline-flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i>{{ p.courses_done }}</span>
     </a>

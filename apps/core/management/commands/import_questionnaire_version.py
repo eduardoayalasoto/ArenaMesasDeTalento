@@ -21,13 +21,16 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--dir", required=True, help="Carpeta con <AREA>.yaml.")
-        parser.add_argument("--target-version", type=int, required=True, help="Versión destino (≥ 2).")
+        parser.add_argument(
+            "--target-version", type=int, required=True,
+            help="Versión destino. La 1 solo se admite si el YAML trae escala propia (CONS).",
+        )
         parser.add_argument("--publish", action="store_true", help="Publica cada versión cargada.")
         parser.add_argument("--dry-run", action="store_true", help="Revierte todo al final; solo reporta.")
 
     def handle(self, *args, **opts):
-        if opts["target_version"] < 2:
-            raise CommandError("La versión destino debe ser 2 o mayor (la v1 la siembra seed_questionnaires).")
+        if opts["target_version"] < 1:
+            raise CommandError("La versión destino debe ser 1 o mayor.")
         directory = Path(opts["dir"])
         if not directory.is_absolute():
             directory = Path(settings.BASE_DIR) / directory
@@ -37,9 +40,9 @@ class Command(BaseCommand):
 
         try:
             with transaction.atomic():
-                for area, level, questions in entries:
+                for area, level, questions, options in entries:
                     result = questionnaire_import.import_version(
-                        area, level, questions, opts["target_version"], publish=opts["publish"]
+                        area, level, questions, opts["target_version"], publish=opts["publish"], **options
                     )
                     self.stdout.write(f"  {result}")
                 if opts["dry_run"]:

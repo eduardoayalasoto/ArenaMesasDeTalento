@@ -53,6 +53,21 @@ def _progress(evaluation):
     return answered, total, scoring.ownership_evaluation_score(evaluation)
 
 
+def _category_rows(evaluation):
+    """Desglose por categoría para la pantalla (spec 008): [] si el cuestionario tiene una sola."""
+    rows = scoring.ownership_category_breakdown(evaluation)
+    if len(rows) < 2:
+        return []
+    return [
+        {
+            "code": r.code, "name": r.name, "weight": str(r.weight),
+            "score": None if r.score is None else str(r.score),
+            "answered": r.answered, "total": r.total,
+        }
+        for r in rows
+    ]
+
+
 @login_required
 @requires("ownership.self.manage")
 def ownership_list(request):
@@ -151,10 +166,12 @@ def ownership_start(request, project_id):
     evaluators = (
         access.assignable_users("assign.ownership_evaluator").exclude(pk=request.user.pk).order_by("full_name")
     )
+    suggested = ownership_flow.suggested_evaluator_for(membership.project, request.user, evaluators)
     return render(request, "evaluations/ownership_start.html", {
         "page_title": "Elegir evaluador",
         "project": membership.project,
         "evaluators": evaluators,
+        "suggested_id": suggested.pk if suggested else "",
     })
 
 
@@ -288,6 +305,7 @@ def _render_ownership(request, pk, *, editing):
     ).order_by("order")
     scale = list(evaluation.template.scale_options.order_by("order"))
     answered, total, average = _progress(evaluation)
+    category_rows = _category_rows(evaluation)
 
     lead_projects = None
     if evaluation.project is None:
@@ -307,6 +325,7 @@ def _render_ownership(request, pk, *, editing):
         "answered": answered,
         "total": total,
         "average": average,
+        "category_rows": category_rows,
         "is_owner": is_owner,
         "editing": editing,
         "answers_editable": editing and can_edit_answers,
@@ -434,6 +453,7 @@ def ownership_autosave(request, pk):
     return JsonResponse({
         "ok": True, "answered": answered, "total": total,
         "average": str(average) if average is not None else None,
+        "categories": _category_rows(evaluation),
     })
 
 

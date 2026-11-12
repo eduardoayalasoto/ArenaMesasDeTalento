@@ -1,3 +1,4 @@
+{% load core_extras %}
 {% comment %}Informe de resultados estilo slide. Params: subject, final, weight, projects, feedback, period, vd_comment_rows, feedback_session.{% endcomment %}
 
 <!-- Hero: identidad + calificación final -->
@@ -7,7 +8,7 @@
       {% include "partials/avatar.html" with subject=subject size="w-24 h-24 sm:w-28 sm:h-28" icon="w-12 h-12" %}
       <div class="min-w-0">
         <h2 class="text-3xl font-bold text-base-content leading-tight truncate">{{ subject.full_name }}</h2>
-        <p class="mt-1 text-lg text-base-content/70">{{ subject.area.name|default:"Sin área" }}{% if subject.level %} · {{ subject.level.name }}{% endif %}</p>
+        <p class="mt-1 text-lg text-base-content/70">{{ subject.area.name|default:"Sin área" }}{% if subject.level %} · {{ subject|puesto }}{% endif %}</p>
         <p class="mt-1 text-base text-base-content/60">Periodo {{ period.name }}</p>
       </div>
     </div>
@@ -31,6 +32,22 @@
   {% include "dashboards/_pillar_card.html" with title="Entrega de Valor" score=final.value_delivery_score weight=weight.w_value_delivery %}
   {% include "dashboards/_pillar_card.html" with title="Impacto Arena" score=final.arena_impact_score weight=weight.w_arena_impact %}
 </div>
+
+{% if ownership_categories %}
+  <!-- Ownership por categoría (spec 008) -->
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-4 mb-5">
+    <h3 class="font-semibold text-base-content mb-3">Ownership por categoría</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {% for c in ownership_categories %}
+        <div class="rounded-xl border border-base-300 p-3">
+          <p class="text-base font-medium text-base-content">{{ c.name }}</p>
+          <p class="text-sm text-base-content/75">Peso {{ c.weight }}%</p>
+          <p class="mt-1 font-semibold tabular-nums {% if c.score is not None %}text-xl text-base-content{% else %}text-base text-base-content/50{% endif %}">{% if c.score is not None %}{{ c.score }}{% else %}Sin calificar{% endif %}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
 
 {% if lead_eval %}
   <!-- Lead: acceso directo a su evaluación de Ownership (visible para Talento) -->

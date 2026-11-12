@@ -34,6 +34,12 @@
         {% for e in form.validador.errors %}<p class="mt-1 text-base text-error">{{ e }}</p>{% endfor %}
         <p class="mt-1 text-base text-base-content/60">Revisa y valida (o regresa) la Entrega de Valor capturada por el Responsable. Puede ser cualquier colaborador, sin importar su nivel o perfil; solo esa persona (además de Talento) podrá validar este proyecto.</p>
       </div>
+      <div>
+        <label class="fieldset-legend" for="{{ form.suggested_evaluator.id_for_label }}">{{ form.suggested_evaluator.label }}</label>
+        {{ form.suggested_evaluator }}
+        {% for e in form.suggested_evaluator.errors %}<p class="mt-1 text-base text-error">{{ e }}</p>{% endfor %}
+        <p class="mt-1 text-base text-base-content/60">{{ form.suggested_evaluator.help_text }} Sin sugerido se preselecciona al Owner, y si no al Responsable.</p>
+      </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="fieldset-legend" for="{{ form.kickoff.id_for_label }}">{{ form.kickoff.label }}</label>

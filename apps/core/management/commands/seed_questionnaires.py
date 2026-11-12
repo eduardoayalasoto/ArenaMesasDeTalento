@@ -9,10 +9,12 @@ from django.db import transaction
 
 from apps.catalog.models import Area, SeniorityLevel
 from apps.questionnaires.models import (
+    Category,
     Question,
     QuestionnaireTemplate,
     ScaleOption,
     Section,
+    TemplateCategory,
 )
 
 OWNERSHIP_SCALE_NOTE = (
@@ -88,10 +90,17 @@ class Command(BaseCommand):
         section = Section.objects.create(
             template=template, title="Checklist de Ownership", order=1
         )
+        # Spec 008: todo cuestionario de Ownership nace con «General» al 100% (promedio simple).
+        general, _ = Category.objects.get_or_create(
+            code=Category.GENERAL_CODE, defaults={"name": "General", "order": 0}
+        )
+        TemplateCategory.objects.update_or_create(
+            template=template, category=general, defaults={"weight_pct": 100}
+        )
         for i, q in enumerate(questions, start=1):
             Question.objects.create(
                 section=section, order=i, title=q["title"], text=q.get("text", ""),
-                qtype=Question.Type.SCALE, allow_na=True, is_required=True,
+                qtype=Question.Type.SCALE, allow_na=True, is_required=True, category=general,
             )
         for order, (value, label, desc) in enumerate(OWNERSHIP_SCALE, start=1):
             ScaleOption.objects.create(

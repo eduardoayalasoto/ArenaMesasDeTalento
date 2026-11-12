@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Question, QuestionnaireTemplate, ScaleOption, Section
+from .models import Category, Question, QuestionnaireTemplate, ScaleOption, Section, TemplateCategory
 
 
 class QuestionInline(admin.TabularInline):
@@ -32,3 +32,14 @@ class SectionAdmin(admin.ModelAdmin):
 @admin.register(ScaleOption)
 class ScaleOptionAdmin(admin.ModelAdmin):
     list_display = ["__str__", "template", "question", "value", "order"]
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "code", "order", "is_active"]
+
+
+@admin.register(TemplateCategory)
+class TemplateCategoryAdmin(admin.ModelAdmin):
+    list_display = ["template", "category", "weight_pct"]
+    list_filter = ["category"]

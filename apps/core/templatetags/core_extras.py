@@ -145,3 +145,21 @@ def tag_color_swatches():
     from apps.crm.models import Tag
 
     return [(value, label, Tag.COLOR_SWATCH_CLASSES[value]) for value, label in Tag.COLOR_CHOICES]
+
+
+@register.filter
+def puesto(user):
+    """Puesto visible de una persona (catálogo de Puestos; sin él, el nombre de su nivel). Spec 008."""
+    from apps.core.services import positions
+
+    return positions.user_position_name(user) if user is not None else ""
+
+
+@register.filter
+def puesto_de(obj):
+    """Puesto visible de un objeto con `area` y `level` (p. ej. un cuestionario). Spec 008."""
+    from apps.core.services import positions
+
+    if obj is None or not getattr(obj, "level_id", None):
+        return ""
+    return positions.position_name(obj.area_id, obj.level_id, fallback=obj.level.name)

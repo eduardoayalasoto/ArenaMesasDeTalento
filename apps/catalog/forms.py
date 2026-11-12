@@ -37,7 +37,7 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = [
-            "name", "client", "owner", "responsable", "validador",
+            "name", "client", "owner", "responsable", "validador", "suggested_evaluator",
             "duration_type", "status", "kickoff", "target_close", "is_active",
         ]
         labels = {
@@ -46,6 +46,7 @@ class ProjectForm(forms.ModelForm):
             "owner": "Owner",
             "responsable": "Responsable (evaluará la Entrega de Valor)",
             "validador": "Validador de Entrega de Valor",
+            "suggested_evaluator": "Evaluador sugerido de Ownership",
             "duration_type": "Tipo de duración",
             "status": "Estatus",
             "kickoff": "Kick-off",
@@ -58,6 +59,7 @@ class ProjectForm(forms.ModelForm):
             "owner": forms.Select(attrs={"class": _SELECT}),
             "responsable": forms.Select(attrs={"class": _SELECT}),
             "validador": forms.Select(attrs={"class": _SELECT}),
+            "suggested_evaluator": forms.Select(attrs={"class": _SELECT}),
             "duration_type": forms.RadioSelect(),
             "status": forms.Select(attrs={"class": _SELECT}),
             "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
@@ -77,6 +79,10 @@ class ProjectForm(forms.ModelForm):
         self.fields["validador"].queryset = active
         self.fields["validador"].required = False
         self.fields["validador"].empty_label = "— Selecciona un Validador —"
+        self.fields["suggested_evaluator"].queryset = assignable_users("assign.ownership_evaluator").order_by("full_name")
+        self.fields["suggested_evaluator"].required = False
+        self.fields["suggested_evaluator"].empty_label = "— Sin sugerido (se usa el Owner) —"
+        self.fields["suggested_evaluator"].help_text = "Se preselecciona al iniciar la evaluación; cada persona puede cambiarlo."
 
 
 class AreaDirectorForm(forms.Form):
@@ -84,3 +90,33 @@ class AreaDirectorForm(forms.Form):
 
     area = forms.IntegerField(widget=forms.HiddenInput)
     director = forms.IntegerField(required=False)
+
+
+class PositionForm(forms.Form):
+    """Nombre y estado de un puesto (área × nivel). Crea el puesto si aún no existe."""
+
+    area = forms.IntegerField(widget=forms.HiddenInput)
+    level = forms.IntegerField(widget=forms.HiddenInput)
+    name = forms.CharField(label="Nombre del puesto", max_length=60)
+    is_active = forms.BooleanField(label="Activo", required=False)
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise forms.ValidationError("El nombre del puesto es obligatorio.")
+        return name
+
+
+class CategoryForm(forms.Form):
+    """Alta y edición de una categoría de pregunta (spec 008)."""
+
+    category = forms.IntegerField(widget=forms.HiddenInput, required=False)
+    name = forms.CharField(label="Nombre", max_length=80)
+    order = forms.IntegerField(label="Orden", min_value=0, max_value=999, initial=1)
+    is_active = forms.BooleanField(label="Activa", required=False)
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise forms.ValidationError("El nombre de la categoría es obligatorio.")
+        return name

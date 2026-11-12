@@ -10,7 +10,7 @@
 
     {% include "partials/info_panel.html" with title="Elige a tus evaluadores" text="<p><strong>Evaluador principal:</strong> quien lidera la sesión de retroalimentación contigo y puede cerrar la evaluación. Suele ser quien más cerca trabajó contigo en el proyecto.</p><p><strong>Evaluadores secundarios (opcional):</strong> personas adicionales que participarán en la sesión con los mismos permisos que el principal para revisar y cerrar. Puedes agregar o quitar evaluadores más adelante.</p>" %}
 
-    <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6" x-data="{ primaryId: '', secondaries: [] }">
+    <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6" x-data="{ primaryId: '{{ suggested_id }}', secondaries: [] }">
       {% csrf_token %}
 
       <div class="mb-5">
@@ -18,9 +18,10 @@
         <select name="evaluator" id="evaluator" class="select w-full" required x-model="primaryId">
           <option value="">— Selecciona una persona —</option>
           {% for e in evaluators %}
-            <option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>
+            <option value="{{ e.id }}" {% if e.id == suggested_id %}selected{% endif %}>{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>
           {% endfor %}
         </select>
+        {% if suggested_id %}<p class="mt-1 text-base text-base-content/60">Preseleccionamos al evaluador sugerido para este proyecto; puedes cambiarlo.</p>{% endif %}
       </div>
 
       <div class="mb-5">

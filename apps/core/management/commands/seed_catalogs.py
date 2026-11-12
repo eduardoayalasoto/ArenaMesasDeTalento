@@ -47,6 +47,11 @@ class Command(BaseCommand):
             levels[code] = level
         self.stdout.write(self.style.SUCCESS(f"Niveles: {SeniorityLevel.objects.count()}"))
 
+        from apps.core.services import positions
+
+        created = positions.ensure_default_positions()
+        self.stdout.write(self.style.SUCCESS(f"Puestos: {created} nuevos"))
+
         for code, (wo, wv, wa) in WEIGHTS.items():
             PillarWeight.objects.update_or_create(
                 level=levels[code],

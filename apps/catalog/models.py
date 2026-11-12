@@ -52,6 +52,33 @@ class SeniorityLevel(models.Model):
         return self.name
 
 
+class Position(models.Model):
+    """Puesto: nombre visible de una combinación área × nivel (spec 008).
+
+    Cada área nombra su propia escalera (Analítica: Junior/Mid/Senior/Lead; Consultoría: Analista/
+    Consultor/Consultor Sr/Gerente). El nivel global sigue gobernando la ponderación de pilares.
+    """
+
+    area = models.ForeignKey(Area, on_delete=models.PROTECT, related_name="positions", verbose_name="área")
+    level = models.ForeignKey(
+        SeniorityLevel, on_delete=models.PROTECT, related_name="positions", verbose_name="nivel"
+    )
+    name = models.CharField("nombre del puesto", max_length=60)
+    is_active = models.BooleanField("activo", default=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "puesto"
+        verbose_name_plural = "puestos"
+        ordering = ["area__code", "level__order"]
+        constraints = [
+            models.UniqueConstraint(fields=["area", "level"], name="unique_position_area_level"),
+        ]
+
+    def __str__(self):
+        return f"{self.area.code} · {self.name}"
+
+
 class PillarWeight(models.Model):
     """Ponderación de los 3 pilares por nivel (RN-19). Debe sumar 1.00."""
 
@@ -223,6 +250,14 @@ class Project(models.Model):
         verbose_name="Validador de Entrega de Valor",
         null=True, blank=True,
     )
+    # Spec 008: se preselecciona como evaluador principal al iniciar la evaluación de Ownership.
+    suggested_evaluator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="suggested_for_projects",
+        verbose_name="evaluador sugerido de Ownership",
+        null=True, blank=True,
+    )
     kickoff = models.DateField("kick-off", null=True, blank=True)
     target_close = models.DateField("cierre objetivo", null=True, blank=True)
     status = models.CharField(
@@ -282,3 +317,13 @@ class ScenarioOption(models.Model):
 
     def __str__(self):
         return self.name
+
+
+def _invalidate_position_cache(sender, **kwargs):
+    from apps.core.services import positions
+
+    positions.invalidate()
+
+
+models.signals.post_save.connect(_invalidate_position_cache, sender=Position)
+models.signals.post_delete.connect(_invalidate_position_cache, sender=Position)

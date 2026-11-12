@@ -140,3 +140,39 @@ def test_secondary_can_close_evaluation(collaborator, project_finite, period, ow
     assert errors == []
     ev.refresh_from_db()
     assert ev.is_submitted
+
+
+# --- evaluador sugerido por proyecto (spec 008, US6) ------------------------
+
+@pytest.mark.django_db
+def test_suggested_evaluator_preselection(client, collaborator, project_finite, period, lead, area, level_jr, ownership_template):
+    from django.urls import reverse
+
+    from apps.catalog.models import ProjectMembership
+
+    secondary = _make_secondary(area, level_jr)
+    # Sin sugerido: el owner; con sugerido: ese; nunca el propio colaborador ni una persona inactiva.
+    assert ownership_flow.suggested_evaluator_for(project_finite, collaborator) == lead
+    project_finite.suggested_evaluator = secondary
+    project_finite.save()
+    assert ownership_flow.suggested_evaluator_for(project_finite, collaborator) == secondary
+    assert ownership_flow.suggested_evaluator_for(project_finite, secondary) == lead
+    User.objects.filter(pk=secondary.pk).update(is_active=False)
+    project_finite.refresh_from_db()
+    assert ownership_flow.suggested_evaluator_for(project_finite, collaborator) == lead
+    only_secondary = User.objects.filter(pk=secondary.pk)
+    assert ownership_flow.suggested_evaluator_for(project_finite, collaborator, only_secondary) is None
+    User.objects.filter(pk=secondary.pk).update(is_active=True)
+
+    # La pantalla de inicio lo preselecciona (y el colaborador puede cambiarlo).
+    ProjectMembership.objects.create(project=project_finite, user=collaborator)
+    User.objects.filter(pk=collaborator.pk).update(photo_data=b"x", photo_mime="image/jpeg")
+    client.force_login(collaborator)
+    response = client.get(reverse("evaluations:ownership_start", args=[project_finite.pk]))
+    assert response.status_code == 200
+    candidates = {u.pk for u in response.context["evaluators"]}
+    project_finite.refresh_from_db()    # (la instancia del test guardaba al sugerido cuando estaba inactivo)
+    expected = ownership_flow.suggested_evaluator_for(project_finite, collaborator, response.context["evaluators"])
+    assert response.context["suggested_id"] == (expected.pk if expected else "")
+    if secondary.pk in candidates:
+        assert expected == secondary and f'value="{secondary.pk}" selected' in response.content.decode()

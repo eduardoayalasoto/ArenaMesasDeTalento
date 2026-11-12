@@ -24,6 +24,21 @@ def resolve_ownership_template(user):
     )
 
 
+def suggested_evaluator_for(project, user, candidates=None):
+    """Evaluador a preseleccionar al iniciar (spec 008): sugerido del proyecto → owner → responsable.
+
+    Nunca el propio colaborador ni una persona inactiva; si se pasan `candidates` (queryset de quienes
+    pueden evaluar), solo se devuelve alguien de esa lista. None si no hay candidato.
+    """
+    allowed = None if candidates is None else set(candidates.values_list("pk", flat=True))
+    for person in (project.suggested_evaluator, project.owner, project.responsable):
+        if person is None or person.pk == user.pk or not person.is_active:
+            continue
+        if allowed is None or person.pk in allowed:
+            return person
+    return None
+
+
 def get_or_create_ownership_evaluation(user, period, project=None, evaluator=None):
     """Obtiene o crea la evaluación para el usuario y periodo dados.
 

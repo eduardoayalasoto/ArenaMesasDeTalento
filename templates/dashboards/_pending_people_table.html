@@ -1,3 +1,4 @@
+{% load core_extras %}
 {% comment %}
 Tabla de personas con pendientes en el periodo abierto. Params: pending_rows.
 Cada row: user, ownership_missing, vd_capture_missing, vd_validation_missing,
@@ -33,7 +34,7 @@ por total descendente.
                     {% include "partials/avatar.html" with subject=row.user size="w-10 h-10" icon="w-5 h-5" %}
                     <div class="min-w-0">
                       <p class="font-medium text-base-content truncate group-hover:underline">{{ row.user.full_name }}</p>
-                      <p class="text-base text-base-content/60 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user.level.name|default:"Sin nivel" }}</p>
+                      <p class="text-base text-base-content/60 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user|puesto|default:"Sin nivel" }}</p>
                     </div>
                   </a>
                 </td>

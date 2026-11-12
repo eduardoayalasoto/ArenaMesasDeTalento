@@ -1,13 +1,15 @@
 {% extends "base.html" %}
-{% load callout_tags %}
+{% load callout_tags core_extras %}
 {% load dict_extras %}
 {% block content %}
+{{ category_rows|json_script:"category-rows" }}
 <div x-data="ownershipForm({
         url: '{% url 'evaluations:ownership_autosave' pk=evaluation.pk %}',
         csrf: '{{ csrf_token }}',
         answered: {{ answered }},
         total: {{ total }},
         average: {% if average is not None %}'{{ average }}'{% else %}null{% endif %},
+        categories: JSON.parse(document.getElementById('category-rows').textContent),
         reason: ''
      })">
 
@@ -78,7 +80,7 @@
           {% include "partials/avatar.html" with subject=evaluation.user size="w-8 h-8" mini=True %}
           <span class="min-w-0">
             <span class="block font-medium text-base-content truncate">{{ evaluation.user.full_name }}</span>
-            <span class="block text-sm text-base-content/60 truncate">{{ evaluation.template.area.name }} · {{ evaluation.template.level.name }}</span>
+            <span class="block text-sm text-base-content/60 truncate">{{ evaluation.template.area.name }} · {{ evaluation.template|puesto_de }}</span>
           </span>
         </dd>
       </div>
@@ -254,6 +256,8 @@
   {% endif %}
 
   <!-- Secciones y preguntas -->
+  {% include "evaluations/_category_scores.html" %}
+
   {% for section in sections %}
     <section class="mb-10">
       <h3 class="font-semibold text-base-content mb-4 flex items-center gap-2">
@@ -385,7 +389,7 @@
             body: JSON.stringify({ question, value, is_na: isNa, reason: this.reason }),
           });
           const data = await r.json();
-          if (data.ok) { this.answered = data.answered; this.total = data.total; this.average = data.average; this.touched = true; }
+          if (data.ok) { this.answered = data.answered; this.total = data.total; this.average = data.average; this.categories = data.categories || []; this.touched = true; }
           else { Alpine.store('ui').notify('No se pudo guardar la respuesta.', 'error'); }
         } catch (e) { Alpine.store('ui').notify('Sin conexión. Reintenta en un momento.', 'warning'); }
         finally { this.saving = false; }

@@ -10,11 +10,12 @@ from apps.catalog.models import (
     Area,
     EvaluationPeriod,
     PillarWeight,
+    Position,
     Project,
     ProjectMembership,
     SeniorityLevel,
 )
-from apps.questionnaires.models import Question, QuestionnaireTemplate, Section
+from apps.questionnaires.models import Category, Question, QuestionnaireTemplate, Section, TemplateCategory
 
 User = get_user_model()
 
@@ -71,6 +72,27 @@ def project_indefinite(db, lead):
     )
 
 
+@pytest.fixture(autouse=True)
+def _clear_position_cache():
+    """La caché de puestos es de proceso; entre pruebas (con rollback) no debe filtrarse."""
+    from apps.core.services import positions
+
+    positions.invalidate()
+
+
+def make_general(template):
+    """Como en producción (spec 008): «General» al 100% y todas las preguntas de escala en ella;
+    más el puesto del área × nivel, que se exige al publicar."""
+    general, _ = Category.objects.get_or_create(code="general", defaults={"name": "General", "order": 0})
+    TemplateCategory.objects.get_or_create(template=template, category=general, defaults={"weight_pct": Decimal("100.0")})
+    Question.objects.filter(section__template=template, qtype="SCALE").update(category=general)
+    if template.area_id and template.level_id:
+        Position.objects.get_or_create(
+            area=template.area, level=template.level, defaults={"name": template.level.name}
+        )
+    return template
+
+
 @pytest.fixture
 def ownership_template(db, area, level_jr):
     """Plantilla de Ownership publicada con `make_questions` preguntas de escala."""
@@ -81,7 +103,7 @@ def ownership_template(db, area, level_jr):
     section = Section.objects.create(template=tpl, title="Checklist", order=1)
     for i in range(1, 11):
         Question.objects.create(section=section, order=i, title=f"P{i}", qtype="SCALE")
-    return tpl
+    return make_general(tpl)
 
 
 @pytest.fixture
@@ -112,7 +134,7 @@ def ownership_template_lead(db, area, level_lead):
     section = Section.objects.create(template=tpl, title="Checklist Lead", order=1)
     for i in range(1, 11):
         Question.objects.create(section=section, order=i, title=f"PL{i}", qtype="SCALE")
-    return tpl
+    return make_general(tpl)
 
 
 def make_membership(project, user, period=None):

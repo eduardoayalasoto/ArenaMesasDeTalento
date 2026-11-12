@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load core_extras %}
 {% block content %}
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-base-content">Cuestionarios</h2>
@@ -22,7 +23,7 @@
             <tr>
               <td class="px-4 py-3">
                 <p class="font-medium text-base-content">
-                  {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.name }} · {{ t.level.name }}{% else %}Entrega de Valor{% endif %}
+                  {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.name }} · {{ t|puesto_de }}{% else %}Entrega de Valor{% endif %}
                 </p>
               </td>
               <td class="px-4 py-3 text-center tabular-nums">v{{ t.version }}</td>

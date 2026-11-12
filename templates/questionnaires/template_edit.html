@@ -1,17 +1,21 @@
 {% extends "base.html" %}
-{% load callout_tags %}
+{% load callout_tags core_extras %}
 {% block content %}
+  <script src="{% static_v 'js/ownership_weights.js' %}"></script>
   <div class="flex flex-wrap items-start justify-between gap-3 mb-6">
     <div>
       <h2 class="text-xl font-semibold text-base-content">
-        {% if template.kind == 'OWNERSHIP' %}Ownership · {{ template.area.name }} · {{ template.level.name }}{% else %}Entrega de Valor{% endif %}
+        {% if template.kind == 'OWNERSHIP' %}Ownership · {{ template.area.name }} · {{ template|puesto_de }}{% else %}Entrega de Valor{% endif %}
       </h2>
       <p class="text-base-content/70">Versión {{ template.version }} · {% include "partials/status_badge.html" with status=template.status label=template.get_status_display %}</p>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2" x-data>
       {% if editable %}
         <form method="post"><input type="hidden" name="action" value="publish">{% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-primary">Publicar versión</button>
+          <button type="submit" class="btn btn-sm btn-primary"
+                  {% if weights_errors %}disabled title="Corrige los pesos y categorías antes de publicar"{% endif %}
+                  :disabled="$store.weights.blocked || {{ weights_errors|length }} > 0"
+                  :title="$store.weights.blocked ? 'Hay pesos que no suman 100%' : ''">Publicar versión</button>
         </form>
       {% else %}
         <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
@@ -45,6 +49,8 @@
     </div>
   </div>
 
+  {% if is_ownership %}{% include "questionnaires/_weights_panel.html" %}{% endif %}
+
   <!-- Secciones y preguntas -->
   {% for section in sections %}
     <section class="mb-8">
@@ -55,7 +61,7 @@
             <div x-show="!edit">
               <div class="flex items-start justify-between gap-3">
                 <div>
-                  <p class="font-medium text-base-content">{{ forloop.counter }}. {{ q.title }}</p>
+                  <p class="font-medium text-base-content">{{ forloop.counter }}. {{ q.title }}{% if q.category %} <span class="badge badge-ghost font-normal">{{ q.category.name }}</span>{% endif %}</p>
                   {% if q.text %}<p class="mt-1 text-base text-base-content/70 whitespace-pre-line">{{ q.text }}</p>{% endif %}
                   {% include "partials/_checklist_details.html" with question=q %}
                 </div>
@@ -74,6 +80,13 @@
               {% csrf_token %}<input type="hidden" name="action" value="save_question"><input type="hidden" name="question" value="{{ q.id }}">
               <div><label class="fieldset-legend" for="q{{ q.id }}-title">Título</label><input type="text" id="q{{ q.id }}-title" name="title" value="{{ q.title }}" maxlength="200" required class="input w-full"></div>
               <div><label class="fieldset-legend" for="q{{ q.id }}-text">Descripción</label><textarea id="q{{ q.id }}-text" name="text" rows="2" class="textarea w-full">{{ q.text }}</textarea></div>
+              {% if is_ownership %}
+              <div><label class="fieldset-legend" for="q{{ q.id }}-cat">Categoría</label>
+                <select id="q{{ q.id }}-cat" name="category" class="select w-full" required>
+                  <option value="">— Elige una categoría —</option>
+                  {% for c in category_choices %}<option value="{{ c.pk }}" {% if q.category_id == c.pk %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+                </select></div>
+              {% endif %}
               <div class="grid gap-3 md:grid-cols-2">
                 <div class="md:col-span-2"><label class="fieldset-legend" for="q{{ q.id }}-ac">Criterio de aceptación</label><textarea id="q{{ q.id }}-ac" name="acceptance_criteria" rows="3" class="textarea w-full">{{ q.acceptance_criteria }}</textarea></div>
                 <div><label class="fieldset-legend" for="q{{ q.id }}-del">Entregable</label><textarea id="q{{ q.id }}-del" name="deliverable" rows="2" class="textarea w-full">{{ q.deliverable }}</textarea></div>
@@ -94,6 +107,12 @@
         {% csrf_token %}<input type="hidden" name="action" value="add_question"><input type="hidden" name="section" value="{{ section.id }}">
         <p class="fieldset-legend">Agregar pregunta a esta sección</p>
         <input type="text" name="title" class="input w-full mb-2" placeholder="Título de la pregunta" maxlength="200" required>
+        {% if is_ownership %}
+        <select name="category" class="select w-full mb-2" aria-label="Categoría de la pregunta" required>
+          <option value="">— Elige una categoría —</option>
+          {% for c in category_choices %}<option value="{{ c.pk }}">{{ c.name }}</option>{% endfor %}
+        </select>
+        {% endif %}
         <textarea name="text" rows="2" class="textarea w-full mb-2" placeholder="Descripción (opcional)"></textarea>
         <label class="fieldset-legend" for="add-ac-{{ section.id }}">Criterio de aceptación (opcional)</label>
         <textarea id="add-ac-{{ section.id }}" name="acceptance_criteria" rows="2" class="textarea w-full"></textarea>
