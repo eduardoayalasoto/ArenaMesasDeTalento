@@ -51,6 +51,159 @@ def duplicate_as_new_version(template):
     return copy
 
 
+@transaction.atomic
+def create_template(kind, area=None, level=None):
+    """Crea un cuestionario nuevo (versión 1, BORRADOR) para un puesto que aún no tiene ninguno.
+
+    Ownership exige área y nivel; Entrega de Valor no lleva ninguno. La escala y su nota se copian
+    del cuestionario más reciente del mismo tipo (publicado si lo hay), para que nazca completo.
+    Si ya existe cualquier versión para ese puesto, se rechaza: se debe versionar el existente.
+    """
+    from apps.questionnaires.models import (
+        Category,
+        QuestionnaireTemplate,
+        ScaleOption,
+        Section,
+        TemplateCategory,
+    )
+
+    Kind = QuestionnaireTemplate.Kind
+    if kind == Kind.OWNERSHIP:
+        if area is None or level is None:
+            raise ValidationError("Elige el área y el nivel del cuestionario de Ownership.")
+    elif kind == Kind.VALUE_DELIVERY:
+        area = level = None
+    else:
+        raise ValidationError("Elige el tipo de cuestionario.")
+
+    if QuestionnaireTemplate.objects.filter(kind=kind, area=area, level=level).exists():
+        raise ValidationError(
+            "Ya existe un cuestionario para ese puesto: ábrelo y crea una nueva versión para editarlo."
+        )
+
+    with_scale = QuestionnaireTemplate.objects.filter(kind=kind, scale_options__isnull=False).distinct()
+    source = (
+        with_scale.filter(status=QuestionnaireTemplate.Status.PUBLICADO).order_by("-version", "-pk").first()
+        or with_scale.order_by("-version", "-pk").first()
+    )
+    template = QuestionnaireTemplate.objects.create(
+        kind=kind, area=area, level=level, version=1,
+        status=QuestionnaireTemplate.Status.BORRADOR,
+        scale_note=source.scale_note if source else "",
+    )
+    if source:
+        ScaleOption.objects.bulk_create([
+            ScaleOption(template=template, value=o.value, label=o.label,
+                        description=o.description, order=o.order)
+            for o in source.scale_options.filter(question__isnull=True).order_by("order")
+        ])
+    if kind == Kind.OWNERSHIP:
+        general, _ = Category.objects.get_or_create(
+            code=Category.GENERAL_CODE, defaults={"name": "General", "order": 0},
+        )
+        TemplateCategory.objects.create(template=template, category=general, weight_pct=100)
+    Section.objects.create(
+        template=template, order=1,
+        title="Criterios" if kind == Kind.VALUE_DELIVERY else "Preguntas",
+    )
+    return template
+
+
+def delete_draft(template):
+    """Descarta un BORRADOR completo (secciones, preguntas, escala y pesos). Nunca uno publicado."""
+    from django.db.models import ProtectedError
+
+    from apps.questionnaires.models import QuestionnaireTemplate
+
+    if template.status != QuestionnaireTemplate.Status.BORRADOR:
+        raise ValidationError("Solo se puede descartar un borrador; los publicados y archivados se conservan.")
+    try:
+        template.delete()
+    except ProtectedError:
+        raise ValidationError("Este borrador ya tiene información ligada y no se puede eliminar.") from None
+
+
+# --- Secciones --------------------------------------------------------------
+
+def add_section(template, title):
+    from apps.questionnaires.models import Section
+
+    last = template.sections.order_by("-order").values_list("order", flat=True).first() or 0
+    return Section.objects.create(template=template, title=title, order=last + 1)
+
+
+def rename_section(section, title):
+    section.title = title
+    section.save(update_fields=["title"])
+    return section
+
+
+def delete_section(section):
+    """Elimina una sección solo si está vacía: nunca borra preguntas por arrastre."""
+    if section.questions.exists():
+        raise ValidationError(
+            "La sección tiene preguntas; muévelas a otra sección o elimínalas antes de quitarla."
+        )
+    section.delete()
+
+
+def move_section(template, section_id, direction):
+    """Intercambia el orden de una sección con su vecina (arriba/abajo)."""
+    from apps.questionnaires.models import Section
+
+    siblings = list(template.sections.order_by("order", "pk"))
+    ids = [s.pk for s in siblings]
+    if int(section_id) not in ids:
+        raise ValidationError("La sección no pertenece a este cuestionario.")
+    idx = ids.index(int(section_id))
+    swap = idx - 1 if direction == "up" else idx + 1
+    if 0 <= swap < len(siblings):
+        # Renumera de forma contigua para que dos secciones con el mismo orden nunca queden empatadas.
+        siblings[idx], siblings[swap] = siblings[swap], siblings[idx]
+        for order, section in enumerate(siblings, start=1):
+            section.order = order
+        Section.objects.bulk_update(siblings, ["order"])
+
+
+# --- Escala de respuestas ---------------------------------------------------
+
+def save_scale_option(template, *, value, label, description="", option=None):
+    """Crea o actualiza una opción de la escala del cuestionario (value None = N/A)."""
+    from apps.questionnaires.models import ScaleOption
+
+    if option is not None:
+        option.value, option.label, option.description = value, label, description
+        option.save(update_fields=["value", "label", "description"])
+        return option
+    last = (
+        template.scale_options.filter(question__isnull=True)
+        .order_by("-order").values_list("order", flat=True).first() or 0
+    )
+    return ScaleOption.objects.create(
+        template=template, value=value, label=label, description=description, order=last + 1,
+    )
+
+
+def delete_scale_option(option):
+    option.delete()
+
+
+def move_scale_option(template, option_id, direction):
+    from apps.questionnaires.models import ScaleOption
+
+    options = list(template.scale_options.filter(question__isnull=True).order_by("order", "pk"))
+    ids = [o.pk for o in options]
+    if int(option_id) not in ids:
+        raise ValidationError("La opción no pertenece a este cuestionario.")
+    idx = ids.index(int(option_id))
+    swap = idx - 1 if direction == "up" else idx + 1
+    if 0 <= swap < len(options):
+        options[idx], options[swap] = options[swap], options[idx]
+        for order, option in enumerate(options, start=1):
+            option.order = order
+        ScaleOption.objects.bulk_update(options, ["order"])
+
+
 def validate_for_publish(template):
     """Errores (en español) que impiden publicar: sin reactivos de escala, títulos repetidos o sin escala."""
     from collections import Counter

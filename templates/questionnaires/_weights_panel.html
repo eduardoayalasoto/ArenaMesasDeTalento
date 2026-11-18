@@ -97,7 +97,7 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
 
       <div x-show="open" x-cloak class="mt-3">
         <form method="post"
-              x-data="weightGroup('cat-{{ g.link.pk }}', [{% for row in g.questions %}'{{ row.value }}'{% if not forloop.last %}, {% endif %}{% endfor %}])">
+              x-data="weightGroup('cat-{{ g.link.pk }}', [{% for row in g.questions %}'{{ row.value }}'{% if not forloop.last %}, {% endif %}{% endfor %}], true)">
           {% csrf_token %}<input type="hidden" name="action" value="save_question_weights"><input type="hidden" name="link" value="{{ g.link.pk }}">
           <div class="overflow-x-auto">
             <table class="table">
@@ -123,8 +123,9 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
             <div class="mt-3 flex flex-wrap items-center gap-3" role="status" aria-live="polite">
               <span class="badge badge-success" x-show="ok" x-cloak>Suma 100.0%</span>
               <span class="badge badge-warning" x-show="!ok" x-cloak>
-                <span x-show="!hasInvalid">Suma actual <span x-text="totalLabel"></span>% — debe llegar a 100% (<span x-text="gapLabel"></span>)</span>
-                <span x-show="hasInvalid">Revisa los pesos: usa números de 0 a 100 con un solo decimal</span>
+                <span x-show="hasZero">Toda pregunta debe pesar más de 0%: una pregunta en 0% no participa en el score</span>
+                <span x-show="!hasZero && !hasInvalid">Suma actual <span x-text="totalLabel"></span>% — debe llegar a 100% (<span x-text="gapLabel"></span>)</span>
+                <span x-show="!hasZero && hasInvalid">Revisa los pesos: usa números de 0 a 100 con un solo decimal</span>
               </span>
               <button type="button" class="btn btn-ghost btn-sm" @click="equalize()">Repartir en partes iguales</button>
               <button type="submit" class="btn btn-primary btn-sm" :disabled="!ok">Guardar pesos</button>
@@ -132,7 +133,7 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
                 <button type="submit" name="action" value="clear_question_weights" class="btn btn-outline btn-sm">Volver a partes iguales</button>
               {% endif %}
             </div>
-            <p class="label mt-2">Un peso de 0 significa que la pregunta se califica pero no pondera en el score.</p>
+            <p class="label mt-2">Toda pregunta de la categoría debe pesar más de 0% para participar en el score.</p>
           {% endif %}
         </form>
       </div>

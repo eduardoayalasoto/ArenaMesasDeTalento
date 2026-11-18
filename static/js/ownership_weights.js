@@ -5,7 +5,8 @@ document.addEventListener('alpine:init', () => {
     invalid: {},
     get blocked() { return Object.values(this.invalid).some(Boolean); },
   });
-  Alpine.data('weightGroup', (gid, initial) => ({
+  // positive = true (preguntas de una categoría): ningún peso puede ser 0; una pregunta en 0% no participa en el score.
+  Alpine.data('weightGroup', (gid, initial, positive = false) => ({
     gid,
     vals: initial,
     parse(v) {
@@ -15,8 +16,9 @@ document.addEventListener('alpine:init', () => {
       return t > 1000 ? null : t;
     },
     get hasInvalid() { return this.vals.some(v => this.parse(v) === null); },
+    get hasZero() { return positive && this.vals.some(v => this.parse(v) === 0); },
     get total() { return this.vals.reduce((a, v) => a + (this.parse(v) ?? 0), 0); },
-    get ok() { return this.vals.length > 0 && !this.hasInvalid && this.total === 1000; },
+    get ok() { return this.vals.length > 0 && !this.hasInvalid && !this.hasZero && this.total === 1000; },
     get totalLabel() { return (this.total / 10).toFixed(1); },
     get gapLabel() {
       const gap = Math.abs(1000 - this.total) / 10;

@@ -59,14 +59,15 @@ def _matrix_rows():
 @pytest.mark.django_db
 def test_cons_import_builds_four_weighted_questionnaires(cons, collaborator, period, project_finite):
     area, levels = cons
-    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, publish=True, dry_run=True, stdout=StringIO())
+    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, dry_run=True, stdout=StringIO())
     assert not T.objects.filter(area=area).exists()
 
+    # Se importan como BORRADOR: el YAML aún trae competencias en 0% y publicar las rechaza (ver abajo).
     out = StringIO()
-    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, publish=True, stdout=out)
+    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, stdout=out)
     templates = {t.level.code: t for t in T.objects.filter(area=area).select_related("level")}
     assert set(templates) == {"JR", "MID", "SNR", "LEAD"}
-    assert all(t.version == 1 and t.status == T.Status.PUBLICADO for t in templates.values())
+    assert all(t.version == 1 and t.status == T.Status.BORRADOR for t in templates.values())
 
     for code, template in templates.items():
         links = {l.category.code: str(l.weight_pct) for l in template.template_categories.select_related("category")}
@@ -93,10 +94,12 @@ def test_cons_import_builds_four_weighted_questionnaires(cons, collaborator, per
 
     # Idempotente.
     before = (T.objects.count(), Question.objects.count())
-    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, publish=True, stdout=StringIO())
+    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, stdout=StringIO())
     assert (T.objects.count(), Question.objects.count()) == before
 
     # A un Analista de CONS se le asigna el cuestionario de su puesto; el Gerente (LEAD) sigue siendo Lead.
+    # La asignación solo ve cuestionarios publicados; se simula el estado ya publicado de producción.
+    T.objects.filter(area=area).update(status=T.Status.PUBLICADO)
     collaborator.area, collaborator.level = area, levels["JR"]
     collaborator.save()
     assert ownership_flow.resolve_ownership_template(collaborator) == templates["JR"]
@@ -118,7 +121,7 @@ def test_cons_score_matches_the_original_matrix(cons, collaborator, period, proj
     redistribuyen dentro de su categoría (ver test_scoring_weighted).
     """
     area, levels = cons
-    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, publish=True, stdout=StringIO())
+    call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, stdout=StringIO())
     originals = _matrix_rows()
     rng = random.Random(2026)
     for code, template in {t.level.code: t for t in T.objects.filter(area=area).select_related("level")}.items():
@@ -138,6 +141,18 @@ def test_cons_score_matches_the_original_matrix(cons, collaborator, period, proj
             if expected is not None:
                 assert abs(float(got) - expected) <= 0.011, (code, got, expected)
             evaluation.delete()
+
+
+@pytest.mark.django_db
+def test_cons_cannot_be_published_while_competencies_weigh_zero(cons):
+    """Toda pregunta de una categoría debe pesar más de 0%: el YAML actual (que replica el Excel con
+    IA como productividad, Disciplina de forma de trabajo y Apego en 0%) no se puede publicar."""
+    area, _levels = cons
+    with pytest.raises(CommandError, match="peso 0%") as exc:
+        call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, publish=True, stdout=StringIO())
+    for title in ("IA como productividad", "Disciplina de forma de trabajo", "Apego a los valores de Arena Analytics"):
+        assert title in str(exc.value)
+    assert not T.objects.filter(area=area, status=T.Status.PUBLICADO).exists()
 
 
 @pytest.mark.django_db

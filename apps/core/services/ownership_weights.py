@@ -127,6 +127,8 @@ def validate_template_weights(template) -> list[str]:
     for link in links:
         group = [q for q in questions if q.category_id == link.category_id]
         name = link.category.name
+        if link.weight_pct <= 0:
+            errors.append(f"La categoría «{name}» pesa 0%: dale peso o quítala del cuestionario.")
         if link.weight_pct > 0 and not group:
             errors.append(f"La categoría «{name}» pesa {link.weight_pct}% pero no tiene preguntas.")
             continue
@@ -138,14 +140,22 @@ def validate_template_weights(template) -> list[str]:
             )
             continue
         if defined:
+            zero_titles = [q.title for q in group if q.weight_pct == 0]
+            if zero_titles:
+                errors.append(zero_weight_error(name, zero_titles))
             error = group_error(f"Preguntas de {name}", defined)
             if error:
                 errors.append(error)
-            elif link.weight_pct > 0 and not any(w > 0 for w in defined):
-                errors.append(
-                    f"La categoría «{name}» pesa {link.weight_pct}% pero todas sus preguntas pesan 0."
-                )
     return errors
+
+
+def zero_weight_error(category_name: str, titles) -> str:
+    """Toda pregunta de una categoría debe pesar más de 0%: una en 0% no participa en el score."""
+    listed = ", ".join(f"«{t}»" for t in titles)
+    return (
+        f"En «{category_name}» hay preguntas con peso 0%: {listed}. Toda pregunta debe pesar más de 0% "
+        "para participar en el score."
+    )
 
 
 def editor_groups(template) -> list[dict]:

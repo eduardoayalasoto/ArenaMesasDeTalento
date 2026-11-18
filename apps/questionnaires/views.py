@@ -8,14 +8,31 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from apps.core.services import ownership_weights
 from apps.core.services import questionnaire_editor as editor
 
-from .forms import QuestionForm, WeightsForm
-from .models import Category, Question, QuestionnaireTemplate, Section, TemplateCategory
+from .forms import QuestionForm, ScaleOptionForm, SectionForm, TemplateCreateForm, WeightsForm
+from .models import Category, Question, QuestionnaireTemplate, ScaleOption, Section, TemplateCategory
 from apps.access import services as access
 from apps.access.decorators import requires
+
+
+def _list_context(request, create_form=None):
+    templates = list(
+        QuestionnaireTemplate.objects.select_related("area", "level")
+        .order_by("kind", "area__code", "level__order", "-version")
+    )
+    Kind = QuestionnaireTemplate.Kind
+    return {
+        "page_title": "Cuestionarios",
+        "templates": templates,
+        "ownership_count": sum(1 for t in templates if t.kind == Kind.OWNERSHIP and t.is_published),
+        "value_delivery_count": sum(1 for t in templates if t.kind == Kind.VALUE_DELIVERY and t.is_published),
+        "draft_count": sum(1 for t in templates if t.status == QuestionnaireTemplate.Status.BORRADOR),
+        "create_form": create_form or TemplateCreateForm(),
+    }
 
 
 @login_required
@@ -28,14 +45,29 @@ def admin_list(request):
             "mensaje": "Solo Talento y Cultura administra los cuestionarios.",
         }, status=403)
 
-    templates = (
-        QuestionnaireTemplate.objects.select_related("area", "level")
-        .order_by("kind", "area__code", "level__order", "-version")
-    )
-    return render(request, "questionnaires/admin_list.html", {
-        "page_title": "Cuestionarios",
-        "templates": templates,
-    })
+    return render(request, "questionnaires/admin_list.html", _list_context(request))
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def template_create(request):
+    """Crea un cuestionario nuevo en BORRADOR para un puesto que todavía no tiene ninguno."""
+    form = TemplateCreateForm(request.POST)
+    if form.is_valid():
+        position = form.cleaned_data["position"]
+        try:
+            template = editor.create_template(
+                form.cleaned_data["kind"],
+                area=position.area if position else None,
+                level=position.level if position else None,
+            )
+        except ValidationError as exc:
+            form.add_error(None, " ".join(exc.messages))
+        else:
+            messages.success(request, "Creé el cuestionario en borrador. Agrega sus preguntas y publícalo cuando esté listo.")
+            return redirect("questionnaires:template_edit", pk=template.pk)
+    return render(request, "questionnaires/admin_list.html", _list_context(request, create_form=form), status=400)
 
 
 @login_required
@@ -80,9 +112,14 @@ def template_edit(request, pk):
 
         elif action == "save_question":
             q = get_object_or_404(Question, pk=request.POST.get("question"), section__template=template)
+            previous_section = q.section_id
             form = QuestionForm(request.POST, instance=q, template=template)
             if form.is_valid():
-                form.save()
+                question = form.save(commit=False)
+                if question.section_id != previous_section:
+                    # Al cambiar de sección entra al final de la nueva.
+                    question.order = question.section.questions.count() + 1
+                question.save()
                 messages.success(request, "Guardé la pregunta.")
             else:
                 messages.error(request, _form_errors(form))
@@ -100,17 +137,22 @@ def template_edit(request, pk):
                 ).exists():
                     q.weight_pct = Decimal("0.0")
                 q.save()
-                messages.success(request, "Agregué la pregunta.")
+                if q.weight_pct == 0:
+                    messages.warning(
+                        request,
+                        "Agregué la pregunta con peso 0%. Reparte los pesos de su categoría: "
+                        "no se puede publicar con preguntas en 0%.",
+                    )
+                else:
+                    messages.success(request, "Agregué la pregunta.")
             else:
                 messages.error(request, _form_errors(form))
 
         elif action in _WEIGHT_ACTIONS:
             _WEIGHT_ACTIONS[action](request, template)
 
-        elif action == "delete_question":
-            q = get_object_or_404(Question, pk=request.POST.get("question"), section__template=template)
-            q.delete()
-            messages.info(request, "Eliminé la pregunta.")
+        elif action in _STRUCTURE_ACTIONS:
+            _STRUCTURE_ACTIONS[action](request, template)
 
         elif action == "move_question":
             _move_question(template, request.POST.get("question"), request.POST.get("dir"))
@@ -129,7 +171,9 @@ def template_edit(request, pk):
         "page_title": "Editar cuestionario",
         "template": template,
         "sections": sections,
+        "section_choices": list(template.sections.order_by("order")),
         "scale": scale,
+        "scale_form": ScaleOptionForm(template=template),
         "editable": editable,
         "is_ownership": is_ownership,
         "weight_groups": weight_groups,
@@ -204,7 +248,8 @@ def _save_question_weights(request, template):
     link, questions = _category_questions(request, template)
     form = WeightsForm(
         request.POST, ids=[q.pk for q in questions], field_prefix="q_",
-        label=f"Preguntas de {link.category.name}",
+        label=f"Preguntas de {link.category.name}", positive_for=link.category.name,
+        titles={q.pk: q.title for q in questions},
     )
     if not questions or not form.is_valid():
         messages.error(request, _form_errors(form) if questions else "La categoría no tiene preguntas.")
@@ -229,3 +274,129 @@ _WEIGHT_ACTIONS = {
     "save_question_weights": _save_question_weights,
     "clear_question_weights": _clear_question_weights,
 }
+
+
+# --- Secciones y escala de respuestas ----------------------------------------
+
+def _add_section(request, template):
+    form = SectionForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, _form_errors(form))
+        return
+    editor.add_section(template, form.cleaned_data["title"])
+    messages.success(request, "Agregué la sección.")
+
+
+def _rename_section(request, template):
+    section = get_object_or_404(Section, pk=request.POST.get("section"), template=template)
+    form = SectionForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, _form_errors(form))
+        return
+    editor.rename_section(section, form.cleaned_data["title"])
+    messages.success(request, "Guardé el título de la sección.")
+
+
+def _move_section(request, template):
+    try:
+        editor.move_section(template, request.POST.get("section") or 0, request.POST.get("dir"))
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+
+
+def _scale_option_from_post(request, template):
+    pk = request.POST.get("option")
+    if not pk:
+        return None
+    return get_object_or_404(ScaleOption, pk=pk, template=template, question__isnull=True)
+
+
+def _save_scale_option(request, template):
+    option = _scale_option_from_post(request, template)
+    form = ScaleOptionForm(request.POST, template=template, option=option)
+    if not form.is_valid():
+        messages.error(request, _form_errors(form))
+        return
+    editor.save_scale_option(template, option=option, **form.cleaned_data)
+    messages.success(request, "Guardé la opción de la escala." if option else "Agregué la opción a la escala.")
+
+
+def _move_scale_option(request, template):
+    try:
+        editor.move_scale_option(template, request.POST.get("option") or 0, request.POST.get("dir"))
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+
+
+_STRUCTURE_ACTIONS = {
+    "add_section": _add_section,
+    "rename_section": _rename_section,
+    "move_section": _move_section,
+    "save_scale_option": _save_scale_option,
+    "move_scale_option": _move_scale_option,
+}
+
+
+# --- Borrados con confirmación en modal (POST simple, solo sobre BORRADOR) ----
+
+def _is_draft(request, template):
+    if template.status != QuestionnaireTemplate.Status.BORRADOR:
+        messages.error(request, "Este cuestionario está publicado: crea una nueva versión para editarlo.")
+        return False
+    return True
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def question_delete(request, pk):
+    question = get_object_or_404(Question.objects.select_related("section__template"), pk=pk)
+    template = question.section.template
+    if _is_draft(request, template):
+        question.delete()
+        messages.info(request, "Eliminé la pregunta. Revisa que los pesos sigan sumando 100%.")
+    return redirect("questionnaires:template_edit", pk=template.pk)
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def section_delete(request, pk):
+    section = get_object_or_404(Section.objects.select_related("template"), pk=pk)
+    template = section.template
+    if _is_draft(request, template):
+        try:
+            editor.delete_section(section)
+        except ValidationError as exc:
+            messages.error(request, " ".join(exc.messages))
+        else:
+            messages.info(request, "Eliminé la sección.")
+    return redirect("questionnaires:template_edit", pk=template.pk)
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def scale_option_delete(request, pk):
+    option = get_object_or_404(
+        ScaleOption.objects.select_related("template"), pk=pk, template__isnull=False, question__isnull=True,
+    )
+    template = option.template
+    if _is_draft(request, template):
+        editor.delete_scale_option(option)
+        messages.info(request, "Eliminé la opción de la escala.")
+    return redirect("questionnaires:template_edit", pk=template.pk)
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def template_delete(request, pk):
+    template = get_object_or_404(QuestionnaireTemplate, pk=pk)
+    try:
+        editor.delete_draft(template)
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+        return redirect("questionnaires:template_edit", pk=template.pk)
+    messages.info(request, "Descarté el borrador.")
+    return redirect("questionnaires:admin_list")

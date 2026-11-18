@@ -3,8 +3,50 @@
 {% block content %}
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-base-content">Cuestionarios</h2>
-    <p class="text-base-content/70">16 de Ownership (por área y nivel) + 1 de Entrega de Valor. Los publicados son de solo lectura; crea una versión para editar.</p>
+    <p class="text-base-content/70">
+      {{ ownership_count }} de Ownership publicados (por puesto) + {{ value_delivery_count }} de Entrega de Valor{% if draft_count %} · {{ draft_count }} borrador{{ draft_count|pluralize:"es" }} en edición{% endif %}.
+      Los publicados son de solo lectura; crea una versión para editar.
+    </p>
   </div>
+
+  <!-- Alta de un cuestionario nuevo -->
+  <form method="post" action="{% url 'questionnaires:template_create' %}"
+        class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mb-6"
+        x-data="{ kind: '{{ create_form.kind.value|default:'OWNERSHIP' }}' }">
+    {% csrf_token %}
+    <h3 class="font-semibold text-base-content">Nuevo cuestionario</h3>
+    <p class="text-base text-base-content/75 mt-1">
+      Nace como borrador con la escala del cuestionario vigente; después agregas secciones, preguntas y pesos.
+      Para un puesto que ya tiene cuestionario, ábrelo y crea una nueva versión.
+    </p>
+
+    {% if create_form.non_field_errors %}
+      <p class="mt-3 text-base text-error" role="alert">{{ create_form.non_field_errors|join:" " }}</p>
+    {% endif %}
+
+    <div class="mt-4 flex flex-wrap items-end gap-3">
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend"><label for="new-template-kind">Tipo</label></legend>
+        <select id="new-template-kind" name="kind" x-model="kind" class="select w-56">
+          <option value="OWNERSHIP">Ownership</option>
+          <option value="VALUE_DELIVERY">Entrega de Valor</option>
+        </select>
+        {% if create_form.kind.errors %}<p class="label text-error">{{ create_form.kind.errors|join:", " }}</p>{% endif %}
+      </fieldset>
+
+      <fieldset class="fieldset w-72" x-show="kind === 'OWNERSHIP'">
+        <legend class="fieldset-legend"><label for="{{ create_form.position.id_for_label }}">Puesto</label></legend>
+        {{ create_form.position }}
+        {% if create_form.position.errors %}<p class="label text-error">{{ create_form.position.errors|join:", " }}</p>{% endif %}
+      </fieldset>
+
+      <button type="submit" class="btn btn-primary">Crear cuestionario</button>
+    </div>
+    <p class="label mt-2" x-show="kind === 'OWNERSHIP'">
+      Solo aparecen los puestos activos que aún no tienen cuestionario. Para sumar uno nuevo, dalo de alta en
+      <a href="{% url 'catalog:position_admin' %}" class="link">Catálogos → Puestos</a>.
+    </p>
+  </form>
 
   <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
@@ -30,9 +72,19 @@
               <td class="px-4 py-3 text-center tabular-nums">{{ t.question_count }}</td>
               <td class="px-4 py-3">{% include "partials/status_badge.html" with status=t.status label=t.get_status_display %}</td>
               <td class="px-4 py-3 text-right">
-                <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-soft btn-primary">
-                  {% if t.status == 'BORRADOR' %}Editar{% else %}Ver{% endif %}
-                </a>
+                <div class="flex items-center justify-end gap-1">
+                  <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-soft btn-primary">
+                    {% if t.status == 'BORRADOR' %}Editar{% else %}Ver{% endif %}
+                  </a>
+                  {% if t.status == 'BORRADOR' %}
+                    {% with pk_s=t.pk|stringformat:"s" %}
+                      {% with cid="discard-template-"|add:pk_s %}
+                        {% url 'questionnaires:template_delete' pk=t.pk as discard_url %}
+                        {% include "components/_confirm.html" with confirm_id=cid title="Descartar borrador" message="Se elimina este borrador con todo su contenido. No afecta a las versiones publicadas." confirm_url=discard_url trigger_aria="Descartar borrador" confirm_label="Descartar" %}
+                      {% endwith %}
+                    {% endwith %}
+                  {% endif %}
+                </div>
               </td>
             </tr>
           {% endfor %}

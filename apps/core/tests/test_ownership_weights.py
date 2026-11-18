@@ -68,15 +68,26 @@ def test_validate_template_weights_scenarios(draft):
     qa2.save()
     assert "suman 99.9%" in " ".join(w.validate_template_weights(draft))
 
-    # Categoría con peso pero todas sus preguntas en 0.
+    # Una pregunta en 0% no participa en el score: toda pregunta de la categoría debe pesar más de 0%.
     qa1.weight_pct, qa2.weight_pct = Decimal("0.0"), Decimal("100.0")
     qa1.save(); qa2.save()
-    assert w.validate_template_weights(draft) == []
+    errors = w.validate_template_weights(draft)
+    assert len(errors) == 1 and "peso 0%" in errors[0] and "«Q1»" in errors[0] and "«Q2»" not in errors[0]
     qa2.weight_pct, qa1.weight_pct = Decimal("0.0"), Decimal("0.0")
     qa1.save(); qa2.save()
-    assert "suman 0.0%" in " ".join(w.validate_template_weights(draft))
+    errors = " ".join(w.validate_template_weights(draft))
+    assert "«Q1», «Q2»" in errors and "suman 0.0%" in errors
     qa1.weight_pct = qa2.weight_pct = None
     qa1.save(); qa2.save()
+
+    # Una categoría completa en 0% tampoco cuenta: se le da peso o se quita.
+    link_b = draft.template_categories.get(category__code="b")
+    link_a = draft.template_categories.get(category__code="a")
+    link_a.weight_pct, link_b.weight_pct = Decimal("100.0"), Decimal("0.0")
+    link_a.save(); link_b.save()
+    assert "«B» pesa 0%" in " ".join(w.validate_template_weights(draft))
+    link_a.weight_pct, link_b.weight_pct = Decimal("60.0"), Decimal("40.0")
+    link_a.save(); link_b.save()
 
     # Pregunta sin categoría y categoría con peso pero sin preguntas.
     Question.objects.filter(category__code="b").update(category=None)
