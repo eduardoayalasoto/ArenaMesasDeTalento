@@ -44,7 +44,11 @@ def user_position_name(user) -> str:
     return position_name(user.area_id, user.level_id, fallback=level.name)
 
 
-CONS_NAMES = {"JR": "Analista", "MID": "Consultor", "SNR": "Consultor Sr", "LEAD": "Gerente"}
+# Cargo (posición) por área; el nivel (Jr/Mid/Snr/Lead) va aparte. Spec 009.
+DEFAULT_CARGOS = {
+    "CD": "Científico de Datos", "CONS": "Consultor", "ID": "Ingeniero de Datos",
+    "PM": "Project Manager", "UXUI": "Diseñador UX/UI",
+}
 
 
 def ensure_default_positions() -> int:
@@ -58,7 +62,7 @@ def ensure_default_positions() -> int:
     created = 0
     for area in Area.objects.all():
         for level in levels:
-            name = CONS_NAMES.get(level.code, level.name) if area.code == "CONS" else level.name
+            name = DEFAULT_CARGOS.get(area.code, area.name)
             _, was_created = Position.objects.get_or_create(area=area, level=level, defaults={"name": name})
             created += was_created
     return created

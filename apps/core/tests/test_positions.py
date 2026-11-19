@@ -47,14 +47,14 @@ def test_positions_catalog_names_cache_and_validation(ladder, client, talento):
                                     area=areas["CONS"], level=levels["JR"])
     pm = User.objects.create_user(email="p1@arena-analytics.com", password=None, full_name="P Uno",
                                   area=areas["PM"], level=levels["JR"])
-    assert [puesto(cons), puesto(pm)] == ["Analista", "Junior"]
+    assert [puesto(cons), puesto(pm)] == ["Consultor · Junior", "Project Manager · Junior"]
     gerente = User(area=areas["CONS"], level=levels["LEAD"])
-    assert puesto(gerente) == "Gerente" and puesto(User(area=None, level=None)) == ""
+    assert puesto(gerente) == "Consultor · Lead" and puesto(User(area=None, level=None)) == ""
 
     # Renombrar invalida la caché y no toca la ponderación de pilares del nivel global.
     Position.objects.filter(area=areas["CONS"], level=levels["JR"]).update(name="Analista Jr")
     positions.invalidate()
-    assert puesto(cons) == "Analista Jr"
+    assert puesto(cons) == "Analista Jr · Junior"
     assert PillarWeight.objects.get(level=levels["JR"]).w_ownership == Decimal("0.60")
 
     # Sin puesto en el catálogo se muestra el nivel; con puesto inactivo la combinación no está definida.
@@ -70,7 +70,7 @@ def test_positions_catalog_names_cache_and_validation(ladder, client, talento):
     from apps.questionnaires.models import QuestionnaireTemplate
 
     template = QuestionnaireTemplate(kind="OWNERSHIP", area=areas["CONS"], level=levels["MID"])
-    assert puesto_de(template) == "Consultor"
+    assert puesto_de(template) == "Consultor · Mid"
 
     # Pantalla: Talento renombra un puesto y crea uno que faltaba; las combinaciones no definidas se avisan.
     client.force_login(talento)

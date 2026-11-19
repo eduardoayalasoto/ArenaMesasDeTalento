@@ -147,12 +147,19 @@ def tag_color_swatches():
     return [(value, label, Tag.COLOR_SWATCH_CLASSES[value]) for value, label in Tag.COLOR_CHOICES]
 
 
+def _cargo_nivel(name, level):
+    """«Cargo · Nivel»; si el nombre es el del propio nivel (sin cargo definido), solo el nivel."""
+    if not name or level is None or name == level.name:
+        return name
+    return f"{name} · {level.name}"
+
+
 @register.filter
 def puesto(user):
     """Puesto visible de una persona (catálogo de Puestos; sin él, el nombre de su nivel). Spec 008."""
     from apps.core.services import positions
 
-    return positions.user_position_name(user) if user is not None else ""
+    return _cargo_nivel(positions.user_position_name(user), getattr(user, "level", None)) if user is not None else ""
 
 
 @register.filter
@@ -162,4 +169,4 @@ def puesto_de(obj):
 
     if obj is None or not getattr(obj, "level_id", None):
         return ""
-    return positions.position_name(obj.area_id, obj.level_id, fallback=obj.level.name)
+    return _cargo_nivel(positions.position_name(obj.area_id, obj.level_id, fallback=obj.level.name), obj.level)
