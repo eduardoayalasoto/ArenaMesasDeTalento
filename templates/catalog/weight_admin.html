@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block content %}
+  <script src="{% static_v 'js/ownership_weights.js' %}"></script>
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold text-base-content">Ponderación de pilares</h2>
+    <p class="text-base-content/75">
+      Cómo pesan Ownership, Entrega de Valor e Impacto Arena en la calificación final, por área, posición y nivel.
+      Una posición sin ponderación propia usa la de su nivel. Cuando ya hay calificaciones finales de esa posición,
+      su ponderación se bloquea.
+    </p>
+  </div>
+
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto"
+       x-data="{ q: '' }">
+    <div class="p-4 border-b border-base-200">
+      <label class="sr-only" for="weight-filter">Buscar posición</label>
+      <input id="weight-filter" type="search" x-model="q" class="input w-72" placeholder="Buscar área, posición o nivel">
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Área</th><th>Posición</th><th>Nivel</th>
+          <th class="text-right">Ownership</th><th class="text-right">Entrega de Valor</th><th class="text-right">Impacto Arena</th>
+          <th>Origen</th><th class="text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
+            <td>{{ r.position.area.name }}</td>
+            <td class="font-medium text-base-content">{{ r.position.name }}</td>
+            <td>{{ r.position.level.name }}</td>
+            <td class="text-right tabular-nums">{{ r.ownership }}%</td>
+            <td class="text-right tabular-nums">{{ r.value_delivery }}%</td>
+            <td class="text-right tabular-nums">{{ r.arena_impact }}%</td>
+            <td>
+              {% if r.own %}<span class="badge badge-soft badge-primary">Propia</span>
+              {% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}
+              {% if r.locked %}<span class="badge badge-soft badge-warning">Bloqueada</span>{% endif %}
+            </td>
+            <td class="text-right">
+              <button type="button" class="btn btn-sm btn-soft btn-primary"
+                      data-id="{{ r.position.pk }}" data-label="{{ r.position.area.name }} · {{ r.position.name }} · {{ r.position.level.name }}"
+                      data-own="{{ r.own|yesno:'1,' }}" data-locked="{{ r.locked|yesno:'1,' }}"
+                      data-ownership="{{ r.ownership }}" data-vd="{{ r.value_delivery }}" data-arena="{{ r.arena_impact }}"
+                      @click="$dispatch('edit-weight', $el.dataset); $dispatch('open-weight-drawer')">
+                {% if r.locked %}Ver{% else %}Editar{% endif %}
+              </button>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="8" class="text-base-content/75">No hay posiciones. Créalas en Catálogos → Posiciones.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include "components/_drawer.html" with id="weight-drawer" title="Ponderación de pilares" open_event="open-weight-drawer" close_event="close-weight-drawer" body_id="weight-drawer-body" width_class="w-3/4 max-w-none" body_template="catalog/_weight_drawer_form.html" %}
+{% endblock %}

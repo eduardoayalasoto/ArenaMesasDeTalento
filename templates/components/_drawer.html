@@ -16,6 +16,8 @@ plantilla que lo usa. Se abre/cierra con eventos `window`:
 
 Uso: {% include "components/_drawer.html" with id="deal-drawer" title="Editar Deal" open_event="open-deal-drawer" close_event="close-deal-drawer" body_id="deal-drawer-body" %}
 
+`width_class` (opcional): ancho del panel; los CRUD usan "w-3/4 max-w-none" (3/4 de pantalla).
+
 `body_template` (opcional): ruta de un template a incluir en el body en
 vez del spinner por default, para contenido estático/Alpine-driven que
 no necesita `hx-get`.
@@ -24,7 +26,7 @@ no necesita `hx-get`.
      @{{ open_event }}.window="$refs.dialog.showModal()"
      @{{ close_event }}.window="$refs.dialog.close()">
   <dialog x-ref="dialog" id="{{ id }}" class="modal modal-end" aria-label="{{ title }}">
-    <div class="modal-box max-w-lg h-screen max-h-screen w-full rounded-none flex flex-col p-0">
+    <div class="modal-box {% if width_class %}{{ width_class }}{% else %}max-w-lg w-full{% endif %} h-screen max-h-screen rounded-none flex flex-col p-0">
       <div class="flex items-center justify-between gap-3 px-5 py-4 border-b border-base-300 shrink-0">
         <h2 class="text-lg font-semibold font-heading">{{ title }}</h2>
         <form method="dialog">

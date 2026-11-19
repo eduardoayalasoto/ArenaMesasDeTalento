@@ -11,7 +11,7 @@
     </div>
     <div class="flex items-center gap-2" x-data>
       <a href="{% url 'questionnaires:admin_list' %}" class="btn btn-sm btn-ghost">Volver a cuestionarios</a>
-      {% if editable %}
+      {% if is_draft %}
         {% url 'questionnaires:template_delete' pk=template.pk as discard_url %}
         {% include "components/_confirm.html" with confirm_id="discard-template-modal" title="Descartar borrador" message="Se elimina este borrador con todas sus secciones, preguntas, escala y pesos. No afecta a las versiones publicadas." confirm_url=discard_url trigger_label="Descartar borrador" trigger_icon="trash-2" confirm_label="Descartar" %}
         <form method="post"><input type="hidden" name="action" value="publish">{% csrf_token %}
@@ -30,7 +30,11 @@
 
   {% if not editable %}
     {% callout "neutral" icon="lock" cls="mb-6" %}
-      Este cuestionario está {{ template.get_status_display|lower }} y es de solo lectura para no alterar resultados históricos. Crea una nueva versión para hacer cambios.
+      Este cuestionario está {{ template.get_status_display|lower }} y ya tiene respuestas (o no está vigente), así que es de solo lectura para no alterar resultados históricos. Crea una nueva versión para hacer cambios.
+    {% endcallout %}
+  {% elif not is_draft %}
+    {% callout "info" icon="info" cls="mb-6" %}
+      Esta versión está publicada pero aún no tiene respuestas: puedes editar preguntas y pesos. Cuando alguien la conteste, quedará bloqueada. Revisa que los pesos sigan sumando 100%.
     {% endcallout %}
   {% endif %}
 

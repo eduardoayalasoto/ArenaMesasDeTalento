@@ -169,8 +169,8 @@ def user_admin(request):
 
                 if not positions.position_defined(new_area, new_level):
                     profile_errors.append(
-                        f"{user.full_name}: no existe un puesto activo para {new_area.name} · {new_level.name} "
-                        "(Catálogos → Puestos); no se cambió su área ni su nivel."
+                        f"{user.full_name}: no existe una posición activa para {new_area.name} · {new_level.name} "
+                        "(Catálogos → Posiciones); no se cambió su área ni su nivel."
                     )
                     new_area, new_level = user.area, user.level
             if (user.area_id != (new_area.id if new_area else None)

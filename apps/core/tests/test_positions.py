@@ -89,7 +89,7 @@ def test_positions_catalog_names_cache_and_validation(ladder, client, talento):
         "full_name": "Nuevo", "email": "nuevo@arena-analytics.com", "area": areas["PM"].pk,
         "level": levels["SNR"].pk, "role": "COLABORADOR", "password": "Arena2026!",
     })
-    assert not form.is_valid() and "No existe un puesto activo" in str(form.errors["level"])
+    assert not form.is_valid() and "No existe una posición activa" in str(form.errors["level"])
     form = UserCreateForm({
         "full_name": "Nuevo", "email": "nuevo@arena-analytics.com", "area": areas["PM"].pk,
         "level": levels["JR"].pk, "role": "COLABORADOR", "password": "Arena2026!",

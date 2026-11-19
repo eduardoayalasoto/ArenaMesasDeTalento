@@ -4,7 +4,7 @@
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-base-content">Cuestionarios</h2>
     <p class="text-base-content/70">
-      {{ ownership_count }} de Ownership publicados (por puesto) + {{ value_delivery_count }} de Entrega de Valor{% if draft_count %} · {{ draft_count }} borrador{{ draft_count|pluralize:"es" }} en edición{% endif %}.
+      {{ ownership_count }} de Ownership publicados (por posición) + {{ value_delivery_count }} de Entrega de Valor{% if draft_count %} · {{ draft_count }} borrador{{ draft_count|pluralize:"es" }} en edición{% endif %}.
       Los publicados son de solo lectura; crea una versión para editar.
     </p>
   </div>
@@ -17,7 +17,7 @@
     <h3 class="font-semibold text-base-content">Nuevo cuestionario</h3>
     <p class="text-base text-base-content/75 mt-1">
       Nace como borrador con la escala del cuestionario vigente; después agregas secciones, preguntas y pesos.
-      Para un puesto que ya tiene cuestionario, ábrelo y crea una nueva versión.
+      Para una posición que ya tiene cuestionario, ábrelo y crea una nueva versión.
     </p>
 
     {% if create_form.non_field_errors %}
@@ -35,7 +35,7 @@
       </fieldset>
 
       <fieldset class="fieldset w-72" x-show="kind === 'OWNERSHIP'">
-        <legend class="fieldset-legend"><label for="{{ create_form.position.id_for_label }}">Puesto</label></legend>
+        <legend class="fieldset-legend"><label for="{{ create_form.position.id_for_label }}">Posición</label></legend>
         {{ create_form.position }}
         {% if create_form.position.errors %}<p class="label text-error">{{ create_form.position.errors|join:", " }}</p>{% endif %}
       </fieldset>
@@ -43,8 +43,8 @@
       <button type="submit" class="btn btn-primary">Crear cuestionario</button>
     </div>
     <p class="label mt-2" x-show="kind === 'OWNERSHIP'">
-      Solo aparecen los puestos activos que aún no tienen cuestionario. Para sumar uno nuevo, dalo de alta en
-      <a href="{% url 'catalog:position_admin' %}" class="link">Catálogos → Puestos</a>.
+      Aparecen las posiciones activas; las que ya tienen cuestionario se marcan. Para sumar uno nuevo, dalo de alta en
+      <a href="{% url 'catalog:position_admin' %}" class="link">Catálogos → Posiciones</a>.
     </p>
   </form>
 

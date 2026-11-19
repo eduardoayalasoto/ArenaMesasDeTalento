@@ -1,32 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="mb-6">
-    <h2 class="text-xl font-semibold text-base-content">Áreas</h2>
-    <p class="text-base-content/70">El Director de cada área aprueba el nivel de Dirección de las solicitudes de curso de Arena Learn. Si un área no tiene Director, cualquier Director puede aprobar.</p>
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h2 class="text-xl font-semibold text-base-content">Áreas</h2>
+      <p class="text-base-content/75">Las áreas agrupan posiciones y personas. El Director de cada área aprueba el nivel de Dirección de las solicitudes de Arena Learn; sin Director, cualquier Director puede aprobar.</p>
+    </div>
+    <button type="button" class="btn btn-primary" data-mode="create"
+            @click="$dispatch('edit-area', $el.dataset); $dispatch('open-area-drawer')">Crear área</button>
   </div>
 
-  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-200">
-    {% for a in areas %}
-      <form method="post" class="flex flex-wrap items-center justify-between gap-4 p-4">
-        {% csrf_token %}
-        <input type="hidden" name="area" value="{{ a.pk }}">
-        <div class="min-w-0">
-          <p class="font-medium text-base-content">{{ a.name }} <span class="text-base text-base-content/50">· {{ a.code }}</span></p>
-          {% if not a.is_active %}<span class="badge bg-base-200 text-base-content/60">Inactiva</span>{% endif %}
-        </div>
-        <div class="flex items-center gap-2">
-          <label class="sr-only" for="dir-{{ a.pk }}">Director de {{ a.name }}</label>
-          <select id="dir-{{ a.pk }}" name="director" class="select w-full w-64">
-            <option value="">— Cualquier Director —</option>
-            {% for d in directors %}
-              <option value="{{ d.pk }}" {% if a.director_id == d.pk %}selected{% endif %}>{{ d.full_name }}</option>
-            {% endfor %}
-          </select>
-          <button type="submit" class="btn btn-sm btn-soft btn-primary">Guardar</button>
-        </div>
-      </form>
-    {% empty %}
-      <p class="p-6 text-base text-base-content/60">No hay áreas registradas.</p>
-    {% endfor %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto">
+    <table class="table">
+      <thead><tr><th>Clave</th><th>Nombre</th><th>Director</th><th class="text-center">Posiciones</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
+      <tbody>
+        {% for a in areas %}
+          <tr>
+            <td class="tabular-nums">{{ a.code }}</td>
+            <td class="font-medium text-base-content">{{ a.name }}</td>
+            <td>{{ a.director.full_name|default:"Cualquier Director" }}</td>
+            <td class="text-center tabular-nums">{{ a.position_count }}</td>
+            <td>{% if a.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>
+            <td class="text-right whitespace-nowrap">
+              <button type="button" class="btn btn-sm btn-ghost" data-mode="view" data-id="{{ a.pk }}" data-code="{{ a.code }}" data-name="{{ a.name }}" data-director="{{ a.director_id|default_if_none:'' }}" data-active="{{ a.is_active|yesno:'1,' }}" data-usage="{{ a.usage|join:', ' }}"
+                      @click="$dispatch('edit-area', $el.dataset); $dispatch('open-area-drawer')">Ver</button>
+              <button type="button" class="btn btn-sm btn-soft btn-primary" data-mode="edit" data-id="{{ a.pk }}" data-code="{{ a.code }}" data-name="{{ a.name }}" data-director="{{ a.director_id|default_if_none:'' }}" data-active="{{ a.is_active|yesno:'1,' }}" data-usage="{{ a.usage|join:', ' }}"
+                      @click="$dispatch('edit-area', $el.dataset); $dispatch('open-area-drawer')">Editar</button>
+              {% include "components/_confirm.html" with confirm_id=a.delete_confirm_id title="Borrar área" message=a.delete_confirm_message confirm_url=a.delete_url %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-base-content/75">No hay áreas registradas.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+
+  {% include "components/_drawer.html" with id="area-drawer" title="Área" open_event="open-area-drawer" close_event="close-area-drawer" body_id="area-drawer-body" width_class="w-3/4 max-w-none" body_template="catalog/_area_drawer_form.html" %}
 {% endblock %}

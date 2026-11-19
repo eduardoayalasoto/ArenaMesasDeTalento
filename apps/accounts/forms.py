@@ -171,7 +171,7 @@ class UserCreateForm(forms.ModelForm):
             from apps.core.services import positions
 
             if not positions.position_defined(area, level):
-                self.add_error("level", f"No existe un puesto activo para {area.name} · {level.name} (Catálogos → Puestos).")
+                self.add_error("level", f"No existe una posición activa para {area.name} · {level.name} (Catálogos → Posiciones).")
         return cleaned
 
     def save(self, commit=True):

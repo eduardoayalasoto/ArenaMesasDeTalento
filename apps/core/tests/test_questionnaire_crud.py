@@ -86,10 +86,12 @@ def test_create_value_delivery_only_once():
 
 
 @pytest.mark.django_db
-def test_create_form_only_offers_free_puestos(published, new_position, area, level_jr):
-    Position.objects.get_or_create(area=area, level=level_jr, defaults={"name": "Junior"})
+def test_create_form_lists_all_positions_and_rejects_taken(published, new_position, area, level_jr):
+    taken, _ = Position.objects.get_or_create(area=area, level=level_jr, defaults={"name": "Junior"})
     form = TemplateCreateForm()
-    assert list(form.fields["position"].queryset) == [new_position]
+    assert {new_position, taken} <= set(form.fields["position"].queryset)
+    assert "ya tiene cuestionario" in form.fields["position"].label_from_instance(taken)
+    assert not TemplateCreateForm({"kind": "OWNERSHIP", "position": taken.pk}).is_valid()
 
     assert not TemplateCreateForm({"kind": "OWNERSHIP"}).is_valid()
     assert TemplateCreateForm({"kind": "OWNERSHIP", "position": new_position.pk}).is_valid()
@@ -182,7 +184,7 @@ def test_view_create_shows_errors_without_creating(client, talento, published):
     client.force_login(talento)
     before = T.objects.count()
     response = client.post(reverse("questionnaires:template_create"), {"kind": "OWNERSHIP"})
-    assert response.status_code == 400 and "Elige el puesto" in response.content.decode()
+    assert response.status_code == 400 and "Elige la posición" in response.content.decode()
     assert T.objects.count() == before
 
 
@@ -223,7 +225,9 @@ def test_view_edit_structure_actions_on_draft(client, talento, draft):
 
 
 @pytest.mark.django_db
-def test_view_deletes_are_refused_on_published(client, talento, published):
+def test_view_deletes_are_refused_on_archived(client, talento, published):
+    published.status = T.Status.ARCHIVADO   # publicado sin respuestas sí se edita (spec 009); archivado no
+    published.save()
     client.force_login(talento)
     question = Question.objects.get(section__template=published)
     option = published.scale_options.first()

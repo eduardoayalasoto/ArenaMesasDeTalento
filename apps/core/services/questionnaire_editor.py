@@ -204,6 +204,25 @@ def move_scale_option(template, option_id, direction):
         ScaleOption.objects.bulk_update(options, ["order"])
 
 
+def has_responses(template) -> bool:
+    """True si el cuestionario ya tiene alguna contestación (Ownership o Entrega de Valor)."""
+    from apps.evaluations.models import OwnershipAnswer, OwnershipEvaluation
+
+    return (
+        OwnershipAnswer.objects.filter(evaluation__template=template).exists()
+        or OwnershipEvaluation.objects.filter(template=template, status=OwnershipEvaluation.Status.ENVIADA).exists()
+    )
+
+
+def is_editable(template) -> bool:
+    """Un borrador siempre se edita; uno publicado, mientras nadie lo haya contestado.
+    Archivado o con respuestas: solo vía nueva versión (no se alteran resultados)."""
+    Status = template.Status
+    if template.status == Status.BORRADOR:
+        return True
+    return template.status == Status.PUBLICADO and not has_responses(template)
+
+
 def validate_for_publish(template):
     """Errores (en español) que impiden publicar: sin reactivos de escala, títulos repetidos o sin escala."""
     from collections import Counter
@@ -230,7 +249,7 @@ def _position_errors(template):
     from apps.core.services import positions
 
     if template.area_id and template.level_id and not positions.position_defined(template.area, template.level):
-        return [f"No existe un puesto activo para {template.area.name} · {template.level.name} en Catálogos → Puestos."]
+        return [f"No existe una posición activa para {template.area.name} · {template.level.name} en Catálogos → Posiciones."]
     return []
 
 

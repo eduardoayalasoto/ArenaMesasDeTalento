@@ -1,0 +1,21 @@
+{# Drawer de Categorías (spec 009): crear / ver / editar. Evento `edit-category`. #}
+<div x-data="{ mode: 'create', id: '', name: '', order: 1, active: true }"
+     @edit-category.window="const d = $event.detail; mode = d.mode; id = d.id || ''; name = d.name || ''; order = d.order || 1; active = mode === 'create' ? true : !!d.active">
+  <p class="text-base font-medium text-base-content mb-4" x-text="mode === 'create' ? 'Nueva categoría' : (mode === 'view' ? 'Detalle de la categoría' : 'Editar categoría')"></p>
+  <form method="post" action="{% url 'catalog:category_admin' %}">
+    {% csrf_token %}
+    <input type="hidden" name="category" :value="id">
+    <fieldset :disabled="mode === 'view'" class="grid gap-4 md:grid-cols-2">
+      <div class="md:col-span-2"><label class="fieldset-legend" for="cat-name">Nombre</label>
+        <input id="cat-name" name="name" maxlength="80" required class="input w-full" x-model="name" placeholder="Ej. Delivery al cliente"></div>
+      <div><label class="fieldset-legend" for="cat-order">Orden</label>
+        <input id="cat-order" name="order" type="number" min="0" max="999" class="input w-full" x-model="order"></div>
+      <label class="flex items-center gap-2 text-base self-end pb-2">
+        <input type="checkbox" name="is_active" class="checkbox checkbox-sm" x-model="active"> Activa
+      </label>
+    </fieldset>
+    <div class="mt-6 flex gap-3" x-show="mode !== 'view'">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+</div>

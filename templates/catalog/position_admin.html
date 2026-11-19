@@ -1,52 +1,54 @@
 {% extends "base.html" %}
-{% load callout_tags %}
 {% block content %}
   <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
     <div>
-      <h2 class="text-xl font-semibold text-base-content">Puestos</h2>
+      <h2 class="text-xl font-semibold text-base-content">Posiciones</h2>
       <p class="text-base-content/75">
-        Cada área nombra su propia escalera. El nivel global (Jr, Mid, Sr, Lead) sigue definiendo la ponderación de los pilares;
-        el nombre del puesto es lo que ven las personas en pantalla.
+        Cada posición es un cargo dentro de un área, en un nivel (Junior, Mid, Senior, Lead). El nivel define la escalera global;
+        el nombre de la posición es lo que ven las personas en pantalla.
       </p>
     </div>
-    {% if missing %}
-      <form method="post">
-        {% csrf_token %}<input type="hidden" name="action" value="complete">
-        <button type="submit" class="btn btn-sm btn-primary">Completar {{ missing }} puesto{{ missing|pluralize }} faltante{{ missing|pluralize }}</button>
-      </form>
-    {% endif %}
+    <div class="flex flex-wrap items-center gap-2">
+      {% if missing %}
+        <form method="post">{% csrf_token %}<input type="hidden" name="action" value="complete">
+          <button type="submit" class="btn btn-outline">Completar {{ missing }} posición{{ missing|pluralize:"es" }} faltante{{ missing|pluralize }}</button>
+        </form>
+      {% endif %}
+      <button type="button" class="btn btn-primary" data-mode="create"
+              @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Crear posición</button>
+    </div>
   </div>
 
-  {% for block in blocks %}
-    <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm mb-6 overflow-hidden">
-      <h3 class="px-4 py-3 font-semibold text-base-content border-b border-base-200">
-        {{ block.area.name }} <span class="text-base font-normal text-base-content/75">· {{ block.area.code }}</span>
-      </h3>
-      <div class="divide-y divide-base-200">
-        {% for row in block.rows %}
-          <form method="post" class="flex flex-wrap items-center justify-between gap-3 p-4">
-            {% csrf_token %}
-            <input type="hidden" name="area" value="{{ block.area.pk }}">
-            <input type="hidden" name="level" value="{{ row.level.pk }}">
-            <div class="w-40">
-              <p class="text-base text-base-content/75">Nivel {{ row.level.name }}</p>
-              {% if not row.position %}<span class="badge badge-warning">Sin definir</span>{% endif %}
-            </div>
-            <div class="flex flex-wrap items-center gap-3">
-              <label class="sr-only" for="pos-{{ block.area.pk }}-{{ row.level.pk }}">Nombre del puesto para {{ block.area.name }}, nivel {{ row.level.name }}</label>
-              <input id="pos-{{ block.area.pk }}-{{ row.level.pk }}" type="text" name="name" maxlength="60" required
-                     value="{% if row.position %}{{ row.position.name }}{% else %}{{ row.level.name }}{% endif %}" class="input w-64">
-              <label class="flex items-center gap-2 text-base">
-                <input type="checkbox" name="is_active" class="checkbox checkbox-sm" {% if not row.position or row.position.is_active %}checked{% endif %}>
-                Activo
-              </label>
-              <button type="submit" class="btn btn-sm btn-soft btn-primary">{% if row.position %}Guardar{% else %}Crear{% endif %}</button>
-            </div>
-          </form>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto" x-data="{ q: '' }">
+    <div class="p-4 border-b border-base-200">
+      <label class="sr-only" for="pos-filter">Buscar</label>
+      <input id="pos-filter" type="search" x-model="q" class="input w-72" placeholder="Buscar área, posición o nivel">
+    </div>
+    <table class="table">
+      <thead><tr><th>Área</th><th>Posición</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
+      <tbody>
+        {% for r in rows %}
+          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
+            <td>{{ r.position.area.name }}</td>
+            <td class="font-medium text-base-content">{{ r.position.name }}</td>
+            <td>{{ r.position.level.name }}</td>
+            <td class="text-center tabular-nums">{{ r.people }}</td>
+            <td>{% if r.own_weights %}<span class="badge badge-soft badge-primary">Propia</span>{% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}</td>
+            <td>{% if r.position.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>
+            <td class="text-right whitespace-nowrap">
+              <button type="button" class="btn btn-sm btn-ghost" data-mode="view" data-id="{{ r.position.pk }}" data-area="{{ r.position.area_id }}" data-level="{{ r.position.level_id }}" data-name="{{ r.position.name }}" data-active="{{ r.position.is_active|yesno:'1,' }}"
+                      @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Ver</button>
+              <button type="button" class="btn btn-sm btn-soft btn-primary" data-mode="edit" data-id="{{ r.position.pk }}" data-area="{{ r.position.area_id }}" data-level="{{ r.position.level_id }}" data-name="{{ r.position.name }}" data-active="{{ r.position.is_active|yesno:'1,' }}"
+                      @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Editar</button>
+              {% include "components/_confirm.html" with confirm_id=r.delete_confirm_id title="Borrar posición" message=r.delete_confirm_message confirm_url=r.delete_url %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="text-base-content/75">No hay posiciones. Crea la primera o completa las faltantes.</td></tr>
         {% endfor %}
-      </div>
-    </section>
-  {% empty %}
-    <p class="text-base text-base-content/75">No hay áreas registradas.</p>
-  {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include "components/_drawer.html" with id="position-drawer" title="Posición" open_event="open-position-drawer" close_event="close-position-drawer" body_id="position-drawer-body" width_class="w-3/4 max-w-none" body_template="catalog/_position_drawer_form.html" %}
 {% endblock %}

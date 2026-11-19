@@ -126,6 +126,10 @@ Clases canónicas (las mismas del CRM, sin equivalente legado):
 - Íconos: **solo `window.renderIcons(raíz)`** (`static/js/icons.js`); prohibido
   `lucide.createIcons()` global (ciclo infinito con Alpine).
 - Diálogos = modal (`<dialog>`); prohibidos `alert()/confirm()/prompt()` en código nuevo.
+- **CRUD de catálogos = drawer** (`components/_drawer.html`, `width_class="w-3/4 max-w-none"`): el índice es
+  una tabla con columnas informativas y botón **Editar** por fila; **Crear** y **Editar** abren el mismo drawer
+  y todo catálogo ofrece las cuatro operaciones (crear, ver, editar, desactivar/eliminar). Excepción:
+  **Cuestionarios y Proyectos** son pantallas completas de composición, no drawer.
 - Prohibido `style=` inline, emojis como íconos y CSS nuevo fuera de `static/src/input.css`.
 - htmx para interacción con el servidor (la vista devuelve un parcial HTML); Alpine solo para
   estado local; nunca `fetch` dentro de Alpine.

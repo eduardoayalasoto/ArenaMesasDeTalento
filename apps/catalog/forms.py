@@ -85,6 +85,28 @@ class ProjectForm(forms.ModelForm):
         self.fields["suggested_evaluator"].help_text = "Se preselecciona al iniciar la evaluación; cada persona puede cambiarlo."
 
 
+class AreaForm(forms.Form):
+    """Alta y edición de un área (spec 009). Sin `area` crea una nueva."""
+
+    area = forms.IntegerField(widget=forms.HiddenInput, required=False)
+    code = forms.CharField(label="Clave", max_length=8)
+    name = forms.CharField(label="Nombre", max_length=80)
+    director = forms.IntegerField(required=False)
+    is_active = forms.BooleanField(label="Activa", required=False)
+
+    def clean_code(self):
+        code = self.cleaned_data["code"].strip()
+        if not code:
+            raise forms.ValidationError("La clave del área es obligatoria.")
+        return code
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise forms.ValidationError("El nombre del área es obligatorio.")
+        return name
+
+
 class AreaDirectorForm(forms.Form):
     """Director del área (Arena Learn, spec 004): aprueba el nivel Dirección de solicitudes de curso."""
 
@@ -95,15 +117,16 @@ class AreaDirectorForm(forms.Form):
 class PositionForm(forms.Form):
     """Nombre y estado de un puesto (área × nivel). Crea el puesto si aún no existe."""
 
-    area = forms.IntegerField(widget=forms.HiddenInput)
-    level = forms.IntegerField(widget=forms.HiddenInput)
-    name = forms.CharField(label="Nombre del puesto", max_length=60)
+    position = forms.IntegerField(widget=forms.HiddenInput, required=False)
+    area = forms.IntegerField(label="Área")
+    level = forms.IntegerField(label="Nivel")
+    name = forms.CharField(label="Nombre de la posición", max_length=60)
     is_active = forms.BooleanField(label="Activo", required=False)
 
     def clean_name(self):
         name = self.cleaned_data["name"].strip()
         if not name:
-            raise forms.ValidationError("El nombre del puesto es obligatorio.")
+            raise forms.ValidationError("El nombre de la posición es obligatorio.")
         return name
 
 
@@ -120,3 +143,12 @@ class CategoryForm(forms.Form):
         if not name:
             raise forms.ValidationError("El nombre de la categoría es obligatorio.")
         return name
+
+
+class PillarWeightForm(forms.Form):
+    """Pesos en % de los 3 pilares de una posición (spec 009). La suma la valida el servicio."""
+
+    position = forms.IntegerField(widget=forms.HiddenInput)
+    w_ownership = forms.DecimalField(label="Ownership", min_value=0, max_value=100, decimal_places=1)
+    w_value_delivery = forms.DecimalField(label="Entrega de Valor", min_value=0, max_value=100, decimal_places=1)
+    w_arena_impact = forms.DecimalField(label="Impacto Arena", min_value=0, max_value=100, decimal_places=1)

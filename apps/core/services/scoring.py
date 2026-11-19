@@ -221,11 +221,13 @@ def final_score(user, period, ownership, value_delivery, arena) -> FinalScoreRes
     final = None
     band = ""
     if is_complete:
-        weight = user.level.weight  # PillarWeight (OneToOne)
+        from apps.core.services import pillar_weights
+
+        w_own, w_vd, w_arena = pillar_weights.effective_weights(user)  # por posición; si no, por nivel
         final = (
-            Decimal(str(ownership)) * weight.w_ownership
-            + Decimal(str(value_delivery)) * weight.w_value_delivery
-            + Decimal(str(arena)) * weight.w_arena_impact
+            Decimal(str(ownership)) * w_own
+            + Decimal(str(value_delivery)) * w_vd
+            + Decimal(str(arena)) * w_arena
         ).quantize(TWO_DP, rounding=ROUND_HALF_UP)
         band = interpretation_band(final)
 

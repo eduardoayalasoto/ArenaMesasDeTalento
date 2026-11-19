@@ -63,13 +63,13 @@ class Position(models.Model):
     level = models.ForeignKey(
         SeniorityLevel, on_delete=models.PROTECT, related_name="positions", verbose_name="nivel"
     )
-    name = models.CharField("nombre del puesto", max_length=60)
+    name = models.CharField("nombre de la posición", max_length=60)
     is_active = models.BooleanField("activo", default=True)
     history = HistoricalRecords()
 
     class Meta:
-        verbose_name = "puesto"
-        verbose_name_plural = "puestos"
+        verbose_name = "posición"
+        verbose_name_plural = "posiciones"
         ordering = ["area__code", "level__order"]
         constraints = [
             models.UniqueConstraint(fields=["area", "level"], name="unique_position_area_level"),
@@ -327,3 +327,26 @@ def _invalidate_position_cache(sender, **kwargs):
 
 models.signals.post_save.connect(_invalidate_position_cache, sender=Position)
 models.signals.post_delete.connect(_invalidate_position_cache, sender=Position)
+
+
+class PositionPillarWeight(models.Model):
+    """Ponderación de los 3 pilares por posición (área × nivel). Spec 009.
+
+    Fracciones que suman 1.000 (la pantalla las captura en % con un decimal). Sin fila propia,
+    la calificación usa la ponderación del nivel (`PillarWeight`).
+    """
+
+    position = models.OneToOneField(
+        Position, on_delete=models.CASCADE, related_name="pillar_weight", verbose_name="posición",
+    )
+    w_ownership = models.DecimalField("peso Ownership", max_digits=4, decimal_places=3)
+    w_value_delivery = models.DecimalField("peso Entrega de Valor", max_digits=4, decimal_places=3)
+    w_arena_impact = models.DecimalField("peso Impacto Arena", max_digits=4, decimal_places=3)
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "ponderación por posición"
+        verbose_name_plural = "ponderaciones por posición"
+
+    def __str__(self):
+        return f"{self.position} · {self.w_ownership}/{self.w_value_delivery}/{self.w_arena_impact}"

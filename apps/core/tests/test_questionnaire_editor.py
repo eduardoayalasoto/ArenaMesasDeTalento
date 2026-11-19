@@ -127,12 +127,16 @@ def test_editor_weights_must_sum_100_before_saving_or_publishing(client, publish
     q1.refresh_from_db()
     assert q1.weight_pct is None
 
-    # Todo cuadra: se publica y el publicado queda inmutable.
+    # Todo cuadra: se publica; sin respuestas sigue editable, archivado queda inmutable (spec 009).
     client.post(url, {"action": "publish"})
     draft.refresh_from_db()
     assert draft.status == QuestionnaireTemplate.Status.PUBLICADO
     client.post(url, {"action": "save_category_weights", f"w_{links['general'].pk}": "50.0", f"w_{links['uno'].pk}": "50.0"})
-    assert weights()["general"] == Decimal("60.0")
+    assert weights()["general"] == Decimal("50.0")
+    draft.status = QuestionnaireTemplate.Status.ARCHIVADO
+    draft.save()
+    client.post(url, {"action": "save_category_weights", f"w_{links['general'].pk}": "60.0", f"w_{links['uno'].pk}": "40.0"})
+    assert weights()["general"] == Decimal("50.0")
 
 
 @pytest.mark.django_db
@@ -143,7 +147,7 @@ def test_publish_requires_position_and_categories(published):
     Position.objects.filter(area=draft.area, level=draft.level).delete()
     from apps.core.services import positions
     positions.invalidate()
-    assert any("puesto activo" in e for e in editor.validate_for_publish(draft))
+    assert any("posición activa" in e for e in editor.validate_for_publish(draft))
 
     draft.template_categories.all().delete()
     assert any("no tiene categorías con peso" in e for e in editor.validate_for_publish(draft))

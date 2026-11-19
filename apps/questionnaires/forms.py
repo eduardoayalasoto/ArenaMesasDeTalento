@@ -14,39 +14,41 @@ _TEXTAREA = "textarea w-full"
 
 
 class TemplateCreateForm(forms.Form):
-    """Alta de un cuestionario nuevo: tipo + (para Ownership) el puesto que aún no tiene ninguno."""
+    """Alta de un cuestionario nuevo: tipo + (para Ownership) la posición que aún no tiene ninguno."""
 
     kind = forms.ChoiceField(
         label="Tipo", choices=QuestionnaireTemplate.Kind.choices,
         widget=forms.Select(attrs={"class": "select w-full"}),
     )
     position = forms.ModelChoiceField(
-        label="Puesto", queryset=Position.objects.none(), required=False,
-        empty_label="— Elige el puesto —", widget=forms.Select(attrs={"class": "select w-full"}),
+        label="Posición", queryset=Position.objects.none(), required=False,
+        empty_label="— Elige la posición —", widget=forms.Select(attrs={"class": "select w-full"}),
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        taken = set(
+        self._taken = set(
             QuestionnaireTemplate.objects.filter(kind=QuestionnaireTemplate.Kind.OWNERSHIP)
             .values_list("area_id", "level_id")
         )
-        free = [
-            p.pk for p in Position.objects.filter(is_active=True).select_related("area", "level")
-            if (p.area_id, p.level_id) not in taken
-        ]
         field = self.fields["position"]
         field.queryset = (
-            Position.objects.filter(pk__in=free).select_related("area", "level")
+            Position.objects.filter(is_active=True).select_related("area", "level")
             .order_by("area__code", "level__order")
         )
-        field.label_from_instance = lambda p: f"{p.area.name} · {p.name}"
+        field.label_from_instance = lambda p: (
+            f"{p.area.name} · {p.name} ({p.level.name})"
+            + (" — ya tiene cuestionario" if (p.area_id, p.level_id) in self._taken else "")
+        )
 
     def clean(self):
         cleaned = super().clean()
         kind = cleaned.get("kind")
         if kind == QuestionnaireTemplate.Kind.OWNERSHIP and not cleaned.get("position"):
-            self.add_error("position", "Elige el puesto del cuestionario de Ownership.")
+            self.add_error("position", "Elige la posición del cuestionario de Ownership.")
+        position = cleaned.get("position")
+        if kind == QuestionnaireTemplate.Kind.OWNERSHIP and position and (position.area_id, position.level_id) in self._taken:
+            self.add_error("position", "Esa posición ya tiene cuestionario: ábrelo y crea una nueva versión.")
         return cleaned
 
 

@@ -1,0 +1,29 @@
+{# Drawer de Posiciones (spec 009): crear / ver / editar. Evento `edit-position`. #}
+<div x-data="{ mode: 'create', id: '', area: '', level: '', name: '', active: true }"
+     @edit-position.window="const d = $event.detail; mode = d.mode; id = d.id || ''; area = d.area || ''; level = d.level || ''; name = d.name || ''; active = mode === 'create' ? true : !!d.active">
+  <p class="text-base font-medium text-base-content mb-4" x-text="mode === 'create' ? 'Nueva posición' : (mode === 'view' ? 'Detalle de la posición' : 'Editar posición')"></p>
+  <form method="post" action="{% url 'catalog:position_admin' %}">
+    {% csrf_token %}
+    <input type="hidden" name="position" :value="id">
+    <fieldset :disabled="mode === 'view'" class="grid gap-4 md:grid-cols-2">
+      <div><label class="fieldset-legend" for="pos-area">Área</label>
+        <select id="pos-area" name="area" class="select w-full" required x-model="area">
+          <option value="">— Elige el área —</option>
+          {% for a in areas %}<option value="{{ a.pk }}">{{ a.name }}</option>{% endfor %}
+        </select></div>
+      <div><label class="fieldset-legend" for="pos-level">Nivel</label>
+        <select id="pos-level" name="level" class="select w-full" required x-model="level">
+          <option value="">— Elige el nivel —</option>
+          {% for l in levels %}<option value="{{ l.pk }}">{{ l.name }}</option>{% endfor %}
+        </select></div>
+      <div class="md:col-span-2"><label class="fieldset-legend" for="pos-name">Nombre de la posición (el cargo)</label>
+        <input id="pos-name" name="name" maxlength="60" required class="input w-full" x-model="name" placeholder="Ej. Project Manager"></div>
+      <label class="flex items-center gap-2 text-base">
+        <input type="checkbox" name="is_active" class="checkbox checkbox-sm" x-model="active"> Activa
+      </label>
+    </fieldset>
+    <div class="mt-6 flex gap-3" x-show="mode !== 'view'">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,27 @@
+{# Drawer de Áreas (spec 009): crear / ver / editar. Se llena con el evento `edit-area`. #}
+<div x-data="{ mode: 'create', id: '', code: '', name: '', director: '', active: true, usage: '' }"
+     @edit-area.window="const d = $event.detail; mode = d.mode; id = d.id || ''; code = d.code || ''; name = d.name || ''; director = d.director || ''; active = mode === 'create' ? true : !!d.active; usage = d.usage || ''">
+  <p class="text-base font-medium text-base-content mb-4" x-text="mode === 'create' ? 'Nueva área' : (mode === 'view' ? 'Detalle del área' : 'Editar área')"></p>
+  <form method="post" action="{% url 'catalog:area_admin' %}">
+    {% csrf_token %}
+    <input type="hidden" name="area" :value="id">
+    <fieldset :disabled="mode === 'view'" class="grid gap-4 md:grid-cols-2">
+      <div><label class="fieldset-legend" for="area-code">Clave</label>
+        <input id="area-code" name="code" maxlength="8" required class="input w-full" x-model="code"></div>
+      <div><label class="fieldset-legend" for="area-name">Nombre</label>
+        <input id="area-name" name="name" maxlength="80" required class="input w-full" x-model="name"></div>
+      <div><label class="fieldset-legend" for="area-director">Director del área</label>
+        <select id="area-director" name="director" class="select w-full" x-model="director">
+          <option value="">— Cualquier Director —</option>
+          {% for d in directors %}<option value="{{ d.pk }}">{{ d.full_name }}</option>{% endfor %}
+        </select></div>
+      <label class="flex items-center gap-2 text-base self-end pb-2">
+        <input type="checkbox" name="is_active" class="checkbox checkbox-sm" x-model="active"> Activa
+      </label>
+    </fieldset>
+    <p class="text-base text-base-content/75 mt-4" x-show="usage" x-cloak>En uso por: <span x-text="usage"></span>. No se puede borrar; desactívala.</p>
+    <div class="mt-6 flex gap-3" x-show="mode !== 'view'">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+</div>

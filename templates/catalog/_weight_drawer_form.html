@@ -1,0 +1,39 @@
+{# Formulario del drawer de ponderación (spec 009). Se llena con el evento `edit-weight`. #}
+<div x-data="{ pos: '', label: '', own: false, locked: false }"
+     @edit-weight.window="pos = $event.detail.id; label = $event.detail.label; own = !!$event.detail.own; locked = !!$event.detail.locked">
+  <p class="text-base text-base-content/75 mb-4" x-text="label"></p>
+
+  <p class="mb-4" x-show="locked" x-cloak>
+    <span class="badge badge-soft badge-warning">Bloqueada</span>
+    Ya hay calificaciones finales de esta posición; sus pesos no se pueden cambiar.
+  </p>
+
+  <form method="post" action="{% url 'catalog:weight_save' %}" id="weight-form"
+        x-data="weightGroup('weight-drawer', ['0.0', '0.0', '0.0'])"
+        @edit-weight.window="vals = [$event.detail.ownership, $event.detail.vd, $event.detail.arena]">
+    {% csrf_token %}
+    <input type="hidden" name="position" :value="pos">
+    <fieldset :disabled="locked" class="grid gap-4 md:grid-cols-3">
+      <div><label class="fieldset-legend" for="w-own">Ownership (%)</label>
+        <input id="w-own" name="w_ownership" type="text" inputmode="decimal" x-model="vals[0]" class="input w-full text-right tabular-nums"></div>
+      <div><label class="fieldset-legend" for="w-vd">Entrega de Valor (%)</label>
+        <input id="w-vd" name="w_value_delivery" type="text" inputmode="decimal" x-model="vals[1]" class="input w-full text-right tabular-nums"></div>
+      <div><label class="fieldset-legend" for="w-arena">Impacto Arena (%)</label>
+        <input id="w-arena" name="w_arena_impact" type="text" inputmode="decimal" x-model="vals[2]" class="input w-full text-right tabular-nums"></div>
+    </fieldset>
+
+    <div class="mt-4 flex flex-wrap items-center gap-3" role="status" aria-live="polite">
+      <span class="badge badge-success" x-show="ok" x-cloak>Suma 100.0%</span>
+      <span class="badge badge-warning" x-show="!ok" x-cloak>
+        <span x-show="!hasInvalid">Suma actual <span x-text="totalLabel"></span>% — debe llegar a 100% (<span x-text="gapLabel"></span>)</span>
+        <span x-show="hasInvalid">Usa números de 0 a 100 con un solo decimal</span>
+      </span>
+    </div>
+
+    <div class="mt-6 flex flex-wrap items-center gap-3" x-show="!locked">
+      <button type="submit" class="btn btn-primary" :disabled="!ok">Guardar</button>
+      <button type="submit" name="action" value="reset" class="btn btn-outline" x-show="own" x-cloak
+              formnovalidate>Volver a la ponderación del nivel</button>
+    </div>
+  </form>
+</div>

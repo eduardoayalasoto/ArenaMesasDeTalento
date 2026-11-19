@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from . import views, views_areas, views_catalogs
+from . import views, views_areas, views_catalogs, views_weights
 
 app_name = "catalog"
 
@@ -17,10 +17,15 @@ urlpatterns = [
     path("periodos/<int:pk>/editar/", views.period_edit, name="period_edit"),
     path("periodos/<int:pk>/eliminar/", views.period_delete, name="period_delete"),
     path("areas/", views_areas.area_admin, name="area_admin"),
+    path("areas/<int:pk>/borrar/", views_areas.area_delete, name="area_delete"),
     path("puestos/", views_catalogs.position_admin, name="position_admin"),
+    path("puestos/<int:pk>/borrar/", views_catalogs.position_delete, name="position_delete"),
     path("categorias/", views_catalogs.category_admin, name="category_admin"),
+    path("categorias/<int:pk>/borrar/", views_catalogs.category_delete, name="category_delete"),
     path("escenarios/", views.scenario_admin, name="scenario_admin"),
     path("escenarios/nuevo/", views.scenario_create, name="scenario_create"),
     path("escenarios/<int:pk>/editar/", views.scenario_edit, name="scenario_edit"),
-    # Pendiente: weight_admin, area/level admin (hoy vía Django admin)
+    path("ponderaciones/", views_weights.weight_admin, name="weight_admin"),
+    path("ponderaciones/guardar/", views_weights.weight_save, name="weight_save"),
+    # Pendiente: CRUD de niveles (hoy vía Django admin)
 ]

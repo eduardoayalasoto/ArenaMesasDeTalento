@@ -81,7 +81,8 @@ def template_edit(request, pk):
         }, status=403)
 
     template = get_object_or_404(QuestionnaireTemplate, pk=pk)
-    editable = template.status == QuestionnaireTemplate.Status.BORRADOR
+    is_draft = template.status == QuestionnaireTemplate.Status.BORRADOR
+    editable = editor.is_editable(template)
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -91,7 +92,7 @@ def template_edit(request, pk):
             messages.success(request, f"Creé la versión {copy.version} en borrador para editar.")
             return redirect("questionnaires:template_edit", pk=copy.pk)
 
-        if action == "publish" and editable:
+        if action == "publish" and is_draft:
             try:
                 editor.publish_template(template)
             except ValidationError as exc:
@@ -101,7 +102,7 @@ def template_edit(request, pk):
             return redirect("questionnaires:template_edit", pk=template.pk)
 
         if not editable:
-            messages.error(request, "Este cuestionario está publicado: crea una nueva versión para editarlo.")
+            messages.error(request, "Este cuestionario ya tiene respuestas o no está vigente: crea una nueva versión para editarlo.")
             return redirect("questionnaires:template_edit", pk=template.pk)
 
         # Acciones de edición (solo BORRADOR)
@@ -175,6 +176,7 @@ def template_edit(request, pk):
         "scale": scale,
         "scale_form": ScaleOptionForm(template=template),
         "editable": editable,
+        "is_draft": is_draft,
         "is_ownership": is_ownership,
         "weight_groups": weight_groups,
         "category_choices": [g["link"].category for g in weight_groups],
@@ -340,8 +342,8 @@ _STRUCTURE_ACTIONS = {
 # --- Borrados con confirmación en modal (POST simple, solo sobre BORRADOR) ----
 
 def _is_draft(request, template):
-    if template.status != QuestionnaireTemplate.Status.BORRADOR:
-        messages.error(request, "Este cuestionario está publicado: crea una nueva versión para editarlo.")
+    if not editor.is_editable(template):
+        messages.error(request, "Este cuestionario ya tiene respuestas o no está vigente: crea una nueva versión para editarlo.")
         return False
     return True
 
