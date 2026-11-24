@@ -81,7 +81,7 @@ def test_category_crud_and_delete_guard(client, talento):
 
 
 @pytest.mark.django_db
-def test_published_template_is_editable_until_it_has_responses(ownership_template):
+def test_published_template_is_editable_in_place_only_archived_is_read_only(ownership_template):
     assert ownership_template.status == QuestionnaireTemplate.Status.PUBLICADO
     assert editor.is_editable(ownership_template)
     ownership_template.status = QuestionnaireTemplate.Status.ARCHIVADO

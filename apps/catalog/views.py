@@ -11,6 +11,7 @@ from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from apps.catalog.vigencia import is_evaluable, open_period
 from apps.core.http import back_to_list
 from apps.core.services import period_lifecycle
 from apps.core.services import projects as project_service
@@ -41,9 +42,11 @@ def project_admin(request):
     """Índice de proyectos: búsqueda en vivo (htmx), filtros y acciones por proyecto."""
     params = {k: request.GET.get(k, "").strip() for k in ("q", "state", "duration", "focus", "sort")}
     today = date.today()
+    period = open_period()
     projects = list(project_service.search_projects(**params, today=today))
     for p in projects:
         p.delivery = project_service.delivery_info(p, today)
+        p.evaluable = is_evaluable(p, period)
         p.close_confirm_id = f"close-project-{p.pk}"
         p.delete_confirm_id = f"delete-project-{p.pk}"
         p.reopen_confirm_id = f"reopen-project-{p.pk}"

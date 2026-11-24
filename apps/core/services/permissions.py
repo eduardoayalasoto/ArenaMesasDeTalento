@@ -8,6 +8,7 @@ rol: consultan el perfil del usuario (`apps.access.services`) y, cuando aplica, 
 from django.contrib.auth import get_user_model
 from django.db.models import QuerySet
 
+from apps.catalog.vigencia import evaluable_q
 from apps.access import services as access
 from apps.access.registry import Scope
 
@@ -28,12 +29,12 @@ def can_view_evaluation(viewer, evaluation) -> bool:
 
 
 def projects_led_by(viewer) -> QuerySet:
-    """Proyectos activos donde el usuario es responsable (captura Entrega de Valor).
+    """Proyectos evaluables donde el usuario es responsable (captura Entrega de Valor).
 
-    Un proyecto Cerrado (`is_active=False`) deja de ofrecerse para capturar
-    Entrega de Valor del periodo Abierto — ya no es "evaluable".
+    Evaluable = abierto, o cerrado con fecha de entrega dentro del periodo Abierto
+    (ver `apps.catalog.vigencia`). Fuera de esa ventana ya no se ofrece para capturar.
     """
-    return viewer.responsible_projects.filter(is_active=True)
+    return viewer.responsible_projects.filter(evaluable_q())
 
 
 def projects_validated_by(viewer) -> QuerySet:

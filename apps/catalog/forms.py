@@ -38,7 +38,7 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = [
             "name", "client", "owner", "responsable", "validador", "suggested_evaluator",
-            "duration_type", "status", "kickoff", "target_close", "is_active",
+            "duration_type", "kickoff", "target_close", "is_active",
         ]
         labels = {
             "name": "Nombre del proyecto",
@@ -48,10 +48,9 @@ class ProjectForm(forms.ModelForm):
             "validador": "Validador de Entrega de Valor",
             "suggested_evaluator": "Evaluador sugerido de Ownership",
             "duration_type": "Tipo de duración",
-            "status": "Estatus",
             "kickoff": "Kick-off",
             "target_close": "Fecha estimada de entrega",
-            "is_active": "Activo",
+            "is_active": "Proyecto abierto",
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Tablero Comercial"}),
@@ -61,7 +60,6 @@ class ProjectForm(forms.ModelForm):
             "validador": forms.Select(attrs={"class": _SELECT}),
             "suggested_evaluator": forms.Select(attrs={"class": _SELECT}),
             "duration_type": forms.RadioSelect(),
-            "status": forms.Select(attrs={"class": _SELECT}),
             "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "target_close": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "is_active": forms.CheckboxInput(attrs={"class": "checkbox"}),

@@ -50,8 +50,7 @@
             </td>
             <td class="px-4 py-2.5 whitespace-nowrap">
               {% if p.is_active %}<span class="badge badge-soft badge-success whitespace-nowrap">Abierto</span>{% else %}<span class="badge badge-soft whitespace-nowrap">Cerrado</span>{% endif %}
-              {% if p.status == "DELAYED" %}<span class="badge badge-soft badge-error whitespace-nowrap">Delayed</span>{% endif %}
-              <p class="mt-0.5 text-sm text-base-content/60">{% if p.kickoff %}Inicio {{ p.kickoff|date:"d M Y" }}{% else %}Sin kick-off{% endif %}</p>
+              <p class="mt-0.5 text-sm {% if p.evaluable %}text-base-content/70{% else %}text-base-content/50{% endif %}">{% if p.evaluable %}Evaluable este periodo{% else %}Solo registro{% endif %}</p>
             </td>
             <td class="px-4 py-2.5">
               <div class="flex items-center justify-end gap-1 whitespace-nowrap">

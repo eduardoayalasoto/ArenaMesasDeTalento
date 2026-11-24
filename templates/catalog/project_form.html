@@ -7,7 +7,6 @@
       {% if project %}
         <p class="mt-1 flex flex-wrap items-center gap-2 text-base text-base-content/70">
           {% if project.is_active %}<span class="badge badge-soft badge-success whitespace-nowrap">Abierto</span>{% else %}<span class="badge badge-soft whitespace-nowrap">Cerrado</span>{% endif %}
-          {% if project.status == "DELAYED" %}<span class="badge badge-soft badge-error whitespace-nowrap">Delayed</span>{% endif %}
           {% if project.client %}{{ project.client }}{% endif %}
         </p>
       {% endif %}
@@ -27,8 +26,7 @@
           {% include "components/_form_field.html" with field=form.client %}
         </div>
         <div class="grid gap-x-4 md:grid-cols-2">
-          {% include "components/_form_field.html" with field=form.status %}
-          {% include "components/_form_field.html" with field=form.is_active %}
+          {% include "components/_form_field.html" with field=form.is_active help="Un proyecto cerrado sigue evaluable si su fecha de entrega cae dentro del periodo abierto; fuera de esa ventana queda solo como registro." %}
         </div>
       </section>
 

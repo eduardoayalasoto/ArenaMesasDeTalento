@@ -3,6 +3,7 @@
 from django.db import transaction
 from django.utils import timezone
 
+from apps.catalog.vigencia import evaluable_q
 from apps.core.services import period_lifecycle, scoring
 
 
@@ -143,7 +144,7 @@ def ownership_cards(user, period):
     }
     cards = {}
     if period.status == EvaluationPeriod.Status.ABIERTO:
-        for m in user.memberships.select_related("project__owner").filter(project__is_active=True):
+        for m in user.memberships.select_related("project__owner").filter(evaluable_q("project__")):
             cards[m.project_id] = {"project": m.project, "evaluation": evals.get(m.project_id), "historical": False}
     for project_id, ev in evals.items():
         cards.setdefault(project_id, {"project": ev.project, "evaluation": ev, "historical": True})

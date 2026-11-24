@@ -22,18 +22,12 @@
                   :disabled="$store.weights.blocked || {{ weights_errors|length }} > 0"
                   :title="$store.weights.blocked ? 'Hay pesos que no suman 100%' : ''">Publicar versión</button>
         </form>
-      {% elif not editable and template.status != 'ARCHIVADO' %}
-        {% if existing_draft %}
-          <a href="{% url 'questionnaires:template_edit' pk=existing_draft.pk %}" class="btn btn-primary">Continuar borrador v{{ existing_draft.version }}</a>
-        {% else %}
-          <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
-            <button type="submit" class="btn btn-primary"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar en una nueva versión</button>
-          </form>
-        {% endif %}
-      {% else %}
+      {% elif editable %}
         <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
-          <button type="submit" class="btn btn-outline btn-primary">Crear nueva versión</button>
+          <button type="submit" class="btn btn-outline btn-primary" title="Copia este cuestionario como borrador para rehacerlo sin tocar el vigente">Crear nueva versión</button>
         </form>
+      {% elif current_version %}
+        <a href="{% url 'questionnaires:template_edit' pk=current_version.pk %}" class="btn btn-primary">Ir a la versión vigente</a>
       {% endif %}
     </div>
   </div>
@@ -44,23 +38,16 @@
       Los cambios se guardan al instante y <strong>no afectan</strong> a nadie hasta que lo publiques. Recorre los pasos de arriba abajo; al final verás qué falta para publicar.
     {% endcallout %}
   {% elif not editable %}
-    {% callout "warning" icon="lock" title="Esta versión ya no se puede modificar" cls="mb-6" %}
-      Está {{ template.get_status_display|lower }} y ya tiene respuestas (o no está vigente). Para no alterar resultados históricos, los cambios se hacen en una <strong>nueva versión</strong>, que nace como borrador con todo el contenido copiado.
-      {% if template.status != 'ARCHIVADO' %}
-      <div class="mt-3">
-        {% if existing_draft %}
-          <a href="{% url 'questionnaires:template_edit' pk=existing_draft.pk %}" class="btn btn-sm btn-primary">Continuar el borrador v{{ existing_draft.version }}</a>
-        {% else %}
-          <form method="post" class="inline"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-primary">Crear nueva versión y editar</button>
-          </form>
-        {% endif %}
-      </div>
-      {% else %}<p class="mt-2">Es una versión anterior: para cambiar el cuestionario, edita la versión vigente.</p>{% endif %}
+    {% callout "neutral" icon="lock" title="Versión anterior (solo lectura)" cls="mb-6" %}
+      Esta versión ya fue reemplazada. Para hacer cambios, edita la versión vigente.
+    {% endcallout %}
+  {% elif has_answers %}
+    {% callout "warning" icon="alert-triangle" title="Esta versión ya tiene respuestas" cls="mb-6" %}
+      Puedes editarla: textos, pesos, categorías, orden y preguntas nuevas. Ten en cuenta que los <strong>pesos</strong> se usan para calcular resultados, así que ajustarlos cambia cómo se calculan las calificaciones. No se pueden eliminar preguntas contestadas ni cambiar los valores de la escala. Si vas a rehacer el cuestionario completo, mejor usa «Crear nueva versión».
     {% endcallout %}
   {% else %}
-    {% callout "info" icon="info" title="Publicada, sin respuestas todavía" cls="mb-6" %}
-      Puedes editar preguntas y pesos directamente. Cuando alguien la conteste quedará bloqueada y los cambios requerirán una nueva versión. Revisa que los pesos sigan sumando 100%.
+    {% callout "info" icon="info" title="Versión publicada, sin respuestas todavía" cls="mb-6" %}
+      Los cambios se guardan al instante. Revisa que los pesos sigan sumando 100%.
     {% endcallout %}
   {% endif %}
 

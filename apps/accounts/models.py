@@ -150,12 +150,16 @@ class User(AbstractUser):
     @property
     def leads_projects(self) -> bool:
         """Es responsable de al menos un proyecto activo (acceso a Entrega de Valor)."""
-        return self.responsible_projects.filter(is_active=True).exists()
+        from apps.catalog.vigencia import evaluable_q
+
+        return self.responsible_projects.filter(evaluable_q()).exists()
 
     @property
     def validates_projects(self) -> bool:
         """Es Validador de Entrega de Valor de al menos un proyecto activo."""
-        return self.validated_projects.filter(is_active=True).exists()
+        from apps.catalog.vigencia import evaluable_q
+
+        return self.validated_projects.filter(evaluable_q()).exists()
 
     @property
     def has_photo(self) -> bool:

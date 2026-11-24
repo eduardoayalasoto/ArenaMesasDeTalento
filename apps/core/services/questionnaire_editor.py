@@ -215,12 +215,11 @@ def has_responses(template) -> bool:
 
 
 def is_editable(template) -> bool:
-    """Un borrador siempre se edita; uno publicado, mientras nadie lo haya contestado.
-    Archivado o con respuestas: solo vía nueva versión (no se alteran resultados)."""
-    Status = template.Status
-    if template.status == Status.BORRADOR:
-        return True
-    return template.status == Status.PUBLICADO and not has_responses(template)
+    """Borrador y publicado se editan en sitio (también con respuestas: p. ej. para ajustar un peso).
+    Solo el archivado (versión anterior) es de solo lectura. Lo que dejaría respuestas huérfanas
+    (borrar una pregunta contestada, quitar u renumerar una opción de la escala) lo frenan las
+    vistas con `has_responses`."""
+    return template.status in (template.Status.BORRADOR, template.Status.PUBLICADO)
 
 
 def validate_for_publish(template):

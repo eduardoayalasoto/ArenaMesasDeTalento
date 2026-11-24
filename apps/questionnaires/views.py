@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
@@ -28,27 +28,46 @@ def _draft_index(templates):
     drafts = {}
     for t in templates:
         if t.status == QuestionnaireTemplate.Status.BORRADOR:
-            drafts.setdefault(_template_key(t), t.pk)
+            drafts.setdefault(_template_key(t), t)
     return drafts
+
+
+def _missing_positions(templates):
+    """Posiciones activas que todavía no tienen ningún cuestionario de Ownership (ni borrador)."""
+    from apps.catalog.models import Position
+
+    taken = {(t.area_id, t.level_id) for t in templates if t.kind == QuestionnaireTemplate.Kind.OWNERSHIP}
+    return [
+        p for p in Position.objects.filter(is_active=True).select_related("area", "level")
+        if (p.area_id, p.level_id) not in taken
+    ]
 
 
 def _list_context(request, create_form=None):
     templates = list(
         QuestionnaireTemplate.objects.select_related("area", "level")
+        .annotate(n_questions=Count("sections__questions", distinct=True), n_sections=Count("sections", distinct=True))
         .order_by("kind", "area__code", "level__order", "-version")
     )
     Kind = QuestionnaireTemplate.Kind
+    Status = QuestionnaireTemplate.Status
     drafts = _draft_index(templates)
     for t in templates:
-        # Un publicado con respuestas no se edita en sitio: "Editar" abre su borrador o crea uno nuevo.
         t.editable_now = editor.is_editable(t)
-        t.draft_pk = None if t.editable_now else drafts.get(_template_key(t))
+        t.has_answers = t.status == Status.PUBLICADO and editor.has_responses(t)
+        draft = drafts.get(_template_key(t)) if t.status == Status.PUBLICADO else None
+        t.draft_version = draft.version if draft else None
+    missing = _missing_positions(templates)
     return {
         "page_title": "Cuestionarios",
         "templates": templates,
         "ownership_count": sum(1 for t in templates if t.kind == Kind.OWNERSHIP and t.is_published),
         "value_delivery_count": sum(1 for t in templates if t.kind == Kind.VALUE_DELIVERY and t.is_published),
-        "draft_count": sum(1 for t in templates if t.status == QuestionnaireTemplate.Status.BORRADOR),
+        "draft_count": sum(1 for t in templates if t.status == Status.BORRADOR),
+        "archived_count": sum(1 for t in templates if t.status == Status.ARCHIVADO),
+        "answered_count": sum(1 for t in templates if t.has_answers),
+        "missing_positions": missing,
+        "areas": sorted({t.area for t in templates if t.area_id}, key=lambda a: a.name),
         "create_form": create_form or TemplateCreateForm(),
     }
 
@@ -120,10 +139,10 @@ def template_edit(request, pk):
             return redirect("questionnaires:template_edit", pk=template.pk)
 
         if not editable:
-            messages.error(request, "Este cuestionario ya tiene respuestas o no está vigente: crea una nueva versión para editarlo.")
+            messages.error(request, "Esta es una versión anterior (archivada) y es de solo lectura: edita la versión vigente.")
             return redirect("questionnaires:template_edit", pk=template.pk)
 
-        # Acciones de edición (solo BORRADOR)
+        # Acciones de edición (borrador o publicado)
         if action == "save_meta":
             template.scale_note = request.POST.get("scale_note", "").strip()
             template.save(update_fields=["scale_note"])
@@ -186,17 +205,18 @@ def template_edit(request, pk):
     is_ownership = template.kind == QuestionnaireTemplate.Kind.OWNERSHIP
     weight_groups = ownership_weights.editor_groups(template) if is_ownership else []
     linked_ids = [g["link"].category_id for g in weight_groups]
-    existing_draft = None
+    current = None
     if not editable:
-        existing_draft = QuestionnaireTemplate.objects.filter(
+        current = QuestionnaireTemplate.objects.filter(
             kind=template.kind, area=template.area, level=template.level,
-            status=QuestionnaireTemplate.Status.BORRADOR,
-        ).exclude(pk=template.pk).first()
+            status__in=(QuestionnaireTemplate.Status.PUBLICADO, QuestionnaireTemplate.Status.BORRADOR),
+        ).order_by("-version").first()
     publish_errors = editor.validate_for_publish(template) if is_draft else []
     question_count = Question.objects.filter(section__template=template).count()
     return render(request, "questionnaires/template_edit.html", {
         "page_title": "Editar cuestionario",
-        "existing_draft": existing_draft,
+        "current_version": current,
+        "has_answers": template.status == QuestionnaireTemplate.Status.PUBLICADO and editor.has_responses(template),
         "step_questions": 3 if is_ownership else 2,
         "step_publish": 4 if is_ownership else 3,
         "not_draft_flag": not is_draft,
@@ -353,6 +373,9 @@ def _save_scale_option(request, template):
     if not form.is_valid():
         messages.error(request, _form_errors(form))
         return
+    if option is not None and form.cleaned_data.get("value") != option.value and editor.has_responses(template):
+        messages.error(request, "No se puede cambiar el valor de una opción: ya hay respuestas con esta escala. Puedes editar su etiqueta y descriptor.")
+        return
     editor.save_scale_option(template, option=option, **form.cleaned_data)
     messages.success(request, "Guardé la opción de la escala." if option else "Agregué la opción a la escala.")
 
@@ -377,7 +400,7 @@ _STRUCTURE_ACTIONS = {
 
 def _is_draft(request, template):
     if not editor.is_editable(template):
-        messages.error(request, "Este cuestionario ya tiene respuestas o no está vigente: crea una nueva versión para editarlo.")
+        messages.error(request, "Esta es una versión anterior (archivada) y es de solo lectura: edita la versión vigente.")
         return False
     return True
 
@@ -389,8 +412,11 @@ def question_delete(request, pk):
     question = get_object_or_404(Question.objects.select_related("section__template"), pk=pk)
     template = question.section.template
     if _is_draft(request, template):
-        question.delete()
-        messages.info(request, "Eliminé la pregunta. Revisa que los pesos sigan sumando 100%.")
+        if question.ownership_answers.exists():
+            messages.error(request, "No se puede eliminar: la pregunta ya tiene respuestas. Edita su texto o su peso en su lugar.")
+        else:
+            question.delete()
+            messages.info(request, "Eliminé la pregunta. Revisa que los pesos sigan sumando 100%.")
     return redirect("questionnaires:template_edit", pk=template.pk)
 
 
@@ -419,8 +445,11 @@ def scale_option_delete(request, pk):
     )
     template = option.template
     if _is_draft(request, template):
-        editor.delete_scale_option(option)
-        messages.info(request, "Eliminé la opción de la escala.")
+        if editor.has_responses(template):
+            messages.error(request, "No se puede quitar una opción de la escala: ya hay respuestas con esta escala. Puedes editar su etiqueta y descriptor.")
+        else:
+            editor.delete_scale_option(option)
+            messages.info(request, "Eliminé la opción de la escala.")
     return redirect("questionnaires:template_edit", pk=template.pk)
 
 

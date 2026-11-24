@@ -55,13 +55,13 @@ def test_projectform_guarda_campos_nuevos(lead):
     form = ProjectForm(data={
         "name": "Con Form", "client": "C", "owner": lead.pk, "responsable": resp.pk,
         "duration_type": Project.Duration.FINITO, "is_active": "on",
-        "kickoff": "2026-01-01", "target_close": "2026-06-30", "status": "DELAYED",
+        "kickoff": "2026-01-01", "target_close": "2026-06-30",
     })
     assert form.is_valid(), form.errors
     p = form.save()
     assert p.responsable == resp
     assert p.kickoff == _date(2026, 1, 1)
-    assert p.status == Project.Status.DELAYED
+    assert p.status == Project.Status.ON_TRACK   # el estatus ya no se captura en el formulario
 
 
 @pytest.mark.django_db

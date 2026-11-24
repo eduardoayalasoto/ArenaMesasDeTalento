@@ -15,6 +15,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
+from apps.catalog.vigencia import evaluable_q
 from apps.catalog.models import Area, EvaluationPeriod, Project, ProjectMembership, SeniorityLevel
 from apps.access import services as access
 from apps.access.decorators import requires, requires_any
@@ -67,7 +68,7 @@ def build_results(subject, period):
         )
         member_projects = list(
             subject.memberships.select_related("project")
-            .filter(project__is_active=True).order_by("project__name")
+            .filter(evaluable_q("project__")).order_by("project__name")
         )
         vd_evals = {
             vd.project_id: vd
@@ -252,14 +253,14 @@ def _project_progress(period):
     )
     projects = {}
     teams = {}
-    for p in Project.objects.filter(is_active=True).select_related("owner"):
+    for p in Project.objects.filter(evaluable_q()).select_related("owner"):
         projects[p.id] = p
         ids = set()
         if p.owner_id in valid_ids:
             ids.add(p.owner_id)
         teams[p.id] = ids
     for pid, uid in (
-        ProjectMembership.objects.filter(project__is_active=True)
+        ProjectMembership.objects.filter(evaluable_q("project__"))
         .values_list("project_id", "user_id")
     ):
         if pid in teams and uid in valid_ids:
@@ -289,7 +290,7 @@ def _person_team_projects(target, period):
     el estado de revisión de Mesa por cada uno, y el estado general derivado
     (`mesa_all_ready`: tiene equipos y todos están revisados)."""
     projects = list(
-        Project.objects.filter(is_active=True)
+        Project.objects.filter(evaluable_q())
         .filter(Q(memberships__user=target) | Q(owner=target))
         .distinct().order_by("name")
     )
@@ -316,12 +317,12 @@ def _general_ready_ids(period, users):
 
     team_proj = {}
     for pid, uid in (
-        ProjectMembership.objects.filter(project__is_active=True, user__in=users)
+        ProjectMembership.objects.filter(evaluable_q("project__"), user__in=users)
         .values_list("project_id", "user_id")
     ):
         team_proj.setdefault(uid, set()).add(pid)
     for pid, oid in (
-        Project.objects.filter(is_active=True, owner__in=users).values_list("id", "owner_id")
+        Project.objects.filter(evaluable_q(), owner__in=users).values_list("id", "owner_id")
     ):
         team_proj.setdefault(oid, set()).add(pid)
     reviewed = {}
@@ -360,7 +361,7 @@ def talent_table(request):
     proyecto_id = request.GET.get("proyecto")
     if proyecto_id:
         selected_project = (
-            Project.objects.filter(pk=proyecto_id, is_active=True)
+            Project.objects.filter(evaluable_q(), pk=proyecto_id)
             .select_related("owner").first()
         )
 
@@ -412,7 +413,7 @@ def talent_table(request):
     for u in page.object_list:
         if u.is_lead:
             lead_projects_by_user[u.id] = list(
-                ProjectMembership.objects.filter(user=u, project__is_active=True)
+                ProjectMembership.objects.filter(evaluable_q("project__"), user=u)
                 .order_by("project__name")
                 .values_list("project__name", flat=True)
             )
@@ -567,7 +568,7 @@ def _pending_people(period):
     users = User.objects.filter(is_active=True, is_superuser=False).select_related("area", "level")
 
     memberships_by_user = {}
-    for m in ProjectMembership.objects.filter(project__is_active=True).select_related("project"):
+    for m in ProjectMembership.objects.filter(evaluable_q("project__")).select_related("project"):
         memberships_by_user.setdefault(m.user_id, []).append(m.project)
 
     own_by_project = {}
@@ -590,7 +591,7 @@ def _pending_people(period):
 
     responsable_projects = {}
     validador_projects = {}
-    for p in Project.objects.filter(is_active=True):
+    for p in Project.objects.filter(evaluable_q()):
         if p.responsable_id:
             responsable_projects.setdefault(p.responsable_id, []).append(p)
         if p.validador_id:
@@ -864,7 +865,7 @@ def talent_mesa_project_toggle(request, pk, project_id):
 
     User = get_user_model()
     target = get_object_or_404(User, pk=pk, is_active=True)
-    project = get_object_or_404(Project, pk=project_id, is_active=True)
+    project = get_object_or_404(Project.objects.filter(evaluable_q()), pk=project_id)
     period = _open_period()
     if not period:
         return HttpResponse(status=400)
@@ -944,7 +945,7 @@ def talent_responsable_remove(request, pk, rid):
 def _project_names(user):
     """Nombres de los proyectos activos donde `user` es miembro u owner."""
     return list(
-        Project.objects.filter(is_active=True)
+        Project.objects.filter(evaluable_q())
         .filter(Q(memberships__user=user) | Q(owner=user))
         .distinct().order_by("name").values_list("name", flat=True)
     )

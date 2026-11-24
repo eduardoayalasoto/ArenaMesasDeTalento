@@ -300,28 +300,80 @@ def test_delete_routes_require_post(client, talento, draft):
     assert T.objects.filter(pk=draft.pk).exists()
 
 
-# --- Editar siempre disponible y pantalla guiada por pasos ----------------------------------------
+# --- Editar es editar: en sitio, también con respuestas ------------------------------------------
 
 @pytest.mark.django_db
-def test_list_edit_button_opens_or_creates_a_draft_when_locked(client, talento, published, monkeypatch):
-    monkeypatch.setattr(editor, "has_responses", lambda template: True)   # ya contestado: bloqueado
+def test_edit_in_place_even_with_responses(client, talento, published, monkeypatch):
+    monkeypatch.setattr(editor, "has_responses", lambda template: True)   # ya contestado
     client.force_login(talento)
     html = client.get(reverse("questionnaires:admin_list")).content.decode()
-    assert 'name="action" value="duplicate"' in html                      # «Editar» crea la nueva versión
-    new = editor.duplicate_as_new_version(published)
-    html = client.get(reverse("questionnaires:admin_list")).content.decode()
-    assert "Editar borrador" in html and reverse("questionnaires:template_edit", args=[new.pk]) in html
-    assert 'name="action" value="duplicate"' not in html                  # ya hay borrador: no duplica otra vez
+    assert reverse("questionnaires:template_edit", args=[published.pk]) in html
+    assert 'name="action" value="duplicate"' not in html                  # «Editar» ya no pide versión nueva
+    # Cambiar un texto/peso se guarda directamente sobre la publicada.
+    q = Question.objects.get(section__template=published)
+    resp = client.post(reverse("questionnaires:template_edit", args=[published.pk]), {
+        "action": "save_question", "question": q.pk, "title": "P1 ajustada", "text": "", "category": q.category_id or "",
+    })
+    assert resp.status_code == 302
+    q.refresh_from_db()
+    assert q.title == "P1 ajustada"
+    page = client.get(reverse("questionnaires:template_edit", args=[published.pk])).content.decode()
+    assert "Esta versión ya tiene respuestas" in page
 
 
 @pytest.mark.django_db
-def test_edit_screen_is_a_guided_sequence_of_steps(client, talento, draft, published, monkeypatch):
+def test_answered_questions_and_scale_values_are_protected(client, talento, published, monkeypatch):
+    from apps.evaluations.models import OwnershipAnswer, OwnershipEvaluation
+
+    monkeypatch.setattr(editor, "has_responses", lambda template: True)
+    client.force_login(talento)
+    q = Question.objects.get(section__template=published)
+    ev = OwnershipEvaluation.objects.create(user=talento, period=_open_period(), template=published)
+    OwnershipAnswer.objects.create(evaluation=ev, question=q, value=3)
+    client.post(reverse("questionnaires:question_delete", args=[q.pk]))
+    assert Question.objects.filter(pk=q.pk).exists()                       # contestada: no se borra
+    option = ScaleOption.objects.get(template=published, value=1)
+    client.post(reverse("questionnaires:scale_option_delete", args=[option.pk]))
+    assert ScaleOption.objects.filter(pk=option.pk).exists()               # con respuestas: no se quita
+    client.post(reverse("questionnaires:template_edit", args=[published.pk]), {
+        "action": "save_scale_option", "option": option.pk, "value": "2", "label": "Nuevo", "description": "",
+    })
+    option.refresh_from_db()
+    assert option.value == 1                                               # el valor numérico no cambia
+
+
+@pytest.mark.django_db
+def test_archived_version_is_read_only_and_screen_is_a_guided_sequence(client, talento, draft, published):
     client.force_login(talento)
     html = client.get(reverse("questionnaires:template_edit", args=[draft.pk])).content.decode()
     for marker in ("Paso 1 · Escala de respuestas", "Paso 2 · Categorías y pesos",
                    "Paso 3 · Secciones y preguntas", "Paso 4 · Publicar", "Estás editando un borrador"):
         assert marker in html
-    monkeypatch.setattr(editor, "has_responses", lambda template: True)
-    locked = client.get(reverse("questionnaires:template_edit", args=[published.pk])).content.decode()
-    assert "Esta versión ya no se puede modificar" in locked
-    assert locked.count('name="action" value="duplicate"') >= 1 or "Continuar" in locked
+    published.status = T.Status.ARCHIVADO
+    published.save(update_fields=["status"])
+    page = client.get(reverse("questionnaires:template_edit", args=[published.pk])).content.decode()
+    assert "Versión anterior (solo lectura)" in page
+    client.post(reverse("questionnaires:template_edit", args=[published.pk]), {"action": "save_meta", "scale_note": "x"})
+    published.refresh_from_db()
+    assert published.scale_note != "x"
+
+
+def _open_period():
+    from datetime import date
+
+    from apps.catalog.models import EvaluationPeriod
+
+    return EvaluationPeriod.objects.get_or_create(
+        name="2026-S2", defaults=dict(start_date=date(2026, 7, 1), end_date=date(2026, 12, 31),
+                                      status=EvaluationPeriod.Status.ABIERTO))[0]
+
+
+@pytest.mark.django_db
+def test_list_summary_cards_and_missing_positions(client, talento, published, new_position):
+    client.force_login(talento)
+    resp = client.get(reverse("questionnaires:admin_list"))
+    html = resp.content.decode()
+    assert resp.status_code == 200
+    assert [p.pk for p in resp.context["missing_positions"]] == [new_position.pk]   # Consultoría aún sin cuestionario
+    assert "Posiciones sin cuestionario" in html and "Consultoría · Analista" in html
+    assert "Vigente · sin respuestas aún" in html and "1 pregunta" in html

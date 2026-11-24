@@ -125,13 +125,11 @@
 
             <div class="mt-3 flex items-center gap-2 text-sm text-base-content/60 min-h-6">
               {% if not p.is_active %}
-                <span class="badge badge-sm bg-base-200 text-base-content/60">Proyecto cerrado</span>
+                <span class="badge badge-sm bg-base-200 text-base-content/60 whitespace-nowrap">Proyecto cerrado{% if p.target_close %} · {{ p.target_close|date:"d/m/Y" }}{% endif %}</span>
               {% elif p.target_close and p.target_close < today %}
-                <span class="badge badge-sm bg-base-200 text-base-content/60">Terminó el {{ p.target_close|date:"d/m/Y" }}</span>
-              {% elif p.status == "DELAYED" %}
-                <span class="badge badge-sm badge-warning badge-soft">{{ p.get_status_display }}</span>
+                <span class="badge badge-sm bg-base-200 text-base-content/60 whitespace-nowrap">Terminó el {{ p.target_close|date:"d/m/Y" }}</span>
               {% else %}
-                <span class="badge badge-sm badge-success badge-soft">{{ p.get_status_display }}</span>
+                <span class="badge badge-sm badge-success badge-soft whitespace-nowrap">Vigente</span>
               {% endif %}
             </div>
 

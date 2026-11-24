@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
 
+from apps.catalog.vigencia import evaluable_q
 from apps.catalog.models import EvaluationPeriod
 from apps.evaluations.models import OwnershipEvaluation
 
@@ -32,7 +33,7 @@ class Command(BaseCommand):
         sent = 0
         for user in User.objects.filter(is_active=True, is_superuser=False):
             pending = []
-            for m in user.memberships.select_related("project").filter(project__is_active=True):
+            for m in user.memberships.select_related("project").filter(evaluable_q("project__")):
                 ev = OwnershipEvaluation.objects.filter(
                     user=user, project=m.project, period=period
                 ).first()

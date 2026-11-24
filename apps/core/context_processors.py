@@ -1,6 +1,7 @@
 """Navegación lateral construida según las capacidades del usuario (segregación de pantallas)."""
 
 from django.urls import NoReverseMatch, reverse
+from apps.catalog.vigencia import evaluable_q
 
 
 def _safe_url(name: str) -> str | None:
@@ -86,7 +87,7 @@ def notifications(request):
                     "url": _safe_url_args("evaluations:ownership_edit", lead_eval.pk) or list_url,
                 })
         else:
-            memberships = user.memberships.select_related("project").filter(project__is_active=True)
+            memberships = user.memberships.select_related("project").filter(evaluable_q("project__"))
             evals = {
                 e.project_id: e
                 for e in OwnershipEvaluation.objects.filter(user=user, period=period)

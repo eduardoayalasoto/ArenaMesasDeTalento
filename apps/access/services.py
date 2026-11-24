@@ -16,6 +16,7 @@ from django.utils.text import slugify
 
 from . import registry
 from .registry import Scope
+from apps.catalog.vigencia import evaluable_q
 
 DEFAULT_PROFILE_SLUG = "colaborador"
 _CACHE_ATTR = "_access_grants"
@@ -200,8 +201,8 @@ def effective_access(user) -> dict:
                           FeedbackResponsible.objects.filter(user=user).count()))
     except Exception:  # pragma: no cover - apps opcionales
         pass
-    relations.append(("Responsable de proyecto activo", user.responsible_projects.filter(is_active=True).count()))
-    relations.append(("Validador de proyecto activo", user.validated_projects.filter(is_active=True).count()))
+    relations.append(("Responsable de proyecto activo", user.responsible_projects.filter(evaluable_q()).count()))
+    relations.append(("Validador de proyecto activo", user.validated_projects.filter(evaluable_q()).count()))
     relations.append(("Lead directo de", user.direct_reports.filter(deleted_at__isnull=True).count()))
     relations.append(("Director de área", user.directed_areas.count()))
     return {"user": user, "profile": None if user.is_superuser else effective_profile(user),
@@ -368,7 +369,7 @@ def out_of_profile_assignments() -> list[dict]:
     proj_ok = ok_ids("assign.project_role")
     from django.db.models import Q
 
-    bad_p = Project.objects.filter(is_active=True).filter(
+    bad_p = Project.objects.filter(evaluable_q()).filter(
         Q(responsable__isnull=False) & ~Q(responsable_id__in=proj_ok)
         | Q(validador__isnull=False) & ~Q(validador_id__in=proj_ok)
     )

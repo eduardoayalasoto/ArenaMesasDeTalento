@@ -6,7 +6,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from apps.catalog.models import Project
+from apps.catalog.models import EvaluationPeriod, Project
 from apps.core.services import projects as project_service
 
 User = get_user_model()
@@ -36,7 +36,7 @@ def projects(db, people):
         "tablero": Project.objects.create(name="Tablero Comercial", client="Retail Norte", owner=rosa, responsable=rosa,
                                           validador=pablo, target_close=today + timedelta(days=5)),
         "late": Project.objects.create(name="Migración ERP", client="Industrial", owner=pablo, responsable=pablo,
-                                       target_close=today - timedelta(days=3), status=Project.Status.DELAYED),
+                                       target_close=today - timedelta(days=3)),
         "servicio": Project.objects.create(name="Soporte BI", owner=rosa, responsable=rosa,
                                            duration_type=Project.Duration.INDEFINIDO, is_active=False),
     }
@@ -56,7 +56,6 @@ def test_search_any_word_and_filters(client, talento, projects):
     assert names(q="rosa tablero") == {"Tablero Comercial"}               # varias palabras
     assert names(state="cerrados") == {"Soporte BI"}
     assert names(duration="INDEFINIDO") == {"Soporte BI"}
-    assert names(focus="retrasados") == {"Migración ERP"}
     assert names(focus="vencidos") == {"Migración ERP"}
     assert names(focus="sin_validador") == {"Migración ERP", "Soporte BI"}
     assert "<html" not in client.get(url, **HX).content.decode()
@@ -88,3 +87,29 @@ def test_close_and_delete_go_back_to_the_filtered_list(client, talento, projects
     resp = client.post(reverse("catalog:project_reactivate", args=[projects["servicio"].pk]))
     assert resp.status_code == 302 and Project.objects.get(pk=projects["servicio"].pk).is_active
     assert client.get(reverse("catalog:project_delete", args=[projects["tablero"].pk])).status_code == 405
+
+
+@pytest.mark.django_db
+def test_closed_project_stays_evaluable_only_if_its_delivery_falls_in_the_open_period(client, talento, people):
+    from apps.catalog.vigencia import evaluable_q, is_evaluable
+
+    rosa, _ = people
+    period = EvaluationPeriod.objects.create(
+        name="2026-S2", start_date=date(2026, 7, 1), end_date=date(2026, 12, 31),
+        status=EvaluationPeriod.Status.ABIERTO,
+    )
+    mk = lambda name, **kw: Project.objects.create(name=name, owner=rosa, responsable=rosa, **kw)
+    abierto = mk("Abierto sin fecha")
+    en_ventana = mk("Cerrado en el semestre", is_active=False, target_close=date(2026, 11, 20))
+    fuera = mk("Cerrado de antes", is_active=False, target_close=date(2026, 3, 1))
+    sin_fecha = mk("Cerrado sin fecha", is_active=False)
+
+    evaluables = set(Project.objects.filter(evaluable_q()).values_list("name", flat=True))
+    assert evaluables == {"Abierto sin fecha", "Cerrado en el semestre"}
+    assert [is_evaluable(p, period) for p in (abierto, en_ventana, fuera, sin_fecha)] == [True, True, False, False]
+    # La pantalla de proyectos lo dice y ya no habla de "Delayed".
+    client.force_login(talento)
+    html = client.get(reverse("catalog:project_admin"), {"state": "registro"}, **HX).content.decode()
+    assert "Cerrado de antes" in html and "Cerrado en el semestre" not in html and "Delayed" not in html
+    html = client.get(reverse("catalog:project_admin"), {"state": "evaluables"}, **HX).content.decode()
+    assert "Cerrado en el semestre" in html and "Cerrado de antes" not in html

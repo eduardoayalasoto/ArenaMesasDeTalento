@@ -7,11 +7,14 @@ from datetime import date
 from django.db.models import Count, Exists, F, OuterRef, Q
 
 from apps.catalog.models import Project
+from apps.catalog.vigencia import evaluable_q, open_period
 
 STATE_CHOICES = (
     ("", "Todos los estados"),
+    ("evaluables", "Evaluables en el periodo abierto"),
     ("abiertos", "Abiertos"),
     ("cerrados", "Cerrados"),
+    ("registro", "Solo registro (no evaluables)"),
 )
 DURATION_CHOICES = (
     ("", "Toda duración"),
@@ -20,7 +23,6 @@ DURATION_CHOICES = (
 )
 FOCUS_CHOICES = (
     ("", "Sin atención especial"),
-    ("retrasados", "Marcados como Delayed"),
     ("vencidos", "Entrega vencida"),
     ("sin_validador", "Sin validador"),
     ("sin_equipo", "Sin equipo"),
@@ -37,6 +39,7 @@ def search_projects(*, q: str = "", state: str = "", duration: str = "", focus: 
     from apps.evaluations.models import OwnershipEvaluation, ValueDeliveryEvaluation
 
     today = today or date.today()
+    period = open_period()
     qs = Project.objects.select_related("owner", "responsable", "validador").annotate(
         members=Count("memberships", distinct=True),
         has_evals=(
@@ -54,11 +57,13 @@ def search_projects(*, q: str = "", state: str = "", duration: str = "", focus: 
         qs = qs.filter(is_active=True)
     elif state == "cerrados":
         qs = qs.filter(is_active=False)
+    elif state == "evaluables":
+        qs = qs.filter(evaluable_q(period=period))
+    elif state == "registro":
+        qs = qs.exclude(evaluable_q(period=period))
     if duration in (Project.Duration.FINITO, Project.Duration.INDEFINIDO):
         qs = qs.filter(duration_type=duration)
-    if focus == "retrasados":
-        qs = qs.filter(status=Project.Status.DELAYED)
-    elif focus == "vencidos":
+    if focus == "vencidos":
         qs = qs.filter(is_active=True, duration_type=Project.Duration.FINITO, target_close__lt=today)
     elif focus == "sin_validador":
         qs = qs.filter(validador__isnull=True)

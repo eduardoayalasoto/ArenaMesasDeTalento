@@ -10,7 +10,7 @@
     </a>
   </div>
 
-  {% include "partials/info_panel.html" with title="Cómo leer esta lista" text="<p>La <strong>fecha estimada de entrega</strong> solo aplica a proyectos con fecha; los <strong>servicios continuos</strong> se evalúan por la consistencia del servicio.</p><p>El <strong>Responsable</strong> captura la Entrega de Valor y el <strong>Validador</strong> la revisa. <strong>Cerrar</strong> un proyecto con evaluaciones es reversible; solo se elimina uno que nunca tuvo evaluaciones.</p>" %}
+  {% include "partials/info_panel.html" with title="Cómo leer esta lista" text="<p>La <strong>fecha estimada de entrega</strong> solo aplica a proyectos con fecha; los <strong>servicios continuos</strong> se evalúan por la consistencia del servicio.</p><p>Un proyecto <strong>abierto</strong> se ofrece para evaluar. Uno <strong>cerrado</strong> sigue evaluable solo si su fecha de entrega cae dentro del periodo abierto; si no, queda como <strong>registro</strong>. Cerrar es reversible; solo se elimina un proyecto que nunca tuvo evaluaciones.</p><p>El <strong>Responsable</strong> captura la Entrega de Valor y el <strong>Validador</strong> la revisa.</p>" %}
 
   {# Búsqueda en vivo: cada tecla (con pausa) y cada filtro piden el parcial por htmx; la URL queda compartible. #}
   <form id="project-filters" method="get" action="{% url 'catalog:project_admin' %}" class="mb-4 flex flex-wrap items-center gap-2"

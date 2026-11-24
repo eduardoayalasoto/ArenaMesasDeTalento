@@ -14,6 +14,7 @@ from typing import Callable
 
 from django.urls import NoReverseMatch, reverse
 
+from apps.catalog.vigencia import evaluable_q
 from apps.access import services as access
 from apps.access.registry import Scope
 
@@ -79,7 +80,7 @@ def _vd_to_capture(u):
     period = EvaluationPeriod.objects.filter(status=EvaluationPeriod.Status.ABIERTO).first()
     if not period:
         return 0
-    projects = u.responsible_projects.filter(is_active=True)
+    projects = u.responsible_projects.filter(evaluable_q())
     done = ValueDeliveryEvaluation.objects.filter(period=period, project__in=projects).exclude(
         status=ValueDeliveryEvaluation.Status.BORRADOR).values("project")
     return projects.exclude(pk__in=done).count()
