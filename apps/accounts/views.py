@@ -1,53 +1,24 @@
 """Pantallas de cuenta: perfil (foto + contraseña) y administración de usuarios (Talento)."""
 
+import json
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
-from django.db.models import ProtectedError
-from django.http import Http404, HttpResponse, HttpResponseNotAllowed
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Area, SeniorityLevel
+from apps.core.services import users as user_service
 
-from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserCreateForm
+from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserAdminForm
 from apps.access import services as access
 from apps.access.decorators import requires
 
 User = get_user_model()
-
-
-@login_required
-@requires("users.manage")
-def user_create(request):
-    """Alta de un usuario nuevo (solo Talento/admin)."""
-    if not access.has(request.user, "users.manage"):
-        return render(request, "errors/403.html", {
-            "titulo": "Administración reservada a Talento",
-            "mensaje": "Solo Talento y Cultura crea usuarios.",
-        }, status=403)
-
-    form = UserCreateForm()
-    if request.method == "POST":
-        form = UserCreateForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Perfil sugerido por rol y nivel (spec 005, R8); después se cambia en Usuarios.
-            from apps.access.models import Profile
-            from apps.access.seed import suggested_profile_slug
-
-            suggested = Profile.objects.filter(slug=suggested_profile_slug(user), is_system=False).first()
-            if suggested:
-                user.profile = suggested
-                user.save(update_fields=["profile"])
-            messages.success(request, f"Creaste a {user.full_name} ({user.email}).")
-            return redirect("accounts:user_admin")
-
-    return render(request, "accounts/user_create.html", {
-        "page_title": "Nuevo usuario",
-        "form": form,
-    })
 
 
 @login_required
@@ -125,174 +96,140 @@ def profile(request):
     })
 
 
+# --- Administración de usuarios (Talento) ---------------------------------------------------------
+
+
+def _hx_done(message: str, variant: str = "success") -> HttpResponse:
+    """Respuesta htmx de un guardado: toast, cierra el drawer y refresca la lista (sin tocar el cuerpo)."""
+    response = HttpResponse("")
+    response["HX-Reswap"] = "none"
+    response["HX-Trigger"] = json.dumps({
+        "toast": {"message": message, "variant": variant},
+        "users-changed": True,
+        "close-user-drawer": True,
+    })
+    return response
+
+
+def _back_to_list(request):
+    """Vuelve al listado conservando búsqueda y filtros (vienen en el Referer de la página)."""
+    referer = request.META.get("HTTP_REFERER", "")
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
+        return redirect(referer)
+    return redirect("accounts:user_admin")
+
+
 @login_required
 @requires("users.manage")
 def user_admin(request):
-    """Asignación masiva de área, nivel y rol (criterio de salida de Fase 1)."""
-    if not access.has(request.user, "users.manage"):
-        return render(request, "errors/403.html", {
-            "titulo": "Administración reservada a Talento",
-            "mensaje": "Solo Talento y Cultura administra a los colaboradores.",
-        }, status=403)
-
-    areas = {a.code: a for a in Area.objects.all()}
-    levels = {l.code: l for l in SeniorityLevel.objects.all()}
-
-    lead_candidates = access.assignable_users("assign.direct_lead").select_related("level").order_by("full_name")
-    lead_ids = set(lead_candidates.values_list("id", flat=True))
-
-    from apps.access.models import Profile
-
-    profiles = {p.pk: p for p in Profile.objects.filter(is_system=False)}
-    can_assign_profiles = access.has(request.user, "access.manage")
-
-    if request.method == "POST":
-        updated = 0
-        profile_errors = []
-        for user in User.objects.filter(is_superuser=False, deleted_at__isnull=True):
-            if f"area-{user.id}" not in request.POST:
-                continue  # usuario no estaba visible en el form (filtro activo)
-            area_code = request.POST.get(f"area-{user.id}", "")
-            level_code = request.POST.get(f"level-{user.id}", "")
-            role = request.POST.get(f"role-{user.id}", user.role)
-            new_area = areas.get(area_code)
-            new_level = levels.get(level_code)
-            # Lead directo (Arena Learn): solo si el campo llegó en el POST; nunca él mismo.
-            lead_raw = request.POST.get(f"lead-{user.id}")
-            new_lead_id = user.direct_lead_id
-            if lead_raw is not None:
-                new_lead_id = int(lead_raw) if lead_raw.isdigit() and int(lead_raw) in lead_ids else None
-                if new_lead_id == user.id:
-                    new_lead_id = None
-            if new_area and new_level and (new_area.id, new_level.id) != (user.area_id, user.level_id):
-                from apps.core.services import positions
-
-                if not positions.position_defined(new_area, new_level):
-                    profile_errors.append(
-                        f"{user.full_name}: no existe una posición activa para {new_area.name} · {new_level.name} "
-                        "(Catálogos → Posiciones); no se cambió su área ni su nivel."
-                    )
-                    new_area, new_level = user.area, user.level
-            if (user.area_id != (new_area.id if new_area else None)
-                    or user.level_id != (new_level.id if new_level else None)
-                    or user.role != role
-                    or user.direct_lead_id != new_lead_id):
-                user.area = new_area
-                user.level = new_level
-                user.role = role
-                user.direct_lead_id = new_lead_id
-                user.save(update_fields=["area", "level", "role", "direct_lead"])
-                updated += 1
-            # Perfil (spec 005): solo si llegó en el POST y quien guarda puede administrar perfiles.
-            profile_raw = request.POST.get(f"profile-{user.id}")
-            if can_assign_profiles and profile_raw and profile_raw.isdigit() and int(profile_raw) in profiles:
-                try:
-                    if access.assign_profile(user, profiles[int(profile_raw)], request.user):
-                        updated += 1
-                except ValidationError as exc:
-                    profile_errors.append(f"{user.full_name}: {' '.join(exc.messages)}")
-        for err in profile_errors:
-            messages.error(request, err)
-        messages.success(request, f"Actualizaste {updated} colaborador(es).")
-        return redirect("accounts:user_admin")
-
-    q = request.GET.get("q", "").strip()
-    users = User.objects.filter(is_superuser=False, deleted_at__isnull=True).select_related(
-        "area", "level", "profile")
-    if q:
-        users = users.filter(full_name__icontains=q)
-
-    return render(request, "accounts/user_admin.html", {
+    """Índice de usuarios: búsqueda en vivo (htmx), filtros y acciones por persona."""
+    params = {k: request.GET.get(k, "").strip() for k in ("q", "area", "level", "role", "status")}
+    users = list(user_service.search_users(**params))
+    context = {
         "page_title": "Usuarios",
-        "users": users.order_by("full_name"),
+        "users": users,
+        "total": len(users),
+        "filtered": any(params.values()),
         "areas": Area.objects.all(),
         "levels": SeniorityLevel.objects.all(),
         "roles": User.Role.choices,
-        "lead_candidates": lead_candidates,
-        "profiles": sorted(profiles.values(), key=lambda p: p.name),
-        "can_assign_profiles": can_assign_profiles,
-        "q": q,
+        "statuses": user_service.STATUS_CHOICES,
+        "can_reset_password": access.has(request.user, "users.reset_password"),
+        "can_delete": access.has(request.user, "users.delete"),
+        **params,
+    }
+    for u in users:
+        u.reset_confirm_id = f"reset-pwd-{u.pk}"
+        u.reset_message = (f"¿Restablecer la contraseña de {u.full_name} a {user_service.DEFAULT_PASSWORD}? "
+                           "Tendrá que cambiarla al iniciar sesión.")
+        u.delete_confirm_id = f"delete-user-{u.pk}"
+        u.delete_message = (f"¿Eliminar a {u.full_name}? Si tiene evaluaciones se da de baja y se conserva su "
+                            "historial; si no, se borra de forma permanente.")
+    template = "accounts/_user_results.html" if request.headers.get("HX-Request") else "accounts/user_admin.html"
+    return render(request, template, context)
+
+
+def _render_drawer(request, form, target=None):
+    from apps.evaluations.models import OwnershipEvaluation
+
+    evaluations = history = ()
+    if target is not None:
+        evaluations = OwnershipEvaluation.objects.filter(user=target).select_related(
+            "period", "project").order_by("-period__start_date", "project__name")
+        history = user_service.history_for(target)
+    return render(request, "accounts/_user_drawer_form.html", {
+        "form": form,
+        "target": target,
+        "evaluations": evaluations,
+        "history": history,
     })
 
 
+def _drawer_form(request, instance=None):
+    kwargs = {
+        "actor": request.user,
+        "can_assign_profiles": access.has(request.user, "access.manage"),
+        "instance": instance,
+    }
+    return UserAdminForm(request.POST, **kwargs) if request.method == "POST" else UserAdminForm(**kwargs)
+
+
 @login_required
+@requires("users.manage")
+def user_create(request):
+    """Alta de un usuario nuevo (drawer del índice)."""
+    if not request.headers.get("HX-Request"):
+        return redirect("accounts:user_admin")
+    form = _drawer_form(request)
+    if request.method == "POST" and form.is_valid():
+        try:
+            user = user_service.create_user(form, request.user)
+        except ValidationError as exc:
+            form.add_error(None, exc)
+        else:
+            return _hx_done(f"Creaste a {user.full_name} ({user.email}).")
+    return _render_drawer(request, form)
+
+
+@login_required
+@requires("users.manage")
+def user_edit(request, pk):
+    """Ver y editar a una persona (drawer del índice)."""
+    if not request.headers.get("HX-Request"):
+        return redirect("accounts:user_admin")
+    target = get_object_or_404(user_service.base_queryset(), pk=pk)
+    form = _drawer_form(request, instance=target)
+    if request.method == "POST" and form.is_valid():
+        try:
+            user, changed = user_service.update_user(form, request.user)
+        except ValidationError as exc:
+            form.add_error(None, exc)
+        else:
+            if changed:
+                return _hx_done(f"Actualizaste a {user.full_name}.")
+            return _hx_done("No hubo cambios que guardar.", "info")
+    return _render_drawer(request, form, target)
+
+
+@login_required
+@require_POST
 @requires("users.reset_password")
 def user_reset_password(request, pk):
-    """Restablece la contraseña de un colaborador a Arena2026! (solo Talento/admin)."""
-    if not access.has(request.user, "users.reset_password"):
-        return render(request, "errors/403.html", {
-            "titulo": "Acción reservada a Talento",
-            "mensaje": "Solo Talento y Cultura puede resetear contraseñas.",
-        }, status=403)
-    if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
+    """Restablece la contraseña de un colaborador a la inicial (solo Talento/admin)."""
     user = get_object_or_404(User, pk=pk, is_superuser=False)
-    user.set_password("Arena2026!")
-    user.must_change_password = True
-    user.save(update_fields=["password", "must_change_password"])
-    if request.headers.get("HX-Request"):
-        return HttpResponse(
-            '<span class="inline-flex items-center gap-1 text-base font-medium text-success">'
-            '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i>Reseteada</span>'
-        )
-    messages.success(request, f"Contraseña de {user.full_name} restablecida a Arena2026!.")
-    return redirect("accounts:user_admin")
+    user_service.reset_password(user, request.user)
+    messages.success(request, f"Contraseña de {user.full_name} restablecida a {user_service.DEFAULT_PASSWORD}.")
+    return _back_to_list(request)
 
 
 @login_required
+@require_POST
 @requires("users.delete")
 def user_delete(request, pk):
-    """Elimina o desactiva un usuario (solo Talento/admin). Soft delete si tiene historial."""
-    if not access.has(request.user, "users.delete"):
-        return render(request, "errors/403.html", {
-            "titulo": "Acción reservada a Talento",
-            "mensaje": "Solo Talento y Cultura puede eliminar usuarios.",
-        }, status=403)
-    if request.method != "POST":
-        return HttpResponseNotAllowed(["POST"])
-
+    """Elimina o da de baja a un usuario (solo Talento/admin). Baja lógica si tiene historial."""
     user = get_object_or_404(User, pk=pk, is_superuser=False)
-
-    if user.pk == request.user.pk:
-        error_msg = "No puedes eliminarte a ti mismo."
-        if request.headers.get("HX-Request"):
-            return HttpResponse(
-                f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-base text-error">'
-                f'{error_msg}</td></tr>'
-            )
-        messages.error(request, error_msg)
-        return redirect("accounts:user_admin")
-
-    from apps.evaluations.models import ArenaImpactScore, FinalScore, OwnershipEvaluation
-    has_history = (
-        OwnershipEvaluation.objects.filter(user=user).exists()
-        or ArenaImpactScore.objects.filter(user=user).exists()
-        or FinalScore.objects.filter(user=user).exists()
-    )
-
-    if has_history:
-        user.is_active = False
-        user.deleted_at = timezone.now()
-        user.save(update_fields=["is_active", "deleted_at"])
-        msg = f"{user.full_name} eliminado/a. Sus evaluaciones históricas se conservan."
-    else:
-        try:
-            nombre = user.full_name
-            user.delete()
-            msg = f"{nombre} eliminado/a permanentemente."
-        except ProtectedError as e:
-            protected = list(e.protected_objects)[:3]
-            detalle = ", ".join(str(o) for o in protected)
-            error_msg = f"No se puede eliminar: hay registros vinculados ({detalle}…). Reasigna primero."
-            if request.headers.get("HX-Request"):
-                return HttpResponse(
-                    f'<tr id="user-row-{pk}"><td colspan="5" class="px-4 py-2 text-base text-error">'
-                    f'{error_msg}</td></tr>'
-                )
-            messages.error(request, error_msg)
-            return redirect("accounts:user_admin")
-
-    if request.headers.get("HX-Request"):
-        return HttpResponse("")
-    messages.success(request, msg)
-    return redirect("accounts:user_admin")
+    try:
+        messages.success(request, user_service.delete_user(user, request.user))
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+    return _back_to_list(request)

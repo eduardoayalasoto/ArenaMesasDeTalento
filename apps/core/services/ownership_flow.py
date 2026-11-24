@@ -243,5 +243,12 @@ def reset_ownership_evaluation(evaluation, actor=None, reason=None):
 
     user = evaluation.user
     period = evaluation.period
+    project = evaluation.project.name if evaluation.project_id else "todos sus proyectos"
     evaluation.delete()
     final_flow.recompute_final_score(user, period)
+    from apps.accounts.models import UserAuditLog
+    from apps.core.services import users as user_admin
+
+    user_admin.log(actor, UserAuditLog.Kind.EVALUATION_RESET, user,
+                   f"Evaluación de Ownership de {period.name} ({project}) reiniciada."
+                   + (f" Motivo: {reason}" if reason else ""))

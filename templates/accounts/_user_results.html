@@ -1,0 +1,74 @@
+{% load core_extras %}
+{# Parcial de resultados del índice de usuarios (htmx). Una línea por persona, todo en texto. #}
+<p class="mb-2 text-base text-base-content/70" aria-live="polite">
+  {{ total }} usuario{{ total|pluralize }}{% if filtered %} con los filtros actuales{% endif %}
+  {% if filtered %}· <a href="{% url 'accounts:user_admin' %}" class="link link-primary">Limpiar filtros</a>{% endif %}
+</p>
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-base">
+      <thead class="bg-base-200/50 text-base-content/70 text-left">
+        <tr>
+          <th class="px-4 py-3 font-medium">Colaborador</th>
+          <th class="px-4 py-3 font-medium hidden md:table-cell">Área y nivel</th>
+          <th class="px-4 py-3 font-medium hidden lg:table-cell">Rol y perfil</th>
+          <th class="px-4 py-3 font-medium hidden xl:table-cell">Lead directo</th>
+          <th class="px-4 py-3 font-medium hidden sm:table-cell">Estado</th>
+          <th class="px-4 py-3 font-medium text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-base-200">
+        {% for u in users %}
+          <tr id="user-row-{{ u.pk }}" class="hover:bg-base-200/50 transition-colors">
+            <td class="px-4 py-2.5">
+              <div class="flex items-center gap-3 min-w-0">
+                {% include "partials/avatar.html" with subject=u size="w-9 h-9" mini=True %}
+                <div class="min-w-0">
+                  <p class="font-medium text-base-content truncate">{{ u.full_name }}</p>
+                  <p class="text-sm text-base-content/60 truncate">{{ u.email }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-2.5 hidden md:table-cell">
+              {% if u.area %}<p class="text-base-content">{{ u.area.name }}</p>{% else %}<p class="text-warning">Sin área</p>{% endif %}
+              {% if u.level %}<p class="text-sm text-base-content/60">{{ u.level.name }} · {{ u|puesto }}</p>{% else %}<p class="text-sm text-warning">Sin nivel</p>{% endif %}
+            </td>
+            <td class="px-4 py-2.5 hidden lg:table-cell">
+              <p class="text-base-content">{{ u.get_role_display }}</p>
+              <p class="text-sm text-base-content/60">{{ u.profile.name|default:"Perfil sugerido por rol" }}</p>
+            </td>
+            <td class="px-4 py-2.5 hidden xl:table-cell">
+              <p class="text-base-content">{{ u.direct_lead.full_name|default:"Lead del área" }}</p>
+            </td>
+            <td class="px-4 py-2.5 hidden sm:table-cell">
+              {% if not u.is_active %}<span class="badge badge-soft badge-error">Inactivo</span>
+              {% elif u.must_change_password %}<span class="badge badge-soft badge-warning">Cambiar contraseña</span>
+              {% elif not u.area_id or not u.level_id %}<span class="badge badge-soft badge-warning">Incompleto</span>
+              {% else %}<span class="badge badge-soft badge-success">Activo</span>{% endif %}
+              <p class="mt-0.5 text-sm text-base-content/60">{% if u.last_login %}Último acceso {{ u.last_login|date:"d M Y" }}{% else %}Nunca ha ingresado{% endif %}</p>
+            </td>
+            <td class="px-4 py-2.5">
+              <div class="flex items-center justify-end gap-1">
+                <button type="button" class="btn btn-sm btn-soft btn-primary"
+                        hx-get="{% url 'accounts:user_edit' u.pk %}" hx-target="#user-drawer-body" hx-swap="innerHTML"
+                        hx-on::before-request="window.openUserDrawer()">
+                  <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
+                </button>
+                {% if can_reset_password %}
+                  {% url 'accounts:user_reset_password' u.pk as reset_url %}
+                  {% include "components/_confirm.html" with confirm_id=u.reset_confirm_id title="Restablecer contraseña" message=u.reset_message confirm_url=reset_url trigger_icon="key-round" trigger_aria="Restablecer contraseña" confirm_label="Restablecer" %}
+                {% endif %}
+                {% if can_delete %}
+                  {% url 'accounts:user_delete' u.pk as delete_url %}
+                  {% include "components/_confirm.html" with confirm_id=u.delete_confirm_id title="Eliminar usuario" message=u.delete_message confirm_url=delete_url trigger_aria="Eliminar usuario" %}
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">{% include "components/_empty_state.html" with icon="search-x" message="Ningún usuario coincide con la búsqueda." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,161 +1,62 @@
 {% extends "base.html" %}
-{% load access_tags core_extras %}
 {% block content %}
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
       <h2 class="text-xl font-semibold text-base-content">Usuarios</h2>
-      <p class="text-base-content/70">Asigna área, nivel y rol a cada colaborador.</p>
+      <p class="text-base-content/70">Busca, revisa y administra a cada colaborador: área, nivel, rol, perfil, Lead directo y acceso.</p>
     </div>
-    <a href="{% url 'accounts:user_create' %}" class="btn btn-sm btn-primary">{% include "partials/icon.html" with name="user-plus" cls="w-4 h-4" %} Nuevo usuario</a>
+    <button type="button" class="btn btn-primary"
+            hx-get="{% url 'accounts:user_create' %}" hx-target="#user-drawer-body" hx-swap="innerHTML"
+            hx-on::before-request="window.openUserDrawer()">
+      <i data-lucide="user-plus" class="w-4 h-4" aria-hidden="true"></i> Nuevo usuario
+    </button>
   </div>
-  {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El nivel <strong>Lead</strong> habilita ver a toda su área. El <strong>Lead directo</strong> es quien aprueba primero sus solicitudes de curso en Arena Learn (si está vacío, aprueba cualquier Lead de su área). El rol <strong>Director</strong> habilita validar la Entrega de Valor; <strong>Talento</strong> administra todo. Los cambios se guardan al presionar «Guardar cambios».</p>" %}
+  {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El <strong>Lead directo</strong> es quien aprueba primero sus solicitudes de curso en Arena Learn (si está vacío, aprueba cualquier Lead de su área). El <strong>perfil</strong> define qué puede ver y hacer. Todo cambio queda en la bitácora de la persona.</p><p>Para reiniciar una evaluación, ábrela desde su evaluación individual: una persona puede tener varias en un mismo periodo.</p>" %}
 
-  <form method="get" class="mb-4">
-    <div class="relative max-w-sm">
-      {% include "partials/icon.html" with name="search" cls="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" %}
-      <input type="search" name="q" value="{{ q }}" class="input w-full pl-9" placeholder="Buscar por nombre…">
+  {# Búsqueda en vivo: cada tecla (con pausa) y cada filtro piden el parcial por htmx; la URL queda compartible. #}
+  <form id="user-filters" method="get" action="{% url 'accounts:user_admin' %}" class="mb-4 flex flex-wrap items-center gap-2"
+        hx-get="{% url 'accounts:user_admin' %}" hx-target="#user-results" hx-swap="innerHTML" hx-push-url="true"
+        hx-trigger="input changed delay:300ms, change, submit" hx-sync="this:replace" hx-indicator="#users-spinner">
+    <div class="relative w-full sm:w-80">
+      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" aria-hidden="true"></i>
+      <input type="search" name="q" value="{{ q }}" class="input w-full pl-9" autocomplete="off"
+             placeholder="Buscar por nombre, correo, área, nivel, rol, perfil, Lead…" aria-label="Buscar usuarios">
     </div>
+    <select name="area" class="select w-full sm:w-44" aria-label="Filtrar por área">
+      <option value="">Todas las áreas</option>
+      {% for a in areas %}<option value="{{ a.code }}" {% if area == a.code %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
+    </select>
+    <select name="level" class="select w-full sm:w-40" aria-label="Filtrar por nivel">
+      <option value="">Todos los niveles</option>
+      {% for l in levels %}<option value="{{ l.code }}" {% if level == l.code %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+    </select>
+    <select name="role" class="select w-full sm:w-44" aria-label="Filtrar por rol">
+      <option value="">Todos los roles</option>
+      {% for value, label in roles %}<option value="{{ value }}" {% if role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <select name="status" class="select w-full sm:w-52" aria-label="Filtrar por estado">
+      {% for value, label in statuses %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <span id="users-spinner" class="htmx-indicator" aria-hidden="true"><span class="loading loading-spinner loading-sm text-base-content/50"></span></span>
   </form>
 
-  <form method="post" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
-    {% csrf_token %}
-    <div class="overflow-x-auto">
-      <table class="w-full text-base">
-        <thead class="bg-base-200/50 text-base-content/70 text-left">
-          <tr>
-            <th class="px-4 py-3 font-medium">Colaborador</th>
-            <th class="px-4 py-3 font-medium w-44">Área</th>
-            <th class="px-4 py-3 font-medium w-44">Nivel</th>
-            <th class="px-4 py-3 font-medium w-48">Rol</th>
-            <th class="px-4 py-3 font-medium w-52" title="Primer aprobador de sus solicitudes de curso en Arena Learn">Lead directo</th>
-            {% if can_assign_profiles %}<th class="px-4 py-3 font-medium w-44" title="Define qué puede ver y hacer en el sistema">Perfil</th>{% endif %}
-            <th class="px-4 py-3 font-medium w-36">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-base-200">
-          {% for u in users %}
-            <tr id="user-row-{{ u.id }}" class="hover:bg-base-200/50 transition-colors">
-              <td class="px-4 py-2.5">
-                <p class="font-medium text-base-content">{{ u.full_name }}</p>
-                <p class="text-base text-base-content/50">{{ u.email }}</p>
-              </td>
+  {# Refresca la lista (con los filtros vigentes) tras guardar en el drawer. #}
+  <div class="hidden" aria-hidden="true"
+       hx-get="{% url 'accounts:user_admin' %}" hx-trigger="users-changed from:body" hx-include="#user-filters"
+       hx-target="#user-results" hx-swap="innerHTML"></div>
 
-              <td class="px-4 py-2.5">
-                <div class="relative">
-                  <select name="area-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
-                    <option value="">— Sin área —</option>
-                    {% for a in areas %}<option value="{{ a.code }}" {% if u.area_id == a.id %}selected{% endif %}>{{ a.name }}</option>{% endfor %}
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
-                  </div>
-                </div>
-              </td>
+  <div id="user-results">{% include "accounts/_user_results.html" %}</div>
 
-              <td class="px-4 py-2.5">
-                <div class="relative">
-                  <select name="level-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
-                    <option value="">— Sin nivel —</option>
-                    {% for l in levels %}<option value="{{ l.code }}" {% if u.level_id == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
-                  </div>
-                </div>
-                {% if u.level %}<p class="mt-0.5 text-sm text-base-content/60">Posición: {{ u|puesto }} · Nivel: {{ u.level.name }}</p>{% endif %}
-              </td>
+  {% include "components/_drawer.html" with id="user-drawer" title="Usuario" open_event="open-user-drawer" close_event="close-user-drawer" body_id="user-drawer-body" width_class="w-3/4 max-w-none" %}
+{% endblock %}
 
-              <td class="px-4 py-2.5">
-                <div class="relative">
-                  <select name="role-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
-                    {% for value, label in roles %}<option value="{{ value }}" {% if u.role == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
-                  </div>
-                </div>
-              </td>
-
-              <td class="px-4 py-2.5">
-                <div class="relative">
-                  <select name="lead-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer">
-                    <option value="">— Lead del área —</option>
-                    {% for c in lead_candidates %}{% if c.id != u.id %}<option value="{{ c.id }}" {% if u.direct_lead_id == c.id %}selected{% endif %}>{{ c.full_name }}{% if c.level and c.level.code == "LEAD" %} · Lead{% endif %}</option>{% endif %}{% endfor %}
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
-                  </div>
-                </div>
-              </td>
-
-              {% if can_assign_profiles %}
-              <td class="px-4 py-2.5">
-                <div class="relative">
-                  <select name="profile-{{ u.id }}" class="select w-full py-1.5 appearance-none pr-8 text-base bg-base-100 cursor-pointer" aria-label="Perfil de {{ u.full_name }}">
-                    {% if not u.profile_id %}<option value="">— Sugerido por rol —</option>{% endif %}
-                    {% for p in profiles %}<option value="{{ p.pk }}" {% if u.profile_id == p.pk %}selected{% endif %}>{{ p.name }}</option>{% endfor %}
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-base-content/50"></i>
-                  </div>
-                </div>
-                <a href="{% url 'access:effective_access' u.pk %}" class="text-base text-primary hover:underline">Ver acceso</a>
-              </td>
-              {% endif %}
-
-              <td class="px-4 py-2.5">
-                <div class="flex items-center gap-1">
-                  {% if request.user|can:"users.reset_password" %}
-                  <span id="reset-pwd-{{ u.id }}" class="relative group/tip">
-                    <button type="button"
-                      hx-post="{% url 'accounts:user_reset_password' u.id %}"
-                      hx-target="#reset-pwd-{{ u.id }}"
-                      hx-swap="innerHTML"
-                      hx-confirm="¿Resetear contraseña de {{ u.full_name }} a Arena2026!? Tendrá que cambiarla al iniciar sesión."
-                      class="p-1.5 rounded-lg text-warning hover:bg-warning/10 border border-transparent hover:border-warning/25 transition cursor-pointer">
-                      <i data-lucide="key-round" class="w-4 h-4"></i>
-                    </button>
-                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip:opacity-100 z-20">Resetear contraseña</span>
-                  </span>
-                  {% endif %}
-                  {% if request.user|can:"ownership.admin" %}
-                  <span id="reset-eval-{{ u.id }}" class="relative group/tip2">
-                    <button type="button"
-                      hx-post="{% url 'evaluations:ownership_reset_user' u.id %}"
-                      hx-target="#reset-eval-{{ u.id }}"
-                      hx-swap="innerHTML"
-                      hx-confirm="¿Reiniciar la evaluación de {{ u.full_name }}? Se borrarán todas sus respuestas y evaluador asignado del periodo actual."
-                      class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer">
-                      <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                    </button>
-                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip2:opacity-100 z-20">Reiniciar evaluación</span>
-                  </span>
-                  {% endif %}
-                  {% if request.user|can:"users.delete" %}
-                  <span class="relative group/tip3">
-                    <button type="button"
-                      hx-post="{% url 'accounts:user_delete' u.id %}"
-                      hx-target="#user-row-{{ u.id }}"
-                      hx-swap="outerHTML"
-                      hx-confirm="¿Eliminar a {{ u.full_name }}? Esta acción no se puede deshacer."
-                      class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer">
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                    <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/tip3:opacity-100 z-20">Eliminar usuario</span>
-                  </span>
-                  {% endif %}
-                </div>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <div class="p-4 border-t border-base-300 bg-base-200/50 flex justify-end sticky bottom-0">
-      <button type="submit" class="btn btn-primary">
-        {% include "partials/icon.html" with name="save" cls="w-4 h-4" %}
-        Guardar cambios
-      </button>
-    </div>
-  </form>
+{% block extra_scripts %}
+<script>
+  // Abre el drawer con un spinner mientras htmx trae el formulario (evita ver el de la persona anterior).
+  window.openUserDrawer = function () {
+    document.getElementById("user-drawer-body").innerHTML =
+      '<div class="flex items-center justify-center py-10 text-base-content/40"><span class="loading loading-spinner loading-md" role="status" aria-label="Cargando"></span></div>';
+    window.dispatchEvent(new CustomEvent("open-user-drawer"));
+  };
+</script>
 {% endblock %}

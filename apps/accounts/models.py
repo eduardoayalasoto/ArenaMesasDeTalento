@@ -165,3 +165,37 @@ class User(AbstractUser):
     def initials(self) -> str:
         parts = (self.full_name or self.email).split()
         return (parts[0][:1] + (parts[1][:1] if len(parts) > 1 else "")).upper()
+
+
+class UserAuditLog(models.Model):
+    """Bitácora inmutable de la administración de usuarios (alta, edición, contraseña, baja, reinicios)."""
+
+    class Kind(models.TextChoices):
+        CREATED = "CREATED", "Alta"
+        UPDATED = "UPDATED", "Edición"
+        PASSWORD_RESET = "PASSWORD_RESET", "Contraseña restablecida"
+        DEACTIVATED = "DEACTIVATED", "Baja (conserva historial)"
+        DELETED = "DELETED", "Eliminación"
+        EVALUATION_RESET = "EVALUATION_RESET", "Evaluación reiniciada"
+
+    actor = models.ForeignKey("accounts.User", on_delete=models.SET_NULL, null=True, blank=True, related_name="+")
+    kind = models.CharField(max_length=20, choices=Kind.choices)
+    target_user = models.ForeignKey("accounts.User", on_delete=models.SET_NULL, null=True, blank=True,
+                                    related_name="audit_entries")
+    # Foto fija de la persona (el usuario puede borrarse y la bitácora debe seguir siendo legible).
+    target_label = models.CharField(max_length=220, blank=True)
+    detail = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "movimiento de usuarios"
+        verbose_name_plural = "bitácora de usuarios"
+        ordering = ["-created_at", "-pk"]
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError("La bitácora de usuarios es inmutable.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.get_kind_display()} · {self.target_label}"

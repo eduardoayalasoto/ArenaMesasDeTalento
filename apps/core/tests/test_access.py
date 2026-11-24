@@ -125,12 +125,12 @@ def test_profile_crud_assignment_and_lockout(client, people):
     assert Profile.objects.filter(pk=dup.pk).exists()
     client.post(reverse("access:profile_delete", args=[ext.slug]))
     assert not Profile.objects.filter(pk=ext.pk).exists()
-    # Selector en Usuarios (solo filas presentes en el POST).
+    # Perfil desde el drawer de Usuarios (edición htmx).
     c = p["colab"]
-    client.post(reverse("accounts:user_admin"), {
-        f"area-{c.id}": "CD", f"level-{c.id}": "JR", f"role-{c.id}": "COLABORADOR",
-        f"profile-{c.id}": prof("lead").pk,
-    })
+    client.post(reverse("accounts:user_edit", args=[c.pk]), {
+        "full_name": c.full_name, "email": c.email, "area": c.area_id, "level": c.level_id,
+        "role": "COLABORADOR", "is_active": "on", "profile": prof("lead").pk,
+    }, HTTP_HX_REQUEST="true")
     c.refresh_from_db()
     assert c.profile.slug == "lead"
     assert AccessAuditLog.objects.filter(kind="PROFILE_ASSIGNED", target_user=c).exists()

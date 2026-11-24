@@ -1,0 +1,91 @@
+{# Cuerpo del drawer de Usuarios (htmx): alta y "ver y editar". Guardar responde con toast y refresca la lista. #}
+<div class="grid gap-8 lg:grid-cols-3">
+  <form class="lg:col-span-2" method="post"
+        hx-post="{% if target %}{% url 'accounts:user_edit' target.pk %}{% else %}{% url 'accounts:user_create' %}{% endif %}"
+        hx-target="#user-drawer-body" hx-swap="innerHTML" hx-indicator="#user-save-spinner">
+    {% csrf_token %}
+    <p class="text-base font-medium text-base-content mb-4">
+      {% if target %}{{ target.full_name }}{% else %}Nuevo usuario{% endif %}
+    </p>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error mb-4 text-base" role="alert">{{ form.non_field_errors|join:" " }}</div>
+    {% endif %}
+
+    <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-2">Datos de la persona</h3>
+    <div class="grid gap-x-4 md:grid-cols-2">
+      {% include "components/_form_field.html" with field=form.full_name %}
+      {% include "components/_form_field.html" with field=form.email %}
+    </div>
+
+    <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mt-4 mb-2">Organización</h3>
+    <div class="grid gap-x-4 md:grid-cols-2">
+      {% include "components/_form_field.html" with field=form.area %}
+      {% include "components/_form_field.html" with field=form.level %}
+      {% include "components/_form_field.html" with field=form.role help=form.role.help_text %}
+      {% include "components/_form_field.html" with field=form.direct_lead help=form.direct_lead.help_text %}
+    </div>
+
+    <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mt-4 mb-2">Acceso</h3>
+    <div class="grid gap-x-4 md:grid-cols-2">
+      {% if form.profile %}{% include "components/_form_field.html" with field=form.profile help=form.profile.help_text %}{% endif %}
+      {% include "components/_form_field.html" with field=form.is_active %}
+      {% if form.password %}
+        {% include "components/_form_field.html" with field=form.password help=form.password.help_text %}
+        {% include "components/_form_field.html" with field=form.must_change_password %}
+      {% endif %}
+    </div>
+
+    <div class="mt-6 flex items-center gap-3">
+      <button type="submit" class="btn btn-primary">{% if target %}Guardar cambios{% else %}Crear usuario{% endif %}</button>
+      <button type="button" class="btn btn-ghost" onclick="window.dispatchEvent(new CustomEvent('close-user-drawer'))">Cancelar</button>
+      <span id="user-save-spinner" class="htmx-indicator" aria-hidden="true"><span class="loading loading-spinner loading-sm"></span></span>
+    </div>
+  </form>
+
+  {% if target %}
+  <aside class="space-y-6">
+    <section>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-2">Evaluaciones de Ownership</h3>
+      {% if evaluations %}
+        <ul class="divide-y divide-base-200 border border-base-300 rounded-xl">
+          {% for ev in evaluations %}
+            <li class="flex items-center justify-between gap-3 px-3 py-2">
+              <div class="min-w-0">
+                <p class="text-base text-base-content truncate">{{ ev.period.name }} · {{ ev.project.name|default:"General" }}</p>
+                <p class="text-sm text-base-content/60">{{ ev.get_status_display }}</p>
+              </div>
+              <a href="{% url 'evaluations:ownership_view' ev.pk %}" class="btn btn-sm btn-ghost shrink-0">Abrir</a>
+            </li>
+          {% endfor %}
+        </ul>
+        <p class="mt-2 text-sm text-base-content/60">Reiniciar una evaluación se hace dentro de cada una (permiso de Talento).</p>
+      {% else %}
+        <p class="text-base text-base-content/60">Todavía no tiene evaluaciones.</p>
+      {% endif %}
+    </section>
+
+    <section>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-2">Acceso efectivo</h3>
+      <a href="{% url 'access:effective_access' target.pk %}" class="link link-primary text-base">Ver qué puede hacer en el sistema</a>
+    </section>
+
+    <section>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-2">Historial de cambios</h3>
+      {% if history %}
+        <ul class="space-y-2">
+          {% for h in history %}
+            <li class="text-base">
+              <p class="text-base-content">{{ h.get_kind_display }}</p>
+              <p class="text-sm text-base-content/60">{{ h.actor.full_name|default:"Sistema" }} · {{ h.created_at|date:"d M Y H:i" }}</p>
+              {% if h.detail %}<p class="text-sm text-base-content/70">{{ h.detail }}</p>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-base text-base-content/60">Sin movimientos registrados.</p>
+      {% endif %}
+    </section>
+  </aside>
+  {% endif %}
+</div>

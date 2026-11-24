@@ -370,14 +370,16 @@ def test_admin_screens_lead_and_director(client, learn_people, learn_area):
     client.force_login(p["colab"])
     assert client.get(reverse("catalog:area_admin")).status_code == 403
     client.force_login(p["talento"])
-    post = {f"area-{colab.id}": "CD", f"level-{colab.id}": "JR", f"role-{colab.id}": "COLABORADOR",
-            f"lead-{colab.id}": str(p["lead"].id)}
-    client.post(reverse("accounts:user_admin"), post)
+    post = {"full_name": colab.full_name, "email": colab.email, "area": colab.area_id, "level": colab.level_id,
+            "role": "COLABORADOR", "is_active": "on", "direct_lead": str(p["lead"].id)}
+    edit = reverse("accounts:user_edit", args=[colab.pk])
+    client.post(edit, post, HTTP_HX_REQUEST="true")
     colab.refresh_from_db()
     assert colab.direct_lead == p["lead"]
-    client.post(reverse("accounts:user_admin"), {**post, f"lead-{colab.id}": str(colab.id)})
+    # Nunca su propio Lead: la opción ni siquiera es elegible, el formulario lo rechaza.
+    client.post(edit, {**post, "direct_lead": str(colab.id)}, HTTP_HX_REQUEST="true")
     colab.refresh_from_db()
-    assert colab.direct_lead is None  # nunca su propio Lead
+    assert colab.direct_lead == p["lead"]
 
     client.post(reverse("catalog:area_admin"), {"area": learn_area.pk, "director": p["director"].pk})
     client.post(reverse("catalog:area_admin"), {"area": learn_area.pk, "director": colab.pk})  # no es Director

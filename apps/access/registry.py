@@ -100,8 +100,7 @@ PERMISSIONS: tuple[PermissionDef, ...] = (
                   (N, A, T), ("evaluations:ownership_validation", "evaluations:ownership_save"),
                   help="Asignado: solo como evaluador. Todos: cualquier evaluación (incluye periodos cerrados)."),
     PermissionDef("ownership.admin", "Evaluaciones", "Reabrir y reiniciar evaluaciones de Ownership", "administrar",
-                  ON_OFF, ("evaluations:ownership_reopen", "evaluations:ownership_reset",
-                           "evaluations:ownership_reset_user")),
+                  ON_OFF, ("evaluations:ownership_reopen", "evaluations:ownership_reset")),
     PermissionDef("period.closed.correct", "Evaluaciones",
                   "Corregir registros de un periodo Cerrado (con motivo)", "administrar", ON_OFF, kind="inline"),
     PermissionDef("value_delivery.capture", "Evaluaciones", "Entrega de Valor: lista y captura", "editar",
@@ -135,7 +134,7 @@ PERMISSIONS: tuple[PermissionDef, ...] = (
                   ON_OFF, ("dashboards:period_progress",)),
     # --- Catálogos ---------------------------------------------------------------------
     PermissionDef("users.manage", "Catálogos", "Usuarios: ver, alta y edición (área, nivel, rol, Lead directo)",
-                  "editar", ON_OFF, ("accounts:user_admin", "accounts:user_create")),
+                  "editar", ON_OFF, ("accounts:user_admin", "accounts:user_create", "accounts:user_edit")),
     PermissionDef("users.reset_password", "Catálogos", "Resetear contraseña", "administrar",
                   ON_OFF, ("accounts:user_reset_password",)),
     PermissionDef("users.delete", "Catálogos", "Eliminar o desactivar usuarios", "borrar",
