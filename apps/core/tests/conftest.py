@@ -120,7 +120,7 @@ def level_lead(db):
 def lead_collab(db, area, level_lead):
     return User.objects.create_user(
         email="lead_collab@arena-analytics.com", password="x", full_name="Lead Transversal",
-        area=area, level=level_lead,
+        area=area, level=level_lead, is_lead_flag=True,
     )
 
 
@@ -146,6 +146,8 @@ def make_membership(project, user, period=None):
 def make_learn_user(email, *, area=None, level=None, role=None, **extra):
     """Usuario con foto (evita el redirect de PhotoRequiredMiddleware en pruebas de vista)."""
     # password=None → contraseña inutilizable: evita el hash PBKDF2 (lento) en cada usuario.
+    # «Lead / Gerente» es una marca de la ficha; en pruebas, nivel Lead = marcado (igual que la migración de datos).
+    extra.setdefault("is_lead_flag", bool(level is not None and level.code == "LEAD"))
     return User.objects.create_user(
         email=email, password=None, full_name=email.split("@")[0].replace(".", " ").title(),
         area=area, level=level, role=role or User.Role.COLABORADOR,

@@ -31,17 +31,16 @@ def position_name(area_id, level_id, fallback="") -> str:
 
 
 def position_defined(area, level) -> bool:
-    """True si existe un puesto activo para la combinación área × nivel."""
-    entry = _mapping().get((area.pk, level.pk))
+    """True si existe un puesto activo para la combinación posición × nivel (nivel None = sin nivel)."""
+    entry = _mapping().get((area.pk, getattr(level, "pk", None)))
     return bool(entry and entry[1])
 
 
 def user_position_name(user) -> str:
-    """Puesto visible de una persona: nombre del catálogo o, sin él, el nombre de su nivel."""
+    """Puesto visible de una persona: nombre del catálogo o, sin él, el nombre de su nivel o de su posición."""
     level = getattr(user, "level", None)
-    if level is None:
-        return ""
-    return position_name(user.area_id, user.level_id, fallback=level.name)
+    fallback = level.name if level is not None else (user.area.name if user.area_id else "")
+    return position_name(user.area_id, user.level_id, fallback=fallback)
 
 
 # Cargo (posición) por área; el nivel (Jr/Mid/Snr/Lead) va aparte. Spec 009.

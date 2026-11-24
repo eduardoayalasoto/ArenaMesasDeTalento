@@ -56,7 +56,9 @@ def save_position(*, pk, area, level, name, is_active):
     from apps.core.services import positions
 
     if Position.objects.filter(area=area, level=level).exclude(pk=pk).exists():
-        raise ValidationError(f"Ya existe la posición de {area.name} · {level.name}: edítala en lugar de crear otra.")
+        raise ValidationError(
+            f"Ya existe la posición de {area.name}{f' · {level.name}' if level else ''}: edítala en lugar de crear otra."
+        )
     position = Position.objects.get(pk=pk) if pk else Position()
     position.area, position.level, position.name, position.is_active = area, level, name.strip(), is_active
     position.save()

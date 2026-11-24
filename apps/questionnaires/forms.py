@@ -37,7 +37,7 @@ class TemplateCreateForm(forms.Form):
             .order_by("area__code", "level__order")
         )
         field.label_from_instance = lambda p: (
-            f"{p.area.name} · {p.name} ({p.level.name})"
+            f"{p.area.name} · {p.name}" + (f" ({p.level.name})" if p.level_id else "")
             + (" — ya tiene cuestionario" if (p.area_id, p.level_id) in self._taken else "")
         )
 

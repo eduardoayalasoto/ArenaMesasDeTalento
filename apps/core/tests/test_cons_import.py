@@ -103,7 +103,7 @@ def test_cons_import_builds_four_weighted_questionnaires(cons, collaborator, per
     collaborator.area, collaborator.level = area, levels["JR"]
     collaborator.save()
     assert ownership_flow.resolve_ownership_template(collaborator) == templates["JR"]
-    assert User(area=area, level=levels["LEAD"]).is_lead and not collaborator.is_lead
+    assert User(area=area, level=levels["LEAD"], is_lead_flag=True).is_lead and not collaborator.is_lead
 
     # Con respuestas capturadas el puesto se rechaza y no se modifica.
     evaluation = OwnershipEvaluation.objects.create(user=collaborator, project=project_finite, period=period, template=templates["JR"])

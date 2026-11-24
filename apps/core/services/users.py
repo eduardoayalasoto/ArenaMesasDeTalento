@@ -34,6 +34,8 @@ _TRACKED = (
     ("level", "Nivel"),
     ("role", "Rol"),
     ("direct_lead", "Lead directo"),
+    ("is_lead_flag", "Lead / Gerente"),
+    ("is_director_flag", "Director"),
     ("is_active", "Activo"),
 )
 
@@ -104,6 +106,7 @@ def _snapshot(user) -> dict[str, str]:
         "Nombre": user.full_name, "Correo": user.email,
         "Área": name(user.area), "Nivel": name(user.level),
         "Rol": user.get_role_display(), "Lead directo": name(user.direct_lead),
+        "Lead / Gerente": "Sí" if user.is_lead_flag else "No", "Director": "Sí" if user.is_director_flag else "No",
         "Activo": "Sí" if user.is_active else "No",
     }
 

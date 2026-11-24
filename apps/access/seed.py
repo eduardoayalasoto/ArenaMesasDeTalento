@@ -84,7 +84,7 @@ def matrix_for(slug: str) -> dict[str, int]:
 
 
 def suggested_profile_slug(user) -> str:
-    """Perfil sugerido al migrar y al dar de alta (research R8). El nivel solo sugiere."""
+    """Perfil sugerido al migrar y al dar de alta (research R8). La marca «Lead / Gerente» solo sugiere."""
     if getattr(user, "is_superuser", False):
         return "superusuario"
     role = getattr(user, "role", "")
@@ -92,7 +92,6 @@ def suggested_profile_slug(user) -> str:
         return "talento"
     if role == "DIRECTOR":
         return "director"
-    level = getattr(user, "level", None)
-    if level is not None and getattr(level, "code", "") == "LEAD":
+    if getattr(user, "is_lead_flag", False):
         return "lead"
     return "colaborador"

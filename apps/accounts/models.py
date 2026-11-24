@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    """Colaborador de Arena. El rol LEAD no se guarda: deriva de level.code == 'LEAD'."""
+    """Colaborador de Arena. «Lead / Gerente» y «Director» son marcas de la ficha (no dependen del nivel)."""
 
     class Role(models.TextChoices):
         COLABORADOR = "COLABORADOR", "Colaborador"
@@ -106,6 +106,15 @@ class User(AbstractUser):
         "debe cambiar contraseña", default=False,
         help_text="Si está activo, se obliga a crear una nueva contraseña al ingresar.",
     )
+    # Marcas de organigrama (reemplazan el nivel «Lead» como criterio): las fija Talento al editar.
+    is_lead_flag = models.BooleanField(
+        "Lead / Gerente", default=False,
+        help_text="Lidera a un equipo: evalúa como líder y puede ser Lead directo.",
+    )
+    is_director_flag = models.BooleanField(
+        "Director", default=False,
+        help_text="Está en la cima del organigrama de su área.",
+    )
     deleted_at = models.DateTimeField("eliminado el", null=True, blank=True)
     date_joined = models.DateTimeField("fecha de alta", default=timezone.now)
 
@@ -131,8 +140,8 @@ class User(AbstractUser):
     # --- Roles derivados (no se persisten) --------------------------------
     @property
     def is_lead(self) -> bool:
-        """Lead de área: deriva del nivel, no del rol (decisión del plan)."""
-        return bool(self.level and self.level.code == "LEAD")
+        """Lead / Gerente: lo marca Talento en la ficha de la persona (ya no deriva del nivel)."""
+        return bool(self.is_lead_flag)
 
     @property
     def is_talento(self) -> bool:

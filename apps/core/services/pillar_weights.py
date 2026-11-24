@@ -25,6 +25,11 @@ def effective_weights(user):
     own = PositionPillarWeight.objects.filter(
         position__area_id=user.area_id, position__level_id=user.level_id, position__is_active=True,
     ).first()
+    if own is None and user.level_id is None:
+        raise ValidationError(
+            "Esta posición no usa niveles y no tiene ponderación de pilares propia: "
+            "defínela en Catálogos → Ponderación de pilares."
+        )
     row = own or user.level.weight
     return row.w_ownership, row.w_value_delivery, row.w_arena_impact
 
@@ -46,7 +51,7 @@ def matrix():
         "area__code", "level__order"
     ):
         own = getattr(position, "pillar_weight", None)
-        source = own or inherited.get(position.level_id)
+        source = own or (inherited.get(position.level_id) if position.level_id else None)
         rows.append({
             "position": position,
             "own": own is not None,

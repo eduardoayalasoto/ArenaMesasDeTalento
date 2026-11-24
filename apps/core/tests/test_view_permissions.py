@@ -35,6 +35,7 @@ def _make_user(email, *, role=User.Role.COLABORADOR, level=None, area=None, supe
             email=email, password="x",
             full_name=email.split("@")[0],
             role=role, level=level, area=area,
+            is_lead_flag=bool(level is not None and level.code == "LEAD"),
         )
     if not superuser:
         u.photo_data = b"fake-photo"

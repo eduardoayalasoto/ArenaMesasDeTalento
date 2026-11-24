@@ -24,7 +24,7 @@ def other_area(db):
 def area_lead(db, area, level_lead):
     return User.objects.create_user(
         email="arealead@arena-analytics.com", password="x", full_name="Lead de Área",
-        area=area, level=level_lead,
+        area=area, level=level_lead, is_lead_flag=True,
     )
 
 

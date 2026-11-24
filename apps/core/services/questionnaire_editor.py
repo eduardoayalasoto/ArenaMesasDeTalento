@@ -247,8 +247,9 @@ def _position_errors(template):
     """Un cuestionario solo se publica para una combinación área × nivel definida (spec 008, FR-020)."""
     from apps.core.services import positions
 
-    if template.area_id and template.level_id and not positions.position_defined(template.area, template.level):
-        return [f"No existe una posición activa para {template.area.name} · {template.level.name} en Catálogos → Posiciones."]
+    if template.area_id and not positions.position_defined(template.area, template.level):
+        level_name = f" · {template.level.name}" if template.level_id else ""
+        return [f"No existe una posición activa para {template.area.name}{level_name} en Catálogos → Posiciones."]
     return []
 
 

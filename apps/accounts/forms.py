@@ -148,14 +148,17 @@ class UserAdminForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["full_name", "email", "area", "level", "role", "direct_lead", "is_active"]
+        fields = ["full_name", "email", "area", "level", "role", "direct_lead", "is_lead_flag", "is_director_flag",
+                  "is_active"]
         labels = {
             "full_name": "Nombre completo",
             "email": "Correo electrónico",
-            "area": "Área",
-            "level": "Nivel",
+            "area": "Posición",
+            "level": "Nivel (opcional)",
             "role": "Rol",
             "direct_lead": "Lead directo",
+            "is_lead_flag": "Lead / Gerente",
+            "is_director_flag": "Director",
             "is_active": "Cuenta activa (puede ingresar)",
         }
         widgets = {
@@ -165,6 +168,8 @@ class UserAdminForm(forms.ModelForm):
             "level": forms.Select(attrs={"class": _SELECT}),
             "role": forms.Select(attrs={"class": _SELECT}),
             "direct_lead": forms.Select(attrs={"class": _SELECT}),
+            "is_lead_flag": forms.CheckboxInput(attrs={"class": "checkbox"}),
+            "is_director_flag": forms.CheckboxInput(attrs={"class": "checkbox"}),
             "is_active": forms.CheckboxInput(attrs={"class": "checkbox"}),
         }
 
@@ -177,8 +182,11 @@ class UserAdminForm(forms.ModelForm):
         self.creating = self.instance.pk is None
         self.fields["area"].required = False
         self.fields["level"].required = False
-        self.fields["area"].empty_label = "— Sin área —"
+        self.fields["area"].empty_label = "— Sin posición —"
         self.fields["level"].empty_label = "— Sin nivel —"
+        self.fields["level"].help_text = "Solo si la posición lo usa (p. ej. Consultor Senior o los niveles de Analítica)."
+        self.fields["is_lead_flag"].help_text = "Lidera a un equipo: evalúa como líder y puede ser Lead directo."
+        self.fields["is_director_flag"].help_text = "Está en la cima del organigrama de su área."
         self.fields["direct_lead"].required = False
         self.fields["direct_lead"].empty_label = "— Lead del área —"
         eligible = access.assignable_users("assign.direct_lead").values("pk")

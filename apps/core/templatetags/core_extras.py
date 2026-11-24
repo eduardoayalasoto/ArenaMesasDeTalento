@@ -167,6 +167,8 @@ def puesto_de(obj):
     """Puesto visible de un objeto con `area` y `level` (p. ej. un cuestionario). Spec 008."""
     from apps.core.services import positions
 
-    if obj is None or not getattr(obj, "level_id", None):
+    if obj is None or not getattr(obj, "area_id", None):
         return ""
-    return _cargo_nivel(positions.position_name(obj.area_id, obj.level_id, fallback=obj.level.name), obj.level)
+    level = getattr(obj, "level", None)
+    fallback = level.name if level is not None else obj.area.name
+    return _cargo_nivel(positions.position_name(obj.area_id, obj.level_id, fallback=fallback), level)

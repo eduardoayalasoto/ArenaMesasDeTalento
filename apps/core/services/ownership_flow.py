@@ -8,10 +8,14 @@ from apps.core.services import period_lifecycle, scoring
 
 
 def resolve_ownership_template(user):
-    """Plantilla de Ownership PUBLICADA para el área y nivel del usuario, o None."""
+    """Plantilla de Ownership PUBLICADA para la posición y el nivel (opcional) del usuario, o None.
+
+    Coincidencia exacta: un Consultor sin nivel usa el cuestionario de Consultor; con nivel Senior, el
+    de Consultor Senior. Sin cuestionario que coincida, la persona no puede iniciar su evaluación.
+    """
     from apps.questionnaires.models import QuestionnaireTemplate
 
-    if not user.area_id or not user.level_id:
+    if not user.area_id:
         return None
     return (
         QuestionnaireTemplate.objects.filter(

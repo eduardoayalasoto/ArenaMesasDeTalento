@@ -51,12 +51,24 @@ class QuestionnaireTemplate(models.Model):
                 fields=["kind", "area", "level", "version"],
                 name="unique_template_version",
             ),
+            # Posiciones sin nivel: NULL no entra en las restricciones anteriores.
+            models.UniqueConstraint(
+                fields=["kind", "area"],
+                condition=models.Q(status="PUBLICADO", level__isnull=True, area__isnull=False),
+                name="unique_published_template_nolevel",
+            ),
+            models.UniqueConstraint(
+                fields=["kind", "area", "version"],
+                condition=models.Q(level__isnull=True, area__isnull=False),
+                name="unique_template_version_nolevel",
+            ),
         ]
 
     def __str__(self):
         if self.kind == self.Kind.VALUE_DELIVERY:
             return f"Entrega de Valor v{self.version}"
-        return f"Ownership {self.area.code}/{self.level.code} v{self.version}"
+        level = f"/{self.level.code}" if self.level_id else ""
+        return f"Ownership {self.area.code}{level} v{self.version}"
 
     @property
     def is_published(self):

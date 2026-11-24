@@ -52,9 +52,9 @@ def _fallback_q(slug: str):
     if slug == "director":
         return Q(role="DIRECTOR")
     if slug == "lead":
-        return Q(level__code="LEAD") & ~Q(role__in=("TALENTO", "DIRECTOR"))
+        return Q(is_lead_flag=True) & ~Q(role__in=("TALENTO", "DIRECTOR"))
     if slug == DEFAULT_PROFILE_SLUG:
-        return ~Q(role__in=("TALENTO", "DIRECTOR")) & (Q(level__isnull=True) | ~Q(level__code="LEAD"))
+        return ~Q(role__in=("TALENTO", "DIRECTOR")) & Q(is_lead_flag=False)
     return Q(pk__in=[])
 
 

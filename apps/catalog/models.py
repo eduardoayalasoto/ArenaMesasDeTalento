@@ -9,9 +9,43 @@ from django.db import models
 from simple_history.models import HistoricalRecords
 
 
-class Area(models.Model):
-    """Área de Analítica (RN-01). Cuatro: ID, CD, PM, UXUI."""
+class Department(models.Model):
+    """Área de la organización (nivel superior): Analítica y Consultoría.
 
+    Vocabulario de la interfaz: Área → Posición → Nivel (opcional). En el código, `Department` es el
+    «Área» de la interfaz y `Area` es la «Posición» (Ingeniero de Datos, Analista, Gerente…).
+    """
+
+    code = models.CharField("clave", max_length=8, unique=True)
+    name = models.CharField("nombre", max_length=80)
+    order = models.PositiveSmallIntegerField("orden", default=1)
+    is_active = models.BooleanField("activa", default=True)
+    director = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="directed_departments", verbose_name="director del área",
+    )
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "área"
+        verbose_name_plural = "áreas"
+        ordering = ["order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Area(models.Model):
+    """Posición (puesto) dentro de un Área: Ingeniero de Datos, Product Manager, Analista, Gerente…
+
+    Nombre histórico: se llama `Area` en el código y en la base, pero la interfaz la muestra como
+    «Posición»; el «Área» de la interfaz es `Department`.
+    """
+
+    department = models.ForeignKey(
+        Department, on_delete=models.PROTECT, null=True, blank=True, related_name="areas",
+        verbose_name="área",
+    )
     code = models.CharField("clave", max_length=8, unique=True)
     name = models.CharField("nombre", max_length=80)
     is_active = models.BooleanField("activa", default=True)
@@ -28,8 +62,8 @@ class Area(models.Model):
     )
 
     class Meta:
-        verbose_name = "área"
-        verbose_name_plural = "áreas"
+        verbose_name = "posición"
+        verbose_name_plural = "posiciones"
         ordering = ["code"]
 
     def __str__(self):
@@ -37,7 +71,7 @@ class Area(models.Model):
 
 
 class SeniorityLevel(models.Model):
-    """Nivel de seniority (RN-01). Cuatro: JR, MID, SNR, LEAD."""
+    """Nivel (RN-01): Jr, Mid, Snr, Lead… Es opcional por persona: hay posiciones que no usan niveles."""
 
     code = models.CharField("clave", max_length=8, unique=True)
     name = models.CharField("nombre", max_length=40)
@@ -59,9 +93,10 @@ class Position(models.Model):
     Consultor/Consultor Sr/Gerente). El nivel global sigue gobernando la ponderación de pilares.
     """
 
-    area = models.ForeignKey(Area, on_delete=models.PROTECT, related_name="positions", verbose_name="área")
+    area = models.ForeignKey(Area, on_delete=models.PROTECT, related_name="positions", verbose_name="posición")
     level = models.ForeignKey(
-        SeniorityLevel, on_delete=models.PROTECT, related_name="positions", verbose_name="nivel"
+        SeniorityLevel, on_delete=models.PROTECT, related_name="positions", verbose_name="nivel",
+        null=True, blank=True,
     )
     name = models.CharField("nombre de la posición", max_length=60)
     is_active = models.BooleanField("activo", default=True)
@@ -73,6 +108,10 @@ class Position(models.Model):
         ordering = ["area__code", "level__order"]
         constraints = [
             models.UniqueConstraint(fields=["area", "level"], name="unique_position_area_level"),
+            # Sin nivel (NULL) la restricción anterior no aplica: una sola fila «sin nivel» por posición.
+            models.UniqueConstraint(
+                fields=["area"], condition=models.Q(level__isnull=True), name="unique_position_area_nolevel",
+            ),
         ]
 
     def __str__(self):
