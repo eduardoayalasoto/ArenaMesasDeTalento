@@ -8,10 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Area, SeniorityLevel
+from apps.core.http import back_to_list
 from apps.core.services import users as user_service
 
 from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserAdminForm
@@ -109,14 +109,6 @@ def _hx_done(message: str, variant: str = "success") -> HttpResponse:
         "close-user-drawer": True,
     })
     return response
-
-
-def _back_to_list(request):
-    """Vuelve al listado conservando búsqueda y filtros (vienen en el Referer de la página)."""
-    referer = request.META.get("HTTP_REFERER", "")
-    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
-        return redirect(referer)
-    return redirect("accounts:user_admin")
 
 
 @login_required
@@ -219,7 +211,7 @@ def user_reset_password(request, pk):
     user = get_object_or_404(User, pk=pk, is_superuser=False)
     user_service.reset_password(user, request.user)
     messages.success(request, f"Contraseña de {user.full_name} restablecida a {user_service.DEFAULT_PASSWORD}.")
-    return _back_to_list(request)
+    return back_to_list(request, "accounts:user_admin")
 
 
 @login_required
@@ -232,4 +224,4 @@ def user_delete(request, pk):
         messages.success(request, user_service.delete_user(user, request.user))
     except ValidationError as exc:
         messages.error(request, " ".join(exc.messages))
-    return _back_to_list(request)
+    return back_to_list(request, "accounts:user_admin")

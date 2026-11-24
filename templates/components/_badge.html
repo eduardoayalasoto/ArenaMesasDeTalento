@@ -13,7 +13,7 @@ badge-neutral` quedaba a 1.09:1 en el tema oscuro `business` (texto neutral
 sobre fondo neutral), invisible; ghost = base-200 + base-content, AA en
 ambos temas.
 {% endcomment %}
-<span class="badge {% if variant == "informative" %}badge-soft badge-info{% elif variant == "success" %}badge-soft badge-success{% elif variant == "warning" %}badge-soft badge-warning{% elif variant == "danger" %}badge-soft badge-error{% else %}badge-ghost text-base-content{% endif %} gap-1">
+<span class="badge whitespace-nowrap {% if variant == "informative" %}badge-soft badge-info{% elif variant == "success" %}badge-soft badge-success{% elif variant == "warning" %}badge-soft badge-warning{% elif variant == "danger" %}badge-soft badge-error{% else %}badge-ghost text-base-content{% endif %} gap-1">
   {% if badge_icon %}<i data-lucide="{{ badge_icon }}" class="w-3 h-3" aria-hidden="true"></i>
   {% elif variant == "informative" %}<i data-lucide="info" class="w-3 h-3"></i>
   {% elif variant == "success" %}<i data-lucide="check-circle" class="w-3 h-3"></i>

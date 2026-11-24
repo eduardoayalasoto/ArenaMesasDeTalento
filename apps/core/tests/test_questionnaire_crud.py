@@ -298,3 +298,30 @@ def test_delete_routes_require_post(client, talento, draft):
     client.force_login(talento)
     assert client.get(reverse("questionnaires:template_delete", args=[draft.pk])).status_code == 405
     assert T.objects.filter(pk=draft.pk).exists()
+
+
+# --- Editar siempre disponible y pantalla guiada por pasos ----------------------------------------
+
+@pytest.mark.django_db
+def test_list_edit_button_opens_or_creates_a_draft_when_locked(client, talento, published, monkeypatch):
+    monkeypatch.setattr(editor, "has_responses", lambda template: True)   # ya contestado: bloqueado
+    client.force_login(talento)
+    html = client.get(reverse("questionnaires:admin_list")).content.decode()
+    assert 'name="action" value="duplicate"' in html                      # «Editar» crea la nueva versión
+    new = editor.duplicate_as_new_version(published)
+    html = client.get(reverse("questionnaires:admin_list")).content.decode()
+    assert "Editar borrador" in html and reverse("questionnaires:template_edit", args=[new.pk]) in html
+    assert 'name="action" value="duplicate"' not in html                  # ya hay borrador: no duplica otra vez
+
+
+@pytest.mark.django_db
+def test_edit_screen_is_a_guided_sequence_of_steps(client, talento, draft, published, monkeypatch):
+    client.force_login(talento)
+    html = client.get(reverse("questionnaires:template_edit", args=[draft.pk])).content.decode()
+    for marker in ("Paso 1 · Escala de respuestas", "Paso 2 · Categorías y pesos",
+                   "Paso 3 · Secciones y preguntas", "Paso 4 · Publicar", "Estás editando un borrador"):
+        assert marker in html
+    monkeypatch.setattr(editor, "has_responses", lambda template: True)
+    locked = client.get(reverse("questionnaires:template_edit", args=[published.pk])).content.decode()
+    assert "Esta versión ya no se puede modificar" in locked
+    assert locked.count('name="action" value="duplicate"') >= 1 or "Continuar" in locked

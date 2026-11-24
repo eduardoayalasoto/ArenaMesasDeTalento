@@ -19,12 +19,30 @@ from apps.access import services as access
 from apps.access.decorators import requires
 
 
+def _template_key(template):
+    return (template.kind, template.area_id, template.level_id)
+
+
+def _draft_index(templates):
+    """Borrador vigente por cuestionario (mismo tipo, área y nivel), para continuarlo en vez de duplicar."""
+    drafts = {}
+    for t in templates:
+        if t.status == QuestionnaireTemplate.Status.BORRADOR:
+            drafts.setdefault(_template_key(t), t.pk)
+    return drafts
+
+
 def _list_context(request, create_form=None):
     templates = list(
         QuestionnaireTemplate.objects.select_related("area", "level")
         .order_by("kind", "area__code", "level__order", "-version")
     )
     Kind = QuestionnaireTemplate.Kind
+    drafts = _draft_index(templates)
+    for t in templates:
+        # Un publicado con respuestas no se edita en sitio: "Editar" abre su borrador o crea uno nuevo.
+        t.editable_now = editor.is_editable(t)
+        t.draft_pk = None if t.editable_now else drafts.get(_template_key(t))
     return {
         "page_title": "Cuestionarios",
         "templates": templates,
@@ -168,8 +186,24 @@ def template_edit(request, pk):
     is_ownership = template.kind == QuestionnaireTemplate.Kind.OWNERSHIP
     weight_groups = ownership_weights.editor_groups(template) if is_ownership else []
     linked_ids = [g["link"].category_id for g in weight_groups]
+    existing_draft = None
+    if not editable:
+        existing_draft = QuestionnaireTemplate.objects.filter(
+            kind=template.kind, area=template.area, level=template.level,
+            status=QuestionnaireTemplate.Status.BORRADOR,
+        ).exclude(pk=template.pk).first()
+    publish_errors = editor.validate_for_publish(template) if is_draft else []
+    question_count = Question.objects.filter(section__template=template).count()
     return render(request, "questionnaires/template_edit.html", {
         "page_title": "Editar cuestionario",
+        "existing_draft": existing_draft,
+        "step_questions": 3 if is_ownership else 2,
+        "step_publish": 4 if is_ownership else 3,
+        "not_draft_flag": not is_draft,
+        "publish_errors": publish_errors,
+        "question_count": question_count,
+        "scale_done": scale.exists(),
+        "weights_done": is_ownership and bool(weight_groups) and not ownership_weights.validate_template_weights(template),
         "template": template,
         "sections": sections,
         "section_choices": list(template.sections.order_by("order")),

@@ -5,7 +5,7 @@
     <h2 class="text-xl font-semibold text-base-content">Cuestionarios</h2>
     <p class="text-base-content/70">
       {{ ownership_count }} de Ownership publicados (por posición) + {{ value_delivery_count }} de Entrega de Valor{% if draft_count %} · {{ draft_count }} borrador{{ draft_count|pluralize:"es" }} en edición{% endif %}.
-      Los publicados son de solo lectura; crea una versión para editar.
+      «Editar» siempre está disponible: si la versión ya tiene respuestas, abre su borrador (o crea uno nuevo) para no alterar resultados históricos.
     </p>
   </div>
 
@@ -48,48 +48,82 @@
     </p>
   </form>
 
-  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-base">
-        <thead class="bg-base-200/50 text-base-content/70 text-left">
-          <tr>
-            <th class="px-4 py-3 font-medium">Cuestionario</th>
-            <th class="px-4 py-3 font-medium text-center">Versión</th>
-            <th class="px-4 py-3 font-medium text-center">Preguntas</th>
-            <th class="px-4 py-3 font-medium">Estado</th>
-            <th class="px-4 py-3 font-medium"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-base-200">
-          {% for t in templates %}
+  <div x-data="{ q: '', kind: '', status: '' }">
+    <div class="mb-3 flex flex-wrap items-center gap-2">
+      <div class="relative w-full sm:w-80">
+        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" aria-hidden="true"></i>
+        <input type="search" x-model="q" class="input w-full pl-9" placeholder="Buscar por área, puesto o tipo…" aria-label="Buscar cuestionarios" autocomplete="off">
+      </div>
+      <select x-model="kind" class="select w-full sm:w-48" aria-label="Filtrar por tipo">
+        <option value="">Todos los tipos</option>
+        <option value="OWNERSHIP">Ownership</option>
+        <option value="VALUE_DELIVERY">Entrega de Valor</option>
+      </select>
+      <select x-model="status" class="select w-full sm:w-48" aria-label="Filtrar por estado">
+        <option value="">Todos los estados</option>
+        <option value="BORRADOR">Borrador</option>
+        <option value="PUBLICADO">Publicado</option>
+        <option value="ARCHIVADO">Archivado</option>
+      </select>
+    </div>
+
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-base">
+          <thead class="bg-base-200/50 text-base-content/70 text-left">
             <tr>
-              <td class="px-4 py-3">
-                <p class="font-medium text-base-content">
-                  {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.name }} · {{ t|puesto_de }}{% else %}Entrega de Valor{% endif %}
-                </p>
-              </td>
-              <td class="px-4 py-3 text-center tabular-nums">v{{ t.version }}</td>
-              <td class="px-4 py-3 text-center tabular-nums">{{ t.question_count }}</td>
-              <td class="px-4 py-3">{% include "partials/status_badge.html" with status=t.status label=t.get_status_display %}</td>
-              <td class="px-4 py-3 text-right">
-                <div class="flex items-center justify-end gap-1">
-                  <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-soft btn-primary">
-                    {% if t.status == 'BORRADOR' %}Editar{% else %}Ver{% endif %}
-                  </a>
-                  {% if t.status == 'BORRADOR' %}
-                    {% with pk_s=t.pk|stringformat:"s" %}
-                      {% with cid="discard-template-"|add:pk_s %}
-                        {% url 'questionnaires:template_delete' pk=t.pk as discard_url %}
-                        {% include "components/_confirm.html" with confirm_id=cid title="Descartar borrador" message="Se elimina este borrador con todo su contenido. No afecta a las versiones publicadas." confirm_url=discard_url trigger_aria="Descartar borrador" confirm_label="Descartar" %}
-                      {% endwith %}
-                    {% endwith %}
-                  {% endif %}
-                </div>
-              </td>
+              <th class="px-4 py-3 font-medium">Cuestionario</th>
+              <th class="px-4 py-3 font-medium text-center">Versión</th>
+              <th class="px-4 py-3 font-medium text-center">Preguntas</th>
+              <th class="px-4 py-3 font-medium">Estado</th>
+              <th class="px-4 py-3 font-medium text-right">Acciones</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="divide-y divide-base-200">
+            {% for t in templates %}
+              <tr class="hover:bg-base-200/50 transition-colors"
+                  data-search="{% if t.kind == 'OWNERSHIP' %}ownership {{ t.area.name }} {{ t|puesto_de }}{% else %}entrega de valor{% endif %}"
+                  data-kind="{{ t.kind }}" data-status="{{ t.status }}"
+                  x-show="(!q || $el.dataset.search.toLowerCase().includes(q.toLowerCase())) && (!kind || $el.dataset.kind === kind) && (!status || $el.dataset.status === status)">
+                <td class="px-4 py-3">
+                  <p class="font-medium text-base-content">
+                    {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.name }} · {{ t|puesto_de }}{% else %}Entrega de Valor{% endif %}
+                  </p>
+                </td>
+                <td class="px-4 py-3 text-center tabular-nums whitespace-nowrap">v{{ t.version }}</td>
+                <td class="px-4 py-3 text-center tabular-nums">{{ t.question_count }}</td>
+                <td class="px-4 py-3 whitespace-nowrap">{% include "partials/status_badge.html" with status=t.status label=t.get_status_display %}</td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center justify-end gap-1 whitespace-nowrap">
+                    {% if t.editable_now %}
+                      <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-soft btn-primary"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</a>
+                    {% elif t.status == 'ARCHIVADO' %}
+                      <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-ghost" title="Versión anterior: edita la vigente">Ver</a>
+                    {% elif t.draft_pk %}
+                      <a href="{% url 'questionnaires:template_edit' pk=t.draft_pk %}" class="btn btn-sm btn-soft btn-primary" title="Ya hay un borrador de este cuestionario"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar borrador</a>
+                      <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-ghost">Ver</a>
+                    {% else %}
+                      <form method="post" action="{% url 'questionnaires:template_edit' pk=t.pk %}" class="inline">
+                        {% csrf_token %}<input type="hidden" name="action" value="duplicate">
+                        <button type="submit" class="btn btn-sm btn-soft btn-primary" title="Crea una nueva versión en borrador para editarla"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</button>
+                      </form>
+                      <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-ghost">Ver</a>
+                    {% endif %}
+                    {% if t.status == 'BORRADOR' %}
+                      {% with pk_s=t.pk|stringformat:"s" %}
+                        {% with cid="discard-template-"|add:pk_s %}
+                          {% url 'questionnaires:template_delete' pk=t.pk as discard_url %}
+                          {% include "components/_confirm.html" with confirm_id=cid title="Descartar borrador" message="Se elimina este borrador con todo su contenido. No afecta a las versiones publicadas." confirm_url=discard_url trigger_aria="Descartar borrador" confirm_label="Descartar" %}
+                        {% endwith %}
+                      {% endwith %}
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 {% endblock %}

@@ -6,12 +6,6 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
 {% endcomment %}
 
 <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mb-6">
-  <h3 class="font-semibold text-base-content">Categorías y pesos</h3>
-  <p class="text-base text-base-content/75 mt-1">
-    Cada pregunta pertenece a una categoría. El score del cuestionario es la suma del score de cada categoría por su peso.
-    Los pesos deben sumar exactamente 100%.
-  </p>
-
   {% if editable and weights_errors %}
     {% callout "warning" icon="info" cls="mt-4" title="Antes de publicar" %}
       <ul class="list-disc ml-5">{% for e in weights_errors %}<li>{{ e }}</li>{% endfor %}</ul>

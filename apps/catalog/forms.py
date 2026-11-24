@@ -50,7 +50,7 @@ class ProjectForm(forms.ModelForm):
             "duration_type": "Tipo de duración",
             "status": "Estatus",
             "kickoff": "Kick-off",
-            "target_close": "Cierre objetivo",
+            "target_close": "Fecha estimada de entrega",
             "is_active": "Activo",
         }
         widgets = {
@@ -64,6 +64,7 @@ class ProjectForm(forms.ModelForm):
             "status": forms.Select(attrs={"class": _SELECT}),
             "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "target_close": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
+            "is_active": forms.CheckboxInput(attrs={"class": "checkbox"}),
         }
 
     def __init__(self, *args, **kwargs):

@@ -1,0 +1,13 @@
+{% comment %}
+Encabezado de un paso del editor de cuestionarios.
+Params: n (número), title, description, done (bool: paso completo).
+{% endcomment %}
+<div class="flex items-start gap-3 mb-4">
+  <span class="grid place-items-center w-9 h-9 rounded-full shrink-0 font-semibold {% if done %}bg-success text-success-content{% else %}bg-primary text-primary-content{% endif %}" aria-hidden="true">
+    {% if done %}<i data-lucide="check" class="w-5 h-5"></i>{% else %}{{ n }}{% endif %}
+  </span>
+  <div class="min-w-0">
+    <h3 class="text-lg font-semibold text-base-content font-heading">Paso {{ n }} · {{ title }}</h3>
+    <p class="text-base text-base-content/70">{{ description }}</p>
+  </div>
+</div>

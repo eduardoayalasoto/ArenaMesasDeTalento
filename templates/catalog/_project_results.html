@@ -1,0 +1,82 @@
+{# Parcial de resultados del índice de proyectos (htmx). Una fila por proyecto, todo en texto. #}
+<p class="mb-2 text-base text-base-content/70" aria-live="polite">
+  {{ total }} proyecto{{ total|pluralize }}{% if filtered %} con los filtros actuales{% endif %}
+  {% if filtered %}· <a href="{% url 'catalog:project_admin' %}" class="link link-primary">Limpiar filtros</a>{% endif %}
+</p>
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-base">
+      <thead class="bg-base-200/50 text-base-content/70 text-left">
+        <tr>
+          <th class="px-4 py-3 font-medium">Proyecto</th>
+          <th class="px-4 py-3 font-medium hidden lg:table-cell">Personas</th>
+          <th class="px-4 py-3 font-medium hidden sm:table-cell whitespace-nowrap">Entrega estimada</th>
+          <th class="px-4 py-3 font-medium text-center hidden md:table-cell">Equipo</th>
+          <th class="px-4 py-3 font-medium">Estado</th>
+          <th class="px-4 py-3 font-medium text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-base-200">
+        {% for p in projects %}
+          <tr id="project-row-{{ p.pk }}" class="hover:bg-base-200/50 transition-colors">
+            <td class="px-4 py-2.5">
+              <p class="font-medium text-base-content">{{ p.name }}</p>
+              <p class="text-sm text-base-content/60">{{ p.client|default:"Sin cliente" }}</p>
+            </td>
+            <td class="px-4 py-2.5 hidden lg:table-cell">
+              <p class="text-base-content"><span class="text-sm text-base-content/60">Owner</span> {{ p.owner.full_name }}</p>
+              <p class="text-sm text-base-content/70">
+                <span class="text-base-content/60">Resp.</span> {{ p.responsable.full_name }}
+                · <span class="text-base-content/60">Valid.</span>
+                {% if p.validador %}{{ p.validador.full_name }}{% else %}<span class="text-warning">sin asignar</span>{% endif %}
+              </p>
+            </td>
+            <td class="px-4 py-2.5 hidden sm:table-cell whitespace-nowrap">
+              {% if p.delivery.kind == "date" %}
+                <p class="text-base-content">{{ p.target_close|date:"d M Y" }}</p>
+                {% if p.delivery.text %}
+                  <p class="text-sm {% if p.delivery.tone == 'error' %}text-error{% elif p.delivery.tone == 'warning' %}text-warning{% else %}text-base-content/60{% endif %}">{{ p.delivery.text }}</p>
+                {% endif %}
+              {% elif p.delivery.kind == "continuous" %}
+                <p class="text-base-content">Servicio continuo</p>
+                <p class="text-sm text-base-content/60">Sin fecha de entrega</p>
+              {% else %}
+                <p class="text-warning">Sin fecha definida</p>
+                <p class="text-sm text-base-content/60">Captúrala al editar</p>
+              {% endif %}
+            </td>
+            <td class="px-4 py-2.5 text-center tabular-nums hidden md:table-cell">
+              {% if p.members %}{{ p.members }}{% else %}<span class="text-warning">0</span>{% endif %}
+            </td>
+            <td class="px-4 py-2.5 whitespace-nowrap">
+              {% if p.is_active %}<span class="badge badge-soft badge-success whitespace-nowrap">Abierto</span>{% else %}<span class="badge badge-soft whitespace-nowrap">Cerrado</span>{% endif %}
+              {% if p.status == "DELAYED" %}<span class="badge badge-soft badge-error whitespace-nowrap">Delayed</span>{% endif %}
+              <p class="mt-0.5 text-sm text-base-content/60">{% if p.kickoff %}Inicio {{ p.kickoff|date:"d M Y" }}{% else %}Sin kick-off{% endif %}</p>
+            </td>
+            <td class="px-4 py-2.5">
+              <div class="flex items-center justify-end gap-1 whitespace-nowrap">
+                <a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn btn-sm btn-soft btn-primary">
+                  <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
+                </a>
+                {% if can_close %}
+                  {% if not p.is_active %}
+                    {% url 'catalog:project_reactivate' pk=p.pk as reopen_url %}
+                    {% include "components/_confirm.html" with confirm_id=p.reopen_confirm_id title="Reabrir proyecto" message=p.reopen_message confirm_url=reopen_url trigger_icon="rotate-ccw" trigger_aria="Reabrir proyecto" confirm_label="Reabrir" %}
+                  {% elif p.has_evals %}
+                    {% url 'catalog:project_delete' pk=p.pk as close_url %}
+                    {% include "components/_confirm.html" with confirm_id=p.close_confirm_id title="Cerrar proyecto" message=p.close_message confirm_url=close_url trigger_icon="lock" trigger_aria="Cerrar proyecto" confirm_label="Cerrar proyecto" %}
+                  {% else %}
+                    {% url 'catalog:project_delete' pk=p.pk as delete_url %}
+                    {% include "components/_confirm.html" with confirm_id=p.delete_confirm_id title="Eliminar proyecto" message=p.delete_message confirm_url=delete_url trigger_aria="Eliminar proyecto" %}
+                  {% endif %}
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">{% include "components/_empty_state.html" with icon="folder-search" message="Ningún proyecto coincide con la búsqueda." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

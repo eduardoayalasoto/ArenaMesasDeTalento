@@ -40,15 +40,15 @@
             <td class="px-4 py-2.5 hidden xl:table-cell">
               <p class="text-base-content">{{ u.direct_lead.full_name|default:"Lead del área" }}</p>
             </td>
-            <td class="px-4 py-2.5 hidden sm:table-cell">
-              {% if not u.is_active %}<span class="badge badge-soft badge-error">Inactivo</span>
-              {% elif u.must_change_password %}<span class="badge badge-soft badge-warning">Cambiar contraseña</span>
-              {% elif not u.area_id or not u.level_id %}<span class="badge badge-soft badge-warning">Incompleto</span>
-              {% else %}<span class="badge badge-soft badge-success">Activo</span>{% endif %}
+            <td class="px-4 py-2.5 hidden sm:table-cell whitespace-nowrap">
+              {% if not u.is_active %}<span class="badge badge-soft whitespace-nowrap badge-error">Inactivo</span>
+              {% elif u.must_change_password %}<span class="badge badge-soft whitespace-nowrap badge-warning">Cambiar contraseña</span>
+              {% elif not u.area_id or not u.level_id %}<span class="badge badge-soft whitespace-nowrap badge-warning">Incompleto</span>
+              {% else %}<span class="badge badge-soft whitespace-nowrap badge-success">Activo</span>{% endif %}
               <p class="mt-0.5 text-sm text-base-content/60">{% if u.last_login %}Último acceso {{ u.last_login|date:"d M Y" }}{% else %}Nunca ha ingresado{% endif %}</p>
             </td>
             <td class="px-4 py-2.5">
-              <div class="flex items-center justify-end gap-1">
+              <div class="flex items-center justify-end gap-1 whitespace-nowrap">
                 <button type="button" class="btn btn-sm btn-soft btn-primary"
                         hx-get="{% url 'accounts:user_edit' u.pk %}" hx-target="#user-drawer-body" hx-swap="innerHTML"
                         hx-on::before-request="window.openUserDrawer()">
