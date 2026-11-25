@@ -13,6 +13,7 @@
       <td class="px-4 py-2.5">
         <p class="font-medium text-base-content">{{ lv.name }}</p>
         <p class="text-sm text-base-content/60">{{ lv.code }}</p>
+        <p class="mt-1 text-sm text-base-content/70 sm:hidden">{{ lv.n_people }} persona{{ lv.n_people|pluralize }} · {{ lv.n_templates }} cuestionario{{ lv.n_templates|pluralize }}</p>
       </td>
       <td class="px-4 py-2.5 text-center tabular-nums">{{ lv.order }}</td>
       <td class="px-4 py-2.5 hidden sm:table-cell text-base-content/80 whitespace-nowrap">

@@ -15,8 +15,10 @@
       <td class="px-4 py-2.5">
         <p class="font-medium text-base-content">{{ a.name }}</p>
         <p class="text-sm text-base-content/60">{{ a.code }} · {{ a.people }} persona{{ a.people|pluralize }}</p>
+        <p class="mt-1 text-sm text-base-content/70 sm:hidden">{% if a.department %}{{ a.department.name }}{% else %}Sin área{% endif %}</p>
+        <p class="text-sm text-base-content/70 md:hidden">{{ a.levels_text }}</p>
       </td>
-      <td class="px-4 py-2.5 hidden sm:table-cell">{% if a.department %}{{ a.department.name }}{% else %}<span class="text-warning">Sin área</span>{% endif %}</td>
+      <td class="px-4 py-2.5 hidden sm:table-cell">{% if a.department %}{{ a.department.name }}{% else %}{% include "components/_attention.html" with text="Sin área" %}{% endif %}</td>
       <td class="px-4 py-2.5 hidden md:table-cell text-base-content/80">{{ a.levels_text }}</td>
       <td class="px-4 py-2.5 hidden lg:table-cell">{{ a.director.full_name|default:"Director del Área" }}</td>
       <td class="px-4 py-2.5 whitespace-nowrap">

@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from apps.catalog.vigencia import is_evaluable, open_period
-from apps.core.http import back_to_list
+from apps.core.http import back_to_list, is_partial_request
 from apps.core.services import period_lifecycle
 from apps.core.services import projects as project_service
 from apps.core.services import permissions as perm_service
@@ -66,7 +66,7 @@ def project_admin(request):
         "can_close": access.has(request.user, "projects.close"),
         **params,
     }
-    template = "catalog/_project_results.html" if request.headers.get("HX-Request") else "catalog/project_admin.html"
+    template = "catalog/_project_results.html" if is_partial_request(request) else "catalog/project_admin.html"
     return render(request, template, context)
 
 

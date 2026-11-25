@@ -14,6 +14,8 @@
       <td class="px-4 py-2.5">
         <p class="font-medium text-base-content">{{ d.name }}</p>
         <p class="text-sm text-base-content/60">{{ d.code }} · {{ d.people }} persona{{ d.people|pluralize }}</p>
+        <p class="mt-1 text-sm text-base-content/70 sm:hidden">Director: {{ d.director.full_name|default:"cualquier Director" }}</p>
+        <p class="text-sm text-base-content/70 md:hidden">{{ d.positions_text }}</p>
       </td>
       <td class="px-4 py-2.5 hidden md:table-cell text-base-content/80">{{ d.positions_text }}</td>
       <td class="px-4 py-2.5 hidden sm:table-cell">{{ d.director.full_name|default:"Cualquier Director" }}</td>

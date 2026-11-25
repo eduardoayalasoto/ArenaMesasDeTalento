@@ -7,7 +7,7 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
 
 <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mb-6">
   {% if editable and weights_errors %}
-    {% callout "warning" icon="info" cls="mt-4" title="Antes de publicar" %}
+    {% callout "warning" cls="mt-4" title="Antes de publicar" %}
       <ul class="list-disc ml-5">{% for e in weights_errors %}<li>{{ e }}</li>{% endfor %}</ul>
     {% endcallout %}
   {% endif %}

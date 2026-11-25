@@ -24,13 +24,13 @@
     </div>
     <div class="rounded-2xl border {% if missing_positions %}border-warning/60{% else %}border-base-300{% endif %} bg-base-100 p-4">
       <p class="text-sm text-base-content/60">Posiciones sin cuestionario</p>
-      <p class="text-2xl font-semibold tabular-nums {% if missing_positions %}text-warning{% endif %}">{{ missing_positions|length }}</p>
+      <p class="text-2xl font-semibold tabular-nums">{{ missing_positions|length }}</p>
       <p class="text-sm text-base-content/60">{% if missing_positions %}Quienes las ocupan no pueden evaluarse{% else %}Todas las posiciones están cubiertas{% endif %}</p>
     </div>
   </div>
 
   {% if missing_positions %}
-    {% callout "warning" icon="alert-triangle" title="Posiciones activas sin cuestionario de Ownership" cls="mb-6" %}
+    {% callout "warning" title="Posiciones activas sin cuestionario de Ownership" cls="mb-6" %}
       {% for p in missing_positions|slice:":8" %}{{ p.area.name }} · {{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if missing_positions|length > 8 %} y {{ missing_positions|length|add:"-8" }} más{% endif %}.
       Créalos abajo, en «Nuevo cuestionario».
     {% endcallout %}

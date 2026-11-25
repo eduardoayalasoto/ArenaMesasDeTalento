@@ -1,0 +1,6 @@
+{% comment %}
+Texto de atención (falta un dato, sin asignar…): texto legible + ícono de aviso. El amarillo solo va en el
+ícono, nunca como color del texto (contraste AA, DESIGN_SYSTEM § 7; ui-ux `color-not-only`).
+Uso: {% include "components/_attention.html" with text="Sin posición" %}
+{% endcomment %}
+<span class="inline-flex items-center gap-1 text-base-content"><i data-lucide="{{ icon|default:'triangle-alert' }}" class="w-4 h-4 shrink-0 text-warning" aria-hidden="true"></i>{{ text }}</span>

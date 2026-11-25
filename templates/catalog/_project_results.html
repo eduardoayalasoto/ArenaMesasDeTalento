@@ -22,31 +22,38 @@
             <td class="px-4 py-2.5">
               <p class="font-medium text-base-content">{{ p.name }}</p>
               <p class="text-sm text-base-content/60">{{ p.client|default:"Sin cliente" }}</p>
+              {# En pantallas chicas las columnas se ocultan: lo crítico baja como segunda línea. #}
+              <p class="mt-1 text-sm text-base-content/70 sm:hidden">{% if p.delivery.kind == "date" %}Entrega {{ p.target_close|date:"d M Y" }}{% if p.delivery.text %} · {{ p.delivery.text }}{% endif %}{% elif p.delivery.kind == "continuous" %}Servicio continuo{% else %}Sin fecha definida{% endif %}</p>
+              <p class="text-sm text-base-content/70 lg:hidden">Owner {{ p.owner.full_name }} · Resp. {{ p.responsable.full_name }}{% if not p.members %} · Sin equipo{% endif %}</p>
             </td>
             <td class="px-4 py-2.5 hidden lg:table-cell">
               <p class="text-base-content"><span class="text-sm text-base-content/60">Owner</span> {{ p.owner.full_name }}</p>
               <p class="text-sm text-base-content/70">
                 <span class="text-base-content/60">Resp.</span> {{ p.responsable.full_name }}
                 · <span class="text-base-content/60">Valid.</span>
-                {% if p.validador %}{{ p.validador.full_name }}{% else %}<span class="text-warning">sin asignar</span>{% endif %}
+                {% if p.validador %}{{ p.validador.full_name }}{% else %}{% include "components/_attention.html" with text="sin asignar" %}{% endif %}
               </p>
             </td>
             <td class="px-4 py-2.5 hidden sm:table-cell whitespace-nowrap">
               {% if p.delivery.kind == "date" %}
                 <p class="text-base-content">{{ p.target_close|date:"d M Y" }}</p>
                 {% if p.delivery.text %}
-                  <p class="text-sm {% if p.delivery.tone == 'error' %}text-error{% elif p.delivery.tone == 'warning' %}text-warning{% else %}text-base-content/60{% endif %}">{{ p.delivery.text }}</p>
+                  <p class="text-sm {% if p.delivery.tone == 'muted' %}text-base-content/60{% else %}text-base-content font-medium{% endif %}">
+                    {% if p.delivery.tone == 'error' %}{% include "components/_attention.html" with text=p.delivery.text icon="circle-alert" %}
+                    {% elif p.delivery.tone == 'warning' %}{% include "components/_attention.html" with text=p.delivery.text %}
+                    {% else %}{{ p.delivery.text }}{% endif %}
+                  </p>
                 {% endif %}
               {% elif p.delivery.kind == "continuous" %}
                 <p class="text-base-content">Servicio continuo</p>
                 <p class="text-sm text-base-content/60">Sin fecha de entrega</p>
               {% else %}
-                <p class="text-warning">Sin fecha definida</p>
+                <p>{% include "components/_attention.html" with text="Sin fecha definida" %}</p>
                 <p class="text-sm text-base-content/60">Captúrala al editar</p>
               {% endif %}
             </td>
             <td class="px-4 py-2.5 text-center tabular-nums hidden md:table-cell">
-              {% if p.members %}{{ p.members }}{% else %}<span class="text-warning">0</span>{% endif %}
+              {% if p.members %}{{ p.members }}{% else %}{% include "components/_attention.html" with text="0" %}{% endif %}
             </td>
             <td class="px-4 py-2.5 whitespace-nowrap">
               {% if p.is_active %}<span class="badge badge-soft badge-success whitespace-nowrap">Abierto</span>{% else %}<span class="badge badge-soft whitespace-nowrap">Cerrado</span>{% endif %}

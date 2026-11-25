@@ -77,7 +77,7 @@
               <form method="post">{% csrf_token %}
                 <input type="hidden" name="action" value="remove_member">
                 <input type="hidden" name="membership" value="{{ m.pk }}">
-                <button class="btn btn-ghost btn-xs text-error" aria-label="Quitar a {{ m.user.full_name }}">Quitar</button>
+                <button class="btn btn-ghost btn-sm text-error" aria-label="Quitar a {{ m.user.full_name }}">Quitar</button>
               </form>
             </li>
           {% empty %}

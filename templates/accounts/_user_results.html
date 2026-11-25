@@ -28,13 +28,18 @@
                   <p class="text-sm text-base-content/60 truncate">{{ u.email }}</p>
                 </div>
               </div>
+              {# En pantallas chicas las columnas se ocultan: lo crítico baja como segunda línea. #}
+              <p class="mt-1 text-sm text-base-content/70 md:hidden">{% if u.area %}{% if u.area.department %}{{ u.area.department.name }} · {% endif %}{{ u.area.name }}{% else %}Sin posición{% endif %}{% if u.level %} · {{ u.level.name }}{% endif %}</p>
+              {% if not u.is_active %}<span class="mt-1 badge badge-soft badge-error whitespace-nowrap sm:hidden">Inactivo</span>
+              {% elif u.must_change_password %}<span class="mt-1 badge badge-soft badge-warning whitespace-nowrap sm:hidden">Cambiar contraseña</span>
+              {% elif not u.area_id or not u.level_id %}<span class="mt-1 badge badge-soft badge-warning whitespace-nowrap sm:hidden">Incompleto</span>{% endif %}
             </td>
             <td class="px-4 py-2.5 hidden md:table-cell">
               {% if u.area %}
                 <p class="text-base-content">{% if u.area.department %}{{ u.area.department.name }} · {% endif %}{{ u.area.name }}</p>
                 <p class="text-sm text-base-content/60">{% if u.level %}{{ u.level.name }} · {% endif %}{{ u|puesto }}</p>
               {% else %}
-                <p class="text-warning">Sin posición</p>
+                <p>{% include "components/_attention.html" with text="Sin posición" %}</p>
                 <p class="text-sm text-base-content/60">{% if u.level %}{{ u.level.name }}{% else %}Sin nivel{% endif %}</p>
               {% endif %}
             </td>

@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Area, Department, SeniorityLevel
-from apps.core.http import back_to_list, hx_done
+from apps.core.http import back_to_list, hx_done, is_partial_request
 from apps.core.services import users as user_service
 
 from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserAdminForm
@@ -121,12 +121,12 @@ def user_admin(request):
     }
     for u in users:
         u.reset_confirm_id = f"reset-pwd-{u.pk}"
-        u.reset_message = (f"¿Restablecer la contraseña de {u.full_name} a {user_service.DEFAULT_PASSWORD}? "
+        u.reset_message = (f"¿Restablecer la contraseña de {u.full_name} a la contraseña inicial? "
                            "Tendrá que cambiarla al iniciar sesión.")
         u.delete_confirm_id = f"delete-user-{u.pk}"
         u.delete_message = (f"¿Eliminar a {u.full_name}? Si tiene evaluaciones se da de baja y se conserva su "
                             "historial; si no, se borra de forma permanente.")
-    template = "accounts/_user_results.html" if request.headers.get("HX-Request") else "accounts/user_admin.html"
+    template = "accounts/_user_results.html" if is_partial_request(request) else "accounts/user_admin.html"
     return render(request, template, context)
 
 

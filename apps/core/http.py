@@ -29,3 +29,8 @@ def hx_done(message: str, variant: str = "success", *, refresh: str = "users-cha
         close: True,
     })
     return response
+
+
+def is_partial_request(request) -> bool:
+    """htmx pide el parcial, salvo al restaurar el historial («Atrás» sin caché): ahí debe recibir la página completa."""
+    return bool(request.headers.get("HX-Request")) and not request.headers.get("HX-History-Restore-Request")

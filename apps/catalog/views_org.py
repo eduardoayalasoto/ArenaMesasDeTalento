@@ -16,7 +16,7 @@ from django.views.decorators.http import require_POST
 
 from apps.access import services as access
 from apps.access.decorators import requires
-from apps.core.http import back_to_list, hx_done
+from apps.core.http import back_to_list, hx_done, is_partial_request
 from apps.core.services import audit, catalogs
 
 from .forms import AreaDirectorForm, AreaPositionForm, DepartmentForm, LevelForm
@@ -57,7 +57,7 @@ def _tokens(qs, q, *fields):
 
 
 def _render_list(request, context):
-    template = "catalog/_org_results.html" if request.headers.get("HX-Request") else "catalog/org_list.html"
+    template = "catalog/_org_results.html" if is_partial_request(request) else "catalog/org_list.html"
     return render(request, template, context)
 
 

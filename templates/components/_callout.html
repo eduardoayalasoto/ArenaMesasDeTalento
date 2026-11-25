@@ -18,8 +18,8 @@ Con botón de acción: envolver el cuerpo en `<div class="flex flex-wrap items-c
 darle `ml-auto` al botón.
 {% endcomment %}
 <div role="{% if tone == 'error' or tone == 'warning' %}alert{% else %}status{% endif %}"
-     class="rounded-lg border px-4 py-3 text-base flex items-start gap-3 {% if tone == 'success' %}bg-success/10 border-success/25 text-success{% elif tone == 'warning' %}bg-warning/10 border-warning/25 text-warning{% elif tone == 'error' %}bg-error/10 border-error/25 text-error{% elif tone == 'neutral' %}bg-base-200 border-base-300 text-base-content/80{% else %}bg-primary/10 border-primary/25 text-primary{% endif %}{% if cls %} {{ cls }}{% endif %}">
-  <i data-lucide="{% if icon %}{{ icon }}{% elif tone == 'success' %}circle-check{% elif tone == 'warning' %}triangle-alert{% elif tone == 'error' %}circle-alert{% else %}info{% endif %}" class="w-5 h-5 shrink-0 mt-0.5" aria-hidden="true"></i>
+     class="rounded-lg border px-4 py-3 text-base flex items-start gap-3 text-base-content {% if tone == 'success' %}bg-success/10 border-success/25{% elif tone == 'warning' %}bg-warning/10 border-warning/25{% elif tone == 'error' %}bg-error/10 border-error/25{% elif tone == 'neutral' %}bg-base-200 border-base-300{% else %}bg-primary/10 border-primary/25{% endif %}{% if cls %} {{ cls }}{% endif %}">
+  <i data-lucide="{% if icon %}{{ icon }}{% elif tone == 'success' %}circle-check{% elif tone == 'warning' %}triangle-alert{% elif tone == 'error' %}circle-alert{% else %}info{% endif %}" class="w-5 h-5 shrink-0 mt-0.5 {% if tone == 'success' %}text-success{% elif tone == 'warning' %}text-warning{% elif tone == 'error' %}text-error{% elif tone == 'neutral' %}text-base-content/70{% else %}text-primary{% endif %}" aria-hidden="true"></i>
   <div class="min-w-0 flex-1">
     {% if title %}<p class="font-semibold">{{ title }}</p>{% endif %}
     {{ body }}

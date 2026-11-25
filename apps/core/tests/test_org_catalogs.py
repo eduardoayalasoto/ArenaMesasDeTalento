@@ -120,3 +120,26 @@ def test_area_director_falls_back_to_the_department_director(learn_people, learn
     learn_area.save(update_fields=["department"])                    # la posición no tiene Director propio
     req = submit(p["colab"])
     assert list(flow.eligible_approvers(req, CourseRequest.Stage.DIRECCION)) == [p["director"]]
+
+
+@pytest.mark.django_db
+def test_history_restore_returns_the_full_page_not_the_partial(client, talento, org):
+    """Al volver con «Atrás» htmx pide la URL con HX-History-Restore-Request: debe llegar la página completa."""
+    client.force_login(talento)
+    for name in ("catalog:department_admin", "catalog:area_admin", "catalog:level_admin",
+                 "catalog:project_admin", "accounts:user_admin"):
+        url = reverse(name)
+        assert "<html" not in client.get(url, **HX).content.decode()                    # parcial normal
+        restored = client.get(url, **HX, HTTP_HX_HISTORY_RESTORE_REQUEST="true").content.decode()
+        assert "<html" in restored, name
+
+
+@pytest.mark.django_db
+def test_icon_only_buttons_carry_a_tooltip_and_attention_text_is_readable(client, talento, org):
+    client.force_login(talento)
+    html = client.get(reverse("catalog:level_admin"), **HX).content.decode()
+    assert 'class="tooltip tooltip-left" data-tip="Eliminar nivel"' in html            # tooltip del componente
+    org["analista"].department = None
+    org["analista"].save(update_fields=["department"])
+    html = client.get(reverse("catalog:area_admin"), **HX).content.decode()
+    assert "Sin área" in html and "text-warning\">Sin área" not in html                # el aviso ya no es texto amarillo

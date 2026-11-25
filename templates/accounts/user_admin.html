@@ -5,7 +5,7 @@
       <h2 class="text-xl font-semibold text-base-content">Usuarios</h2>
       <p class="text-base-content/70">Busca, revisa y administra a cada colaborador: área, nivel, rol, perfil, Lead directo y acceso.</p>
     </div>
-    <button type="button" class="btn btn-primary"
+    <button type="button" class="btn btn-sm btn-primary"
             hx-get="{% url 'accounts:user_create' %}" hx-target="#user-drawer-body" hx-swap="innerHTML"
             hx-on::before-request="window.openUserDrawer()">
       <i data-lucide="user-plus" class="w-4 h-4" aria-hidden="true"></i> Nuevo usuario

@@ -62,3 +62,18 @@ Lucide, sin emojis).
 `.claude/agents/frontend-web-engineer.md` (implementa frontend), `frontend-auditor.md` (audita,
 CUMPLE/NO CUMPLE), `django-backend-engineer.md` (backend); skills `daisyui`, `design-system`,
 `django-architecture`, `django-patterns`, speckit. Hook `design_kit_reminder.py` al editar plantillas/CSS.
+
+## Organigrama: Área → Posición → Nivel (opcional) — nov 2026
+- **Vocabulario de la UI ≠ código:** «Área» = `catalog.Department` (Analítica, Consultoría; tiene Director); «Posición»
+  = `catalog.Area` (Ingeniero de Datos, Analista, Gerente…; `User.area`); «Nivel» = `SeniorityLevel`, **opcional**;
+  `catalog.Position` = combinación posición × nivel (nombre visible + ponderación de pilares; `level` nullable).
+- «Lead / Gerente» y «Director» son marcas de la ficha (`User.is_lead_flag`, `is_director_flag`); `is_lead` ya no
+  deriva del nivel. Los permisos siguen viniendo del perfil (spec 005).
+- Cuestionario de Ownership ↔ persona por **coincidencia exacta** posición + nivel (`ownership_flow.resolve_ownership_template`).
+- Preguntas: competencia (título) + bloque del catálogo (skills) + nivel de dominio objetivo N1–N4 + «pondera».
+  Ponderación automática con enteros que suman 100 (`ownership_weights.auto_distribute`); la matriz de competencias
+  se carga con `import_competency_matrix` (simula por defecto) y la migración de Consultoría fue `restructure_org`.
+- **Todo texto visible dice «ponderación», nunca «peso»** (excepto tamaño de archivo y moneda).
+- Pantallas de administración: búsqueda en vivo (htmx), filas de texto, «Ver y editar» en drawer, borrado con `_confirm`
+  y bitácora (`UserAuditLog`, `CatalogAuditLog`). Patrón en `templates/catalog/org_list.html` y `accounts/user_admin.html`.
+- Pendiente: evaluación 360 al Gerente y ponderación por proyecto de cada persona (ver memoria `talento-org-restructure`).

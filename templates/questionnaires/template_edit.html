@@ -17,24 +17,24 @@
         {% url 'questionnaires:template_delete' pk=template.pk as discard_url %}
         {% include "components/_confirm.html" with confirm_id="discard-template-modal" title="Descartar borrador" message="Se elimina este borrador con todas sus secciones, preguntas, escala y ponderaciones. No afecta a las versiones publicadas." confirm_url=discard_url trigger_label="Descartar borrador" trigger_icon="trash-2" confirm_label="Descartar" %}
         <form method="post"><input type="hidden" name="action" value="publish">{% csrf_token %}
-          <button type="submit" class="btn btn-primary"
+          <button type="submit" class="btn btn-sm btn-primary"
                   {% if weights_errors %}disabled title="Corrige las ponderaciones y categorías antes de publicar"{% endif %}
                   :disabled="$store.weights.blocked || {{ weights_errors|length }} > 0"
                   :title="$store.weights.blocked ? 'Hay ponderaciones que no suman 100%' : ''">Publicar versión</button>
         </form>
       {% elif editable %}
         <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
-          <button type="submit" class="btn btn-outline btn-primary" title="Copia este cuestionario como borrador para rehacerlo sin tocar el vigente">Crear nueva versión</button>
+          <button type="submit" class="btn btn-sm btn-outline btn-primary" title="Copia este cuestionario como borrador para rehacerlo sin tocar el vigente">Crear nueva versión</button>
         </form>
       {% elif current_version %}
-        <a href="{% url 'questionnaires:template_edit' pk=current_version.pk %}" class="btn btn-primary">Ir a la versión vigente</a>
+        <a href="{% url 'questionnaires:template_edit' pk=current_version.pk %}" class="btn btn-sm btn-primary">Ir a la versión vigente</a>
       {% endif %}
     </div>
   </div>
 
   {# --- Guía según el estado del cuestionario --- #}
   {% if is_draft %}
-    {% callout "info" icon="pencil" title="Estás editando un borrador" cls="mb-6" %}
+    {% callout "info" title="Estás editando un borrador" cls="mb-6" %}
       Los cambios se guardan al instante y <strong>no afectan</strong> a nadie hasta que lo publiques. Recorre los pasos de arriba abajo; al final verás qué falta para publicar.
     {% endcallout %}
   {% elif not editable %}
@@ -42,11 +42,11 @@
       Esta versión ya fue reemplazada. Para hacer cambios, edita la versión vigente.
     {% endcallout %}
   {% elif has_answers %}
-    {% callout "warning" icon="alert-triangle" title="Esta versión ya tiene respuestas" cls="mb-6" %}
+    {% callout "warning" title="Esta versión ya tiene respuestas" cls="mb-6" %}
       Puedes editarla: textos, ponderaciones, categorías, orden y preguntas nuevas. Ten en cuenta que las <strong>ponderaciones</strong> se usan para calcular resultados, así que ajustarlas cambia cómo se calculan las calificaciones. No se pueden eliminar preguntas contestadas ni cambiar los valores de la escala. Si vas a rehacer el cuestionario completo, mejor usa «Crear nueva versión».
     {% endcallout %}
   {% else %}
-    {% callout "info" icon="info" title="Versión publicada, sin respuestas todavía" cls="mb-6" %}
+    {% callout "info" title="Versión publicada, sin respuestas todavía" cls="mb-6" %}
       Los cambios se guardan al instante. Revisa que las ponderaciones sigan sumando 100%.
     {% endcallout %}
   {% endif %}
@@ -76,7 +76,7 @@
   {# --- Paso 1: escala --- #}
   <section id="paso-1" class="mb-10 scroll-mt-20">
     {% include "questionnaires/_step_header.html" with n=1 title="Escala de respuestas" description="Las opciones que el evaluador elige para calificar cada pregunta." done=scale_done %}
-    {% callout "neutral" icon="lightbulb" title="Para qué sirve" cls="mb-4" %}
+    {% callout "neutral" title="Para qué sirve" cls="mb-4" %}
       Todas las preguntas del cuestionario se contestan con esta escala. Usa valores del 1 al 4 y, si quieres, una opción N/A (déjala sin valor). Escribe un descriptor claro por opción: es lo que ayuda al evaluador a ser consistente. La nota de escala la ve la persona evaluada.
     {% endcallout %}
 
@@ -90,6 +90,9 @@
             {% endfor %}
           </div>
         {% else %}
+          <div class="hidden md:flex items-center gap-2 pb-2 text-sm font-medium text-base-content/60" aria-hidden="true">
+            <span class="w-24">Valor</span><span class="w-48">Etiqueta</span><span class="grow">Descriptor (qué significa)</span>
+          </div>
           <div class="divide-y divide-base-200">
             {% for opt in scale %}
               <div class="flex flex-wrap items-start gap-3 py-3 first:pt-0">
@@ -102,9 +105,9 @@
                 </form>
                 <div class="flex items-center gap-1 shrink-0">
                   <form method="post">{% csrf_token %}<input type="hidden" name="action" value="move_scale_option"><input type="hidden" name="option" value="{{ opt.pk }}"><input type="hidden" name="dir" value="up">
-                    <button class="btn btn-ghost btn-sm p-2" aria-label="Subir {{ opt.label }}" {% if forloop.first %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-up" cls="w-4 h-4" %}</button></form>
+                    <button class="btn btn-ghost btn-sm p-2" aria-label="Subir {{ opt.label }}" title="Subir {{ opt.label }}" {% if forloop.first %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-up" cls="w-4 h-4" %}</button></form>
                   <form method="post">{% csrf_token %}<input type="hidden" name="action" value="move_scale_option"><input type="hidden" name="option" value="{{ opt.pk }}"><input type="hidden" name="dir" value="down">
-                    <button class="btn btn-ghost btn-sm p-2" aria-label="Bajar {{ opt.label }}" {% if forloop.last %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-down" cls="w-4 h-4" %}</button></form>
+                    <button class="btn btn-ghost btn-sm p-2" aria-label="Bajar {{ opt.label }}" title="Bajar {{ opt.label }}" {% if forloop.last %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-down" cls="w-4 h-4" %}</button></form>
                   {% with pk_s=opt.pk|stringformat:"s" %}
                     {% with cid="delete-scale-"|add:pk_s %}
                       {% url 'questionnaires:scale_option_delete' pk=opt.pk as opt_delete_url %}
@@ -143,7 +146,7 @@
   {% if is_ownership %}
   <section id="paso-2" class="mb-10 scroll-mt-20">
     {% include "questionnaires/_step_header.html" with n=2 title="Categorías y ponderaciones" description="Qué temas se evalúan y cuánto pondera cada uno en la calificación." done=weights_done %}
-    {% callout "neutral" icon="lightbulb" title="Cómo funcionan las ponderaciones" cls="mb-4" %}
+    {% callout "neutral" title="Cómo funcionan las ponderaciones" cls="mb-4" %}
       Cada pregunta pertenece a una categoría. La calificación del cuestionario es la suma del puntaje de cada categoría por su ponderación, y las ponderaciones deben sumar exactamente <strong>100%</strong>. Dentro de una categoría puedes repartir la ponderación entre sus preguntas o dejar que pesen lo mismo. Define aquí las categorías <em>antes</em> de crear preguntas.
     {% endcallout %}
     {% include "questionnaires/_weights_panel.html" %}
@@ -153,7 +156,7 @@
   {# --- Paso 3: secciones y preguntas --- #}
   <section id="paso-3" class="mb-10 scroll-mt-20">
     {% include "questionnaires/_step_header.html" with n=step_questions|default:3 title="Secciones y preguntas" description="El contenido que responde el evaluador, agrupado por temas." done=question_count %}
-    {% callout "neutral" icon="lightbulb" title="Cómo se organiza" cls="mb-4" %}
+    {% callout "neutral" title="Cómo se organiza" cls="mb-4" %}
       Una <strong>sección</strong> agrupa preguntas de un mismo tema y se muestra como un bloque al contestar. Cada <strong>pregunta</strong> tiene título, descripción y, si la completas, criterio de aceptación, entregable y guía para el evaluador.{% if is_ownership %} En Ownership toda pregunta necesita una categoría.{% endif %} Usa las flechas para ordenar y el lápiz para editar.
     {% endcallout %}
 
@@ -173,11 +176,11 @@
               <button type="button" class="btn btn-sm btn-ghost" @click="rename = false">Cancelar</button>
             </form>
             <div class="flex items-center gap-1" x-show="!rename">
-              <button type="button" class="btn btn-ghost btn-sm p-2" @click="rename = true" aria-label="Renombrar sección {{ section.title }}"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i></button>
+              <button type="button" class="btn btn-ghost btn-sm p-2" @click="rename = true" aria-label="Renombrar sección {{ section.title }}" title="Renombrar sección {{ section.title }}"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i></button>
               <form method="post">{% csrf_token %}<input type="hidden" name="action" value="move_section"><input type="hidden" name="section" value="{{ section.pk }}"><input type="hidden" name="dir" value="up">
-                <button class="btn btn-ghost btn-sm p-2" aria-label="Subir sección {{ section.title }}" {% if forloop.first %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-up" cls="w-4 h-4" %}</button></form>
+                <button class="btn btn-ghost btn-sm p-2" aria-label="Subir sección {{ section.title }}" title="Subir sección {{ section.title }}" {% if forloop.first %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-up" cls="w-4 h-4" %}</button></form>
               <form method="post">{% csrf_token %}<input type="hidden" name="action" value="move_section"><input type="hidden" name="section" value="{{ section.pk }}"><input type="hidden" name="dir" value="down">
-                <button class="btn btn-ghost btn-sm p-2" aria-label="Bajar sección {{ section.title }}" {% if forloop.last %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-down" cls="w-4 h-4" %}</button></form>
+                <button class="btn btn-ghost btn-sm p-2" aria-label="Bajar sección {{ section.title }}" title="Bajar sección {{ section.title }}" {% if forloop.last %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-down" cls="w-4 h-4" %}</button></form>
               {% if not section.questions.all %}
                 {% with pk_s=section.pk|stringformat:"s" %}
                   {% with cid="delete-section-"|add:pk_s %}
@@ -213,8 +216,8 @@
                   {% if editable %}
                   <div class="flex items-center gap-1 shrink-0">
                     <button type="button" class="btn btn-sm btn-soft btn-primary" @click="edit = true" aria-label="Editar pregunta {{ forloop.counter }}"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</button>
-                    <form method="post"><input type="hidden" name="action" value="move_question"><input type="hidden" name="question" value="{{ q.id }}"><input type="hidden" name="dir" value="up">{% csrf_token %}<button class="btn btn-ghost btn-sm p-2" aria-label="Subir" {% if forloop.first %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-up" cls="w-4 h-4" %}</button></form>
-                    <form method="post"><input type="hidden" name="action" value="move_question"><input type="hidden" name="question" value="{{ q.id }}"><input type="hidden" name="dir" value="down">{% csrf_token %}<button class="btn btn-ghost btn-sm p-2" aria-label="Bajar" {% if forloop.last %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-down" cls="w-4 h-4" %}</button></form>
+                    <form method="post"><input type="hidden" name="action" value="move_question"><input type="hidden" name="question" value="{{ q.id }}"><input type="hidden" name="dir" value="up">{% csrf_token %}<button class="btn btn-ghost btn-sm p-2" aria-label="Subir" title="Subir" {% if forloop.first %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-up" cls="w-4 h-4" %}</button></form>
+                    <form method="post"><input type="hidden" name="action" value="move_question"><input type="hidden" name="question" value="{{ q.id }}"><input type="hidden" name="dir" value="down">{% csrf_token %}<button class="btn btn-ghost btn-sm p-2" aria-label="Bajar" title="Bajar" {% if forloop.last %}disabled{% endif %}>{% include "partials/icon.html" with name="arrow-down" cls="w-4 h-4" %}</button></form>
                     {% with pk_s=q.pk|stringformat:"s" %}
                       {% with cid="delete-question-"|add:pk_s %}
                         {% url 'questionnaires:question_delete' pk=q.pk as question_delete_url %}
@@ -268,7 +271,7 @@
                   <div><label class="fieldset-legend" for="q{{ q.id }}-exp">Expectativa por nivel</label><textarea id="q{{ q.id }}-exp" name="level_expectation" rows="2" class="textarea w-full">{{ q.level_expectation }}</textarea></div>
                   <div class="md:col-span-2"><label class="fieldset-legend" for="q{{ q.id }}-gd">Comentarios y guía</label><textarea id="q{{ q.id }}-gd" name="guidance" rows="2" class="textarea w-full">{{ q.guidance }}</textarea></div>
                 </div>
-                <div class="flex gap-2"><button type="submit" class="btn btn-primary">Guardar</button><button type="button" class="btn btn-outline btn-primary" @click="edit = false">Cancelar</button></div>
+                <div class="flex gap-2"><button type="submit" class="btn btn-primary">Guardar</button><button type="button" class="btn btn-ghost" @click="edit = false">Cancelar</button></div>
               </form>
               {% endif %}
             </div>
@@ -280,14 +283,17 @@
           <form method="post" class="rounded-xl border border-dashed border-base-300 p-4">
             {% csrf_token %}<input type="hidden" name="action" value="add_question"><input type="hidden" name="section" value="{{ section.id }}">
             <p class="font-medium text-base-content mb-2 inline-flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Agregar pregunta a esta sección</p>
-            <input type="text" name="title" class="input w-full mb-2" placeholder="Título de la pregunta" maxlength="200" required aria-label="Título de la pregunta">
+            <label class="fieldset-legend" for="add-title-{{ section.id }}">Título de la pregunta</label>
+            <input id="add-title-{{ section.id }}" type="text" name="title" class="input w-full mb-2" placeholder="Ej. Habilidad de comunicación" maxlength="200" required>
             {% if is_ownership %}
-            <select name="category" class="select w-full mb-2" aria-label="Categoría de la pregunta" required>
+            <label class="fieldset-legend" for="add-cat-{{ section.id }}">Categoría</label>
+            <select id="add-cat-{{ section.id }}" name="category" class="select w-full mb-2" required>
               <option value="">— Elige una categoría —</option>
               {% for c in category_choices %}<option value="{{ c.pk }}">{{ c.name }}</option>{% endfor %}
             </select>
             {% endif %}
-            <textarea name="text" rows="2" class="textarea w-full mb-2" placeholder="Descripción (opcional)" aria-label="Descripción"></textarea>
+            <label class="fieldset-legend" for="add-text-{{ section.id }}">Descripción (opcional)</label>
+            <textarea id="add-text-{{ section.id }}" name="text" rows="2" class="textarea w-full mb-2"></textarea>
             {% if is_ownership %}
             <input type="hidden" name="weighting_fields" value="1">
             <div class="grid gap-2 md:grid-cols-2 mb-2">
@@ -311,7 +317,7 @@
         </div>
       </div>
     {% empty %}
-      {% callout "warning" icon="info" cls="mb-6" %}Este cuestionario todavía no tiene secciones. Crea la primera abajo.{% endcallout %}
+      {% callout "warning" cls="mb-6" %}Este cuestionario todavía no tiene secciones. Crea la primera abajo.{% endcallout %}
     {% endfor %}
 
     {% if editable %}
@@ -331,16 +337,16 @@
     {% include "questionnaires/_step_header.html" with n=step_publish|default:4 title="Publicar" description="Revisa que todo esté completo; al publicar, la gente empieza a contestar con esta versión." done=not_draft_flag %}
     {% if is_draft %}
       {% if publish_errors %}
-        {% callout "warning" icon="alert-triangle" title="Esto falta para poder publicar" %}
+        {% callout "warning" title="Esto falta para poder publicar" %}
           <ul class="list-disc ml-5">{% for e in publish_errors %}<li>{{ e }}</li>{% endfor %}</ul>
         {% endcallout %}
       {% else %}
-        {% callout "success" icon="check-circle" title="Todo listo para publicar" %}
+        {% callout "success" title="Todo listo para publicar" %}
           La escala, las ponderaciones y las preguntas están completas. Al publicar, esta versión reemplaza a la vigente para las evaluaciones nuevas; las respuestas ya capturadas no cambian.
         {% endcallout %}
       {% endif %}
     {% else %}
-      {% callout "info" icon="info" %}Esta versión ya está publicada. Para hacer cambios después de que alguien la conteste, crea una nueva versión.{% endcallout %}
+      {% callout "info" %}Esta versión ya está publicada. Para hacer cambios después de que alguien la conteste, crea una nueva versión.{% endcallout %}
     {% endif %}
   </section>
 {% endblock %}

@@ -10,8 +10,8 @@ Uso: {% include "components/_icon_button.html" with icon="pencil" label="Editar"
 Props:
   icon: nombre de ícono Lucide (requerido)
   label: texto accesible (aria-label) -- SIEMPRE requerido, el botón no
-    tiene texto visible. Combinar con un `tooltip` de daisyUI si se quiere
-    también un tooltip visual (`<div class="tooltip" data-tip="...">`).
+    tiene texto visible. El componente ya lo envuelve en un `tooltip tooltip-left` de daisyUI
+    (a la izquierda: las listas con scroll recortan uno hacia arriba).
   variant: default (btn-ghost, bajo énfasis) | "filled" (sin btn-ghost, más énfasis)
     | "primary" (btn-primary -- acción principal de una sección, ej. el "+"
     de components/_activity_fab.html, 2026-09-25)
@@ -28,16 +28,16 @@ Props:
     _button.html -- nunca contenido derivado de usuario final aquí)
 {% endcomment %}
 {% if href %}
-<a
+<span class="tooltip tooltip-left" data-tip="{{ label }}"><a
   href="{{ href }}"
   aria-label="{{ label }}"
   {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
   class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %}"
 >
   <i data-lucide="{{ icon }}" class="{% if size == 'lg' %}w-5 h-5{% else %}w-[18px] h-[18px]{% endif %}"></i>
-</a>
+</a></span>
 {% else %}
-<button
+<span class="tooltip tooltip-left" data-tip="{{ label }}"><button
   type="{{ type|default:'button' }}"
   aria-label="{{ label }}"
   {% if hx_post %}hx-post="{{ hx_post }}"{% endif %}
@@ -49,5 +49,5 @@ Props:
   class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %}"
 >
   <i data-lucide="{{ icon }}" class="{% if size == 'lg' %}w-5 h-5{% else %}w-[18px] h-[18px]{% endif %}"></i>
-</button>
+</button></span>
 {% endif %}

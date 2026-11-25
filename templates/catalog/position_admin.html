@@ -11,10 +11,10 @@
     <div class="flex flex-wrap items-center gap-2">
       {% if missing %}
         <form method="post">{% csrf_token %}<input type="hidden" name="action" value="complete">
-          <button type="submit" class="btn btn-outline">Completar {{ missing }} posición{{ missing|pluralize:"es" }} faltante{{ missing|pluralize }}</button>
+          <button type="submit" class="btn btn-sm btn-outline">Completar {{ missing }} posición{{ missing|pluralize:"es" }} faltante{{ missing|pluralize }}</button>
         </form>
       {% endif %}
-      <button type="button" class="btn btn-primary" data-mode="create"
+      <button type="button" class="btn btn-sm btn-primary" data-mode="create"
               @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Nueva combinación</button>
     </div>
   </div>

@@ -1,8 +1,9 @@
-{% comment %}Badge de estado. Param: status (BORRADOR/ENVIADA/EN_VALIDACION/VALIDADA/PUBLICADO…) y label.{% endcomment %}
+{% comment %}Badge de estado. Param: status (BORRADOR/ENVIADA/EN_VALIDACION/VALIDADA/PUBLICADO…) y label.
+Variantes daisyUI `badge-soft` (canónicas, DESIGN_SYSTEM § 6); nunca texto de color suelto sobre tinte.{% endcomment %}
 {% if status == "ENVIADA" or status == "VALIDADA" or status == "ABIERTO" or status == "PUBLICADO" %}
-  <span class="badge whitespace-nowrap bg-success/10 text-success">{{ label }}</span>
+  <span class="badge badge-soft badge-success whitespace-nowrap">{{ label }}</span>
 {% elif status == "EN_VALIDACION" or status == "PLANEADO" %}
-  <span class="badge whitespace-nowrap bg-warning/10 text-warning">{{ label }}</span>
+  <span class="badge badge-soft badge-warning whitespace-nowrap">{{ label }}</span>
 {% else %}
-  <span class="badge whitespace-nowrap bg-base-200 text-base-content/70">{{ label }}</span>
+  <span class="badge badge-ghost whitespace-nowrap">{{ label }}</span>
 {% endif %}
