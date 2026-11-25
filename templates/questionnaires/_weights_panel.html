@@ -57,6 +57,16 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
       </div>
     {% endif %}
   </form>
+  {% if editable and weight_groups %}
+    <form method="post" class="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-base-300 p-4">
+      {% csrf_token %}<input type="hidden" name="action" value="auto_weights">
+      <div class="grow min-w-64">
+        <p class="font-medium text-base-content">Calcular ponderaciones automáticamente</p>
+        <p class="text-base text-base-content/70">Cada pregunta pondera según su nivel de dominio objetivo (N1 a N4). Se guardan enteros que suman 100 y la última absorbe la diferencia. Reemplaza las ponderaciones actuales.</p>
+      </div>
+      <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
+  {% endif %}
   {% for g in weight_groups %}{% if editable and not g.questions %}
     <form id="remove-cat-{{ g.link.pk }}" method="post">{% csrf_token %}<input type="hidden" name="action" value="remove_template_category"><input type="hidden" name="link" value="{{ g.link.pk }}"></form>
   {% endif %}{% endfor %}

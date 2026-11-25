@@ -41,6 +41,7 @@ def duplicate_as_new_version(template):
                 section=new_section, order=q.order, title=q.title, text=q.text,
                 qtype=q.qtype, weight=q.weight, allow_na=q.allow_na, is_required=q.is_required,
                 category_id=q.category_id, weight_pct=q.weight_pct,
+                block_id=q.block_id, target_level=q.target_level, is_weighted=q.is_weighted,
                 **{name: getattr(q, name) for name in Question.CHECKLIST_FIELDS},
             )
     for opt in template.scale_options.filter(question__isnull=True):
@@ -69,8 +70,8 @@ def create_template(kind, area=None, level=None):
 
     Kind = QuestionnaireTemplate.Kind
     if kind == Kind.OWNERSHIP:
-        if area is None or level is None:
-            raise ValidationError("Elige el área y el nivel del cuestionario de Ownership.")
+        if area is None:
+            raise ValidationError("Elige el Área y la posición del cuestionario de Ownership (el nivel es opcional).")
     elif kind == Kind.VALUE_DELIVERY:
         area = level = None
     else:

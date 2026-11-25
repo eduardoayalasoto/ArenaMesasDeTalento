@@ -72,9 +72,12 @@ def test_create_template_rejects_a_puesto_that_already_has_one(published, area, 
 
 
 @pytest.mark.django_db
-def test_create_ownership_requires_area_and_level(published):
-    with pytest.raises(ValidationError, match="área y el nivel"):
+def test_create_ownership_requires_the_position_but_the_level_is_optional(published, new_position):
+    with pytest.raises(ValidationError, match="Área y la posición"):
         editor.create_template(T.Kind.OWNERSHIP)
+    # Sin nivel es válido (Analista, Gerente…): el cuestionario nace para la posición sola.
+    tpl = editor.create_template(T.Kind.OWNERSHIP, area=new_position.area, level=None)
+    assert tpl.level is None and tpl.status == T.Status.BORRADOR
 
 
 @pytest.mark.django_db

@@ -7,7 +7,7 @@ from apps.core.services import ownership_weights as ow
 
 from apps.catalog.models import Position
 
-from .models import Category, Question, QuestionnaireTemplate, Section
+from .models import Category, CompetencyBlock, Question, QuestionnaireTemplate, Section
 
 _INPUT = "input w-full"
 _TEXTAREA = "textarea w-full"
@@ -140,8 +140,12 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ["title", "text", "section", "category", *Question.CHECKLIST_FIELDS]
+        fields = ["title", "text", "section", "category", "block", "target_level", "is_weighted",
+                  *Question.CHECKLIST_FIELDS]
         labels = {
+            "block": "Bloque del catálogo",
+            "target_level": "Nivel de dominio objetivo",
+            "is_weighted": "Pondera",
             "title": "Título",
             "text": "Descripción",
             "section": "Sección",
@@ -156,6 +160,9 @@ class QuestionForm(forms.ModelForm):
         widgets = {
             "title": forms.TextInput(attrs={"class": _INPUT}),
             "category": forms.Select(attrs={"class": "select w-full"}),
+            "block": forms.Select(attrs={"class": "select w-full"}),
+            "target_level": forms.Select(attrs={"class": "select w-full"}),
+            "is_weighted": forms.CheckboxInput(attrs={"class": "checkbox"}),
             "text": forms.Textarea(attrs={"class": _TEXTAREA, "rows": 2}),
             **{
                 name: forms.Textarea(attrs={"class": _TEXTAREA, "rows": 2})
@@ -175,8 +182,19 @@ class QuestionForm(forms.ModelForm):
         if template is not None and template.kind == QuestionnaireTemplate.Kind.OWNERSHIP:
             self.fields["category"].queryset = Category.objects.filter(template_links__template=template)
             self.fields["category"].empty_label = "— Elige una categoría —"
+            self.fields["block"].queryset = CompetencyBlock.objects.filter(is_active=True)
+            self.fields["block"].required = False
+            self.fields["block"].empty_label = "— Sin bloque —"
+            self.fields["target_level"].required = False
+            self.fields["target_level"].choices = [("", "— Sin nivel —")] + list(Question.Mastery.choices)
+            # Los campos de ponderación solo se tocan si el formulario los trae (marca `weighting_fields`):
+            # así un guardado que no los incluye no borra el bloque ni convierte la pregunta en «no pondera».
+            if self.is_bound and self.data.get("weighting_fields") != "1":
+                for name in ("block", "target_level", "is_weighted"):
+                    self.fields.pop(name, None)
         else:
-            del self.fields["category"]
+            for name in ("category", "block", "target_level", "is_weighted"):
+                self.fields.pop(name, None)
 
     def clean_section(self):
         # Sin sección en el envío, una pregunta existente se queda donde está (nunca queda sin sección).

@@ -171,8 +171,28 @@ class Question(models.Model):
         related_name="questions", verbose_name="categoría",
     )
     weight_pct = models.DecimalField(
-        "peso en su categoría (%)", max_digits=4, decimal_places=1, null=True, blank=True,
+        "ponderación en su categoría (%)", max_digits=4, decimal_places=1, null=True, blank=True,
         help_text="Vacío = partes iguales; 0 = se califica pero no pondera.",
+    )
+
+    class Mastery(models.IntegerChoices):
+        EXPUESTO = 1, "N1 · Expuesto"
+        CONTRIBUYE = 2, "N2 · Contribuye"
+        AUTONOMO = 3, "N3 · Autónomo"
+        REFERENTE = 4, "N4 · Referente"
+
+    # Competencia = título; el bloque del catálogo aporta los skills que la componen.
+    block = models.ForeignKey(
+        "CompetencyBlock", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="questions", verbose_name="bloque del catálogo",
+    )
+    target_level = models.PositiveSmallIntegerField(
+        "nivel de dominio objetivo", choices=Mastery.choices, null=True, blank=True,
+        help_text="Con él se calcula la ponderación automática: a mayor nivel, mayor ponderación.",
+    )
+    is_weighted = models.BooleanField(
+        "pondera", default=True,
+        help_text="Desmárcala si la pregunta se califica pero no mueve la calificación (ponderación 0).",
     )
     allow_na = models.BooleanField("permite N/A", default=True)
     is_required = models.BooleanField("obligatoria", default=True)
@@ -196,6 +216,11 @@ class Question(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def skills(self):
+        """Skills que componen la competencia: los del bloque del catálogo."""
+        return [s.name for s in self.block.skills.all()] if self.block_id else []
 
     @property
     def checklist_details(self):
@@ -248,3 +273,37 @@ class ScaleOption(models.Model):
     @property
     def is_na(self):
         return self.value is None
+
+
+class CompetencyBlock(models.Model):
+    """Bloque del catálogo de competencias (p. ej. «Disciplina de WoW y gestión»): agrupa sus skills."""
+
+    code = models.SlugField("clave", max_length=60, unique=True)
+    name = models.CharField("nombre", max_length=120)
+    order = models.PositiveSmallIntegerField("orden", default=1)
+    is_active = models.BooleanField("activo", default=True)
+
+    class Meta:
+        verbose_name = "bloque del catálogo"
+        verbose_name_plural = "bloques del catálogo"
+        ordering = ["order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+class BlockSkill(models.Model):
+    """Skill que compone un bloque del catálogo."""
+
+    block = models.ForeignKey(CompetencyBlock, on_delete=models.CASCADE, related_name="skills", verbose_name="bloque")
+    name = models.CharField("skill", max_length=160)
+    order = models.PositiveSmallIntegerField("orden", default=1)
+
+    class Meta:
+        verbose_name = "skill"
+        verbose_name_plural = "skills"
+        ordering = ["block", "order"]
+        constraints = [models.UniqueConstraint(fields=["block", "name"], name="unique_block_skill")]
+
+    def __str__(self):
+        return self.name

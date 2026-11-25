@@ -199,7 +199,13 @@
                     <span class="grid place-items-center w-7 h-7 rounded-full bg-base-200 text-sm font-semibold text-base-content/80 shrink-0">{{ forloop.counter }}</span>
                     <div class="min-w-0">
                       <p class="font-medium text-base-content">{{ q.title }}</p>
-                      {% if q.category %}<span class="mt-1 badge badge-soft badge-primary whitespace-nowrap">{{ q.category.name }}</span>{% endif %}
+                      <div class="mt-1 flex flex-wrap items-center gap-1.5">
+                        {% if q.category %}<span class="badge badge-soft badge-primary whitespace-nowrap">{{ q.category.name }}</span>{% endif %}
+                        {% if q.block %}<span class="badge badge-ghost whitespace-nowrap" title="Bloque del catálogo">{{ q.block.name }}</span>{% endif %}
+                        {% if q.target_level %}<span class="badge badge-ghost whitespace-nowrap" title="Nivel de dominio objetivo">{{ q.get_target_level_display }}</span>{% endif %}
+                        {% if is_ownership and not q.is_weighted %}<span class="badge badge-soft badge-warning whitespace-nowrap" title="Se califica pero no mueve la calificación">No pondera</span>{% endif %}
+                      </div>
+                      {% if q.block %}<p class="mt-1 text-sm text-base-content/60"><span class="font-medium">Skills:</span> {{ q.skills|join:" · " }}</p>{% endif %}
                       {% if q.text %}<p class="mt-2 text-base text-base-content/70 whitespace-pre-line">{{ q.text }}</p>{% endif %}
                       {% include "partials/_checklist_details.html" with question=q %}
                     </div>
@@ -241,6 +247,20 @@
                   {% endif %}
                 </div>
                 <div class="grid gap-3 md:grid-cols-2">
+                  {% if is_ownership %}
+                  <input type="hidden" name="weighting_fields" value="1">
+                  <div><label class="fieldset-legend" for="q{{ q.id }}-block">Bloque del catálogo</label>
+                    <select id="q{{ q.id }}-block" name="block" class="select w-full">
+                      <option value="">— Sin bloque —</option>
+                      {% for b in block_choices %}<option value="{{ b.pk }}" {% if q.block_id == b.pk %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
+                    </select></div>
+                  <div><label class="fieldset-legend" for="q{{ q.id }}-tl">Nivel de dominio objetivo</label>
+                    <select id="q{{ q.id }}-tl" name="target_level" class="select w-full">
+                      <option value="">— Sin nivel —</option>
+                      {% for value, label in mastery_choices %}<option value="{{ value }}" {% if q.target_level == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                    </select></div>
+                  <label class="md:col-span-2 flex items-center gap-2 text-base"><input type="checkbox" name="is_weighted" class="checkbox" {% if q.is_weighted %}checked{% endif %}> Pondera (desmárcala si solo se califica, sin mover la calificación)</label>
+                  {% endif %}
                   <div class="md:col-span-2"><label class="fieldset-legend" for="q{{ q.id }}-ac">Criterio de aceptación</label><textarea id="q{{ q.id }}-ac" name="acceptance_criteria" rows="3" class="textarea w-full">{{ q.acceptance_criteria }}</textarea></div>
                   <div><label class="fieldset-legend" for="q{{ q.id }}-del">Entregable</label><textarea id="q{{ q.id }}-del" name="deliverable" rows="2" class="textarea w-full">{{ q.deliverable }}</textarea></div>
                   <div><label class="fieldset-legend" for="q{{ q.id }}-fmt">Formato</label><textarea id="q{{ q.id }}-fmt" name="deliverable_format" rows="2" class="textarea w-full">{{ q.deliverable_format }}</textarea></div>
@@ -268,6 +288,20 @@
             </select>
             {% endif %}
             <textarea name="text" rows="2" class="textarea w-full mb-2" placeholder="Descripción (opcional)" aria-label="Descripción"></textarea>
+            {% if is_ownership %}
+            <input type="hidden" name="weighting_fields" value="1">
+            <div class="grid gap-2 md:grid-cols-2 mb-2">
+              <select name="block" class="select w-full" aria-label="Bloque del catálogo">
+                <option value="">— Bloque del catálogo (opcional) —</option>
+                {% for b in block_choices %}<option value="{{ b.pk }}">{{ b.name }}</option>{% endfor %}
+              </select>
+              <select name="target_level" class="select w-full" aria-label="Nivel de dominio objetivo">
+                <option value="">— Nivel de dominio objetivo —</option>
+                {% for value, label in mastery_choices %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+              </select>
+              <label class="md:col-span-2 flex items-center gap-2 text-base"><input type="checkbox" name="is_weighted" class="checkbox" checked> Pondera</label>
+            </div>
+            {% endif %}
             <label class="fieldset-legend" for="add-ac-{{ section.id }}">Criterio de aceptación (opcional)</label>
             <textarea id="add-ac-{{ section.id }}" name="acceptance_criteria" rows="2" class="textarea w-full"></textarea>
             <p class="label mb-2">El resto de los campos del checklist se edita después, desde la pregunta.</p>

@@ -94,10 +94,17 @@ def ownership_category_breakdown(evaluation) -> list[CategoryScore]:
 
 
 def _question_weights(group):
-    """Pesos exactos de las preguntas de una categoría: partes iguales si ninguna define peso."""
-    if all(q.weight_pct is None for q in group):
-        return {q.pk: Fraction(1) for q in group}
-    return {q.pk: _exact(q.weight_pct if q.weight_pct is not None else 0) for q in group}
+    """Pesos exactos de las preguntas de una categoría: partes iguales si ninguna define peso.
+
+    Una pregunta que «no pondera» se califica pero pesa 0 en todos los casos.
+    """
+    weighted = [q for q in group if q.is_weighted]
+    weights = {q.pk: Fraction(0) for q in group}
+    if all(q.weight_pct is None for q in weighted):
+        weights.update({q.pk: Fraction(1) for q in weighted})
+    else:
+        weights.update({q.pk: _exact(q.weight_pct if q.weight_pct is not None else 0) for q in weighted})
+    return weights
 
 
 def _category_score(group, graded) -> Fraction | None:

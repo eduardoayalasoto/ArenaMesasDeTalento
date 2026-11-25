@@ -14,7 +14,9 @@ from apps.core.services import ownership_weights
 from apps.core.services import questionnaire_editor as editor
 
 from .forms import QuestionForm, ScaleOptionForm, SectionForm, TemplateCreateForm, WeightsForm
-from .models import Category, Question, QuestionnaireTemplate, ScaleOption, Section, TemplateCategory
+from .models import (
+    Category, CompetencyBlock, Question, QuestionnaireTemplate, ScaleOption, Section, TemplateCategory,
+)
 from apps.access import services as access
 from apps.access.decorators import requires
 
@@ -200,7 +202,8 @@ def template_edit(request, pk):
         return redirect("questionnaires:template_edit", pk=template.pk)
 
     sections = template.sections.prefetch_related(
-        Prefetch("questions", queryset=Question.objects.select_related("category").order_by("order"))
+        Prefetch("questions", queryset=Question.objects.select_related("category", "block")
+                 .prefetch_related("block__skills").order_by("order"))
     ).order_by("order")
     scale = template.scale_options.filter(question__isnull=True).order_by("order")
 
@@ -219,6 +222,8 @@ def template_edit(request, pk):
         "page_title": "Editar cuestionario",
         "current_version": current,
         "has_answers": template.status == QuestionnaireTemplate.Status.PUBLICADO and editor.has_responses(template),
+        "block_choices": CompetencyBlock.objects.filter(is_active=True),
+        "mastery_choices": Question.Mastery.choices,
         "step_questions": 3 if is_ownership else 2,
         "step_publish": 4 if is_ownership else 3,
         "not_draft_flag": not is_draft,
@@ -297,7 +302,7 @@ def _save_category_weights(request, template):
 def _category_questions(request, template):
     link = get_object_or_404(TemplateCategory, pk=request.POST.get("link"), template=template)
     questions = list(Question.objects.filter(
-        section__template=template, category_id=link.category_id, qtype=Question.Type.SCALE,
+        section__template=template, category_id=link.category_id, qtype=Question.Type.SCALE, is_weighted=True,
     ))
     return link, questions
 
@@ -325,7 +330,22 @@ def _clear_question_weights(request, template):
     messages.success(request, f"Las preguntas de «{link.category.name}» vuelven a pesar lo mismo (partes iguales).")
 
 
+def _auto_weights(request, template):
+    try:
+        result = ownership_weights.auto_distribute(template)
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+        return
+    parts = ", ".join(f"{name} {pct}%" for name, pct in result["categories"].items())
+    messages.success(
+        request,
+        f"Calculé las ponderaciones de {result['questions']} pregunta(s) con su nivel de dominio objetivo "
+        f"({parts}). Revisa y ajusta si hace falta.",
+    )
+
+
 _WEIGHT_ACTIONS = {
+    "auto_weights": _auto_weights,
     "add_template_category": _add_template_category,
     "remove_template_category": _remove_template_category,
     "save_category_weights": _save_category_weights,

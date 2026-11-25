@@ -8,6 +8,10 @@ verdad en el servidor (formularios, publicación e importación).
 """
 
 from decimal import Decimal, InvalidOperation
+from fractions import Fraction
+
+from django.core.exceptions import ValidationError
+from django.db import transaction
 
 TENTHS_TOTAL = 1000
 _ONE_DP = Decimal("0.1")
@@ -125,12 +129,13 @@ def validate_template_weights(template) -> list[str]:
         )
 
     for link in links:
-        group = [q for q in questions if q.category_id == link.category_id]
+        # Las preguntas que «no ponderan» se califican pero quedan fuera del reparto.
+        group = [q for q in questions if q.category_id == link.category_id and q.is_weighted]
         name = link.category.name
         if link.weight_pct <= 0:
             errors.append(f"La categoría «{name}» pesa 0%: dale peso o quítala del cuestionario.")
         if link.weight_pct > 0 and not group:
-            errors.append(f"La categoría «{name}» pesa {link.weight_pct}% pero no tiene preguntas.")
+            errors.append(f"La categoría «{name}» pesa {link.weight_pct}% pero no tiene preguntas que ponderen.")
             continue
         defined = [q.weight_pct for q in group if q.weight_pct is not None]
         if defined and len(defined) != len(group):
@@ -170,7 +175,7 @@ def editor_groups(template) -> list[dict]:
     )
     groups = []
     for link in links:
-        group = [q for q in questions if q.category_id == link.category_id]
+        group = [q for q in questions if q.category_id == link.category_id and q.is_weighted]
         custom = bool(group) and all(q.weight_pct is not None for q in group)
         equal = split_equal(len(group))
         groups.append({
@@ -183,3 +188,79 @@ def editor_groups(template) -> list[dict]:
             ],
         })
     return groups
+
+
+# --- Ponderación automática por nivel de dominio objetivo (matriz de competencias) -----------------
+
+def integer_shares(raw) -> list[int]:
+    """Reparte 100 en enteros proporcionales a `raw`; el último absorbe la diferencia para cuadrar a 100.
+
+    3 partes iguales → 33 / 33 / 34. Si el redondeo dejara al último en 0 o negativo, usa mayor residuo.
+    """
+    values = [Fraction(v) for v in raw]
+    total = sum(values)
+    if not values or total <= 0:
+        return [0] * len(values)
+    if len(values) == 1:
+        return [100]
+    shares = [int(Fraction(100) * v / total + Fraction(1, 2)) for v in values[:-1]]
+    last = 100 - sum(shares)
+    if last <= 0 and values[-1] > 0:
+        exact = [Fraction(100) * v / total for v in values]
+        shares = [int(x) for x in exact]
+        for i in sorted(range(len(values)), key=lambda i: (-(exact[i] - shares[i]), i))[: 100 - sum(shares)]:
+            shares[i] += 1
+        return shares
+    return shares + [last]
+
+
+@transaction.atomic
+def auto_distribute(template) -> dict:
+    """Calcula las ponderaciones de categorías y preguntas desde el nivel de dominio objetivo.
+
+    Regla de la matriz: la ponderación de cada pregunta es proporcional a su nivel (N1–N4) dentro del
+    cuestionario. Aquí se guarda en los dos niveles del motor: ponderación de cada categoría (suma de
+    los niveles de sus preguntas) y de cada pregunta dentro de su categoría; ambos con enteros que
+    suman 100 (la última absorbe la diferencia). Las preguntas que no ponderan quedan en 0.
+    """
+    from apps.questionnaires.models import Question
+
+    questions = list(
+        Question.objects.filter(section__template=template, qtype=Question.Type.SCALE)
+        .order_by("section__order", "order")
+    )
+    weighted = [q for q in questions if q.is_weighted]
+    no_level = [q.title for q in weighted if not q.target_level]
+    if no_level:
+        raise ValidationError(
+            "Falta el nivel de dominio objetivo en: " + ", ".join(f"«{t}»" for t in no_level)
+            + ". Captúralo o márcalas como «no pondera»."
+        )
+    no_category = [q.title for q in weighted if q.category_id is None]
+    if no_category:
+        raise ValidationError("Hay preguntas sin categoría: " + ", ".join(f"«{t}»" for t in no_category) + ".")
+
+    links = list(template.template_categories.select_related("category").order_by("category__order", "category__name"))
+    totals = {link.category_id: sum(q.target_level for q in weighted if q.category_id == link.category_id)
+              for link in links}
+    active = [link for link in links if totals[link.category_id] > 0]
+    if not active:
+        raise ValidationError("El cuestionario no tiene preguntas que ponderen.")
+
+    summary = {}
+    shares = dict(zip((link.pk for link in active), integer_shares([totals[l.category_id] for l in active])))
+    for link in links:
+        link.weight_pct = Decimal(shares.get(link.pk, 0))
+        link.save(update_fields=["weight_pct"])
+        summary[link.category.name] = int(link.weight_pct)
+    for link in active:
+        group = [q for q in questions if q.category_id == link.category_id]
+        group_weighted = [q for q in group if q.is_weighted]
+        for q, share in zip(group_weighted, integer_shares([q.target_level for q in group_weighted])):
+            q.weight_pct = Decimal(share)
+            q.save(update_fields=["weight_pct"])
+        for q in group:
+            if not q.is_weighted:
+                q.weight_pct = Decimal(0)
+                q.save(update_fields=["weight_pct"])
+    return {"categories": summary, "questions": len(weighted), "unweighted": len(questions) - len(weighted)}
