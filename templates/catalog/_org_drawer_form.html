@@ -1,0 +1,56 @@
+{# Cuerpo del drawer de Áreas, Posiciones y Niveles (htmx): alta y «Ver y editar». #}
+<div class="grid gap-8 lg:grid-cols-3">
+  <form class="lg:col-span-2" method="post" hx-post="{{ post_url }}" hx-target="#org-drawer-body" hx-swap="innerHTML"
+        hx-indicator="#org-save-spinner">
+    {% csrf_token %}
+    <p class="text-base font-medium text-base-content mb-4">{{ title }}{% if obj %} · {{ obj }}{% endif %}</p>
+    {% if form.non_field_errors %}
+      <div class="alert alert-error mb-4 text-base" role="alert">{{ form.non_field_errors|join:" " }}</div>
+    {% endif %}
+    <div class="grid gap-x-4 md:grid-cols-2">
+      {% for field in form %}
+        {% include "components/_form_field.html" with field=field help=field.help_text %}
+      {% endfor %}
+    </div>
+    <div class="mt-6 flex items-center gap-3">
+      <button type="submit" class="btn btn-primary">{% if obj %}Guardar cambios{% else %}Crear{% endif %}</button>
+      <button type="button" class="btn btn-ghost" onclick="window.dispatchEvent(new CustomEvent('close-org-drawer'))">Cancelar</button>
+      <span id="org-save-spinner" class="htmx-indicator" aria-hidden="true"><span class="loading loading-spinner loading-sm"></span></span>
+    </div>
+  </form>
+
+  <aside class="space-y-6">
+    {% if aside_title %}
+    <section>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-2">{{ aside_title }}</h3>
+      {% if aside_items %}
+        <ul class="divide-y divide-base-200 border border-base-300 rounded-xl">
+          {% for item in aside_items %}<li class="px-3 py-2 text-base">{{ item }}</li>{% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-base text-base-content/60">{% if obj %}Todavía no tiene elementos.{% else %}Se mostrará al guardar.{% endif %}</p>
+      {% endif %}
+      {% if aside_link and obj %}<a href="{{ aside_link.0 }}" class="mt-2 inline-block link link-primary text-base">{{ aside_link.1 }}</a>{% endif %}
+    </section>
+    {% endif %}
+
+    {% if obj %}
+    <section>
+      <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/60 mb-2">Historial de cambios</h3>
+      {% if history %}
+        <ul class="space-y-2">
+          {% for h in history %}
+            <li class="text-base">
+              <p class="text-base-content">{{ h.get_action_display }}</p>
+              <p class="text-sm text-base-content/60">{{ h.actor.full_name|default:"Sistema" }} · {{ h.created_at|date:"d M Y H:i" }}</p>
+              {% if h.detail %}<p class="text-sm text-base-content/70">{{ h.detail }}</p>{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-base text-base-content/60">Sin movimientos registrados.</p>
+      {% endif %}
+    </section>
+    {% endif %}
+  </aside>
+</div>

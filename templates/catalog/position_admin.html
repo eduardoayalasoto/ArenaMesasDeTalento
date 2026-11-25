@@ -2,10 +2,10 @@
 {% block content %}
   <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
     <div>
-      <h2 class="text-xl font-semibold text-base-content">Posiciones</h2>
+      <h2 class="text-xl font-semibold text-base-content">Posición × nivel</h2>
       <p class="text-base-content/75">
-        Cada posición es un cargo dentro de un área, en un nivel (Junior, Mid, Senior, Lead). El nivel define la escalera global;
-        el nombre de la posición es lo que ven las personas en pantalla.
+        El nombre visible y la ponderación de pilares de cada posición en cada nivel (Jr, Mid, Snr, Lead…), o sin nivel
+        cuando la posición no los usa. Las posiciones y los niveles se dan de alta en sus propias pantallas.
       </p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
@@ -15,23 +15,23 @@
         </form>
       {% endif %}
       <button type="button" class="btn btn-primary" data-mode="create"
-              @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Crear posición</button>
+              @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Nueva combinación</button>
     </div>
   </div>
 
   <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto" x-data="{ q: '' }">
     <div class="p-4 border-b border-base-200">
       <label class="sr-only" for="pos-filter">Buscar</label>
-      <input id="pos-filter" type="search" x-model="q" class="input w-72" placeholder="Buscar área, posición o nivel">
+      <input id="pos-filter" type="search" x-model="q" class="input w-72" placeholder="Buscar posición, nombre o nivel">
     </div>
     <table class="table">
-      <thead><tr><th>Área</th><th>Posición</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
+      <thead><tr><th>Posición</th><th>Nombre visible</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
       <tbody>
         {% for r in rows %}
           <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
-            <td>{{ r.position.level.name }}</td>
+            <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
             <td class="text-center tabular-nums">{{ r.people }}</td>
             <td>{% if r.own_weights %}<span class="badge badge-soft badge-primary">Propia</span>{% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}</td>
             <td>{% if r.position.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>

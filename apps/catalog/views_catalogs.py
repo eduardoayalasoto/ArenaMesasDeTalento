@@ -32,7 +32,8 @@ def position_admin(request):
             form = PositionForm(request.POST)
             if form.is_valid():
                 area = get_object_or_404(Area, pk=form.cleaned_data["area"])
-                level = get_object_or_404(SeniorityLevel, pk=form.cleaned_data["level"])
+                level = (get_object_or_404(SeniorityLevel, pk=form.cleaned_data["level"])
+                         if form.cleaned_data.get("level") else None)
                 try:
                     catalogs.save_position(
                         pk=form.cleaned_data.get("position"), area=area, level=level,
@@ -56,7 +57,7 @@ def position_admin(request):
         r["delete_url"] = reverse("catalog:position_delete", args=[p.pk])
         r["delete_confirm_id"] = f"delete-position-{p.pk}"
         r["delete_confirm_message"] = f"Se borra la posición «{p.name}». Si hay personas o cuestionarios con esa área y nivel, no se borra: desactívala."
-    missing = max(Area.objects.count() * SeniorityLevel.objects.count() - len(rows), 0)
+    missing = positions.missing_default_positions()
     return render(request, "catalog/position_admin.html", {
         "page_title": "Posiciones", "rows": rows, "missing": missing,
         "areas": Area.objects.filter(is_active=True).order_by("code"),

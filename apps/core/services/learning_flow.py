@@ -107,8 +107,12 @@ def eligible_approvers(req, stage) -> QuerySet:
     if stage == S.DIRECCION:
         # Se prefiere al Director asignado al área (si su perfil puede aprobar esta etapa).
         area = requester.area
-        if area is not None and area.director_id:
-            director = by_perm("learn.approve.direction", Scope.ASIGNADO).filter(pk=area.director_id)
+        director_id = None
+        if area is not None:
+            # Director de la posición; si no tiene, el del Área (Analítica / Consultoría).
+            director_id = area.director_id or (area.department.director_id if area.department_id else None)
+        if director_id:
+            director = by_perm("learn.approve.direction", Scope.ASIGNADO).filter(pk=director_id)
             if director.exists():
                 return director
         area_q = Q(area_id=requester.area_id) if requester.area_id else Q(pk__in=[])

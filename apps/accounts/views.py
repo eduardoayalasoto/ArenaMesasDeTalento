@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from apps.catalog.models import Area, SeniorityLevel
-from apps.core.http import back_to_list
+from apps.core.http import back_to_list, hx_done
 from apps.core.services import users as user_service
 
 from .forms import ProfileInfoForm, SpanishPasswordChangeForm, UserAdminForm
@@ -99,18 +99,6 @@ def profile(request):
 # --- Administración de usuarios (Talento) ---------------------------------------------------------
 
 
-def _hx_done(message: str, variant: str = "success") -> HttpResponse:
-    """Respuesta htmx de un guardado: toast, cierra el drawer y refresca la lista (sin tocar el cuerpo)."""
-    response = HttpResponse("")
-    response["HX-Reswap"] = "none"
-    response["HX-Trigger"] = json.dumps({
-        "toast": {"message": message, "variant": variant},
-        "users-changed": True,
-        "close-user-drawer": True,
-    })
-    return response
-
-
 @login_required
 @requires("users.manage")
 def user_admin(request):
@@ -179,7 +167,7 @@ def user_create(request):
         except ValidationError as exc:
             form.add_error(None, exc)
         else:
-            return _hx_done(f"Creaste a {user.full_name} ({user.email}).")
+            return hx_done(f"Creaste a {user.full_name} ({user.email}).")
     return _render_drawer(request, form)
 
 
@@ -198,8 +186,8 @@ def user_edit(request, pk):
             form.add_error(None, exc)
         else:
             if changed:
-                return _hx_done(f"Actualizaste a {user.full_name}.")
-            return _hx_done("No hubo cambios que guardar.", "info")
+                return hx_done(f"Actualizaste a {user.full_name}.")
+            return hx_done("No hubo cambios que guardar.", "info")
     return _render_drawer(request, form, target)
 
 

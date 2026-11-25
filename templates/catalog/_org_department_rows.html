@@ -1,0 +1,38 @@
+{# Filas de Áreas (Analítica, Consultoría). #}
+<thead class="bg-base-200/50 text-base-content/70 text-left">
+  <tr>
+    <th class="px-4 py-3 font-medium">Área</th>
+    <th class="px-4 py-3 font-medium hidden md:table-cell">Posiciones</th>
+    <th class="px-4 py-3 font-medium hidden sm:table-cell">Director</th>
+    <th class="px-4 py-3 font-medium">Estado</th>
+    <th class="px-4 py-3 font-medium text-right">Acciones</th>
+  </tr>
+</thead>
+<tbody class="divide-y divide-base-200">
+  {% for d in rows %}
+    <tr class="hover:bg-base-200/50 transition-colors">
+      <td class="px-4 py-2.5">
+        <p class="font-medium text-base-content">{{ d.name }}</p>
+        <p class="text-sm text-base-content/60">{{ d.code }} · {{ d.people }} persona{{ d.people|pluralize }}</p>
+      </td>
+      <td class="px-4 py-2.5 hidden md:table-cell text-base-content/80">{{ d.positions_text }}</td>
+      <td class="px-4 py-2.5 hidden sm:table-cell">{{ d.director.full_name|default:"Cualquier Director" }}</td>
+      <td class="px-4 py-2.5 whitespace-nowrap">
+        {% if d.is_active %}<span class="badge badge-soft badge-success whitespace-nowrap">Activa</span>{% else %}<span class="badge badge-soft whitespace-nowrap">Inactiva</span>{% endif %}
+      </td>
+      <td class="px-4 py-2.5">
+        <div class="flex items-center justify-end gap-1 whitespace-nowrap">
+          <button type="button" class="btn btn-sm btn-soft btn-primary"
+                  hx-get="{% url 'catalog:department_edit' d.pk %}" hx-target="#org-drawer-body" hx-swap="innerHTML"
+                  hx-on::before-request="window.openOrgDrawer()">
+            <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
+          </button>
+          {% url 'catalog:department_delete' d.pk as delete_url %}
+          {% include "components/_confirm.html" with confirm_id=d.delete_confirm_id title="Eliminar área" message=d.delete_message confirm_url=delete_url trigger_aria="Eliminar área" %}
+        </div>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="5">{% include "components/_empty_state.html" with icon="search-x" message="Ninguna área coincide con la búsqueda." %}</td></tr>
+  {% endfor %}
+</tbody>

@@ -1,0 +1,40 @@
+{# Filas de Posiciones (Ingeniero de Datos, Analista, Gerente…). #}
+<thead class="bg-base-200/50 text-base-content/70 text-left">
+  <tr>
+    <th class="px-4 py-3 font-medium">Posición</th>
+    <th class="px-4 py-3 font-medium hidden sm:table-cell">Área</th>
+    <th class="px-4 py-3 font-medium hidden md:table-cell">Niveles</th>
+    <th class="px-4 py-3 font-medium hidden lg:table-cell">Director</th>
+    <th class="px-4 py-3 font-medium">Estado</th>
+    <th class="px-4 py-3 font-medium text-right">Acciones</th>
+  </tr>
+</thead>
+<tbody class="divide-y divide-base-200">
+  {% for a in rows %}
+    <tr class="hover:bg-base-200/50 transition-colors">
+      <td class="px-4 py-2.5">
+        <p class="font-medium text-base-content">{{ a.name }}</p>
+        <p class="text-sm text-base-content/60">{{ a.code }} · {{ a.people }} persona{{ a.people|pluralize }}</p>
+      </td>
+      <td class="px-4 py-2.5 hidden sm:table-cell">{% if a.department %}{{ a.department.name }}{% else %}<span class="text-warning">Sin área</span>{% endif %}</td>
+      <td class="px-4 py-2.5 hidden md:table-cell text-base-content/80">{{ a.levels_text }}</td>
+      <td class="px-4 py-2.5 hidden lg:table-cell">{{ a.director.full_name|default:"Director del Área" }}</td>
+      <td class="px-4 py-2.5 whitespace-nowrap">
+        {% if a.is_active %}<span class="badge badge-soft badge-success whitespace-nowrap">Activa</span>{% else %}<span class="badge badge-soft whitespace-nowrap">Inactiva</span>{% endif %}
+      </td>
+      <td class="px-4 py-2.5">
+        <div class="flex items-center justify-end gap-1 whitespace-nowrap">
+          <button type="button" class="btn btn-sm btn-soft btn-primary"
+                  hx-get="{% url 'catalog:area_edit' a.pk %}" hx-target="#org-drawer-body" hx-swap="innerHTML"
+                  hx-on::before-request="window.openOrgDrawer()">
+            <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
+          </button>
+          {% url 'catalog:area_delete' a.pk as delete_url %}
+          {% include "components/_confirm.html" with confirm_id=a.delete_confirm_id title="Eliminar posición" message=a.delete_message confirm_url=delete_url trigger_aria="Eliminar posición" %}
+        </div>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6">{% include "components/_empty_state.html" with icon="search-x" message="Ninguna posición coincide con la búsqueda." %}</td></tr>
+  {% endfor %}
+</tbody>

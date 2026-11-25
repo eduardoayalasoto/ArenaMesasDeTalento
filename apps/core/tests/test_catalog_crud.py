@@ -22,16 +22,22 @@ def talento(db):
 
 @pytest.mark.django_db
 def test_area_crud_with_usage_guard(client, talento):
+    """La «Posición» de la interfaz (modelo Area): alta/edición por el drawer htmx y borrado protegido."""
+    from apps.catalog.models import Department
+
+    hx = {"HTTP_HX_REQUEST": "true"}
     client.force_login(talento)
-    url = reverse("catalog:area_admin")
-    client.post(url, {"code": "ds", "name": "Ciencia de datos", "is_active": "on"})
+    dept = Department.objects.create(code="ANALIT", name="Analítica")
+    create = reverse("catalog:area_edit")
+    client.post(create, {"code": "ds", "name": "Ciencia de datos", "department": dept.pk, "is_active": "on"}, **hx)
     area = Area.objects.get(code="DS")
-    client.post(url, {"area": area.pk, "code": "DS", "name": "Data Science"})
+    client.post(reverse("catalog:area_edit", args=[area.pk]),
+                {"code": "DS", "name": "Data Science", "department": dept.pk}, **hx)
     area.refresh_from_db()
     assert area.name == "Data Science" and area.is_active is False          # sin checkbox = inactiva
-    assert client.get(url).status_code == 200
+    assert client.get(reverse("catalog:area_admin")).status_code == 200
     # Clave repetida
-    client.post(url, {"code": "ds", "name": "Otra"})
+    client.post(create, {"code": "ds", "name": "Otra", "department": dept.pk}, **hx)
     assert Area.objects.filter(code="DS").count() == 1
     # Con una posición, no se borra; vacía, sí.
     level = SeniorityLevel.objects.create(code="JR", name="Junior", order=1)

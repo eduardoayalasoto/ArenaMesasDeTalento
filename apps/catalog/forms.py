@@ -117,9 +117,9 @@ class PositionForm(forms.Form):
     """Nombre y estado de un puesto (área × nivel). Crea el puesto si aún no existe."""
 
     position = forms.IntegerField(widget=forms.HiddenInput, required=False)
-    area = forms.IntegerField(label="Área")
-    level = forms.IntegerField(label="Nivel")
-    name = forms.CharField(label="Nombre de la posición", max_length=60)
+    area = forms.IntegerField(label="Posición")
+    level = forms.IntegerField(label="Nivel (opcional)", required=False)
+    name = forms.CharField(label="Nombre visible", max_length=60)
     is_active = forms.BooleanField(label="Activo", required=False)
 
     def clean_name(self):
@@ -151,3 +151,100 @@ class PillarWeightForm(forms.Form):
     w_ownership = forms.DecimalField(label="Ownership", min_value=0, max_value=100, decimal_places=1)
     w_value_delivery = forms.DecimalField(label="Entrega de Valor", min_value=0, max_value=100, decimal_places=1)
     w_arena_impact = forms.DecimalField(label="Impacto Arena", min_value=0, max_value=100, decimal_places=1)
+
+
+# --- Áreas, Posiciones y Niveles (vocabulario de la interfaz: Área → Posición → Nivel) ------------------
+
+def _director_queryset():
+    from apps.access.services import assignable_users
+
+    return assignable_users("assign.area_director").order_by("full_name")
+
+
+class _CodeMixin:
+    def clean_code(self):
+        code = self.cleaned_data["code"].strip().upper()
+        if not code:
+            raise forms.ValidationError("La clave es obligatoria.")
+        return code
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise forms.ValidationError("El nombre es obligatorio.")
+        return name
+
+
+class DepartmentForm(_CodeMixin, forms.ModelForm):
+    """Área de la organización (Analítica, Consultoría): clave, nombre, orden, Director y estado."""
+
+    class Meta:
+        from .models import Department
+
+        model = Department
+        fields = ["name", "code", "order", "director", "is_active"]
+        labels = {"name": "Nombre", "code": "Clave", "order": "Orden", "director": "Director del área",
+                  "is_active": "Área activa"}
+        widgets = {
+            "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Analítica"}),
+            "code": forms.TextInput(attrs={"class": _INPUT, "maxlength": 8, "placeholder": "Ej. ANALIT"}),
+            "order": forms.NumberInput(attrs={"class": _INPUT, "min": 1}),
+            "director": forms.Select(attrs={"class": _SELECT}),
+            "is_active": forms.CheckboxInput(attrs={"class": "checkbox"}),
+        }
+        help_texts = {"director": "Aprueba el nivel Dirección de las solicitudes de curso de Arena Learn."}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["director"].queryset = _director_queryset()
+        self.fields["director"].required = False
+        self.fields["director"].empty_label = "— Cualquier Director —"
+
+
+class AreaPositionForm(_CodeMixin, forms.ModelForm):
+    """Posición (puesto) de un Área: Ingeniero de Datos, Analista, Gerente… (modelo `Area` en el código)."""
+
+    class Meta:
+        from .models import Area
+
+        model = Area
+        fields = ["name", "code", "department", "director", "is_active"]
+        labels = {"name": "Nombre de la posición", "code": "Clave", "department": "Área",
+                  "director": "Director (opcional)", "is_active": "Posición activa"}
+        widgets = {
+            "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Ingeniero de Datos"}),
+            "code": forms.TextInput(attrs={"class": _INPUT, "maxlength": 8}),
+            "department": forms.Select(attrs={"class": _SELECT}),
+            "director": forms.Select(attrs={"class": _SELECT}),
+            "is_active": forms.CheckboxInput(attrs={"class": "checkbox"}),
+        }
+        help_texts = {"director": "Solo si esta posición tiene un Director propio; si no, aplica el del Área."}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from .models import Department
+
+        self.fields["department"].queryset = Department.objects.filter(is_active=True) | Department.objects.filter(
+            pk=getattr(self.instance, "department_id", None))
+        self.fields["department"].empty_label = "— Elige el área —"
+        self.fields["department"].required = True
+        self.fields["director"].queryset = _director_queryset()
+        self.fields["director"].required = False
+        self.fields["director"].empty_label = "— Director del Área —"
+
+
+class LevelForm(_CodeMixin, forms.ModelForm):
+    """Nivel (Jr, Mid, Snr, Lead…): catálogo abierto; cada persona o cuestionario lo usa solo si quiere."""
+
+    class Meta:
+        from .models import SeniorityLevel
+
+        model = SeniorityLevel
+        fields = ["name", "code", "order"]
+        labels = {"name": "Nombre", "code": "Clave", "order": "Orden"}
+        widgets = {
+            "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Senior"}),
+            "code": forms.TextInput(attrs={"class": _INPUT, "maxlength": 8, "placeholder": "Ej. SNR"}),
+            "order": forms.NumberInput(attrs={"class": _INPUT, "min": 1}),
+        }
+        help_texts = {"order": "Define el orden en listas y la escalera (1 = el más junior)."}

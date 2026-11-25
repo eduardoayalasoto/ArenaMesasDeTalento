@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{# Índice genérico de Áreas, Posiciones y Niveles: búsqueda en vivo (htmx) y «Ver y editar» en drawer. #}
+{% block content %}
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div class="max-w-3xl">
+      <h2 class="text-xl font-semibold text-base-content">{{ page_title }}</h2>
+      <p class="text-base-content/70">{{ intro }}</p>
+    </div>
+    <button type="button" class="btn btn-primary"
+            hx-get="{{ create_url }}" hx-target="#org-drawer-body" hx-swap="innerHTML"
+            hx-on::before-request="window.openOrgDrawer()">
+      <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> {{ new_label }}
+    </button>
+  </div>
+
+  <form id="org-filters" method="get" action="{{ list_url }}" class="mb-4 flex flex-wrap items-center gap-2"
+        hx-get="{{ list_url }}" hx-target="#org-results" hx-swap="innerHTML" hx-push-url="true"
+        hx-trigger="input changed delay:300ms, change, submit" hx-sync="this:replace" hx-indicator="#org-spinner">
+    <div class="relative w-full sm:w-80">
+      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/50 pointer-events-none" aria-hidden="true"></i>
+      <input type="search" name="q" value="{{ q }}" class="input w-full pl-9" autocomplete="off"
+             placeholder="{{ placeholder }}" aria-label="Buscar">
+    </div>
+    {% for s in selects %}
+      <select name="{{ s.name }}" class="select w-full sm:w-52" aria-label="{{ s.label }}">
+        <option value="">{{ s.label }}</option>
+        {% for value, label in s.options %}<option value="{{ value }}" {% if s.current == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    {% endfor %}
+    {% if states %}
+      <select name="state" class="select w-full sm:w-44" aria-label="Filtrar por estado">
+        {% for value, label in states %}<option value="{{ value }}" {% if state == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    {% endif %}
+    <span id="org-spinner" class="htmx-indicator" aria-hidden="true"><span class="loading loading-spinner loading-sm text-base-content/50"></span></span>
+  </form>
+
+  {# Refresca la lista (con los filtros vigentes) tras guardar en el drawer. #}
+  <div class="hidden" aria-hidden="true"
+       hx-get="{{ list_url }}" hx-trigger="org-changed from:body" hx-include="#org-filters"
+       hx-target="#org-results" hx-swap="innerHTML"></div>
+
+  <div id="org-results">{% include "catalog/_org_results.html" %}</div>
+
+  {% include "components/_drawer.html" with id="org-drawer" title=page_title open_event="open-org-drawer" close_event="close-org-drawer" body_id="org-drawer-body" width_class="w-3/4 max-w-none" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Abre el drawer con un spinner mientras htmx trae el formulario (evita ver el de la fila anterior).
+  window.openOrgDrawer = function () {
+    document.getElementById("org-drawer-body").innerHTML =
+      '<div class="flex items-center justify-center py-10 text-base-content/40"><span class="loading loading-spinner loading-md" role="status" aria-label="Cargando"></span></div>';
+    window.dispatchEvent(new CustomEvent("open-org-drawer"));
+  };
+</script>
+{% endblock %}

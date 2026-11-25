@@ -1,0 +1,12 @@
+{# Parcial de resultados de Áreas / Posiciones / Niveles (htmx): conteo + tabla de filas en texto. #}
+<p class="mb-2 text-base text-base-content/70" aria-live="polite">
+  {{ total }} resultado{{ total|pluralize }}{% if filtered %} con los filtros actuales{% endif %}
+  {% if filtered %}· <a href="{{ list_url }}" class="link link-primary">Limpiar filtros</a>{% endif %}
+</p>
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-base">
+      {% include results_template %}
+    </table>
+  </div>
+</div>

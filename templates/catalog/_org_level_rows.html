@@ -1,0 +1,36 @@
+{# Filas de Niveles (Jr, Mid, Snr, Lead…). #}
+<thead class="bg-base-200/50 text-base-content/70 text-left">
+  <tr>
+    <th class="px-4 py-3 font-medium">Nivel</th>
+    <th class="px-4 py-3 font-medium text-center">Orden</th>
+    <th class="px-4 py-3 font-medium hidden sm:table-cell">Dónde se usa</th>
+    <th class="px-4 py-3 font-medium text-right">Acciones</th>
+  </tr>
+</thead>
+<tbody class="divide-y divide-base-200">
+  {% for lv in rows %}
+    <tr class="hover:bg-base-200/50 transition-colors">
+      <td class="px-4 py-2.5">
+        <p class="font-medium text-base-content">{{ lv.name }}</p>
+        <p class="text-sm text-base-content/60">{{ lv.code }}</p>
+      </td>
+      <td class="px-4 py-2.5 text-center tabular-nums">{{ lv.order }}</td>
+      <td class="px-4 py-2.5 hidden sm:table-cell text-base-content/80 whitespace-nowrap">
+        {{ lv.n_people }} persona{{ lv.n_people|pluralize }} · {{ lv.n_templates }} cuestionario{{ lv.n_templates|pluralize }} · {{ lv.n_positions }} posición{{ lv.n_positions|pluralize:"es" }} por nivel
+      </td>
+      <td class="px-4 py-2.5">
+        <div class="flex items-center justify-end gap-1 whitespace-nowrap">
+          <button type="button" class="btn btn-sm btn-soft btn-primary"
+                  hx-get="{% url 'catalog:level_edit' lv.pk %}" hx-target="#org-drawer-body" hx-swap="innerHTML"
+                  hx-on::before-request="window.openOrgDrawer()">
+            <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
+          </button>
+          {% url 'catalog:level_delete' lv.pk as delete_url %}
+          {% include "components/_confirm.html" with confirm_id=lv.delete_confirm_id title="Eliminar nivel" message=lv.delete_message confirm_url=delete_url trigger_aria="Eliminar nivel" %}
+        </div>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4">{% include "components/_empty_state.html" with icon="search-x" message="Ningún nivel coincide con la búsqueda." %}</td></tr>
+  {% endfor %}
+</tbody>

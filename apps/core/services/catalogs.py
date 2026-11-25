@@ -48,6 +48,30 @@ def delete_area(area):
     delete_if_unused(area, f"el área «{area.name}»")
 
 
+# --- Niveles -------------------------------------------------------------------
+
+@transaction.atomic
+def ensure_level_pillar_weights(level):
+    """Un nivel nuevo nace con la ponderación de pilares del nivel anterior más cercano (se ajusta después).
+
+    Sin ponderación, la calificación final de quien tenga ese nivel no se podría calcular.
+    """
+    from apps.catalog.models import PillarWeight
+
+    if PillarWeight.objects.filter(level=level).exists():
+        return None
+    base = (
+        PillarWeight.objects.filter(level__order__lte=level.order).order_by("-level__order").first()
+        or PillarWeight.objects.order_by("level__order").first()
+    )
+    if base is None:
+        return None
+    return PillarWeight.objects.create(
+        level=level, w_ownership=base.w_ownership, w_value_delivery=base.w_value_delivery,
+        w_arena_impact=base.w_arena_impact,
+    )
+
+
 # --- Posiciones ----------------------------------------------------------------
 
 @transaction.atomic

@@ -55,13 +55,29 @@ def ensure_default_positions() -> int:
 
     Idempotente; no toca los existentes. Devuelve cuántos creó.
     """
+    created = 0
+    for area, level in _missing_pairs():
+        name = DEFAULT_CARGOS.get(area.code, area.name)
+        from apps.catalog.models import Position
+
+        _, was_created = Position.objects.get_or_create(area=area, level=level, defaults={"name": name})
+        created += was_created
+    return created
+
+
+def _missing_pairs():
+    """(posición, nivel) que faltan. Una posición que no usa niveles (tiene una fila «sin nivel») se respeta."""
     from apps.catalog.models import Area, Position, SeniorityLevel
 
     levels = list(SeniorityLevel.objects.all())
-    created = 0
+    existing = set(Position.objects.values_list("area_id", "level_id"))
+    pairs = []
     for area in Area.objects.all():
-        for level in levels:
-            name = DEFAULT_CARGOS.get(area.code, area.name)
-            _, was_created = Position.objects.get_or_create(area=area, level=level, defaults={"name": name})
-            created += was_created
-    return created
+        if (area.pk, None) in existing:
+            continue
+        pairs += [(area, level) for level in levels if (area.pk, level.pk) not in existing]
+    return pairs
+
+
+def missing_default_positions() -> int:
+    return len(_missing_pairs())

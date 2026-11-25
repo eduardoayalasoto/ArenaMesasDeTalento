@@ -6,17 +6,17 @@
     {% csrf_token %}
     <input type="hidden" name="position" :value="id">
     <fieldset :disabled="mode === 'view'" class="grid gap-4 md:grid-cols-2">
-      <div><label class="fieldset-legend" for="pos-area">Área</label>
+      <div><label class="fieldset-legend" for="pos-area">Posición</label>
         <select id="pos-area" name="area" class="select w-full" required x-model="area">
-          <option value="">— Elige el área —</option>
+          <option value="">— Elige la posición —</option>
           {% for a in areas %}<option value="{{ a.pk }}">{{ a.name }}</option>{% endfor %}
         </select></div>
-      <div><label class="fieldset-legend" for="pos-level">Nivel</label>
-        <select id="pos-level" name="level" class="select w-full" required x-model="level">
-          <option value="">— Elige el nivel —</option>
+      <div><label class="fieldset-legend" for="pos-level">Nivel (opcional)</label>
+        <select id="pos-level" name="level" class="select w-full" x-model="level">
+          <option value="">— Sin nivel —</option>
           {% for l in levels %}<option value="{{ l.pk }}">{{ l.name }}</option>{% endfor %}
         </select></div>
-      <div class="md:col-span-2"><label class="fieldset-legend" for="pos-name">Nombre de la posición (el cargo)</label>
+      <div class="md:col-span-2"><label class="fieldset-legend" for="pos-name">Nombre visible (lo que ve la persona)</label>
         <input id="pos-name" name="name" maxlength="60" required class="input w-full" x-model="name" placeholder="Ej. Project Manager"></div>
       <label class="flex items-center gap-2 text-base">
         <input type="checkbox" name="is_active" class="checkbox checkbox-sm" x-model="active"> Activa

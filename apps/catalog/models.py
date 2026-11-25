@@ -70,6 +70,39 @@ class Area(models.Model):
         return self.name
 
 
+class CatalogAuditLog(models.Model):
+    """Bitácora inmutable de los catálogos (Áreas, Posiciones, Niveles…): quién cambió qué y cuándo."""
+
+    class Action(models.TextChoices):
+        CREATED = "CREATED", "Alta"
+        UPDATED = "UPDATED", "Edición"
+        DELETED = "DELETED", "Eliminación"
+
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+",
+    )
+    entity = models.CharField("catálogo", max_length=40)
+    entity_id = models.PositiveIntegerField("id", null=True, blank=True)
+    label = models.CharField("elemento", max_length=200)
+    action = models.CharField("acción", max_length=10, choices=Action.choices)
+    detail = models.TextField("detalle", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "movimiento de catálogo"
+        verbose_name_plural = "bitácora de catálogos"
+        ordering = ["-created_at", "-pk"]
+        indexes = [models.Index(fields=["entity", "entity_id"])]
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            raise ValueError("La bitácora de catálogos es inmutable.")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.get_action_display()} · {self.entity} · {self.label}"
+
+
 class SeniorityLevel(models.Model):
     """Nivel (RN-01): Jr, Mid, Snr, Lead… Es opcional por persona: hay posiciones que no usan niveles."""
 
@@ -103,8 +136,8 @@ class Position(models.Model):
     history = HistoricalRecords()
 
     class Meta:
-        verbose_name = "posición"
-        verbose_name_plural = "posiciones"
+        verbose_name = "posición por nivel"
+        verbose_name_plural = "posiciones por nivel"
         ordering = ["area__code", "level__order"]
         constraints = [
             models.UniqueConstraint(fields=["area", "level"], name="unique_position_area_level"),
