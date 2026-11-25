@@ -229,7 +229,7 @@ class QuestionForm(forms.ModelForm):
 
 
 class WeightsForm(forms.Form):
-    """Pesos de un grupo (categorías de un cuestionario o preguntas de una categoría).
+    """Ponderaciones de un grupo (categorías de un cuestionario o preguntas de una categoría).
 
     Campos `<field_prefix><id>`; todos obligatorios, con un decimal como máximo y Σ = 100.0%
     (spec 008, FR-002/FR-011/FR-013). Tras `is_valid()`, `weights` = {id: Decimal}.
@@ -239,7 +239,7 @@ class WeightsForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.field_prefix = field_prefix
         self.label = label
-        # `positive_for` = nombre de la categoría: ninguna de sus preguntas puede pesar 0.
+        # `positive_for` = nombre de la categoría: ninguna de sus preguntas puede ponderar 0.
         # `titles` = {id: título} para nombrar en el error a quien quedó en 0.
         self.positive_for = positive_for
         self.titles = titles or {}
@@ -254,7 +254,7 @@ class WeightsForm(forms.Form):
             try:
                 values[int(name[len(self.field_prefix):])] = ow.from_tenths(ow.to_tenths(raw))
             except ow.WeightError as exc:
-                raise ValidationError(f"Los pesos de «{self.label}» no son válidos: {exc}") from None
+                raise ValidationError(f"Las ponderaciones de «{self.label}» no son válidas: {exc}") from None
         if self.positive_for:
             zeros = [self.titles.get(pk, str(pk)) for pk, weight in values.items() if weight == 0]
             if zeros:

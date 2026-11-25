@@ -1,11 +1,11 @@
-// Total en vivo de pesos de Ownership (spec 008). Se carga en el editor de cuestionarios.
+// Total en vivo de ponderaciones de Ownership (spec 008). Se carga en el editor de cuestionarios.
 // Décimas enteras para sumar sin errores de coma flotante: el grupo es válido solo si suma 1000 (100.0%).
 document.addEventListener('alpine:init', () => {
   Alpine.store('weights', {
     invalid: {},
     get blocked() { return Object.values(this.invalid).some(Boolean); },
   });
-  // positive = true (preguntas de una categoría): ningún peso puede ser 0; una pregunta en 0% no participa en el score.
+  // positive = true (preguntas de una categoría): ninguna ponderación puede ser 0; una pregunta en 0% no participa en el score.
   Alpine.data('weightGroup', (gid, initial, positive = false) => ({
     gid,
     vals: initial,

@@ -1,8 +1,8 @@
 """Ponderación de pilares por área × posición × nivel (spec 009).
 
-Una posición con fila propia (`PositionPillarWeight`) usa esos pesos; sin ella, rige la
+Una posición con fila propia (`PositionPillarWeight`) usa esas ponderaciones; sin ella, rige la
 ponderación del nivel (`PillarWeight`, RN-19). Una vez que hay calificaciones finales de personas de
-esa posición, los pesos ya no se pueden cambiar (la calificación ya se calculó con ellos).
+esa posición, las ponderaciones ya no se pueden cambiar (la calificación ya se calculó con ellas).
 """
 
 from decimal import Decimal
@@ -69,18 +69,18 @@ def _pct(fraction) -> str:
 
 @transaction.atomic
 def save_weights(position, ownership, value_delivery, arena_impact):
-    """Guarda (crea o actualiza) los pesos en % de una posición. Falla si no suman 100.0, si hay
+    """Guarda (crea o actualiza) las ponderaciones en % de una posición. Falla si no suman 100.0, si hay
     un pilar en negativo o si la posición ya tiene calificaciones finales."""
     from apps.catalog.models import PositionPillarWeight
 
     pcts = [Decimal(str(v)) for v in (ownership, value_delivery, arena_impact)]
     if any(p < 0 or p > 100 for p in pcts):
-        raise ValidationError("Cada peso debe estar entre 0 y 100%.")
+        raise ValidationError("Cada ponderación debe estar entre 0 y 100%.")
     if sum(int((p * 10).to_integral_value()) for p in pcts) != 1000:
-        raise ValidationError("Los tres pesos deben sumar exactamente 100%.")
+        raise ValidationError("Las tres ponderaciones deben sumar exactamente 100%.")
     if is_locked(position):
         raise ValidationError(
-            "Esta posición ya tiene calificaciones finales: sus pesos ya no se pueden cambiar."
+            "Esta posición ya tiene calificaciones finales: sus ponderaciones ya no se pueden cambiar."
         )
     fractions = [(p / 100).quantize(Decimal("0.001")) for p in pcts]
     obj, _ = PositionPillarWeight.objects.update_or_create(
@@ -91,7 +91,7 @@ def save_weights(position, ownership, value_delivery, arena_impact):
 
 @transaction.atomic
 def reset_to_level(position):
-    """Quita los pesos propios: la posición vuelve a heredar la ponderación de su nivel."""
+    """Quita las ponderaciones propias: la posición vuelve a heredar la ponderación de su nivel."""
     if is_locked(position):
         raise ValidationError("Esta posición ya tiene calificaciones finales: no se puede cambiar.")
     from apps.catalog.models import PositionPillarWeight

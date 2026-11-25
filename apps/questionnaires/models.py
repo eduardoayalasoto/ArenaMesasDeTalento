@@ -82,7 +82,7 @@ class QuestionnaireTemplate(models.Model):
 class Category(models.Model):
     """Categoría de pregunta (spec 008): catálogo común a todas las áreas.
 
-    El peso de cada categoría dentro de un cuestionario vive en `TemplateCategory`.
+    La ponderación de cada categoría dentro de un cuestionario vive en `TemplateCategory`.
     «General» es la categoría de arranque de los cuestionarios existentes.
     """
 
@@ -103,7 +103,7 @@ class Category(models.Model):
 
 
 class TemplateCategory(models.Model):
-    """Peso (en %, un decimal) de una categoría dentro de un cuestionario. Σ = 100.0."""
+    """Ponderación (en %, un decimal) de una categoría dentro de un cuestionario. Σ = 100.0."""
 
     template = models.ForeignKey(
         QuestionnaireTemplate, on_delete=models.CASCADE,
@@ -113,7 +113,7 @@ class TemplateCategory(models.Model):
         Category, on_delete=models.PROTECT,
         related_name="template_links", verbose_name="categoría",
     )
-    weight_pct = models.DecimalField("peso (%)", max_digits=4, decimal_places=1, default=0)
+    weight_pct = models.DecimalField("ponderación (%)", max_digits=4, decimal_places=1, default=0)
 
     class Meta:
         verbose_name = "categoría del cuestionario"
@@ -164,8 +164,8 @@ class Question(models.Model):
     qtype = models.CharField(
         "tipo", max_length=12, choices=Type.choices, default=Type.SCALE
     )
-    # Sin uso desde la spec 008 (el peso real es `weight_pct`); se retirará en un spec posterior.
-    weight = models.DecimalField("peso", max_digits=4, decimal_places=2, default=1)
+    # Sin uso desde la spec 008 (la ponderación real es `weight_pct`); se retirará en un spec posterior.
+    weight = models.DecimalField("ponderación", max_digits=4, decimal_places=2, default=1)
     category = models.ForeignKey(
         "Category", on_delete=models.PROTECT, null=True, blank=True,
         related_name="questions", verbose_name="categoría",

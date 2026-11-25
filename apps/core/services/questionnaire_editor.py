@@ -111,7 +111,7 @@ def create_template(kind, area=None, level=None):
 
 
 def delete_draft(template):
-    """Descarta un BORRADOR completo (secciones, preguntas, escala y pesos). Nunca uno publicado."""
+    """Descarta un BORRADOR completo (secciones, preguntas, escala y ponderaciones). Nunca uno publicado."""
     from django.db.models import ProtectedError
 
     from apps.questionnaires.models import QuestionnaireTemplate
@@ -216,7 +216,7 @@ def has_responses(template) -> bool:
 
 
 def is_editable(template) -> bool:
-    """Borrador y publicado se editan en sitio (también con respuestas: p. ej. para ajustar un peso).
+    """Borrador y publicado se editan en sitio (también con respuestas: p. ej. para ajustar una ponderación).
     Solo el archivado (versión anterior) es de solo lectura. Lo que dejaría respuestas huérfanas
     (borrar una pregunta contestada, quitar u renumerar una opción de la escala) lo frenan las
     vistas con `has_responses`."""

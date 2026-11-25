@@ -1,7 +1,7 @@
 """Verifica que el cálculo ponderado (spec 008) no cambie ningún score de Ownership existente.
 
 Solo lee. Recalcula cada evaluación con respuestas y la compara con (a) el promedio simple de
-siempre cuando su cuestionario es «General» / sin pesos y (b) el score guardado de las enviadas.
+siempre cuando su cuestionario es «General» / sin ponderaciones y (b) el score guardado de las enviadas.
 Sale con error si hay una sola diferencia. Úsalo antes y después de migrar (constitución VI).
 
 Ej.: python manage.py verify_ownership_scores [--period 2026-S1]
@@ -13,7 +13,7 @@ from apps.core.services import scoring
 
 
 def _is_legacy_equivalent(evaluation) -> bool:
-    """True si el cuestionario es de una sola categoría y sin pesos de pregunta (promedio simple)."""
+    """True si el cuestionario es de una sola categoría y sin ponderaciones de pregunta (promedio simple)."""
     template = evaluation.template
     if template.template_categories.count() > 1:
         return False

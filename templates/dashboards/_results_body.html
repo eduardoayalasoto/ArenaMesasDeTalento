@@ -41,7 +41,7 @@
       {% for c in ownership_categories %}
         <div class="rounded-xl border border-base-300 p-3">
           <p class="text-base font-medium text-base-content">{{ c.name }}</p>
-          <p class="text-sm text-base-content/75">Peso {{ c.weight }}%</p>
+          <p class="text-sm text-base-content/75">Ponderación {{ c.weight }}%</p>
           <p class="mt-1 font-semibold tabular-nums {% if c.score is not None %}text-xl text-base-content{% else %}text-base text-base-content/50{% endif %}">{% if c.score is not None %}{{ c.score }}{% else %}Sin calificar{% endif %}</p>
         </div>
       {% endfor %}

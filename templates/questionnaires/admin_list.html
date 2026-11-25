@@ -3,7 +3,7 @@
 {% block content %}
   <div class="mb-6">
     <h2 class="text-xl font-semibold text-base-content">Cuestionarios</h2>
-    <p class="text-base-content/70">Qué se les pregunta a las personas y cómo. «Editar» abre el cuestionario tal cual: puedes ajustar textos, pesos y preguntas sin crear una versión nueva.</p>
+    <p class="text-base-content/70">Qué se les pregunta a las personas y cómo. «Editar» abre el cuestionario tal cual: puedes ajustar textos, ponderaciones y preguntas sin crear una versión nueva.</p>
   </div>
 
   <div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -20,7 +20,7 @@
     <div class="rounded-2xl border border-base-300 bg-base-100 p-4">
       <p class="text-sm text-base-content/60">Ya con respuestas</p>
       <p class="text-2xl font-semibold tabular-nums">{{ answered_count }}</p>
-      <p class="text-sm text-base-content/60">Editables; cambios en pesos afectan cálculos</p>
+      <p class="text-sm text-base-content/60">Editables; cambios en ponderaciones afectan cálculos</p>
     </div>
     <div class="rounded-2xl border {% if missing_positions %}border-warning/60{% else %}border-base-300{% endif %} bg-base-100 p-4">
       <p class="text-sm text-base-content/60">Posiciones sin cuestionario</p>
@@ -43,7 +43,7 @@
     {% csrf_token %}
     <h3 class="font-semibold text-base-content">Nuevo cuestionario</h3>
     <p class="text-base text-base-content/75 mt-1">
-      Nace como borrador con la escala del cuestionario vigente; después agregas secciones, preguntas y pesos.
+      Nace como borrador con la escala del cuestionario vigente; después agregas secciones, preguntas y ponderaciones.
       Para una posición que ya tiene cuestionario, ábrelo y crea una nueva versión.
     </p>
 

@@ -145,7 +145,7 @@ class CategoryForm(forms.Form):
 
 
 class PillarWeightForm(forms.Form):
-    """Pesos en % de los 3 pilares de una posición (spec 009). La suma la valida el servicio."""
+    """Ponderaciones en % de los 3 pilares de una posición (spec 009). La suma la valida el servicio."""
 
     position = forms.IntegerField(widget=forms.HiddenInput)
     w_ownership = forms.DecimalField(label="Ownership", min_value=0, max_value=100, decimal_places=1)

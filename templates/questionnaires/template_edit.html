@@ -15,12 +15,12 @@
     <div class="flex flex-wrap items-center gap-2" x-data>
       {% if is_draft %}
         {% url 'questionnaires:template_delete' pk=template.pk as discard_url %}
-        {% include "components/_confirm.html" with confirm_id="discard-template-modal" title="Descartar borrador" message="Se elimina este borrador con todas sus secciones, preguntas, escala y pesos. No afecta a las versiones publicadas." confirm_url=discard_url trigger_label="Descartar borrador" trigger_icon="trash-2" confirm_label="Descartar" %}
+        {% include "components/_confirm.html" with confirm_id="discard-template-modal" title="Descartar borrador" message="Se elimina este borrador con todas sus secciones, preguntas, escala y ponderaciones. No afecta a las versiones publicadas." confirm_url=discard_url trigger_label="Descartar borrador" trigger_icon="trash-2" confirm_label="Descartar" %}
         <form method="post"><input type="hidden" name="action" value="publish">{% csrf_token %}
           <button type="submit" class="btn btn-primary"
-                  {% if weights_errors %}disabled title="Corrige los pesos y categorías antes de publicar"{% endif %}
+                  {% if weights_errors %}disabled title="Corrige las ponderaciones y categorías antes de publicar"{% endif %}
                   :disabled="$store.weights.blocked || {{ weights_errors|length }} > 0"
-                  :title="$store.weights.blocked ? 'Hay pesos que no suman 100%' : ''">Publicar versión</button>
+                  :title="$store.weights.blocked ? 'Hay ponderaciones que no suman 100%' : ''">Publicar versión</button>
         </form>
       {% elif editable %}
         <form method="post"><input type="hidden" name="action" value="duplicate">{% csrf_token %}
@@ -43,11 +43,11 @@
     {% endcallout %}
   {% elif has_answers %}
     {% callout "warning" icon="alert-triangle" title="Esta versión ya tiene respuestas" cls="mb-6" %}
-      Puedes editarla: textos, pesos, categorías, orden y preguntas nuevas. Ten en cuenta que los <strong>pesos</strong> se usan para calcular resultados, así que ajustarlos cambia cómo se calculan las calificaciones. No se pueden eliminar preguntas contestadas ni cambiar los valores de la escala. Si vas a rehacer el cuestionario completo, mejor usa «Crear nueva versión».
+      Puedes editarla: textos, ponderaciones, categorías, orden y preguntas nuevas. Ten en cuenta que las <strong>ponderaciones</strong> se usan para calcular resultados, así que ajustarlas cambia cómo se calculan las calificaciones. No se pueden eliminar preguntas contestadas ni cambiar los valores de la escala. Si vas a rehacer el cuestionario completo, mejor usa «Crear nueva versión».
     {% endcallout %}
   {% else %}
     {% callout "info" icon="info" title="Versión publicada, sin respuestas todavía" cls="mb-6" %}
-      Los cambios se guardan al instante. Revisa que los pesos sigan sumando 100%.
+      Los cambios se guardan al instante. Revisa que las ponderaciones sigan sumando 100%.
     {% endcallout %}
   {% endif %}
 
@@ -60,7 +60,7 @@
     {% if is_ownership %}
     <a href="#paso-2" class="flex items-center gap-3 rounded-xl border border-base-300 bg-base-100 px-3 py-2.5 hover:bg-base-200/50">
       <span class="grid place-items-center w-7 h-7 rounded-full shrink-0 text-sm font-semibold {% if weights_done %}bg-success text-success-content{% else %}bg-base-300 text-base-content{% endif %}">{% if weights_done %}<i data-lucide="check" class="w-4 h-4"></i>{% else %}2{% endif %}</span>
-      <span><span class="block font-medium text-base-content">Categorías y pesos</span><span class="block text-sm text-base-content/60">{% if weights_done %}Suman 100%{% else %}Pendiente de ajustar{% endif %}</span></span>
+      <span><span class="block font-medium text-base-content">Categorías y ponderaciones</span><span class="block text-sm text-base-content/60">{% if weights_done %}Suman 100%{% else %}Pendiente de ajustar{% endif %}</span></span>
     </a>
     {% endif %}
     <a href="#paso-3" class="flex items-center gap-3 rounded-xl border border-base-300 bg-base-100 px-3 py-2.5 hover:bg-base-200/50">
@@ -139,12 +139,12 @@
     </form>
   </section>
 
-  {# --- Paso 2: categorías y pesos (solo Ownership) --- #}
+  {# --- Paso 2: categorías y ponderaciones (solo Ownership) --- #}
   {% if is_ownership %}
   <section id="paso-2" class="mb-10 scroll-mt-20">
-    {% include "questionnaires/_step_header.html" with n=2 title="Categorías y pesos" description="Qué temas se evalúan y cuánto pesa cada uno en la calificación." done=weights_done %}
-    {% callout "neutral" icon="lightbulb" title="Cómo funcionan los pesos" cls="mb-4" %}
-      Cada pregunta pertenece a una categoría. La calificación del cuestionario es la suma del puntaje de cada categoría por su peso, y los pesos deben sumar exactamente <strong>100%</strong>. Dentro de una categoría puedes repartir el peso entre sus preguntas o dejar que pesen lo mismo. Define aquí las categorías <em>antes</em> de crear preguntas.
+    {% include "questionnaires/_step_header.html" with n=2 title="Categorías y ponderaciones" description="Qué temas se evalúan y cuánto pondera cada uno en la calificación." done=weights_done %}
+    {% callout "neutral" icon="lightbulb" title="Cómo funcionan las ponderaciones" cls="mb-4" %}
+      Cada pregunta pertenece a una categoría. La calificación del cuestionario es la suma del puntaje de cada categoría por su ponderación, y las ponderaciones deben sumar exactamente <strong>100%</strong>. Dentro de una categoría puedes repartir la ponderación entre sus preguntas o dejar que pesen lo mismo. Define aquí las categorías <em>antes</em> de crear preguntas.
     {% endcallout %}
     {% include "questionnaires/_weights_panel.html" %}
   </section>
@@ -218,7 +218,7 @@
                     {% with pk_s=q.pk|stringformat:"s" %}
                       {% with cid="delete-question-"|add:pk_s %}
                         {% url 'questionnaires:question_delete' pk=q.pk as question_delete_url %}
-                        {% include "components/_confirm.html" with confirm_id=cid title="Eliminar pregunta" message="Se elimina esta pregunta del borrador. Revisa después que los pesos sigan sumando 100%." confirm_url=question_delete_url trigger_aria="Eliminar pregunta" %}
+                        {% include "components/_confirm.html" with confirm_id=cid title="Eliminar pregunta" message="Se elimina esta pregunta del borrador. Revisa después que las ponderaciones sigan sumando 100%." confirm_url=question_delete_url trigger_aria="Eliminar pregunta" %}
                       {% endwith %}
                     {% endwith %}
                   </div>
@@ -336,7 +336,7 @@
         {% endcallout %}
       {% else %}
         {% callout "success" icon="check-circle" title="Todo listo para publicar" %}
-          La escala, los pesos y las preguntas están completos. Al publicar, esta versión reemplaza a la vigente para las evaluaciones nuevas; las respuestas ya capturadas no cambian.
+          La escala, las ponderaciones y las preguntas están completas. Al publicar, esta versión reemplaza a la vigente para las evaluaciones nuevas; las respuestas ya capturadas no cambian.
         {% endcallout %}
       {% endif %}
     {% else %}

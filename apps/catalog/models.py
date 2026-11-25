@@ -158,12 +158,12 @@ class PillarWeight(models.Model):
         SeniorityLevel, on_delete=models.CASCADE, related_name="weight",
         verbose_name="nivel",
     )
-    w_ownership = models.DecimalField("peso Ownership", max_digits=4, decimal_places=2)
+    w_ownership = models.DecimalField("ponderación Ownership", max_digits=4, decimal_places=2)
     w_value_delivery = models.DecimalField(
-        "peso Entrega de Valor", max_digits=4, decimal_places=2
+        "ponderación Entrega de Valor", max_digits=4, decimal_places=2
     )
     w_arena_impact = models.DecimalField(
-        "peso Impacto Arena", max_digits=4, decimal_places=2
+        "ponderación Impacto Arena", max_digits=4, decimal_places=2
     )
     history = HistoricalRecords()
 
@@ -178,7 +178,7 @@ class PillarWeight(models.Model):
         total = self.w_ownership + self.w_value_delivery + self.w_arena_impact
         if total != Decimal("1.00"):
             raise ValidationError(
-                "Los tres pesos deben sumar exactamente 1.00 (100%). "
+                "Las tres ponderaciones deben sumar exactamente 1.00 (100%). "
                 f"Actualmente suman {total}."
             )
 
@@ -411,9 +411,9 @@ class PositionPillarWeight(models.Model):
     position = models.OneToOneField(
         Position, on_delete=models.CASCADE, related_name="pillar_weight", verbose_name="posición",
     )
-    w_ownership = models.DecimalField("peso Ownership", max_digits=4, decimal_places=3)
-    w_value_delivery = models.DecimalField("peso Entrega de Valor", max_digits=4, decimal_places=3)
-    w_arena_impact = models.DecimalField("peso Impacto Arena", max_digits=4, decimal_places=3)
+    w_ownership = models.DecimalField("ponderación Ownership", max_digits=4, decimal_places=3)
+    w_value_delivery = models.DecimalField("ponderación Entrega de Valor", max_digits=4, decimal_places=3)
+    w_arena_impact = models.DecimalField("ponderación Impacto Arena", max_digits=4, decimal_places=3)
     history = HistoricalRecords()
 
     class Meta:

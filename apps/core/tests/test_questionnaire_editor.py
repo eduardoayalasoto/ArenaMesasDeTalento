@@ -69,7 +69,7 @@ def test_editor_weights_must_sum_100_before_saving_or_publishing(client, publish
     dos = Category.objects.create(code="dos", name="Dos", order=2)
 
     page = client.get(url).content.decode()
-    assert "Categorías y pesos" in page and "Repartir en partes iguales" in page
+    assert "Categorías y ponderaciones" in page and "Repartir en partes iguales" in page
 
     for category in (uno, dos):
         client.post(url, {"action": "add_template_category", "category": category.pk})
@@ -93,11 +93,11 @@ def test_editor_weights_must_sum_100_before_saving_or_publishing(client, publish
     # 99.9%, dos decimales o texto: se rechaza y no se guarda nada.
     assert "suman 99.9%; deben sumar 100%" in post_weights("60.0", "30.0", "9.9")
     assert "un solo decimal" in post_weights("60.0", "30.0", "10.05")
-    assert "no son válidos" in post_weights("60.0", "abc", "10.0")
+    assert "no son válidas" in post_weights("60.0", "abc", "10.0")
     assert weights() == {"general": 100, "uno": 0, "dos": 0}
 
     # 100.0%: se guarda.
-    assert "Guardé los pesos de las categorías" in post_weights("60.0", "30.0", "10.0")
+    assert "Guardé las ponderaciones de las categorías" in post_weights("60.0", "30.0", "10.0")
     assert weights() == {"general": Decimal("60.0"), "uno": Decimal("30.0"), "dos": Decimal("10.0")}
 
     # No se publica: «Dos» pesa 10% y no tiene preguntas; «Uno» pesa 30% y tampoco.
@@ -110,7 +110,7 @@ def test_editor_weights_must_sum_100_before_saving_or_publishing(client, publish
     assert q2.category == uno
     client.post(url, {"action": "remove_template_category", "link": links["dos"].pk})
     assert "dos" not in weights()
-    assert "Guardé los pesos" in say({
+    assert "Guardé las ponderaciones" in say({
         "action": "save_category_weights", f"w_{links['general'].pk}": "60.0", f"w_{links['uno'].pk}": "40.0",
     })
 
@@ -150,4 +150,4 @@ def test_publish_requires_position_and_categories(published):
     assert any("posición activa" in e for e in editor.validate_for_publish(draft))
 
     draft.template_categories.all().delete()
-    assert any("no tiene categorías con peso" in e for e in editor.validate_for_publish(draft))
+    assert any("no tiene categorías con ponderación" in e for e in editor.validate_for_publish(draft))

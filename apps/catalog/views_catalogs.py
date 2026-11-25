@@ -82,7 +82,7 @@ def position_delete(request, pk):
 @login_required
 @requires("catalog.categories.manage")
 def category_admin(request):
-    """Categorías de pregunta (catálogo común). Los pesos viven en cada cuestionario."""
+    """Categorías de pregunta (catálogo común). Las ponderaciones viven en cada cuestionario."""
     from apps.questionnaires.models import Category
 
     if request.method == "POST":

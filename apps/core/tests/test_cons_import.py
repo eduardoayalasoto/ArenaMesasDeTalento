@@ -148,7 +148,7 @@ def test_cons_cannot_be_published_while_competencies_weigh_zero(cons):
     """Toda pregunta de una categoría debe pesar más de 0%: el YAML actual (que replica el Excel con
     IA como productividad, Disciplina de forma de trabajo y Apego en 0%) no se puede publicar."""
     area, _levels = cons
-    with pytest.raises(CommandError, match="peso 0%") as exc:
+    with pytest.raises(CommandError, match="ponderación 0%") as exc:
         call_command("import_questionnaire_version", dir=str(CONS_DIR), target_version=1, publish=True, stdout=StringIO())
     for title in ("IA como productividad", "Disciplina de forma de trabajo", "Apego a los valores de Arena Analytics"):
         assert title in str(exc.value)

@@ -5,8 +5,8 @@ El YAML lo genera `scripts/checklists_2027_to_yaml.py` (checklists) o
 (contracts/import-command.md y specs/008-ownership-ponderado-categorias/contracts/cons-yaml.md):
 - llave (OWNERSHIP, área, nivel, versión); escala y nota de escala se copian de la v1, salvo que
   el YAML traiga `scale` propia (única forma de importar una versión 1);
-- categorías y pesos (spec 008): sin `categories` el cuestionario queda en «General» al 100%;
-  todo peso con un decimal y cada grupo suma exactamente 100.0, o se rechaza el puesto;
+- categorías y ponderaciones (spec 008): sin `categories` el cuestionario queda en «General» al 100%;
+  toda ponderación con un decimal y cada grupo suma exactamente 100.0, o se rechaza el puesto;
 - si la versión ya existe y algún reactivo tiene respuestas, el puesto se rechaza;
 - si existe sin respuestas, se reconstruye; borradores de versión mayor sin respuestas se archivan;
 - con `publish`, se publica vía `questionnaire_editor.publish_template` (valida y archiva la anterior).
@@ -65,7 +65,7 @@ def _has_answers(template):
 
 
 def _plan_categories(label, categories, questions):
-    """[(código, nombre, peso, [preguntas])] validado; sin `categories` = «General» al 100%."""
+    """[(código, nombre, ponderación, [preguntas])] validado; sin `categories` = «General» al 100%."""
     if not categories:
         return [("general", "General", Decimal("100.0"), list(questions))]
     plan = [(entry["code"], entry["name"], entry["weight"], []) for entry in categories]
@@ -81,10 +81,10 @@ def _plan_categories(label, categories, questions):
             weights = [q.get("weight") for q in group]
             if any(w is not None for w in weights):
                 if any(w is None for w in weights):
-                    raise ImportRejected(f"{label}: en «{name}» hay preguntas con peso y otras sin peso.")
+                    raise ImportRejected(f"{label}: en «{name}» hay preguntas con ponderación y otras sin ponderación.")
                 errors.append(ow.group_error(f"{label} · preguntas de {name}", weights))
             if ow.to_tenths(weight) > 0 and not group:
-                raise ImportRejected(f"{label}: la categoría «{name}» pesa {weight}% pero no tiene preguntas.")
+                raise ImportRejected(f"{label}: la categoría «{name}» pondera {weight}% pero no tiene preguntas.")
     except ow.WeightError as exc:
         raise ImportRejected(f"{label}: {exc}") from exc
     errors = [e for e in errors if e]
@@ -144,7 +144,7 @@ def import_version(area_code, level_code, questions, version, publish=False, *,
         template.scale_note = note
         template.save(update_fields=["scale_note"])
 
-    # Categorías y pesos (spec 008). Los nombres de categorías ya existentes no se pisan.
+    # Categorías y ponderaciones (spec 008). Los nombres de categorías ya existentes no se pisan.
     sections = {}
     for idx, (code, name, weight, _group) in enumerate(plan):
         category, _ = Category.objects.get_or_create(code=code, defaults={"name": name, "order": idx})

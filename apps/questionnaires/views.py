@@ -173,7 +173,7 @@ def template_edit(request, pk):
                 q = form.save(commit=False)
                 q.section = section
                 q.order = (section.questions.count() or 0) + 1
-                # Si la categoría ya tiene pesos propios, la pregunta nueva entra con 0 para no romper la suma.
+                # Si la categoría ya tiene ponderaciones propias, la pregunta nueva entra con 0 para no romper la suma.
                 if q.category_id and Question.objects.filter(
                     section__template=template, category_id=q.category_id, weight_pct__isnull=False
                 ).exists():
@@ -182,7 +182,7 @@ def template_edit(request, pk):
                 if q.weight_pct == 0:
                     messages.warning(
                         request,
-                        "Agregué la pregunta con peso 0%. Reparte los pesos de su categoría: "
+                        "Agregué la pregunta con ponderación 0%. Reparte las ponderaciones de su categoría: "
                         "no se puede publicar con preguntas en 0%.",
                     )
                 else:
@@ -262,7 +262,7 @@ def _move_question(template, question_id, direction):
         Question.objects.bulk_update([q, other], ["order"])
 
 
-# --- Pesos de categorías y preguntas (spec 008) ------------------------------
+# --- Ponderaciones de categorías y preguntas (spec 008) ------------------------------
 
 def _add_template_category(request, template):
     category = Category.objects.filter(pk=request.POST.get("category"), is_active=True).first()
@@ -272,7 +272,7 @@ def _add_template_category(request, template):
         messages.info(request, f"«{category.name}» ya está en este cuestionario.")
     else:
         TemplateCategory.objects.create(template=template, category=category, weight_pct=Decimal("0.0"))
-        messages.success(request, f"Agregué «{category.name}» con peso 0%. Ajusta los pesos para llegar a 100%.")
+        messages.success(request, f"Agregué «{category.name}» con ponderación 0%. Ajusta las ponderaciones para llegar a 100%.")
 
 
 def _remove_template_category(request, template):
@@ -281,7 +281,7 @@ def _remove_template_category(request, template):
         messages.error(request, "La categoría tiene preguntas; cámbialas de categoría antes de quitarla.")
         return
     link.delete()
-    messages.warning(request, "Quité la categoría. Revisa que los pesos sigan sumando 100%.")
+    messages.warning(request, "Quité la categoría. Revisa que las ponderaciones sigan sumando 100%.")
 
 
 def _save_category_weights(request, template):
@@ -296,7 +296,7 @@ def _save_category_weights(request, template):
         for link in links:
             link.weight_pct = form.weights[link.pk]
             link.save(update_fields=["weight_pct"])
-    messages.success(request, "Guardé los pesos de las categorías.")
+    messages.success(request, "Guardé las ponderaciones de las categorías.")
 
 
 def _category_questions(request, template):
@@ -321,13 +321,13 @@ def _save_question_weights(request, template):
         for q in questions:
             q.weight_pct = form.weights[q.pk]
             q.save(update_fields=["weight_pct"])
-    messages.success(request, f"Guardé los pesos de las preguntas de «{link.category.name}».")
+    messages.success(request, f"Guardé las ponderaciones de las preguntas de «{link.category.name}».")
 
 
 def _clear_question_weights(request, template):
     link, questions = _category_questions(request, template)
     Question.objects.filter(pk__in=[q.pk for q in questions]).update(weight_pct=None)
-    messages.success(request, f"Las preguntas de «{link.category.name}» vuelven a pesar lo mismo (partes iguales).")
+    messages.success(request, f"Las preguntas de «{link.category.name}» vuelven a ponderar lo mismo (partes iguales).")
 
 
 def _auto_weights(request, template):
@@ -435,10 +435,10 @@ def question_delete(request, pk):
     template = question.section.template
     if _is_draft(request, template):
         if question.ownership_answers.exists():
-            messages.error(request, "No se puede eliminar: la pregunta ya tiene respuestas. Edita su texto o su peso en su lugar.")
+            messages.error(request, "No se puede eliminar: la pregunta ya tiene respuestas. Edita su texto o su ponderación en su lugar.")
         else:
             question.delete()
-            messages.info(request, "Eliminé la pregunta. Revisa que los pesos sigan sumando 100%.")
+            messages.info(request, "Eliminé la pregunta. Revisa que las ponderaciones sigan sumando 100%.")
     return redirect("questionnaires:template_edit", pk=template.pk)
 
 

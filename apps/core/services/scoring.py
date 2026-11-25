@@ -27,7 +27,7 @@ class CategoryScore:
 
     code: str
     name: str
-    weight: Decimal          # peso configurado de la categoría, en %
+    weight: Decimal          # ponderación configurada de la categoría, en %
     score: Decimal | None    # promedio ponderado de la categoría; None = sin calificar
     answered: int
     total: int
@@ -94,9 +94,9 @@ def ownership_category_breakdown(evaluation) -> list[CategoryScore]:
 
 
 def _question_weights(group):
-    """Pesos exactos de las preguntas de una categoría: partes iguales si ninguna define peso.
+    """Ponderaciones exactas de las preguntas de una categoría: partes iguales si ninguna define ponderación.
 
-    Una pregunta que «no pondera» se califica pero pesa 0 en todos los casos.
+    Una pregunta que «no pondera» se califica pero pondera 0 en todos los casos.
     """
     weighted = [q for q in group if q.is_weighted]
     weights = {q.pk: Fraction(0) for q in group}
@@ -120,8 +120,8 @@ def ownership_evaluation_score(evaluation) -> Decimal | None:
     """Calificación de una evaluación de Ownership: promedio ponderado por categorías (spec 008).
 
     Score de categoría = promedio ponderado de sus preguntas calificadas (N/A fuera, RN-03/04);
-    score del cuestionario = Σ score × peso de categoría, redistribuyendo el peso de las
-    categorías sin calificar. Con una sola categoría y pesos nulos es el promedio simple de
+    score del cuestionario = Σ score × ponderación de categoría, redistribuyendo la ponderación de las
+    categorías sin calificar. Con una sola categoría y ponderaciones nulas es el promedio simple de
     siempre. Un único redondeo final (mitad hacia arriba).
     """
     links, questions = _ownership_categories(evaluation)

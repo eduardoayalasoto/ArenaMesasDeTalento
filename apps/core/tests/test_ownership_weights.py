@@ -26,8 +26,8 @@ def test_pure_weight_rules():
     assert w.normalize_to_100([0, 0]) == [Decimal("0.0"), Decimal("0.0")]
 
     assert w.group_error("Categorías", ["60.0", "40.0"]) is None
-    assert w.group_error("Categorías", ["60.0", "39.9"]) == "Los pesos de «Categorías» suman 99.9%; deben sumar 100%."
-    assert "no son válidos" in w.group_error("Categorías", ["60.0", "40.05"])
+    assert w.group_error("Categorías", ["60.0", "39.9"]) == "Las ponderaciones de «Categorías» suman 99.9%; deben sumar 100%."
+    assert "no son válidas" in w.group_error("Categorías", ["60.0", "40.05"])
 
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def test_validate_template_weights_scenarios(draft):
     link = draft.template_categories.get(category__code="b")
     link.weight_pct = Decimal("39.9")
     link.save()
-    assert w.validate_template_weights(draft) == ["Los pesos de «Categorías del cuestionario» suman 99.9%; deben sumar 100%."]
+    assert w.validate_template_weights(draft) == ["Las ponderaciones de «Categorías del cuestionario» suman 99.9%; deben sumar 100%."]
     link.weight_pct = Decimal("40.0")
     link.save()
 
@@ -63,7 +63,7 @@ def test_validate_template_weights_scenarios(draft):
     assert w.validate_template_weights(draft) == []
     qa2.weight_pct = None
     qa2.save()
-    assert "hay preguntas con peso y otras sin peso" in " ".join(w.validate_template_weights(draft))
+    assert "hay preguntas con ponderación y otras sin ponderación" in " ".join(w.validate_template_weights(draft))
     qa2.weight_pct = Decimal("29.9")
     qa2.save()
     assert "suman 99.9%" in " ".join(w.validate_template_weights(draft))
@@ -72,7 +72,7 @@ def test_validate_template_weights_scenarios(draft):
     qa1.weight_pct, qa2.weight_pct = Decimal("0.0"), Decimal("100.0")
     qa1.save(); qa2.save()
     errors = w.validate_template_weights(draft)
-    assert len(errors) == 1 and "peso 0%" in errors[0] and "«Q1»" in errors[0] and "«Q2»" not in errors[0]
+    assert len(errors) == 1 and "ponderación 0%" in errors[0] and "«Q1»" in errors[0] and "«Q2»" not in errors[0]
     qa2.weight_pct, qa1.weight_pct = Decimal("0.0"), Decimal("0.0")
     qa1.save(); qa2.save()
     errors = " ".join(w.validate_template_weights(draft))
@@ -85,11 +85,11 @@ def test_validate_template_weights_scenarios(draft):
     link_a = draft.template_categories.get(category__code="a")
     link_a.weight_pct, link_b.weight_pct = Decimal("100.0"), Decimal("0.0")
     link_a.save(); link_b.save()
-    assert "«B» pesa 0%" in " ".join(w.validate_template_weights(draft))
+    assert "«B» pondera 0%" in " ".join(w.validate_template_weights(draft))
     link_a.weight_pct, link_b.weight_pct = Decimal("60.0"), Decimal("40.0")
     link_a.save(); link_b.save()
 
     # Pregunta sin categoría y categoría con peso pero sin preguntas.
     Question.objects.filter(category__code="b").update(category=None)
     errors = " ".join(w.validate_template_weights(draft))
-    assert "sin categoría" in errors and "pesa 40.0% pero no tiene preguntas" in errors
+    assert "sin categoría" in errors and "pondera 40.0% pero no tiene preguntas" in errors

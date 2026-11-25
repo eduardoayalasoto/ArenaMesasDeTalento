@@ -271,11 +271,11 @@ def test_view_rejects_a_question_weighing_zero(client, talento, draft):
         return " ".join(str(m) for m in get_messages(response.wsgi_request))
 
     message = save("100.0", "0.0")
-    assert "«P2»" in message and "peso 0%" in message
+    assert "«P2»" in message and "ponderación 0%" in message
     q2.refresh_from_db()
     assert q2.weight_pct is None
 
-    assert "Guardé los pesos" in save("60.0", "40.0")
+    assert "Guardé las ponderaciones" in save("60.0", "40.0")
     q2.refresh_from_db()
     assert q2.weight_pct == Decimal("40.0")
 
@@ -292,8 +292,8 @@ def test_adding_a_question_to_a_weighted_category_warns_about_zero(client, talen
     response = client.post(url, {"action": "add_question", "section": section.pk, "title": "P2",
                                  "category": q1.category_id})
     message = " ".join(str(m) for m in get_messages(response.wsgi_request))
-    assert "peso 0%" in message and "no se puede publicar" in message
-    assert any("peso 0%" in e for e in editor.validate_for_publish(draft))
+    assert "ponderación 0%" in message and "no se puede publicar" in message
+    assert any("ponderación 0%" in e for e in editor.validate_for_publish(draft))
 
 
 @pytest.mark.django_db
@@ -349,7 +349,7 @@ def test_answered_questions_and_scale_values_are_protected(client, talento, publ
 def test_archived_version_is_read_only_and_screen_is_a_guided_sequence(client, talento, draft, published):
     client.force_login(talento)
     html = client.get(reverse("questionnaires:template_edit", args=[draft.pk])).content.decode()
-    for marker in ("Paso 1 · Escala de respuestas", "Paso 2 · Categorías y pesos",
+    for marker in ("Paso 1 · Escala de respuestas", "Paso 2 · Categorías y ponderaciones",
                    "Paso 3 · Secciones y preguntas", "Paso 4 · Publicar", "Estás editando un borrador"):
         assert marker in html
     published.status = T.Status.ARCHIVADO

@@ -1,7 +1,7 @@
-"""Reglas de pesos de los cuestionarios de Ownership (spec 008).
+"""Reglas de ponderaciones de los cuestionarios de Ownership (spec 008).
 
-Los pesos son porcentajes con **un decimal** y se manejan en *décimas enteras* (0–1000) para que
-las sumas sean exactas: un grupo de pesos es válido solo si suma 1000 décimas (100.0%).
+Las ponderaciones son porcentajes con **un decimal** y se manejan en *décimas enteras* (0–1000) para que
+las sumas sean exactas: un grupo de ponderaciones es válido solo si suma 1000 décimas (100.0%).
 
 La pantalla del editor aplica la misma aritmética en el navegador; este módulo es la fuente de
 verdad en el servidor (formularios, publicación e importación).
@@ -18,24 +18,24 @@ _ONE_DP = Decimal("0.1")
 
 
 class WeightError(ValueError):
-    """Peso mal formado (más de un decimal, fuera de 0–100 o no numérico)."""
+    """Ponderación mal formada (más de un decimal, fuera de 0–100 o no numérico)."""
 
 
 def to_tenths(value) -> int:
-    """Convierte un peso en % a décimas enteras. Rechaza más de un decimal y fuera de 0–100."""
+    """Convierte una ponderación en % a décimas enteras. Rechaza más de un decimal y fuera de 0–100."""
     if value is None or (isinstance(value, str) and not value.strip()):
-        raise WeightError("Captura un peso entre 0 y 100.")
+        raise WeightError("Captura una ponderación entre 0 y 100.")
     try:
         number = Decimal(str(value).strip().replace(",", "."))
     except InvalidOperation:
-        raise WeightError("El peso debe ser un número.") from None
+        raise WeightError("La ponderación debe ser un número.") from None
     if not number.is_finite():
-        raise WeightError("El peso debe ser un número.")
+        raise WeightError("La ponderación debe ser un número.")
     if number < 0 or number > 100:
-        raise WeightError("El peso debe estar entre 0 y 100.")
+        raise WeightError("La ponderación debe estar entre 0 y 100.")
     tenths = number * 10
     if tenths != tenths.to_integral_value():
-        raise WeightError("Usa un solo decimal en los pesos (por ejemplo 33.3).")
+        raise WeightError("Usa un solo decimal en las ponderaciones (por ejemplo 33.3).")
     return int(tenths)
 
 
@@ -58,9 +58,9 @@ def group_error(label: str, values) -> str | None:
     try:
         total = group_total_tenths(values)
     except WeightError as exc:
-        return f"Los pesos de «{label}» no son válidos: {exc}"
+        return f"Las ponderaciones de «{label}» no son válidas: {exc}"
     if total != TENTHS_TOTAL:
-        return f"Los pesos de «{label}» suman {from_tenths(total)}%; deben sumar 100%."
+        return f"Las ponderaciones de «{label}» suman {from_tenths(total)}%; deben sumar 100%."
     return None
 
 
@@ -76,7 +76,7 @@ def split_equal(n: int) -> list[Decimal]:
 
 
 def normalize_to_100(raw_weights) -> list[Decimal]:
-    """Escala pesos positivos cualesquiera a un decimal sumando exacto 100.0 (mayor residuo).
+    """Escala ponderaciones positivas cualesquiera a un decimal sumando exacto 100.0 (mayor residuo).
 
     Un grupo con suma 0 devuelve ceros (el llamador decide si eso es válido).
     """
@@ -94,18 +94,18 @@ def normalize_to_100(raw_weights) -> list[Decimal]:
 
 
 def validate_template_weights(template) -> list[str]:
-    """Errores (en español) de categorías y pesos de un cuestionario de Ownership.
+    """Errores (en español) de categorías y ponderaciones de un cuestionario de Ownership.
 
     Reglas (data-model.md): Σ categorías = 100.0; cada pregunta de escala con categoría presente
-    en el cuestionario; por categoría, pesos de pregunta todos nulos o todos definidos y Σ = 100.0;
-    una categoría con peso > 0 necesita preguntas ponderadas.
+    en el cuestionario; por categoría, ponderaciones de pregunta todas nulas o todas definidas y Σ = 100.0;
+    una categoría con ponderación > 0 necesita preguntas ponderadas.
     """
     from apps.questionnaires.models import Question
 
     errors: list[str] = []
     links = list(template.template_categories.select_related("category"))
     if not links:
-        return ["El cuestionario no tiene categorías con peso."]
+        return ["El cuestionario no tiene categorías con ponderación."]
 
     error = group_error("Categorías del cuestionario", [link.weight_pct for link in links])
     if error:
@@ -133,14 +133,14 @@ def validate_template_weights(template) -> list[str]:
         group = [q for q in questions if q.category_id == link.category_id and q.is_weighted]
         name = link.category.name
         if link.weight_pct <= 0:
-            errors.append(f"La categoría «{name}» pesa 0%: dale peso o quítala del cuestionario.")
+            errors.append(f"La categoría «{name}» pondera 0%: dale ponderación o quítala del cuestionario.")
         if link.weight_pct > 0 and not group:
-            errors.append(f"La categoría «{name}» pesa {link.weight_pct}% pero no tiene preguntas que ponderen.")
+            errors.append(f"La categoría «{name}» pondera {link.weight_pct}% pero no tiene preguntas que ponderen.")
             continue
         defined = [q.weight_pct for q in group if q.weight_pct is not None]
         if defined and len(defined) != len(group):
             errors.append(
-                f"En «{name}» hay preguntas con peso y otras sin peso; define el peso de todas "
+                f"En «{name}» hay preguntas con ponderación y otras sin ponderación; define la ponderación de todas "
                 "o deja todas en partes iguales."
             )
             continue
@@ -155,16 +155,16 @@ def validate_template_weights(template) -> list[str]:
 
 
 def zero_weight_error(category_name: str, titles) -> str:
-    """Toda pregunta de una categoría debe pesar más de 0%: una en 0% no participa en el score."""
+    """Toda pregunta de una categoría debe ponderar más de 0%: una en 0% no participa en el score."""
     listed = ", ".join(f"«{t}»" for t in titles)
     return (
-        f"En «{category_name}» hay preguntas con peso 0%: {listed}. Toda pregunta debe pesar más de 0% "
+        f"En «{category_name}» hay preguntas con ponderación 0%: {listed}. Toda pregunta debe ponderar más de 0% "
         "para participar en el score."
     )
 
 
 def editor_groups(template) -> list[dict]:
-    """Datos de la pantalla de pesos: por categoría, su vínculo y sus preguntas con el valor a
+    """Datos de la pantalla de ponderaciones: por categoría, su vínculo y sus preguntas con el valor a
     mostrar (el guardado o, si están en partes iguales, el reparto igual como punto de partida)."""
     from apps.questionnaires.models import Question
 
