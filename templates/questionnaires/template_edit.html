@@ -8,7 +8,7 @@
     <div>
       <a href="{% url 'questionnaires:admin_list' %}" class="text-base text-primary hover:underline inline-flex items-center gap-1 mb-1"><i data-lucide="chevron-left" class="w-4 h-4" aria-hidden="true"></i> Cuestionarios</a>
       <h2 class="text-xl font-semibold text-base-content">
-        {% if template.kind == 'OWNERSHIP' %}Ownership · {{ template.area.name }} · {{ template|puesto_de }}{% else %}Entrega de Valor{% endif %}
+        {% if template.kind == 'OWNERSHIP' %}Ownership · {{ template.area.department.name|default:"Sin área" }} · {{ template.area.name }}{% if template.level %} · {{ template.level.name }}{% endif %}{% else %}Entrega de Valor{% endif %}
       </h2>
       <p class="mt-1 flex flex-wrap items-center gap-2 text-base text-base-content/70">Versión {{ template.version }} {% include "partials/status_badge.html" with status=template.status label=template.get_status_display %}</p>
     </div>

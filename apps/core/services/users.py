@@ -43,17 +43,17 @@ _TRACKED = (
 def base_queryset():
     """Personas administrables (sin superusuarios ni dadas de baja)."""
     return User.objects.filter(is_superuser=False, deleted_at__isnull=True).select_related(
-        "area", "level", "profile", "direct_lead")
+        "area__department", "level", "profile", "direct_lead")
 
 
-def search_users(*, q: str = "", area: str = "", level: str = "", role: str = "", status: str = ""):
+def search_users(*, q: str = "", department: str = "", area: str = "", level: str = "", role: str = "", status: str = ""):
     """Filtra por CUALQUIER palabra: cada palabra debe aparecer en algún campo visible (AND entre palabras)."""
     qs = base_queryset()
     role_labels = {value: label.lower() for value, label in User.Role.choices}
     for token in (q or "").split():
         cond = (
             Q(full_name__icontains=token) | Q(email__icontains=token)
-            | Q(area__name__icontains=token) | Q(area__code__icontains=token)
+            | Q(area__name__icontains=token) | Q(area__code__icontains=token) | Q(area__department__name__icontains=token)
             | Q(level__name__icontains=token) | Q(profile__name__icontains=token)
             | Q(direct_lead__full_name__icontains=token)
         )
@@ -61,6 +61,8 @@ def search_users(*, q: str = "", area: str = "", level: str = "", role: str = ""
         if matching_roles:
             cond |= Q(role__in=matching_roles)
         qs = qs.filter(cond)
+    if department:
+        qs = qs.filter(area__department__code=department)
     if area:
         qs = qs.filter(area__code=area)
     if level:

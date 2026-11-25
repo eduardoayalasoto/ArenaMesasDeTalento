@@ -33,22 +33,42 @@ class TemplateCreateForm(forms.Form):
         )
         field = self.fields["position"]
         field.queryset = (
-            Position.objects.filter(is_active=True).select_related("area", "level")
-            .order_by("area__code", "level__order")
+            Position.objects.filter(is_active=True).select_related("area__department", "level")
+            .order_by("area__department__order", "area__code", "level__order")
         )
         field.label_from_instance = lambda p: (
             f"{p.area.name} · {p.name}" + (f" ({p.level.name})" if p.level_id else "")
             + (" — ya tiene cuestionario" if (p.area_id, p.level_id) in self._taken else "")
         )
 
+    def funnel_data(self) -> dict:
+        """Datos del embudo Área → Posición → Nivel (opcional) para la pantalla.
+
+        Cada combinación válida es una fila de «Posición × nivel»; el embudo solo ofrece las que existen.
+        """
+        combos, areas, departments, levels = [], {}, {}, {}
+        for p in self.fields["position"].queryset:
+            department = p.area.department
+            combos.append({
+                "id": p.pk, "department": department.pk if department else 0, "area": p.area_id,
+                "level": p.level_id or 0, "taken": (p.area_id, p.level_id) in self._taken,
+            })
+            areas[p.area_id] = {"id": p.area_id, "name": p.area.name, "department": department.pk if department else 0}
+            if department:
+                departments[department.pk] = {"id": department.pk, "name": department.name}
+            if p.level_id:
+                levels[p.level_id] = {"id": p.level_id, "name": p.level.name}
+        return {"combos": combos, "areas": list(areas.values()), "departments": list(departments.values()),
+                "levels": list(levels.values())}
+
     def clean(self):
         cleaned = super().clean()
         kind = cleaned.get("kind")
         if kind == QuestionnaireTemplate.Kind.OWNERSHIP and not cleaned.get("position"):
-            self.add_error("position", "Elige la posición del cuestionario de Ownership.")
+            self.add_error("position", "Elige el Área, la posición y, si la usa, el nivel del cuestionario de Ownership.")
         position = cleaned.get("position")
         if kind == QuestionnaireTemplate.Kind.OWNERSHIP and position and (position.area_id, position.level_id) in self._taken:
-            self.add_error("position", "Esa posición ya tiene cuestionario: ábrelo y crea una nueva versión.")
+            self.add_error("position", "Esa combinación ya tiene cuestionario: ábrelo y edítalo.")
         return cleaned
 
 

@@ -118,3 +118,30 @@ def test_lead_and_director_marks_are_edited_in_the_user_drawer(client, cons):
     person.refresh_from_db()
     assert person.is_lead and person.is_director_flag
     assert "Lead / Gerente: No → Sí" in UserAuditLog.objects.get(target_user=person, kind="UPDATED").detail
+
+
+@pytest.mark.django_db
+def test_template_funnel_offers_only_defined_combinations_and_marks_taken(client, cons, levels):
+    from apps.questionnaires.forms import TemplateCreateForm
+
+    _run("--apply", "--no-backup")
+    data = TemplateCreateForm().funnel_data()
+    assert [d["name"] for d in data["departments"]] == ["Consultoría"] or {"Consultoría"} <= {d["name"] for d in data["departments"]}
+    consultor = next(a for a in data["areas"] if a["name"] == "Consultor")
+    combos = {c["level"]: c for c in data["combos"] if c["area"] == consultor["id"]}
+    assert set(combos) == {0, levels["SNR"].pk}                     # Consultor: sin nivel y con nivel Senior
+    assert all(c["taken"] for c in combos.values())                 # ya tienen cuestionario (migrados)
+    gerente = next(a for a in data["areas"] if a["name"] == "Gerente")
+    assert [c["level"] for c in data["combos"] if c["area"] == gerente["id"]] == [0]
+
+
+@pytest.mark.django_db
+def test_user_index_shows_area_position_level_and_filters_by_area(client, cons, levels):
+    _run("--apply", "--no-backup")
+    talento = make_learn_user("t2@arena-analytics.com", role="TALENTO")
+    client.force_login(talento)
+    html = client.get(reverse("accounts:user_admin"), {"department": "CONSUL"}, **HX).content.decode()
+    assert "Consultoría · Gerente" in html and "Consultoría · Consultor" in html
+    assert "Snr" in html                                            # Consultor con nivel Senior
+    html = client.get(reverse("accounts:user_admin"), {"department": "ANALIT"}, **HX).content.decode()
+    assert "Consultoría · Gerente" not in html

@@ -180,6 +180,10 @@ class UserAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.actor = actor
         self.creating = self.instance.pk is None
+        self.fields["area"].queryset = self.fields["area"].queryset.select_related("department").order_by(
+            "department__order", "name")
+        self.fields["area"].label_from_instance = (
+            lambda a: f"{a.department.name} · {a.name}" if a.department_id else a.name)
         self.fields["area"].required = False
         self.fields["level"].required = False
         self.fields["area"].empty_label = "— Sin posición —"

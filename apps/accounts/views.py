@@ -10,7 +10,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from apps.catalog.models import Area, SeniorityLevel
+from apps.catalog.models import Area, Department, SeniorityLevel
 from apps.core.http import back_to_list, hx_done
 from apps.core.services import users as user_service
 
@@ -103,14 +103,15 @@ def profile(request):
 @requires("users.manage")
 def user_admin(request):
     """Índice de usuarios: búsqueda en vivo (htmx), filtros y acciones por persona."""
-    params = {k: request.GET.get(k, "").strip() for k in ("q", "area", "level", "role", "status")}
+    params = {k: request.GET.get(k, "").strip() for k in ("q", "department", "area", "level", "role", "status")}
     users = list(user_service.search_users(**params))
     context = {
         "page_title": "Usuarios",
         "users": users,
         "total": len(users),
         "filtered": any(params.values()),
-        "areas": Area.objects.all(),
+        "departments": Department.objects.order_by("order"),
+        "areas": Area.objects.select_related("department").order_by("department__order", "name"),
         "levels": SeniorityLevel.objects.all(),
         "roles": User.Role.choices,
         "statuses": user_service.STATUS_CHOICES,

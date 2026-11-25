@@ -45,7 +45,7 @@ def _missing_positions(templates):
 
 def _list_context(request, create_form=None):
     templates = list(
-        QuestionnaireTemplate.objects.select_related("area", "level")
+        QuestionnaireTemplate.objects.select_related("area__department", "level")
         .annotate(n_questions=Count("sections__questions", distinct=True), n_sections=Count("sections", distinct=True))
         .order_by("kind", "area__code", "level__order", "-version")
     )
@@ -68,6 +68,8 @@ def _list_context(request, create_form=None):
         "answered_count": sum(1 for t in templates if t.has_answers),
         "missing_positions": missing,
         "areas": sorted({t.area for t in templates if t.area_id}, key=lambda a: a.name),
+        "departments": sorted({t.area.department for t in templates if t.area_id and t.area.department_id},
+                              key=lambda d: d.order),
         "create_form": create_form or TemplateCreateForm(),
     }
 

@@ -61,21 +61,44 @@
         {% if create_form.kind.errors %}<p class="label text-error">{{ create_form.kind.errors|join:", " }}</p>{% endif %}
       </fieldset>
 
-      <fieldset class="fieldset w-72" x-show="kind === 'OWNERSHIP'">
-        <legend class="fieldset-legend"><label for="{{ create_form.position.id_for_label }}">Posición</label></legend>
-        {{ create_form.position }}
-        {% if create_form.position.errors %}<p class="label text-error">{{ create_form.position.errors|join:", " }}</p>{% endif %}
-      </fieldset>
+      <div class="flex flex-wrap items-end gap-3" x-show="kind === 'OWNERSHIP'" x-cloak
+           x-data="funnel(JSON.parse(document.getElementById('funnel-data').textContent), {{ create_form.position.value|default:'null' }})">
+        <fieldset class="fieldset w-52">
+          <legend class="fieldset-legend"><label for="funnel-department">Área</label></legend>
+          <select id="funnel-department" class="select w-full" x-model="department" @change="area = ''; level = ''">
+            <option value="">— Elige el área —</option>
+            <template x-for="d in departments()" :key="d.id"><option :value="d.id" x-text="d.name"></option></template>
+          </select>
+        </fieldset>
+        <fieldset class="fieldset w-56">
+          <legend class="fieldset-legend"><label for="funnel-area">Posición</label></legend>
+          <select id="funnel-area" class="select w-full" x-model="area" @change="$nextTick(() => level = String((levels()[0] || {id: ''}).id))" :disabled="!department">
+            <option value="">— Elige la posición —</option>
+            <template x-for="a in areas()" :key="a.id"><option :value="a.id" x-text="a.name"></option></template>
+          </select>
+        </fieldset>
+        <fieldset class="fieldset w-48">
+          <legend class="fieldset-legend"><label for="funnel-level">Nivel</label></legend>
+          <select id="funnel-level" class="select w-full" x-model="level" :disabled="!area">
+            <template x-for="l in levels()" :key="l.id"><option :value="l.id" x-text="l.name"></option></template>
+          </select>
+        </fieldset>
+        <input type="hidden" name="position" :value="positionId()">
+        <p class="label w-full" x-show="taken()" x-cloak>Esa combinación ya tiene cuestionario: ábrelo en la lista y edítalo.</p>
+        {% if create_form.position.errors %}<p class="label text-error w-full">{{ create_form.position.errors|join:", " }}</p>{% endif %}
+      </div>
 
       <button type="submit" class="btn btn-primary">Crear cuestionario</button>
     </div>
     <p class="label mt-2" x-show="kind === 'OWNERSHIP'">
-      Aparecen las posiciones activas; las que ya tienen cuestionario se marcan. Para sumar uno nuevo, dalo de alta en
-      <a href="{% url 'catalog:position_admin' %}" class="link">Catálogos → Posiciones</a>.
+      Solo aparecen las combinaciones definidas en
+      <a href="{% url 'catalog:position_admin' %}" class="link">Posición × nivel</a>. El cuestionario se asigna a las personas
+      cuya Área, posición y nivel coinciden exactamente.
     </p>
+    {{ create_form.funnel_data|json_script:"funnel-data" }}
   </form>
 
-  <div x-data="{ q: '', kind: '', area: '', status: '', previous: false, shown: 0 }"
+  <div x-data="{ q: '', kind: '', dept: '', area: '', status: '', previous: false, shown: 0 }"
        x-init="$nextTick(() => shown = $root.querySelectorAll('tbody tr[data-row]:not([style*=\'display: none\'])').length)"
        @input.debounce.100ms="$nextTick(() => shown = $root.querySelectorAll('tbody tr[data-row]:not([style*=\'display: none\'])').length)"
        @change="$nextTick(() => shown = $root.querySelectorAll('tbody tr[data-row]:not([style*=\'display: none\'])').length)">
@@ -89,8 +112,12 @@
         <option value="OWNERSHIP">Ownership</option>
         <option value="VALUE_DELIVERY">Entrega de Valor</option>
       </select>
-      <select x-model="area" class="select w-full sm:w-44" aria-label="Filtrar por área">
+      <select x-model="dept" class="select w-full sm:w-44" aria-label="Filtrar por área">
         <option value="">Todas las áreas</option>
+        {% for d in departments %}<option value="{{ d.pk }}">{{ d.name }}</option>{% endfor %}
+      </select>
+      <select x-model="area" class="select w-full sm:w-52" aria-label="Filtrar por posición">
+        <option value="">Todas las posiciones</option>
         {% for a in areas %}<option value="{{ a.pk }}">{{ a.name }}</option>{% endfor %}
       </select>
       <select x-model="status" class="select w-full sm:w-44" aria-label="Filtrar por estado">
@@ -117,17 +144,17 @@
           <tbody class="divide-y divide-base-200">
             {% for t in templates %}
               <tr class="hover:bg-base-200/50 transition-colors" data-row
-                  data-search="{% if t.kind == 'OWNERSHIP' %}ownership {{ t.area.name }} {{ t|puesto_de }} {{ t.level.name }}{% else %}entrega de valor{% endif %}"
-                  data-kind="{{ t.kind }}" data-area="{{ t.area_id|default_if_none:'' }}" data-status="{{ t.status }}"
+                  data-search="{% if t.kind == 'OWNERSHIP' %}ownership {{ t.area.department.name }} {{ t.area.name }} {{ t|puesto_de }} {{ t.level.name }}{% else %}entrega de valor{% endif %}"
+                  data-kind="{{ t.kind }}" data-dept="{{ t.area.department_id|default_if_none:'' }}" data-area="{{ t.area_id|default_if_none:'' }}" data-status="{{ t.status }}"
                   data-locked="{% if t.has_answers %}1{% endif %}"
-                  x-show="(!q || $el.dataset.search.toLowerCase().includes(q.toLowerCase())) && (!kind || $el.dataset.kind === kind) && (!area || $el.dataset.area === area)
+                  x-show="(!q || $el.dataset.search.toLowerCase().includes(q.toLowerCase())) && (!kind || $el.dataset.kind === kind) && (!dept || $el.dataset.dept === dept) && (!area || $el.dataset.area === area)
                           && (status === 'ANSWERED' ? $el.dataset.locked === '1' : (!status || $el.dataset.status === status))
                           && (previous || status === 'ARCHIVADO' || $el.dataset.status !== 'ARCHIVADO')">
                 <td class="px-4 py-3">
                   <p class="font-medium text-base-content">
-                    {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.name }} · {{ t|puesto_de }}{% else %}Entrega de Valor{% endif %}
+                    {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.department.name|default:"Sin área" }} · {{ t.area.name }}{% if t.level %} · {{ t.level.name }}{% endif %}{% else %}Entrega de Valor{% endif %}
                   </p>
-                  <p class="text-sm text-base-content/60">{% if t.kind == 'OWNERSHIP' %}Nivel {{ t.level.name }}{% else %}Un solo cuestionario para todos los proyectos{% endif %}</p>
+                  <p class="text-sm text-base-content/60">{% if t.kind == 'OWNERSHIP' %}Se asigna a: {{ t|puesto_de }}{% else %}Un solo cuestionario para todos los proyectos{% endif %}</p>
                 </td>
                 <td class="px-4 py-3 text-center tabular-nums whitespace-nowrap">v{{ t.version }}</td>
                 <td class="px-4 py-3 text-center hidden sm:table-cell whitespace-nowrap">
@@ -169,4 +196,28 @@
     </div>
     <p class="mt-2 text-sm text-base-content/60" aria-live="polite"><span x-text="shown"></span> cuestionario(s) mostrado(s)</p>
   </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Embudo Área → Posición → Nivel (opcional): solo ofrece combinaciones que existen en «Posición × nivel».
+  window.funnel = function (data, selected) {
+    const sel = selected == null ? null : data.combos.find(c => String(c.id) === String(selected));
+    return {
+      department: sel ? String(sel.department) : "",
+      area: sel ? String(sel.area) : "",
+      level: sel ? String(sel.level || 0) : "",
+      departments() { return data.departments; },
+      areas() { return data.areas.filter(a => String(a.department) === this.department); },
+      levels() {
+        const names = {0: "Sin nivel"};
+        data.levels.forEach(l => { names[l.id] = l.name; });
+        return data.combos.filter(c => String(c.area) === this.area).map(c => ({id: c.level, name: names[c.level] || "Sin nivel"}));
+      },
+      combo() { return data.combos.find(c => String(c.area) === this.area && String(c.level || 0) === String(this.level || 0)); },
+      positionId() { const c = this.level === "" ? null : this.combo(); return c ? c.id : ""; },
+      taken() { const c = this.level === "" ? null : this.combo(); return !!(c && c.taken); },
+    };
+  };
+</script>
 {% endblock %}

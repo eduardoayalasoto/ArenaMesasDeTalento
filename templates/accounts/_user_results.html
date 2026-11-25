@@ -10,7 +10,7 @@
       <thead class="bg-base-200/50 text-base-content/70 text-left">
         <tr>
           <th class="px-4 py-3 font-medium">Colaborador</th>
-          <th class="px-4 py-3 font-medium hidden md:table-cell">Área y nivel</th>
+          <th class="px-4 py-3 font-medium hidden md:table-cell">Área · posición · nivel</th>
           <th class="px-4 py-3 font-medium hidden lg:table-cell">Rol y perfil</th>
           <th class="px-4 py-3 font-medium hidden xl:table-cell">Lead directo</th>
           <th class="px-4 py-3 font-medium hidden sm:table-cell">Estado</th>
@@ -30,8 +30,13 @@
               </div>
             </td>
             <td class="px-4 py-2.5 hidden md:table-cell">
-              {% if u.area %}<p class="text-base-content">{{ u.area.name }}</p>{% else %}<p class="text-warning">Sin área</p>{% endif %}
-              {% if u.level %}<p class="text-sm text-base-content/60">{{ u.level.name }} · {{ u|puesto }}</p>{% else %}<p class="text-sm text-warning">Sin nivel</p>{% endif %}
+              {% if u.area %}
+                <p class="text-base-content">{% if u.area.department %}{{ u.area.department.name }} · {% endif %}{{ u.area.name }}</p>
+                <p class="text-sm text-base-content/60">{% if u.level %}{{ u.level.name }} · {% endif %}{{ u|puesto }}</p>
+              {% else %}
+                <p class="text-warning">Sin posición</p>
+                <p class="text-sm text-base-content/60">{% if u.level %}{{ u.level.name }}{% else %}Sin nivel{% endif %}</p>
+              {% endif %}
             </td>
             <td class="px-4 py-2.5 hidden lg:table-cell">
               <p class="text-base-content">{{ u.get_role_display }}</p>

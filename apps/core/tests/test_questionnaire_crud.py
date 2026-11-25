@@ -184,7 +184,7 @@ def test_view_create_shows_errors_without_creating(client, talento, published):
     client.force_login(talento)
     before = T.objects.count()
     response = client.post(reverse("questionnaires:template_create"), {"kind": "OWNERSHIP"})
-    assert response.status_code == 400 and "Elige la posición" in response.content.decode()
+    assert response.status_code == 400 and "Elige el Área" in response.content.decode()
     assert T.objects.count() == before
 
 
