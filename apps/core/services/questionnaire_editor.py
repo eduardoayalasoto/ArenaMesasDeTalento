@@ -278,3 +278,85 @@ def publish_template(template):
     template.status = QuestionnaireTemplate.Status.PUBLICADO
     template.save(update_fields=["status"])
     return template
+
+
+# --- Reordenar por arrastre -----------------------------------------------------
+
+@transaction.atomic
+def reorder_sections(template, section_ids):
+    """Fija el orden de las secciones según la lista de ids (debe ser exactamente el conjunto del cuestionario)."""
+    from apps.questionnaires.models import Section
+
+    sections = {s.pk: s for s in template.sections.all()}
+    ids = [int(i) for i in section_ids]
+    if set(ids) != set(sections) or len(ids) != len(sections):
+        raise ValidationError("La lista de secciones no coincide con el cuestionario.")
+    for order, pk in enumerate(ids, 1):
+        sections[pk].order = order
+    Section.objects.bulk_update(sections.values(), ["order"])
+
+
+@transaction.atomic
+def reorder_questions(template, layout):
+    """`layout` = {id_sección: [ids de preguntas en orden]}. Permite mover una pregunta a otra sección.
+
+    Todas las preguntas del cuestionario deben aparecer exactamente una vez; se renumeran de forma contigua.
+    """
+    from apps.questionnaires.models import Question
+
+    questions = {q.pk: q for q in Question.objects.filter(section__template=template)}
+    sections = {s.pk for s in template.sections.all()}
+    seen = []
+    for section_id, ids in layout.items():
+        if int(section_id) not in sections:
+            raise ValidationError("La sección no pertenece a este cuestionario.")
+        for order, qid in enumerate((int(i) for i in ids), 1):
+            q = questions.get(qid)
+            if q is None:
+                raise ValidationError("La pregunta no pertenece a este cuestionario.")
+            q.section_id, q.order = int(section_id), order
+            seen.append(qid)
+    if sorted(seen) != sorted(questions):
+        raise ValidationError("La lista de preguntas no coincide con el cuestionario.")
+    Question.objects.bulk_update(questions.values(), ["section", "order"])
+
+
+# --- Reordenar por arrastre -----------------------------------------------------
+
+@transaction.atomic
+def reorder_sections(template, section_ids):
+    """Fija el orden de las secciones según la lista de ids (debe ser exactamente el conjunto del cuestionario)."""
+    from apps.questionnaires.models import Section
+
+    sections = {s.pk: s for s in template.sections.all()}
+    ids = [int(i) for i in section_ids]
+    if set(ids) != set(sections) or len(ids) != len(sections):
+        raise ValidationError("La lista de secciones no coincide con el cuestionario.")
+    for order, pk in enumerate(ids, 1):
+        sections[pk].order = order
+    Section.objects.bulk_update(sections.values(), ["order"])
+
+
+@transaction.atomic
+def reorder_questions(template, layout):
+    """`layout` = {id_sección: [ids de preguntas en orden]}. Permite mover una pregunta a otra sección.
+
+    Todas las preguntas del cuestionario deben aparecer exactamente una vez; se renumeran de forma contigua.
+    """
+    from apps.questionnaires.models import Question
+
+    questions = {q.pk: q for q in Question.objects.filter(section__template=template)}
+    sections = {s.pk for s in template.sections.all()}
+    seen = []
+    for section_id, ids in layout.items():
+        if int(section_id) not in sections:
+            raise ValidationError("La sección no pertenece a este cuestionario.")
+        for order, qid in enumerate((int(i) for i in ids), 1):
+            q = questions.get(qid)
+            if q is None:
+                raise ValidationError("La pregunta no pertenece a este cuestionario.")
+            q.section_id, q.order = int(section_id), order
+            seen.append(qid)
+    if sorted(seen) != sorted(questions):
+        raise ValidationError("La lista de preguntas no coincide con el cuestionario.")
+    Question.objects.bulk_update(questions.values(), ["section", "order"])

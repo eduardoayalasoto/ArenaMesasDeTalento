@@ -487,3 +487,25 @@ def template_delete(request, pk):
         return redirect("questionnaires:template_edit", pk=template.pk)
     messages.info(request, "Descarté el borrador.")
     return redirect("questionnaires:admin_list")
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def template_reorder(request, pk):
+    """Reordena por arrastre (htmx): secciones, o preguntas (también entre secciones). Responde 204 o 400 con el motivo."""
+    import json
+
+    from django.http import HttpResponse
+
+    template = get_object_or_404(QuestionnaireTemplate, pk=pk)
+    if not editor.is_editable(template):
+        return HttpResponse("Esta versión es de solo lectura.", status=400)
+    try:
+        if request.POST.get("kind") == "sections":
+            editor.reorder_sections(template, json.loads(request.POST.get("order", "[]")))
+        else:
+            editor.reorder_questions(template, json.loads(request.POST.get("layout", "{}")))
+    except (ValidationError, ValueError, TypeError) as exc:
+        return HttpResponse(" ".join(getattr(exc, "messages", [str(exc)])), status=400)
+    return HttpResponse(status=204)

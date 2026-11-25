@@ -6,8 +6,8 @@
     <h2 class="text-xl font-semibold text-base-content">Ponderación de pilares</h2>
     <p class="text-base-content/75">
       Cómo ponderan Ownership, Entrega de Valor e Impacto Arena en la calificación final, por área, posición y nivel.
-      Una posición sin ponderación propia usa la de su nivel. Cuando ya hay calificaciones finales de esa posición,
-      su ponderación se bloquea.
+      Una posición sin ponderación propia usa la de su nivel. Siempre se puede editar: los periodos cerrados
+      conservan la ponderación con la que se calcularon y el cambio aplica a los periodos que sigan abiertos.
     </p>
   </div>
 
@@ -27,26 +27,21 @@
       </thead>
       <tbody>
         {% for r in rows %}
-          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
+          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())"
+              data-id="{{ r.position.pk }}" data-label="{{ r.position.area.name }} · {{ r.position.name }}{% if r.position.level %} · {{ r.position.level.name }}{% endif %}"
+              data-own="{{ r.own|yesno:'1,' }}" data-ownership="{{ r.ownership }}" data-vd="{{ r.value_delivery }}" data-arena="{{ r.arena_impact }}">
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
-            <td>{{ r.position.level.name }}</td>
+            <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
             <td class="text-right tabular-nums">{{ r.ownership }}%</td>
             <td class="text-right tabular-nums">{{ r.value_delivery }}%</td>
             <td class="text-right tabular-nums">{{ r.arena_impact }}%</td>
             <td>
               {% if r.own %}<span class="badge badge-soft badge-primary">Propia</span>
               {% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}
-              {% if r.locked %}<span class="badge badge-soft badge-warning">Bloqueada</span>{% endif %}
             </td>
             <td class="text-right">
-              <button type="button" class="btn btn-sm btn-soft btn-primary"
-                      data-id="{{ r.position.pk }}" data-label="{{ r.position.area.name }} · {{ r.position.name }} · {{ r.position.level.name }}"
-                      data-own="{{ r.own|yesno:'1,' }}" data-locked="{{ r.locked|yesno:'1,' }}"
-                      data-ownership="{{ r.ownership }}" data-vd="{{ r.value_delivery }}" data-arena="{{ r.arena_impact }}"
-                      @click="$dispatch('edit-weight', $el.dataset); $dispatch('open-weight-drawer')">
-                {% if r.locked %}Ver{% else %}Editar{% endif %}
-              </button>
+              {% include "components/_row_action.html" with kind="edit" label="Ver y editar" extra_attrs="@click=&quot;$dispatch('edit-weight', $el.closest('tr').dataset); $dispatch('open-weight-drawer')&quot;" %}
             </td>
           </tr>
         {% empty %}

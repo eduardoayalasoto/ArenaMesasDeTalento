@@ -15,7 +15,8 @@ def test_every_nav_item_points_to_a_protected_route():
     assert len(names) == len(set(names)), "Ítems duplicados en el menú"
     missing = [n for n in names if n not in registry.ROUTE_TO_KEYS]
     assert not missing, "Ítems de menú sin permiso registrado: " + ", ".join(missing)
-    assert [c.label for c in NAV] == ["Inicio", "Arena Learn", "Mesa de Talento", "Administración"]
+    assert [c.label for c in NAV] == ["Inicio", "Arena Learn", "Mesa de Talento", "Organización",
+                                           "Modelo de evaluación", "Administración"]
     assert all(it.perm or it.visible for cat in NAV for it in cat.items), "Todo ítem necesita permiso o regla"
 
 
@@ -38,7 +39,8 @@ def test_menu_by_profile_and_active_state(learn_area, learn_levels, client):
     assert "Aprobar cursos" not in cats["Arena Learn"]
     nav = _nav(talento, "access:profile_list")
     cats = {c["label"]: c for c in nav["nav_categories"]}
-    assert set(cats) == {"Inicio", "Arena Learn", "Mesa de Talento", "Administración"}
+    assert set(cats) == {"Inicio", "Arena Learn", "Mesa de Talento", "Organización", "Modelo de evaluación",
+                         "Administración"}
     assert cats["Administración"]["active"] and any(i["active"] and i["label"] == "Perfiles y permisos"
                                                    for i in cats["Administración"]["items"])
     assert "Mis evaluaciones" not in [i["label"] for i in cats["Mesa de Talento"]["items"]]

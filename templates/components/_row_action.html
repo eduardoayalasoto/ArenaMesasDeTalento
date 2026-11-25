@@ -1,0 +1,22 @@
+{% comment %}
+Acción de fila de CRUD -- botón de SOLO ícono con tooltip, mismo tamaño en todas las pantallas
+(DESIGN_SYSTEM.md § 6, "Acciones de fila"). Nunca texto en el botón: el tooltip dice qué hace.
+
+  kind="view"   -> eye     · tooltip "Ver"
+  kind="edit"   -> pencil  · tooltip "Editar" (en pantallas con un solo botón: label="Ver y editar")
+  kind="custom" -> el `icon` y `label` que se pasen (p. ej. rotate-ccw "Reabrir")
+Eliminar NO va aquí: usa `components/_confirm.html` (mismo tamaño, ícono trash-2 en rojo).
+
+Uso: {% include "components/_row_action.html" with kind="edit" label="Ver y editar" href=edit_url %}
+     {% include "components/_row_action.html" with kind="edit" label="Ver y editar" hx_get=url hx_target="#org-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openOrgDrawer()"' %}
+     {% include "components/_row_action.html" with kind="view" extra_attrs='data-id="..." @click="..."' %}
+
+Props: kind, label (opcional), icon (solo custom), href | hx_get/hx_target/hx_swap | extra_attrs, type.
+{% endcomment %}
+{% if kind == "view" %}
+  {% include "components/_icon_button.html" with icon="eye" label=label|default:"Ver" href=href hx_get=hx_get hx_target=hx_target hx_swap=hx_swap extra_attrs=extra_attrs type=type variant="" size="" cls=cls %}
+{% elif kind == "edit" %}
+  {% include "components/_icon_button.html" with icon="pencil" label=label|default:"Editar" href=href hx_get=hx_get hx_target=hx_target hx_swap=hx_swap extra_attrs=extra_attrs type=type variant="" size="" cls=cls %}
+{% else %}
+  {% include "components/_icon_button.html" with icon=icon label=label href=href hx_get=hx_get hx_target=hx_target hx_swap=hx_swap extra_attrs=extra_attrs type=type variant="" size="" cls=cls %}
+{% endif %}

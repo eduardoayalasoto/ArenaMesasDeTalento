@@ -58,7 +58,7 @@
           <option value="OWNERSHIP">Ownership</option>
           <option value="VALUE_DELIVERY">Entrega de Valor</option>
         </select>
-        {% if create_form.kind.errors %}<p class="label text-error">{{ create_form.kind.errors|join:", " }}</p>{% endif %}
+        {% if create_form.kind.errors %}<p class="whitespace-normal text-base text-error">{{ create_form.kind.errors|join:", " }}</p>{% endif %}
       </fieldset>
 
       <div class="flex flex-wrap items-end gap-3" x-show="kind === 'OWNERSHIP'" x-cloak
@@ -84,13 +84,13 @@
           </select>
         </fieldset>
         <input type="hidden" name="position" :value="positionId()">
-        <p class="label w-full" x-show="taken()" x-cloak>Esa combinación ya tiene cuestionario: ábrelo en la lista y edítalo.</p>
-        {% if create_form.position.errors %}<p class="label text-error w-full">{{ create_form.position.errors|join:", " }}</p>{% endif %}
+        <p class="whitespace-normal text-base text-base-content/70 w-full" x-show="taken()" x-cloak>Esa combinación ya tiene cuestionario: ábrelo en la lista y edítalo.</p>
+        {% if create_form.position.errors %}<p class="whitespace-normal text-base text-error w-full">{{ create_form.position.errors|join:", " }}</p>{% endif %}
       </div>
 
-      <button type="submit" class="btn btn-primary">Crear cuestionario</button>
+      {% include "components/_create_button.html" with label="Nuevo cuestionario" type="submit" %}
     </div>
-    <p class="label mt-2" x-show="kind === 'OWNERSHIP'">
+    <p class="whitespace-normal text-base text-base-content/70 mt-2" x-show="kind === 'OWNERSHIP'">
       Solo aparecen las combinaciones definidas en
       <a href="{% url 'catalog:position_admin' %}" class="link">Posición × nivel</a>. El cuestionario se asigna a las personas
       cuya Área, posición y nivel coinciden exactamente.
@@ -173,9 +173,11 @@
                 <td class="px-4 py-3">
                   <div class="flex items-center justify-end gap-1 whitespace-nowrap">
                     {% if t.status == 'ARCHIVADO' %}
-                      <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-ghost" title="Versión anterior: edita la vigente">Ver</a>
+                      {% url 'questionnaires:template_edit' pk=t.pk as view_url %}
+                      {% include "components/_row_action.html" with kind="view" label="Ver (versión anterior: edita la vigente)" href=view_url %}
                     {% else %}
-                      <a href="{% url 'questionnaires:template_edit' pk=t.pk %}" class="btn btn-sm btn-soft btn-primary"><i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Editar</a>
+                      {% url 'questionnaires:template_edit' pk=t.pk as edit_url %}
+                      {% include "components/_row_action.html" with kind="edit" label="Ver y editar" href=edit_url %}
                     {% endif %}
                     {% if t.status == 'BORRADOR' %}
                       {% with pk_s=t.pk|stringformat:"s" %}

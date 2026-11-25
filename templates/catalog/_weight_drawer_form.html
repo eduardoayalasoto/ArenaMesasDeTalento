@@ -1,11 +1,10 @@
 {# Formulario del drawer de ponderación (spec 009). Se llena con el evento `edit-weight`. #}
-<div x-data="{ pos: '', label: '', own: false, locked: false }"
-     @edit-weight.window="pos = $event.detail.id; label = $event.detail.label; own = !!$event.detail.own; locked = !!$event.detail.locked">
+<div x-data="{ pos: '', label: '', own: false }"
+     @edit-weight.window="pos = $event.detail.id; label = $event.detail.label; own = !!$event.detail.own">
   <p class="text-base text-base-content/75 mb-4" x-text="label"></p>
 
-  <p class="mb-4" x-show="locked" x-cloak>
-    <span class="badge badge-soft badge-warning">Bloqueada</span>
-    Ya hay calificaciones finales de esta posición; sus ponderaciones no se pueden cambiar.
+  <p class="mb-4 text-base text-base-content/70">
+    Los periodos cerrados conservan la ponderación con la que se calcularon; el cambio aplica a los periodos abiertos y futuros.
   </p>
 
   <form method="post" action="{% url 'catalog:weight_save' %}" id="weight-form"
@@ -13,7 +12,7 @@
         @edit-weight.window="vals = [$event.detail.ownership, $event.detail.vd, $event.detail.arena]">
     {% csrf_token %}
     <input type="hidden" name="position" :value="pos">
-    <fieldset :disabled="locked" class="grid gap-4 md:grid-cols-3">
+    <fieldset class="grid gap-4 md:grid-cols-3">
       <div><label class="fieldset-legend" for="w-own">Ownership (%)</label>
         <input id="w-own" name="w_ownership" type="text" inputmode="decimal" x-model="vals[0]" class="input w-full text-right tabular-nums"></div>
       <div><label class="fieldset-legend" for="w-vd">Entrega de Valor (%)</label>
@@ -30,7 +29,7 @@
       </span>
     </div>
 
-    <div class="mt-6 flex flex-wrap items-center gap-3" x-show="!locked">
+    <div class="mt-6 flex flex-wrap items-center gap-3">
       <button type="submit" class="btn btn-primary" :disabled="!ok">Guardar</button>
       <button type="submit" name="action" value="reset" class="btn btn-outline" x-show="own" x-cloak
               formnovalidate>Volver a la ponderación del nivel</button>

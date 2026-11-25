@@ -1,8 +1,8 @@
 """Ponderación de pilares por área × posición × nivel (spec 009).
 
 Una posición con fila propia (`PositionPillarWeight`) usa esas ponderaciones; sin ella, rige la
-ponderación del nivel (`PillarWeight`, RN-19). Una vez que hay calificaciones finales de personas de
-esa posición, las ponderaciones ya no se pueden cambiar (la calificación ya se calculó con ellas).
+ponderación del nivel (`PillarWeight`, RN-19). Es un catálogo: SIEMPRE se puede editar. La historia
+no cambia porque cada `FinalScore` de un periodo cerrado guarda la ponderación con la que se calculó.
 """
 
 from decimal import Decimal
@@ -34,11 +34,15 @@ def effective_weights(user):
     return row.w_ownership, row.w_value_delivery, row.w_arena_impact
 
 
-def is_locked(position) -> bool:
-    """True si ya hay calificaciones finales de personas con esta área × nivel."""
+def frozen_scores(position) -> int:
+    """Calificaciones de periodos CERRADOS de esta posición: conservan la ponderación con que se calcularon."""
+    from apps.catalog.models import EvaluationPeriod
     from apps.evaluations.models import FinalScore
 
-    return FinalScore.objects.filter(user__area_id=position.area_id, user__level_id=position.level_id).exists()
+    return FinalScore.objects.filter(
+        user__area_id=position.area_id, user__level_id=position.level_id,
+        period__status=EvaluationPeriod.Status.CERRADO,
+    ).count()
 
 
 def matrix():
@@ -55,7 +59,6 @@ def matrix():
         rows.append({
             "position": position,
             "own": own is not None,
-            "locked": is_locked(position),
             "ownership": _pct(source.w_ownership) if source else "",
             "value_delivery": _pct(source.w_value_delivery) if source else "",
             "arena_impact": _pct(source.w_arena_impact) if source else "",
@@ -69,8 +72,8 @@ def _pct(fraction) -> str:
 
 @transaction.atomic
 def save_weights(position, ownership, value_delivery, arena_impact):
-    """Guarda (crea o actualiza) las ponderaciones en % de una posición. Falla si no suman 100.0, si hay
-    un pilar en negativo o si la posición ya tiene calificaciones finales."""
+    """Guarda (crea o actualiza) las ponderaciones en % de una posición. Falla si no suman 100.0 o si hay
+    un pilar fuera de 0-100. Los periodos cerrados conservan la ponderación con que se calcularon."""
     from apps.catalog.models import PositionPillarWeight
 
     pcts = [Decimal(str(v)) for v in (ownership, value_delivery, arena_impact)]
@@ -78,10 +81,6 @@ def save_weights(position, ownership, value_delivery, arena_impact):
         raise ValidationError("Cada ponderación debe estar entre 0 y 100%.")
     if sum(int((p * 10).to_integral_value()) for p in pcts) != 1000:
         raise ValidationError("Las tres ponderaciones deben sumar exactamente 100%.")
-    if is_locked(position):
-        raise ValidationError(
-            "Esta posición ya tiene calificaciones finales: sus ponderaciones ya no se pueden cambiar."
-        )
     fractions = [(p / 100).quantize(Decimal("0.001")) for p in pcts]
     obj, _ = PositionPillarWeight.objects.update_or_create(
         position=position, defaults=dict(zip(PILLARS, fractions)),
@@ -92,8 +91,6 @@ def save_weights(position, ownership, value_delivery, arena_impact):
 @transaction.atomic
 def reset_to_level(position):
     """Quita las ponderaciones propias: la posición vuelve a heredar la ponderación de su nivel."""
-    if is_locked(position):
-        raise ValidationError("Esta posición ya tiene calificaciones finales: no se puede cambiar.")
     from apps.catalog.models import PositionPillarWeight
 
     PositionPillarWeight.objects.filter(position=position).delete()

@@ -8,8 +8,9 @@
         la ponderación de cada categoría se define en cada cuestionario (Cuestionarios → editar → Categorías y ponderaciones).
       </p>
     </div>
-    <button type="button" class="btn btn-primary" data-mode="create" data-order="{{ categories|length|add:1 }}"
-            @click="$dispatch('edit-category', $el.dataset); $dispatch('open-category-drawer')">Crear categoría</button>
+    <span data-order="{{ categories|length|add:1 }}">
+      {% include "components/_create_button.html" with label="Nueva categoría" extra_attrs="@click=&quot;$dispatch('edit-category', {mode: 'create', order: $el.closest('[data-order]').dataset.order}); $dispatch('open-category-drawer')&quot;" %}
+    </span>
   </div>
 
   <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto">
@@ -17,20 +18,18 @@
       <thead><tr><th>Orden</th><th>Nombre</th><th>Clave</th><th class="text-center">Preguntas</th><th class="text-center">Cuestionarios</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
       <tbody>
         {% for c in categories %}
-          <tr>
+          <tr data-id="{{ c.pk }}" data-name="{{ c.name }}" data-order="{{ c.order }}" data-active="{{ c.is_active|yesno:'1,' }}">
             <td class="tabular-nums">{{ c.order }}</td>
             <td class="font-medium text-base-content">{{ c.name }}</td>
             <td class="text-base-content/75">{{ c.code }}</td>
             <td class="text-center tabular-nums">{{ c.questions.all|length }}</td>
             <td class="text-center tabular-nums">{{ c.template_links.all|length }}</td>
             <td>{% if c.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>
-            <td class="text-right whitespace-nowrap">
-              <button type="button" class="btn btn-sm btn-ghost" data-mode="view" data-id="{{ c.pk }}" data-name="{{ c.name }}" data-order="{{ c.order }}" data-active="{{ c.is_active|yesno:'1,' }}"
-                      @click="$dispatch('edit-category', $el.dataset); $dispatch('open-category-drawer')">Ver</button>
-              <button type="button" class="btn btn-sm btn-soft btn-primary" data-mode="edit" data-id="{{ c.pk }}" data-name="{{ c.name }}" data-order="{{ c.order }}" data-active="{{ c.is_active|yesno:'1,' }}"
-                      @click="$dispatch('edit-category', $el.dataset); $dispatch('open-category-drawer')">Editar</button>
-              {% include "components/_confirm.html" with confirm_id=c.delete_confirm_id title="Borrar categoría" message=c.delete_confirm_message confirm_url=c.delete_url %}
-            </td>
+            <td class="text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1">
+              {% include "components/_row_action.html" with kind="view" extra_attrs="@click=&quot;$dispatch('edit-category', {...$el.closest('tr').dataset, mode: 'view'}); $dispatch('open-category-drawer')&quot;" %}
+              {% include "components/_row_action.html" with kind="edit" extra_attrs="@click=&quot;$dispatch('edit-category', {...$el.closest('tr').dataset, mode: 'edit'}); $dispatch('open-category-drawer')&quot;" %}
+              {% include "components/_confirm.html" with confirm_id=c.delete_confirm_id title="Eliminar categoría" message=c.delete_confirm_message confirm_url=c.delete_url %}
+            </div></td>
           </tr>
         {% empty %}
           <tr><td colspan="7" class="text-base-content/75">Aún no hay categorías.</td></tr>

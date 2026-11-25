@@ -22,8 +22,8 @@ Lucide, sin emojis).
   (`is_admin`, `is_director`, `is_lead`): usar `apps.access.services.has/scope` o la fachada
   `apps/core/services/permissions.py`. `is_lead` solo define el TIPO de evaluación.
   `apps/core/tests/test_access_coverage.py` debe quedar en verde.
-- **Menú = datos**: `apps/core/navigation.py` (4 categorías: Inicio · Arena Learn · Mesa de Talento ·
-  Administración). Ninguna condición de menú en plantillas.
+- **Menú = datos**: `apps/core/navigation.py` (6 categorías: Inicio · Arena Learn · Mesa de Talento ·
+  Organización · Modelo de evaluación · Administración). Ninguna condición de menú en plantillas.
 - Django Forms para todo POST; `transaction.atomic` al escribir 2+ modelos;
   `select_related`/`prefetch_related` en listados.
 - **Pruebas compactas por escenario** (pytest contra Neon, `--reuse-db`, nunca en paralelo); usuarios
@@ -76,4 +76,10 @@ CUMPLE/NO CUMPLE), `django-backend-engineer.md` (backend); skills `daisyui`, `de
 - **Todo texto visible dice «ponderación», nunca «peso»** (excepto tamaño de archivo y moneda).
 - Pantallas de administración: búsqueda en vivo (htmx), filas de texto, «Ver y editar» en drawer, borrado con `_confirm`
   y bitácora (`UserAuditLog`, `CatalogAuditLog`). Patrón en `templates/catalog/org_list.html` y `accounts/user_admin.html`.
+- **Botones de CRUD (regla dura):** Ver/Editar/Eliminar = solo ícono con tooltip, mismo tamaño
+  (`components/_row_action.html`, `components/_confirm.html`); crear = «+ Nuevo/Nueva …» (`components/_create_button.html`).
+  Detalle en `DESIGN_SYSTEM.md` §6.
+- **Categorías de pregunta** = solo las 4 familias de la matriz (Persona, Proyecto, Cliente, Metodología y técnica) +
+  «General»; `consolidate_categories` reclasifica por el título de la competencia. **Ponderación de pilares**: el catálogo
+  siempre se edita; `FinalScore` guarda la ponderación aplicada y los periodos cerrados la conservan.
 - Pendiente: evaluación 360 al Gerente y ponderación por proyecto de cada persona (ver memoria `talento-org-restructure`).

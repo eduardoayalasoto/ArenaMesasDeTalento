@@ -61,9 +61,8 @@
             </td>
             <td class="px-4 py-2.5">
               <div class="flex items-center justify-end gap-1 whitespace-nowrap">
-                <a href="{% url 'catalog:project_edit' pk=p.pk %}" class="btn btn-sm btn-soft btn-primary">
-                  <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
-                </a>
+                {% url 'catalog:project_edit' pk=p.pk as edit_url %}
+                {% include "components/_row_action.html" with kind="edit" label="Ver y editar" href=edit_url %}
                 {% if can_close %}
                   {% if not p.is_active %}
                     {% url 'catalog:project_reactivate' pk=p.pk as reopen_url %}

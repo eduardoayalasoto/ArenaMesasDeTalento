@@ -60,6 +60,11 @@ Lockup **«arenatalento»**: `{% include "components/_brand_mark.html" %}` — �
 ### 5.1 Menú — componente `components/_nav_menu.html` (idéntico en arena-crm)
 - Hamburguesa → `dropdown` (`bg-neutral`, `w-72`) → `{% include "components/_nav_menu.html" with
   on_navigate="menuOpen = false" menu_class="p-0" %}`.
+- **Seis categorías (2026-11-25)**: Inicio · Arena Learn · Mesa de Talento · **Organización** (Áreas, Posiciones,
+  Niveles, Posición × nivel, Ponderación de pilares) · **Modelo de evaluación** (Cuestionarios, Categorías,
+  Escenarios, Periodos) · **Administración** (Usuarios, Perfiles y permisos, Proyectos). Una pantalla de
+  catálogo nueva va en la categoría que corresponda a lo que define (estructura / evaluación / personas y acceso),
+  no en una sola categoría gigante.
 - daisyUI `menu` multinivel: **Categoría** (`<details>`, ícono Lucide) › **grupo** opcional
   (`menu-title`, p. ej. Mi evaluación · Por validar · Comité en Mesa de Talento) › **ítem** (ícono
   Lucide). La categoría `inicio` se pinta como accesos directos, sin desplegable.
@@ -118,6 +123,19 @@ Clases canónicas (las mismas del CRM, sin equivalente legado):
   `_confirm.html` con `trigger_size="sm"`), igual que filas de tabla, avisos en línea y barras
   densas. Los botones de **pie / terminar** (enviar un formulario, guardar, cerrar, confirmar en un
   modal, la acción principal al fondo de una tarjeta) van en **mediano** (`btn`, sin tamaño).
+- **Acciones de fila de CRUD (2026-11-25, regla dura)**: en toda tabla/lista de administración los botones
+  **Ver · Editar · Eliminar** son **solo ícono, del mismo tamaño** (`btn btn-ghost btn-circle btn-sm`, ícono de
+  18 px) con **tooltip** que dice qué hacen — nunca texto en el botón (ni «Ver», «Editar», «Ver y editar»).
+  Íconos fijos: **Ver** `eye` · **Editar** `pencil` (si la pantalla solo tiene un botón: tooltip «Ver y editar») ·
+  **Eliminar** `trash-2` en rojo (`text-error`) · reabrir `rotate-ccw` · cerrar `lock` · restablecer contraseña
+  `key-round` · activar/desactivar `power`/`power-off`. Se usan los componentes `components/_row_action.html`
+  (`kind="view"|"edit"`) y `components/_confirm.html` (eliminar y acciones con confirmación). Prohibido armar un
+  `<button class="btn …">Editar</button>` a mano en una fila, usar `confirm()` nativo o mezclar botones con
+  texto e íconos en la misma columna de acciones.
+- **Botón de crear (2026-11-25, regla dura)**: todo botón que lleva a crear un registro se llama **«Nuevo …» /
+  «Nueva …»** (nunca «Crear», «Agregar», «Alta») y lleva **`plus` antes del texto**, chico y primario. Componente
+  `components/_create_button.html` (acepta `href`, `hx_get` o `extra_attrs` para abrir un drawer). Los botones
+  de crear de un formulario inline (p. ej. «Nuevo perfil») usan el mismo componente con `type="submit"`.
 - **Formularios**: `input w-full` · `select w-full` · `textarea w-full` · `file-input w-full`;
   label `fieldset-legend` (o el componente `_form_field`).
 - **Badges**: `badge` + `badge-soft badge-{success|warning|error|info}` (o `_badge`).
@@ -127,7 +145,7 @@ Clases canónicas (las mismas del CRM, sin equivalente legado):
   `lucide.createIcons()` global (ciclo infinito con Alpine).
 - Diálogos = modal (`<dialog>`); prohibidos `alert()/confirm()/prompt()` en código nuevo.
 - **CRUD de catálogos = drawer** (`components/_drawer.html`, `width_class="w-3/4 max-w-none"`): el índice es
-  una tabla con columnas informativas y botón **Editar** por fila; **Crear** y **Editar** abren el mismo drawer
+  una tabla con columnas informativas y los botones de ícono **Ver/Editar/Eliminar** por fila (ver §6); **Crear** y **Editar** abren el mismo drawer
   y todo catálogo ofrece las cuatro operaciones (crear, ver, editar, desactivar/eliminar). Excepción:
   **Cuestionarios y Proyectos** son pantallas completas de composición, no drawer.
 - Prohibido `style=` inline, emojis como íconos y CSS nuevo fuera de `static/src/input.css`.

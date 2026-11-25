@@ -36,26 +36,29 @@ Props:
     la página junto a otros botones de tamaño normal (todos del mismo alto).
   trigger_aria: nombre accesible del disparador de solo ícono (default:
     `title`, p. ej. "Eliminar"); con `trigger_label` el nombre es el texto.
+  confirm_fields: dict opcional de campos ocultos que viaja en el POST (p. ej. {"period": 3, "action": "close"}).
   confirm_label (default "Eliminar") / cancel_label (default "Cancelar").
 {% endcomment %}
 <div>
-  {% with trigger_attrs='data-modal-open="'|add:confirm_id|add:'" onclick="openModal(this.dataset.modalOpen)"' %}
+  {# Eliminar (ícono por defecto) va en rojo; otros disparadores (reabrir, restablecer…) en neutro. #}
+  {% with trigger_default_cls=trigger_icon|yesno:",text-error" trigger_attrs='data-modal-open="'|add:confirm_id|add:'" onclick="openModal(this.dataset.modalOpen)"' %}
     {% if trigger_label %}
       {% include "components/_button.html" with variant="ghost" size=trigger_size|default:"sm" label=trigger_label icon=trigger_icon|default:"trash-2" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" full_width=False %}
     {% else %}
-      {% include "components/_icon_button.html" with icon=trigger_icon|default:"trash-2" label=trigger_aria|default:title|default:"Eliminar" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" variant="" size="" %}
+      {% include "components/_icon_button.html" with icon=trigger_icon|default:"trash-2" label=trigger_aria|default:title|default:"Eliminar" extra_attrs=trigger_attrs href="" hx_post="" hx_get="" type="button" variant="" size="" cls=trigger_cls|default:trigger_default_cls %}
     {% endif %}
   {% endwith %}
   <dialog id="{{ confirm_id }}" class="modal" aria-label="{{ title }}">
     <div class="modal-box max-w-sm">
       <h3 class="font-heading text-lg font-semibold">{{ title }}</h3>
-      <p class="py-3 text-base text-base-content/70">{{ message }}</p>
+      <p class="py-3 text-base text-base-content/70 whitespace-pre-line">{{ message }}</p>
       <div class="modal-action">
         <form method="dialog">
           <button type="submit" class="btn btn-ghost btn-sm">{{ cancel_label|default:"Cancelar" }}</button>
         </form>
         <form method="post" action="{{ confirm_url }}">
           {% csrf_token %}
+          {% for name, value in confirm_fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
           <button type="submit" class="btn btn-error btn-sm">{{ confirm_label|default:"Eliminar" }}</button>
         </form>
       </div>

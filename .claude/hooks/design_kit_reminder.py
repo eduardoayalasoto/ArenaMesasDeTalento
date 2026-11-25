@@ -17,7 +17,8 @@ REMINDER = (
     "2) Busca primero en templates/components/ antes de inventar markup; nada de clases legadas ui-* ni de la escala arena-* en codigo nuevo.\n"
     "3) Menu = apps/core/navigation.py (nunca condiciones de menu en plantillas); permisos con request.user|can:'clave' (spec 005).\n"
     "4) Iconos solo con window.renderIcons(); sin style= inline, emojis ni confirm()/alert().\n"
-    "5) Si tocas navbar, layout o cards, invoca los skills daisyui y frontend-design; corre build_css.ps1 tras cambiar clases."
+    "5) CRUD: acciones de fila Ver/Editar/Eliminar = solo icono con tooltip, mismo tamano (components/_row_action.html, _confirm.html); crear = '+ Nuevo ...' (components/_create_button.html).\n"
+    "6) Si tocas navbar, layout o cards, invoca los skills daisyui y frontend-design; corre build_css.ps1 tras cambiar clases."
 )
 
 # Rutas (relativas a la raiz del repo) que disparan el recordatorio.

@@ -1,6 +1,7 @@
 """Registro del menú de arena-talento (docs/PLAN_MIGRACION_DISENO.md §3.3).
 
-El menú es DATOS: 4 categorías (Inicio · Arena Learn · Mesa de Talento · Administración) con
+El menú es DATOS: 6 categorías (Inicio · Arena Learn · Mesa de Talento · Organización · Modelo de evaluación ·
+Administración) con
 ítems declarativos. La visibilidad de cada ítem sale de la matriz de perfiles (spec 005) — nunca
 de condiciones por rol en la plantilla. `templates/_navbar.html` solo itera lo que arma
 `build_nav(request)`; `apps/core/tests/test_navigation.py` verifica que todo ítem apunte a una
@@ -163,24 +164,29 @@ NAV: tuple[NavCategory, ...] = (
                 group="Comité"),
         NavItem("Impacto Arena", "evaluations:arena_impact", "star", ("arena_impact.edit", P), group="Comité"),
     )),
+    NavCategory("org", "Organización", "building-2", (
+        NavItem("Áreas", "catalog:department_admin", "map", ("departments.manage", P)),
+        NavItem("Posiciones", "catalog:area_admin", "briefcase", ("areas.manage", P)),
+        NavItem("Niveles", "catalog:level_admin", "layers-3", ("levels.manage", P)),
+        NavItem("Posición × nivel", "catalog:position_admin", "grid-3x3", ("catalog.positions.manage", P)),
+        NavItem("Ponderación de pilares", "catalog:weight_admin", "scale", ("weights.manage", P)),
+    )),
+    NavCategory("model", "Modelo de evaluación", "clipboard-check", (
+        NavItem("Cuestionarios", "questionnaires:admin_list", "list-checks", ("questionnaires.manage", P),
+                also_active=("questionnaires:template_edit",)),
+        NavItem("Categorías", "catalog:category_admin", "tags", ("catalog.categories.manage", P)),
+        NavItem("Bloques de competencia", "questionnaires:block_admin", "blocks", ("questionnaires.manage", P)),
+        NavItem("Escenarios", "catalog:scenario_admin", "layers", ("scenarios.manage", P),
+                also_active=("catalog:scenario_create", "catalog:scenario_edit")),
+        NavItem("Periodos", "catalog:period_admin", "calendar", ("periods.manage", P),
+                also_active=("catalog:period_create", "catalog:period_edit")),
+    )),
     NavCategory("admin", "Administración", "settings", (
         NavItem("Usuarios", "accounts:user_admin", "id-card", ("users.manage", P), also_active=("accounts:user_create",)),
         NavItem("Perfiles y permisos", "access:profile_list", "shield", ("access.manage", P),
                 also_active=("access:profile_matrix", "access:effective_access")),
         NavItem("Proyectos", "catalog:project_admin", "folder", ("projects.edit", P),
                 also_active=("catalog:project_create", "catalog:project_edit")),
-        NavItem("Periodos", "catalog:period_admin", "calendar", ("periods.manage", P),
-                also_active=("catalog:period_create", "catalog:period_edit")),
-        NavItem("Áreas", "catalog:department_admin", "map", ("departments.manage", P)),
-        NavItem("Posiciones", "catalog:area_admin", "briefcase", ("areas.manage", P)),
-        NavItem("Niveles", "catalog:level_admin", "layers-3", ("levels.manage", P)),
-        NavItem("Escenarios", "catalog:scenario_admin", "layers", ("scenarios.manage", P),
-                also_active=("catalog:scenario_create", "catalog:scenario_edit")),
-        NavItem("Posición × nivel", "catalog:position_admin", "grid-3x3", ("catalog.positions.manage", P)),
-        NavItem("Ponderación de pilares", "catalog:weight_admin", "scale", ("weights.manage", P)),
-        NavItem("Categorías", "catalog:category_admin", "tags", ("catalog.categories.manage", P)),
-        NavItem("Cuestionarios", "questionnaires:admin_list", "list-checks", ("questionnaires.manage", P),
-                also_active=("questionnaires:template_edit",)),
     )),
 )
 

@@ -6,6 +6,8 @@ Cada fila de la hoja «01 · Matriz por Puesto» es una competencia de un puesto
   - **Bloque del catálogo** y **skills** → catálogo de bloques; los skills los hereda la pregunta.
   - **Nivel objetivo** (N1–N4) → ponderación automática; lo que pesa 0 queda como «no pondera».
 
+Las categorías son SOLO las familias de la matriz + «General» (`consolidate_categories`).
+
 Por cada puesto se crea una versión nueva del cuestionario (la anterior se archiva al publicar), con
 ponderaciones enteras que suman 100 (la última absorbe la diferencia).
 """
@@ -36,7 +38,6 @@ POSITIONS = {
     "Consultor Sr": ("CONSUL", "SNR"),
     "Gerente": ("GERENTE", None),
 }
-LEGACY_CATEGORY_CODES = ("delivery_cliente", "desarrollo_producto", "herramientas_gestion", "actitud_persona")
 
 
 def read_matrix(path) -> list[dict]:
@@ -134,8 +135,54 @@ def load(rows: list[dict]) -> list[dict]:
             "max_deviation": _max_deviation(template, puesto_rows),
         })
 
-    Category.objects.filter(code__in=LEGACY_CATEGORY_CODES).update(is_active=False)
+    consolidate_categories(rows)
     return report
+
+
+@transaction.atomic
+def consolidate_categories(rows: list[dict]) -> dict:
+    """Deja SOLO las 4 familias de la matriz + «General» como categorías y reclasifica las preguntas.
+
+    Cada pregunta de una categoría sobrante pasa a la familia que la matriz le da a su competencia (por
+    título); si la matriz no la conoce, a «General». La ponderación que la categoría sobrante tenía en
+    cada cuestionario se reparte entre las categorías destino en proporción a sus preguntas (Σ = 100.0).
+    Devuelve el resumen: {"moved": {origen: {destino: n}}, "deleted": [claves]}.
+    """
+    from apps.questionnaires.models import Category, Question, TemplateCategory
+
+    family_of = {r["competency"]: r["family"] for r in rows}
+    keep = {code for _name, code, _pos in FAMILIES} | {Category.GENERAL_CODE}
+    by_name = {c.name: c for c in Category.objects.filter(code__in=keep)}
+    general = Category.objects.get(code=Category.GENERAL_CODE)
+    summary = {"moved": {}, "deleted": []}
+
+    for extra in Category.objects.exclude(code__in=keep):
+        moved = summary["moved"].setdefault(extra.name, {})
+        shares = {}  # plantilla -> {categoría destino: n preguntas}
+        for question in extra.questions.select_related("section"):
+            target = by_name.get(family_of.get(question.title), general)
+            Question.objects.filter(pk=question.pk).update(category=target)
+            moved[target.name] = moved.get(target.name, 0) + 1
+            per_template = shares.setdefault(question.section.template_id, {})
+            per_template[target] = per_template.get(target, 0) + 1
+        for link in extra.template_links.all():
+            targets = shares.get(link.template_id, {})
+            total = sum(targets.values())
+            if total:
+                items = list(targets.items())
+                allocated = Decimal(0)
+                for i, (target, n) in enumerate(items):
+                    part = (link.weight_pct - allocated) if i == len(items) - 1 else (link.weight_pct * n / total).quantize(Decimal("0.1"))
+                    allocated += part
+                    row, created = TemplateCategory.objects.get_or_create(
+                        template_id=link.template_id, category=target, defaults={"weight_pct": part})
+                    if not created:
+                        row.weight_pct += part
+                        row.save(update_fields=["weight_pct"])
+            link.delete()
+        summary["deleted"].append(extra.code)
+        extra.delete()
+    return summary
 
 
 def _max_deviation(template, puesto_rows) -> float:

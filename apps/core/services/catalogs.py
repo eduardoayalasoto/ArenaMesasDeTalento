@@ -116,3 +116,105 @@ def delete_category(category):
     if category.code == category.GENERAL_CODE:
         raise ValidationError("La categoría «General» es la base de los cuestionarios y no se borra.")
     delete_if_unused(category, f"la categoría «{category.name}»")
+
+
+# --- Bloques del catálogo de competencias ---------------------------------------
+
+def _skill_names(text: str) -> list[str]:
+    """Skills de un texto «uno por línea» (o separados por «·»), sin vacíos ni repetidos, en orden."""
+    names = []
+    for line in (text or "").replace("·", "\n").splitlines():
+        name = " ".join(line.split())[:160]
+        if name and name not in names:
+            names.append(name)
+    return names
+
+
+@transaction.atomic
+def save_block(*, pk, name, order, is_active, skills_text):
+    """Crea o edita un bloque y deja sus skills EXACTAMENTE como el texto (el orden de las líneas es el orden)."""
+    from django.utils.text import slugify
+
+    from apps.questionnaires.models import BlockSkill, CompetencyBlock
+
+    name = name.strip()
+    if not name:
+        raise ValidationError("El nombre del bloque es obligatorio.")
+    if CompetencyBlock.objects.filter(name__iexact=name).exclude(pk=pk).exists():
+        raise ValidationError(f"Ya existe un bloque llamado «{name}».")
+    if pk:
+        block = CompetencyBlock.objects.get(pk=pk)
+        block.name, block.order, block.is_active = name, order, is_active
+        block.save(update_fields=["name", "order", "is_active"])
+    else:
+        base, code, n = (slugify(name) or "bloque")[:56], None, 2
+        code = base
+        while CompetencyBlock.objects.filter(code=code).exists():
+            code, n = f"{base}-{n}", n + 1
+        block = CompetencyBlock.objects.create(code=code, name=name, order=order, is_active=is_active)
+    names = _skill_names(skills_text)
+    block.skills.exclude(name__in=names).delete()
+    for position, skill in enumerate(names, 1):
+        BlockSkill.objects.update_or_create(block=block, name=skill, defaults={"order": position})
+    return block
+
+
+def delete_block(block):
+    """Un bloque solo se borra si ninguna pregunta lo usa (si no, se desactiva). Sus skills se van con él."""
+    n = block.questions.count()
+    if n:
+        raise ValidationError(
+            f"No se puede borrar el bloque «{block.name}»: lo usan {n} pregunta{'s' if n != 1 else ''}. Desactívalo en su lugar."
+        )
+    block.delete()
+
+
+# --- Bloques del catálogo de competencias ---------------------------------------
+
+def _skill_names(text: str) -> list[str]:
+    """Skills de un texto «uno por línea» (o separados por «·»), sin vacíos ni repetidos, en orden."""
+    names = []
+    for line in (text or "").replace("·", "\n").splitlines():
+        name = " ".join(line.split())[:160]
+        if name and name not in names:
+            names.append(name)
+    return names
+
+
+@transaction.atomic
+def save_block(*, pk, name, order, is_active, skills_text):
+    """Crea o edita un bloque y deja sus skills EXACTAMENTE como el texto (el orden de las líneas es el orden)."""
+    from django.utils.text import slugify
+
+    from apps.questionnaires.models import BlockSkill, CompetencyBlock
+
+    name = name.strip()
+    if not name:
+        raise ValidationError("El nombre del bloque es obligatorio.")
+    if CompetencyBlock.objects.filter(name__iexact=name).exclude(pk=pk).exists():
+        raise ValidationError(f"Ya existe un bloque llamado «{name}».")
+    if pk:
+        block = CompetencyBlock.objects.get(pk=pk)
+        block.name, block.order, block.is_active = name, order, is_active
+        block.save(update_fields=["name", "order", "is_active"])
+    else:
+        base = (slugify(name) or "bloque")[:56]
+        code, n = base, 2
+        while CompetencyBlock.objects.filter(code=code).exists():
+            code, n = f"{base}-{n}", n + 1
+        block = CompetencyBlock.objects.create(code=code, name=name, order=order, is_active=is_active)
+    names = _skill_names(skills_text)
+    block.skills.exclude(name__in=names).delete()
+    for position, skill in enumerate(names, 1):
+        BlockSkill.objects.update_or_create(block=block, name=skill, defaults={"order": position})
+    return block
+
+
+def delete_block(block):
+    """Un bloque solo se borra si ninguna pregunta lo usa (si no, se desactiva). Sus skills se van con él."""
+    n = block.questions.count()
+    if n:
+        raise ValidationError(
+            f"No se puede borrar el bloque «{block.name}»: lo usan {n} pregunta{'s' if n != 1 else ''}. Desactívalo en su lugar."
+        )
+    block.delete()

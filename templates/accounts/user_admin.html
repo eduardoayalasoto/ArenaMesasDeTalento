@@ -5,11 +5,8 @@
       <h2 class="text-xl font-semibold text-base-content">Usuarios</h2>
       <p class="text-base-content/70">Busca, revisa y administra a cada colaborador: área, nivel, rol, perfil, Lead directo y acceso.</p>
     </div>
-    <button type="button" class="btn btn-sm btn-primary"
-            hx-get="{% url 'accounts:user_create' %}" hx-target="#user-drawer-body" hx-swap="innerHTML"
-            hx-on::before-request="window.openUserDrawer()">
-      <i data-lucide="user-plus" class="w-4 h-4" aria-hidden="true"></i> Nuevo usuario
-    </button>
+    {% url 'accounts:user_create' as create_url %}
+    {% include "components/_create_button.html" with label="Nuevo usuario" hx_get=create_url hx_target="#user-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openUserDrawer()"' %}
   </div>
   {% include "partials/info_panel.html" with title="Por qué importa" text="<p>El <strong>área</strong> y el <strong>nivel</strong> determinan qué cuestionario de Ownership responde cada persona; sin ellos no puede iniciar su evaluación.</p><p>El <strong>Lead directo</strong> es quien aprueba primero sus solicitudes de curso en Arena Learn (si está vacío, aprueba cualquier Lead de su área). El <strong>perfil</strong> define qué puede ver y hacer. Todo cambio queda en la bitácora de la persona.</p><p>Para reiniciar una evaluación, ábrela desde su evaluación individual: una persona puede tener varias en un mismo periodo.</p>" %}
 

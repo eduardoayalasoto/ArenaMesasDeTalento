@@ -84,14 +84,16 @@ Además, Talento debe tener un **menú escalable**: agrupado por intención, der
 **Sin sidebar.** Se trae el **navbar superior completo de arena-crm** (`templates/_navbar.html`): barra `navbar bg-neutral` (navy `#242D51`), botón hamburguesa con `dropdown` → `menu` de **categorías plegables tipo acordeón** (una abierta a la vez), campana de pendientes cargada con htmx y menú de usuario (avatar, nombre/correo, toggle de modo oscuro, Mi perfil, Cerrar sesión). Se adapta así:
 
 - **Marca**: lockup **«arenatalento»** igual al de arena-crm (`components/_brand_mark.html`): ícono de Arena + «arena» en `#EAEAEE` + **«talento» en degradado naranja** (p. ej. `#FFB45A → #F2711C`), Quicksand 700. Sustituye el GIF actual + «Mesa de Talento».
-- **4 categorías** (en este orden):
+- **6 categorías** (en este orden; desde 2026-11-25 el catálogo se separó de Administración):
 
 | Categoría | Ítems |
 |---|---|
 | **Inicio** | Mi tablero (acceso directo) |
 | **Arena Learn** | Mis cursos · **Aprobar cursos** (contador) · Catálogo · Personas · Seguimiento |
 | **Mesa de Talento** | *Mi evaluación*: Mis evaluaciones · Mi retroalimentación — *Por validar*: Validar Ownership (contador) · Entrega de Valor (contador) · Validar Entrega de Valor — *Comité*: Mi área · Mesa de Talento · Escenario Actual · Avance del periodo · Impacto Arena |
-| **Administración** | Usuarios · Perfiles y permisos · Proyectos · Periodos · Áreas · Escenarios · Cuestionarios |
+| **Organización** | Áreas · Posiciones · Niveles · Posición × nivel · Ponderación de pilares |
+| **Modelo de evaluación** | Cuestionarios · Categorías · Escenarios · Periodos |
+| **Administración** | Usuarios · Perfiles y permisos · Proyectos |
 
 - **Lo que se corrige del navbar del CRM** al portarlo:
   - **Menú como datos**: registro en Python (`apps/core/navigation.py`) con `label, url_name, icon, category, subgroup, permission_key(s), also_active, badge_fn`; la plantilla solo itera. Visibilidad **solo** por la matriz de permisos (spec 005); una categoría sin ítems visibles no se pinta.

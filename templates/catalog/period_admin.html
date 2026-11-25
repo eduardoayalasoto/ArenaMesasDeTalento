@@ -5,7 +5,8 @@
       <h2 class="text-xl font-semibold text-base-content">Periodos</h2>
       <p class="text-base-content/70">Abre o cierra periodos de evaluación. Al cerrar, la captura queda en solo lectura.</p>
     </div>
-    <a href="{% url 'catalog:period_create' %}" class="btn btn-sm btn-primary">{% include "partials/icon.html" with name="calendar" cls="w-4 h-4" %} Nuevo periodo</a>
+    {% url 'catalog:period_create' as create_url %}
+    {% include "components/_create_button.html" with label="Nuevo periodo" href=create_url %}
   </div>
 
   <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-200">
@@ -17,29 +18,16 @@
         </div>
         <div class="flex items-center gap-2">
           {% include "partials/status_badge.html" with status=p.status label=p.get_status_display %}
-          <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="period" value="{{ p.pk }}">
-            {% if p.status == 'ABIERTO' %}
-              <input type="hidden" name="action" value="close">
-              <button type="submit" class="btn btn-sm btn-soft btn-primary" onclick="return confirm('{{ close_confirm_message|escapejs }}');">Cerrar</button>
-            {% else %}
-              <input type="hidden" name="action" value="open">
-              <button type="submit" class="btn btn-sm btn-soft btn-primary" onclick="return confirm('¿Abrir el periodo «{{ p.name|escapejs }}»?');">Abrir</button>
-            {% endif %}
-          </form>
-          <a href="{% url 'catalog:period_edit' pk=p.pk %}" class="btn btn-sm btn-soft btn-primary">Editar</a>
-          <span class="relative group/dtip">
-            <form method="post" action="{% url 'catalog:period_delete' pk=p.pk %}" class="inline">
-              {% csrf_token %}
-              <button type="submit"
-                class="p-1.5 rounded-lg text-error hover:bg-error/10 border border-transparent hover:border-error/25 transition cursor-pointer"
-                onclick="return confirm('¿Eliminar el periodo «{{ p.name }}»? Si tiene evaluaciones no se podrá borrar.')">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </form>
-            <span class="pointer-events-none absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-neutral px-2 py-1 text-base text-white opacity-0 transition-opacity duration-150 group-hover/dtip:opacity-100 z-20">Eliminar periodo</span>
-          </span>
+          {% url 'catalog:period_admin' as post_url %}
+          {% if p.status == 'ABIERTO' %}
+            {% include "components/_confirm.html" with confirm_id=p.close_confirm_id title="Cerrar periodo" message=close_confirm_message confirm_url=post_url confirm_label="Cerrar periodo" trigger_icon="lock" trigger_aria="Cerrar periodo" confirm_fields=p.close_fields %}
+          {% else %}
+            {% include "components/_confirm.html" with confirm_id=p.open_confirm_id title="Abrir periodo" message=p.open_message confirm_url=post_url confirm_label="Abrir periodo" trigger_icon="lock-open" trigger_aria="Abrir periodo" confirm_fields=p.open_fields %}
+          {% endif %}
+          {% url 'catalog:period_edit' pk=p.pk as edit_url %}
+          {% include "components/_row_action.html" with kind="edit" label="Ver y editar" href=edit_url %}
+          {% url 'catalog:period_delete' pk=p.pk as delete_url %}
+          {% include "components/_confirm.html" with confirm_id=p.delete_confirm_id title="Eliminar periodo" message=p.delete_message confirm_url=delete_url trigger_aria="Eliminar periodo" %}
         </div>
       </div>
     {% empty %}

@@ -26,11 +26,8 @@
       </td>
       <td class="px-4 py-2.5">
         <div class="flex items-center justify-end gap-1 whitespace-nowrap">
-          <button type="button" class="btn btn-sm btn-soft btn-primary"
-                  hx-get="{% url 'catalog:area_edit' a.pk %}" hx-target="#org-drawer-body" hx-swap="innerHTML"
-                  hx-on::before-request="window.openOrgDrawer()">
-            <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
-          </button>
+          {% url 'catalog:area_edit' a.pk as edit_url %}
+          {% include "components/_row_action.html" with kind="edit" label="Ver y editar" hx_get=edit_url hx_target="#org-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openOrgDrawer()"' %}
           {% url 'catalog:area_delete' a.pk as delete_url %}
           {% include "components/_confirm.html" with confirm_id=a.delete_confirm_id title="Eliminar posición" message=a.delete_message confirm_url=delete_url trigger_aria="Eliminar posición" %}
         </div>

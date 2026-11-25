@@ -14,8 +14,7 @@
           <button type="submit" class="btn btn-sm btn-outline">Completar {{ missing }} posición{{ missing|pluralize:"es" }} faltante{{ missing|pluralize }}</button>
         </form>
       {% endif %}
-      <button type="button" class="btn btn-sm btn-primary" data-mode="create"
-              @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Nueva combinación</button>
+      {% include "components/_create_button.html" with label="Nueva combinación" extra_attrs="data-mode=&quot;create&quot; @click=&quot;$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')&quot;" %}
     </div>
   </div>
 
@@ -28,20 +27,19 @@
       <thead><tr><th>Posición</th><th>Nombre visible</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
       <tbody>
         {% for r in rows %}
-          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
+          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())"
+              data-id="{{ r.position.pk }}" data-area="{{ r.position.area_id }}" data-level="{{ r.position.level_id }}" data-name="{{ r.position.name }}" data-active="{{ r.position.is_active|yesno:'1,' }}">
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
             <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
             <td class="text-center tabular-nums">{{ r.people }}</td>
             <td>{% if r.own_weights %}<span class="badge badge-soft badge-primary">Propia</span>{% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}</td>
             <td>{% if r.position.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>
-            <td class="text-right whitespace-nowrap">
-              <button type="button" class="btn btn-sm btn-ghost" data-mode="view" data-id="{{ r.position.pk }}" data-area="{{ r.position.area_id }}" data-level="{{ r.position.level_id }}" data-name="{{ r.position.name }}" data-active="{{ r.position.is_active|yesno:'1,' }}"
-                      @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Ver</button>
-              <button type="button" class="btn btn-sm btn-soft btn-primary" data-mode="edit" data-id="{{ r.position.pk }}" data-area="{{ r.position.area_id }}" data-level="{{ r.position.level_id }}" data-name="{{ r.position.name }}" data-active="{{ r.position.is_active|yesno:'1,' }}"
-                      @click="$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')">Editar</button>
-              {% include "components/_confirm.html" with confirm_id=r.delete_confirm_id title="Borrar posición" message=r.delete_confirm_message confirm_url=r.delete_url %}
-            </td>
+            <td class="text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1">
+              {% include "components/_row_action.html" with kind="view" extra_attrs="@click=&quot;$dispatch('edit-position', {...$el.closest('tr').dataset, mode: 'view'}); $dispatch('open-position-drawer')&quot;" %}
+              {% include "components/_row_action.html" with kind="edit" extra_attrs="@click=&quot;$dispatch('edit-position', {...$el.closest('tr').dataset, mode: 'edit'}); $dispatch('open-position-drawer')&quot;" %}
+              {% include "components/_confirm.html" with confirm_id=r.delete_confirm_id title="Eliminar posición" message=r.delete_confirm_message confirm_url=r.delete_url %}
+            </div></td>
           </tr>
         {% empty %}
           <tr><td colspan="7" class="text-base-content/75">No hay posiciones. Crea la primera o completa las faltantes.</td></tr>

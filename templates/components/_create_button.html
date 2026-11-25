@@ -1,0 +1,12 @@
+{% comment %}
+Botón «Nuevo …» de una pantalla de CRUD -- SIEMPRE `+` (plus) y texto «Nuevo/Nueva …», chico, primario
+(DESIGN_SYSTEM.md § 6). Para que se note que va a crear un registro. No uses otros íconos ni verbos
+("Crear", "Agregar", "Alta") en el botón de crear.
+
+Uso: {% include "components/_create_button.html" with label="Nueva área" href=create_url %}
+     {% include "components/_create_button.html" with label="Nuevo usuario" hx_get=url hx_target="#d" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openUserDrawer()"' %}
+     {% include "components/_create_button.html" with label="Nueva categoría" extra_attrs='data-mode="create" @click="$dispatch(...)"' %}
+
+Props: label (obligatorio: empieza con «Nuevo»/«Nueva»), href | hx_get/hx_target/hx_swap | extra_attrs, type ("submit" en formularios).
+{% endcomment %}
+{% include "components/_button.html" with variant="primary" size="sm" label=label icon="plus" href=href hx_get=hx_get hx_target=hx_target hx_swap=hx_swap hx_post="" extra_attrs=extra_attrs type=type|default:"button" full_width=False %}

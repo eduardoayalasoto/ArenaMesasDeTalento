@@ -221,8 +221,9 @@ class FinalScoreResult:
     is_complete: bool
 
 
-def final_score(user, period, ownership, value_delivery, arena) -> FinalScoreResult:
-    """Promedio ponderado de los 3 pilares según la ponderación del nivel del usuario (RN-12/19)."""
+def final_score(user, period, ownership, value_delivery, arena, weights=None) -> FinalScoreResult:
+    """Promedio ponderado de los 3 pilares (RN-12/19). `weights` = (ownership, VD, arena) congeladas de un
+    periodo cerrado; sin ellas rige la ponderación vigente de la posición/nivel de la persona."""
     is_complete = None not in (ownership, value_delivery, arena)
 
     final = None
@@ -230,7 +231,7 @@ def final_score(user, period, ownership, value_delivery, arena) -> FinalScoreRes
     if is_complete:
         from apps.core.services import pillar_weights
 
-        w_own, w_vd, w_arena = pillar_weights.effective_weights(user)  # por posición; si no, por nivel
+        w_own, w_vd, w_arena = weights or pillar_weights.effective_weights(user)  # por posición; si no, por nivel
         final = (
             Decimal(str(ownership)) * w_own
             + Decimal(str(value_delivery)) * w_vd

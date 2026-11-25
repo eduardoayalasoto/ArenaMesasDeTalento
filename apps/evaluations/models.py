@@ -238,6 +238,11 @@ class FinalScore(models.Model):
     final_score = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
     band = models.CharField("banda", max_length=20, blank=True)
     is_complete = models.BooleanField("completa", default=False)
+    # Ponderación de pilares con la que se calculó. Un periodo CERRADO conserva la suya aunque el
+    # catálogo de ponderaciones cambie después (el catálogo siempre es editable).
+    w_ownership = models.DecimalField("ponderación Ownership aplicada", max_digits=4, decimal_places=3, null=True, blank=True)
+    w_value_delivery = models.DecimalField("ponderación Entrega de Valor aplicada", max_digits=4, decimal_places=3, null=True, blank=True)
+    w_arena_impact = models.DecimalField("ponderación Impacto Arena aplicada", max_digits=4, decimal_places=3, null=True, blank=True)
     updated_at = models.DateTimeField("actualizada el", auto_now=True)
     history = HistoricalRecords()
 

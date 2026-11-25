@@ -250,9 +250,17 @@ def period_admin(request):
         lines.append("Esta acción no se puede deshacer desde aquí.")
         close_confirm_message = "\n".join(lines)
 
+    periods = list(EvaluationPeriod.objects.all())
+    for p in periods:  # datos de los diálogos de confirmación (components/_confirm.html)
+        p.close_confirm_id, p.open_confirm_id, p.delete_confirm_id = (
+            f"close-period-{p.pk}", f"open-period-{p.pk}", f"delete-period-{p.pk}")
+        p.close_fields = {"period": p.pk, "action": "close"}
+        p.open_fields = {"period": p.pk, "action": "open"}
+        p.open_message = f"¿Abrir el periodo «{p.name}»?"
+        p.delete_message = f"¿Eliminar el periodo «{p.name}»? Si tiene evaluaciones no se podrá borrar."
     return render(request, "catalog/period_admin.html", {
         "page_title": "Periodos",
-        "periods": EvaluationPeriod.objects.all(),
+        "periods": periods,
         "close_confirm_message": close_confirm_message,
     })
 
@@ -318,9 +326,14 @@ def scenario_admin(request):
                 messages.error(request, "No se puede eliminar: hay notas que lo usan.")
         return redirect("catalog:scenario_admin")
 
+    options = list(ScenarioOption.objects.all())
+    for opt in options:  # diálogo de confirmación (components/_confirm.html)
+        opt.delete_confirm_id = f"delete-scenario-{opt.pk}"
+        opt.delete_fields = {"action": "delete", "pk": opt.pk}
+        opt.delete_message = f"¿Eliminar «{opt.name}»?"
     return render(request, "catalog/scenario_admin.html", {
         "page_title": "Escenarios",
-        "options": ScenarioOption.objects.all(),
+        "options": options,
     })
 
 

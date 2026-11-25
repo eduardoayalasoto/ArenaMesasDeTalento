@@ -26,13 +26,14 @@ Props:
   hx_post / hx_get / hx_target / hx_swap: atributos htmx opcionales
   extra_attrs: atributos HTML crudos adicionales, sin escapar (ver
     _button.html -- nunca contenido derivado de usuario final aquí)
+  cls: clases extra del botón (p. ej. "text-error" para eliminar)
 {% endcomment %}
 {% if href %}
 <span class="tooltip tooltip-left" data-tip="{{ label }}"><a
   href="{{ href }}"
   aria-label="{{ label }}"
   {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
-  class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %}"
+  class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %} {{ cls }}"
 >
   <i data-lucide="{{ icon }}" class="{% if size == 'lg' %}w-5 h-5{% else %}w-[18px] h-[18px]{% endif %}"></i>
 </a></span>
@@ -46,7 +47,7 @@ Props:
   {% if hx_swap %}hx-swap="{{ hx_swap }}"{% endif %}
   {% if hx_post or hx_get %}hx-indicator="closest button" hx-disabled-elt="this"{% endif %}
   {% if extra_attrs %}{{ extra_attrs|safe }}{% endif %}
-  class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %}"
+  class="btn btn-circle {% if size == 'lg' %}btn-lg{% else %}btn-sm{% endif %} {% if variant == 'primary' %}btn-primary{% elif variant != 'filled' %}btn-ghost{% endif %} {{ cls }}"
 >
   <i data-lucide="{{ icon }}" class="{% if size == 'lg' %}w-5 h-5{% else %}w-[18px] h-[18px]{% endif %}"></i>
 </button></span>

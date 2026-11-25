@@ -75,12 +75,12 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
     <form method="post" class="mt-4 flex flex-wrap items-end gap-2">
       {% csrf_token %}<input type="hidden" name="action" value="add_template_category">
       <div>
-        <label class="fieldset-legend" for="add-category">Agregar categoría (entra con ponderación 0%)</label>
+        <label class="fieldset-legend" for="add-category">Incluir categoría (entra con ponderación 0%)</label>
         <select id="add-category" name="category" class="select">
           {% for c in available_categories %}<option value="{{ c.pk }}">{{ c.name }}</option>{% endfor %}
         </select>
       </div>
-      <button type="submit" class="btn btn-outline btn-primary">Agregar</button>
+      {% include "components/_button.html" with variant="secondary" size="sm" label="Incluir categoría" icon="plus" type="submit" %}
     </form>
   {% endif %}
 
@@ -137,7 +137,7 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
                 <button type="submit" name="action" value="clear_question_weights" class="btn btn-outline btn-sm">Volver a partes iguales</button>
               {% endif %}
             </div>
-            <p class="label mt-2">Toda pregunta de la categoría debe ponderar más de 0% para participar en el score.</p>
+            <p class="whitespace-normal text-base text-base-content/70 mt-2">Toda pregunta de la categoría debe ponderar más de 0% para participar en el score.</p>
           {% endif %}
         </form>
       </div>

@@ -38,7 +38,7 @@ def test_falls_back_to_level_then_uses_position_weights(setup):
 
 
 @pytest.mark.django_db
-def test_weights_must_sum_100_and_lock_after_final_scores(setup):
+def test_weights_must_sum_100_and_stay_editable_with_final_scores(setup):
     from apps.evaluations.models import FinalScore
 
     position, user = setup
@@ -50,11 +50,30 @@ def test_weights_must_sum_100_and_lock_after_final_scores(setup):
 
     period = EvaluationPeriod.objects.create(name="2026", start_date="2026-01-01", end_date="2026-12-31")
     FinalScore.objects.create(user=user, period=period)
-    assert pillar_weights.is_locked(position)
-    with pytest.raises(ValidationError, match="ya tiene calificaciones"):
-        pillar_weights.save_weights(position, "60", "20", "20")
-    with pytest.raises(ValidationError):
-        pillar_weights.reset_to_level(position)
+    # El catálogo siempre se puede editar: la historia vive en el FinalScore de cada periodo cerrado.
+    pillar_weights.save_weights(position, "60", "20", "20")
+    pillar_weights.reset_to_level(position)
+    assert not PositionPillarWeight.objects.exists()
+
+
+@pytest.mark.django_db
+def test_closed_period_keeps_the_weights_it_was_calculated_with(setup):
+    from decimal import Decimal
+
+    from apps.core.services import final_flow
+    from apps.evaluations.models import ArenaImpactScore, FinalScore
+
+    position, user = setup
+    pillar_weights.save_weights(position, "50", "30", "20")
+    period = EvaluationPeriod.objects.create(
+        name="2026", start_date="2026-01-01", end_date="2026-12-31", status=EvaluationPeriod.Status.CERRADO)
+    ArenaImpactScore.objects.create(user=user, period=period, score=Decimal("3.00"))
+    # Congela la ponderación vigente en una calificación ya calculada del periodo cerrado
+    FinalScore.objects.create(user=user, period=period, w_ownership=Decimal("0.500"),
+                              w_value_delivery=Decimal("0.300"), w_arena_impact=Decimal("0.200"))
+    pillar_weights.save_weights(position, "10", "10", "80")  # cambio posterior del catálogo
+    fs = final_flow.recompute_final_score(user, period)
+    assert (fs.w_ownership, fs.w_value_delivery, fs.w_arena_impact) == (Decimal("0.500"), Decimal("0.300"), Decimal("0.200"))
 
 
 @pytest.mark.django_db

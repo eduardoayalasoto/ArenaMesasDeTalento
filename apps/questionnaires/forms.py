@@ -264,3 +264,13 @@ class WeightsForm(forms.Form):
             raise ValidationError(error)
         self.weights = values
         return cleaned
+
+
+class BlockForm(forms.Form):
+    """Alta y edición de un bloque del catálogo de competencias (con sus skills, uno por línea)."""
+
+    block = forms.IntegerField(widget=forms.HiddenInput, required=False)
+    name = forms.CharField(label="Nombre", max_length=120)
+    order = forms.IntegerField(label="Orden", min_value=0, max_value=999, initial=1)
+    is_active = forms.BooleanField(label="Activo", required=False)
+    skills = forms.CharField(label="Skills", required=False, widget=forms.Textarea)

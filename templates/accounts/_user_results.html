@@ -59,11 +59,8 @@
             </td>
             <td class="px-4 py-2.5">
               <div class="flex items-center justify-end gap-1 whitespace-nowrap">
-                <button type="button" class="btn btn-sm btn-soft btn-primary"
-                        hx-get="{% url 'accounts:user_edit' u.pk %}" hx-target="#user-drawer-body" hx-swap="innerHTML"
-                        hx-on::before-request="window.openUserDrawer()">
-                  <i data-lucide="pencil" class="w-4 h-4" aria-hidden="true"></i> Ver y editar
-                </button>
+                {% url 'accounts:user_edit' u.pk as edit_url %}
+                {% include "components/_row_action.html" with kind="edit" label="Ver y editar" hx_get=edit_url hx_target="#user-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openUserDrawer()"' %}
                 {% if can_reset_password %}
                   {% url 'accounts:user_reset_password' u.pk as reset_url %}
                   {% include "components/_confirm.html" with confirm_id=u.reset_confirm_id title="Restablecer contraseña" message=u.reset_message confirm_url=reset_url trigger_icon="key-round" trigger_aria="Restablecer contraseña" confirm_label="Restablecer" %}

@@ -19,7 +19,7 @@
       <label class="fieldset-legend" for="{{ form.description.id_for_label }}">Descripción <span class="text-base-content/50 font-normal">(opcional)</span></label>
       {{ form.description }}
     </div>
-    <button type="submit" class="btn btn-primary"><i data-lucide="plus" class="w-4 h-4"></i> Crear perfil</button>
+    {% include "components/_create_button.html" with label="Nuevo perfil" type="submit" %}
   </form>
 
   <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-200">

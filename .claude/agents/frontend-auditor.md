@@ -57,6 +57,10 @@ siempre que un cambio de UI nuevo o tocado:
   a la clase daisyUI correcta (`primary`→`btn-primary`, `secondary`→`btn-outline btn-primary`,
   `success`→`btn-success`, `danger`→`btn-error`, `ghost`→`btn-ghost` — ver `DESIGN_SYSTEM.md`
   § 3). Iconos de solo-ícono usan `_icon_button.html`, nunca uno armado a mano.
+- **Botones de CRUD (NO CUMPLE si falla):** en cada fila de administración Ver (`eye`) / Editar (`pencil`) /
+  Eliminar (`trash-2` rojo) son solo ícono, del mismo tamaño, con tooltip (`components/_row_action.html`
+  y `_confirm.html`); ningún botón de fila lleva texto. Todo botón que crea es «+ Nuevo/Nueva …» con
+  `components/_create_button.html`. Sin `confirm()` nativo.
 - Todo campo de un `Form` nuevo usa `components/_form_field.html` (patrón
   `fieldset`/`fieldset-legend`/`label` de daisyUI) en vez de `<label>`/`<input>` sueltos.
 - El widget de cada campo es un widget **nativo** de Django estilizado vía

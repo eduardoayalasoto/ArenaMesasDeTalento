@@ -1,0 +1,23 @@
+{# Drawer de Bloques de competencia: crear / ver / editar. Evento `edit-block`. #}
+<div x-data="{ mode: 'create', id: '', name: '', order: 1, active: true, skills: '' }"
+     @edit-block.window="const d = $event.detail; mode = d.mode; id = d.id || ''; name = d.name || ''; order = d.order || 1; skills = d.skills || ''; active = mode === 'create' ? true : !!d.active">
+  <p class="text-base font-medium text-base-content mb-4" x-text="mode === 'create' ? 'Nuevo bloque' : (mode === 'view' ? 'Detalle del bloque' : 'Editar bloque')"></p>
+  <form method="post" action="{% url 'questionnaires:block_admin' %}">
+    {% csrf_token %}
+    <input type="hidden" name="block" :value="id">
+    <fieldset :disabled="mode === 'view'" class="grid gap-4 md:grid-cols-2">
+      <div class="md:col-span-2"><label class="fieldset-legend" for="blk-name">Nombre</label>
+        <input id="blk-name" name="name" maxlength="120" required class="input w-full" x-model="name" placeholder="Ej. Disciplina de WoW y gestión"></div>
+      <div><label class="fieldset-legend" for="blk-order">Orden</label>
+        <input id="blk-order" name="order" type="number" min="0" max="999" class="input w-full" x-model="order"></div>
+      <label class="flex items-center gap-2 text-base self-end pb-2">
+        <input type="checkbox" name="is_active" class="checkbox checkbox-sm" x-model="active"> Activo
+      </label>
+      <div class="md:col-span-2"><label class="fieldset-legend" for="blk-skills">Skills (uno por línea, en el orden en que se muestran)</label>
+        <textarea id="blk-skills" name="skills" rows="8" class="textarea w-full" x-model="skills"></textarea></div>
+    </fieldset>
+    <div class="mt-6 flex gap-3" x-show="mode !== 'view'">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+</div>

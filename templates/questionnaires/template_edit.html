@@ -125,7 +125,7 @@
             <input type="number" name="value" min="1" max="4" placeholder="N/A" class="input w-24" aria-label="Valor de la nueva opción">
             <input type="text" name="label" maxlength="40" required class="input w-48" placeholder="Etiqueta" aria-label="Etiqueta de la nueva opción">
             <input type="text" name="description" class="input grow min-w-64" placeholder="Descriptor (opcional)" aria-label="Descriptor de la nueva opción">
-            <button type="submit" class="btn btn-sm btn-outline btn-primary">Agregar opción</button>
+            {% include "components/_create_button.html" with label="Nueva opción" type="submit" %}
           </form>
         {% endif %}
       </div>
@@ -157,14 +157,16 @@
   <section id="paso-3" class="mb-10 scroll-mt-20">
     {% include "questionnaires/_step_header.html" with n=step_questions|default:3 title="Secciones y preguntas" description="El contenido que responde el evaluador, agrupado por temas." done=question_count %}
     {% callout "neutral" title="Cómo se organiza" cls="mb-4" %}
-      Una <strong>sección</strong> agrupa preguntas de un mismo tema y se muestra como un bloque al contestar. Cada <strong>pregunta</strong> tiene título, descripción y, si la completas, criterio de aceptación, entregable y guía para el evaluador.{% if is_ownership %} En Ownership toda pregunta necesita una categoría.{% endif %} Usa las flechas para ordenar y el lápiz para editar.
+      Una <strong>sección</strong> agrupa preguntas de un mismo tema y se muestra como un bloque al contestar. Cada <strong>pregunta</strong> tiene título, descripción y, si la completas, criterio de aceptación, entregable y guía para el evaluador.{% if is_ownership %} En Ownership toda pregunta necesita una categoría.{% endif %} Arrastra el asa <i data-lucide="grip-vertical" class="inline w-4 h-4" aria-hidden="true"></i> para reordenar secciones y preguntas (también puedes pasar una pregunta a otra sección) o usa el lápiz para editar.
     {% endcallout %}
 
+    <div id="sections-root" data-reorder-url="{% url 'questionnaires:template_reorder' pk=template.pk %}" {% if editable %}data-dnd="1"{% endif %}>
     {% for section in sections %}
-      <div class="mb-6 bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden">
+      <div class="mb-6 bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden" data-section-id="{{ section.pk }}">
         <div class="flex flex-wrap items-center justify-between gap-2 px-5 py-3 bg-base-200/60 border-b border-base-300" x-data="{ rename: false }">
           <div class="flex items-center gap-3 min-w-0" x-show="!rename">
-            <span class="badge badge-primary badge-soft whitespace-nowrap">Sección {{ forloop.counter }}</span>
+            {% if editable %}<span class="tooltip tooltip-right" data-tip="Arrastra para reordenar la sección"><button type="button" class="btn btn-ghost btn-circle btn-sm cursor-grab" data-grip="section" aria-label="Arrastrar para reordenar la sección {{ section.title }}"><i data-lucide="grip-vertical" class="w-[18px] h-[18px]" aria-hidden="true"></i></button></span>{% endif %}
+            <span class="badge badge-primary badge-soft whitespace-nowrap" data-section-badge>Sección {{ forloop.counter }}</span>
             <h4 class="text-base font-semibold text-base-content truncate">{{ section.title }}</h4>
             <span class="text-sm text-base-content/60 whitespace-nowrap">{{ section.questions.all|length }} pregunta{{ section.questions.all|length|pluralize }}</span>
           </div>
@@ -193,13 +195,14 @@
           {% endif %}
         </div>
 
-        <div class="p-4 space-y-3">
+        <div class="p-4 space-y-3 min-h-16" data-qlist data-section-id="{{ section.pk }}">
           {% for q in section.questions.all %}
-            <div class="rounded-xl border border-base-300 border-l-4 border-l-primary/40 bg-base-100 p-4" x-data="{ edit: false }">
+            <div class="rounded-xl border border-base-300 border-l-4 border-l-primary/40 bg-base-100 p-4" x-data="{ edit: false }" data-question-id="{{ q.pk }}">
               <div x-show="!edit">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-start gap-3 min-w-0">
-                    <span class="grid place-items-center w-7 h-7 rounded-full bg-base-200 text-sm font-semibold text-base-content/80 shrink-0">{{ forloop.counter }}</span>
+                    {% if editable %}<span class="tooltip tooltip-right shrink-0" data-tip="Arrastra para reordenar o mover a otra sección"><button type="button" class="btn btn-ghost btn-circle btn-sm cursor-grab" data-grip="question" aria-label="Arrastrar para reordenar la pregunta {{ q.title }}"><i data-lucide="grip-vertical" class="w-[18px] h-[18px]" aria-hidden="true"></i></button></span>{% endif %}
+                    <span class="grid place-items-center w-7 h-7 rounded-full bg-base-200 text-sm font-semibold text-base-content/80 shrink-0" data-q-number>{{ forloop.counter }}</span>
                     <div class="min-w-0">
                       <p class="font-medium text-base-content">{{ q.title }}</p>
                       <div class="mt-1 flex flex-wrap items-center gap-1.5">
@@ -282,7 +285,7 @@
           {% if editable %}
           <form method="post" class="rounded-xl border border-dashed border-base-300 p-4">
             {% csrf_token %}<input type="hidden" name="action" value="add_question"><input type="hidden" name="section" value="{{ section.id }}">
-            <p class="font-medium text-base-content mb-2 inline-flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Agregar pregunta a esta sección</p>
+            <p class="font-medium text-base-content mb-2 inline-flex items-center gap-1.5"><i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i> Nueva pregunta en esta sección</p>
             <label class="fieldset-legend" for="add-title-{{ section.id }}">Título de la pregunta</label>
             <input id="add-title-{{ section.id }}" type="text" name="title" class="input w-full mb-2" placeholder="Ej. Habilidad de comunicación" maxlength="200" required>
             {% if is_ownership %}
@@ -310,8 +313,8 @@
             {% endif %}
             <label class="fieldset-legend" for="add-ac-{{ section.id }}">Criterio de aceptación (opcional)</label>
             <textarea id="add-ac-{{ section.id }}" name="acceptance_criteria" rows="2" class="textarea w-full"></textarea>
-            <p class="label mb-2">El resto de los campos del checklist se edita después, desde la pregunta.</p>
-            <button type="submit" class="btn btn-outline btn-primary">Agregar pregunta</button>
+            <p class="mt-2 text-base text-base-content/70">El resto de los campos del checklist se edita después, desde la pregunta.</p>
+            <div class="mt-3 flex justify-end">{% include "components/_create_button.html" with label="Nueva pregunta" type="submit" %}</div>
           </form>
           {% endif %}
         </div>
@@ -319,6 +322,7 @@
     {% empty %}
       {% callout "warning" cls="mb-6" %}Este cuestionario todavía no tiene secciones. Crea la primera abajo.{% endcallout %}
     {% endfor %}
+    </div>
 
     {% if editable %}
       <form method="post" class="rounded-2xl border border-dashed border-base-300 bg-base-100 p-4 flex flex-wrap items-end gap-3">
@@ -327,7 +331,7 @@
           <label class="fieldset-legend" for="new-section-title">Nueva sección</label>
           <input id="new-section-title" type="text" name="title" maxlength="160" required class="input w-72" placeholder="Ej. Delivery al cliente">
         </div>
-        <button type="submit" class="btn btn-outline btn-primary">Agregar sección</button>
+        {% include "components/_create_button.html" with label="Nueva sección" type="submit" %}
       </form>
     {% endif %}
   </section>
@@ -349,4 +353,8 @@
       {% callout "info" %}Esta versión ya está publicada. Para hacer cambios después de que alguien la conteste, crea una nueva versión.{% endcallout %}
     {% endif %}
   </section>
+{% endblock %}
+
+{% block extra_scripts %}
+  {% if editable %}<script src="{% static_v 'js/questionnaire_dnd.js' %}"></script>{% endif %}
 {% endblock %}

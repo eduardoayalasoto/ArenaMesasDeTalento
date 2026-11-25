@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div class="max-w-3xl">
+      <h2 class="text-xl font-semibold text-base-content">Bloques de competencia</h2>
+      <p class="text-base-content/75">
+        Catálogo de bloques con los skills que componen una competencia. Una pregunta puede referenciar un bloque y hereda
+        sus skills (se muestran en el cuestionario como referencia); el bloque no cambia la calificación.
+      </p>
+    </div>
+    <span data-order="{{ blocks|length|add:1 }}">
+      {% include "components/_create_button.html" with label="Nuevo bloque" extra_attrs="@click=&quot;$dispatch('edit-block', {mode: 'create', order: $el.closest('[data-order]').dataset.order}); $dispatch('open-block-drawer')&quot;" %}
+    </span>
+  </div>
+
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto">
+    <table class="table">
+      <thead><tr><th>Orden</th><th>Bloque</th><th>Skills</th><th class="text-center">Preguntas</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
+      <tbody>
+        {% for b in blocks %}
+          <tr data-id="{{ b.pk }}" data-name="{{ b.name }}" data-order="{{ b.order }}" data-active="{{ b.is_active|yesno:'1,' }}" data-skills="{{ b.skills_text }}">
+            <td class="tabular-nums">{{ b.order }}</td>
+            <td class="font-medium text-base-content">{{ b.name }}</td>
+            <td class="text-base-content/75">{% for s in b.skills.all %}<span class="badge badge-ghost mr-1 mb-1 h-auto whitespace-normal text-left">{{ s.name }}</span>{% empty %}—{% endfor %}</td>
+            <td class="text-center tabular-nums">{{ b.n_questions }}</td>
+            <td>{% if b.is_active %}<span class="badge badge-soft badge-success">Activo</span>{% else %}<span class="badge badge-soft">Inactivo</span>{% endif %}</td>
+            <td class="text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1">
+              {% include "components/_row_action.html" with kind="view" extra_attrs="@click=&quot;$dispatch('edit-block', {...$el.closest('tr').dataset, mode: 'view'}); $dispatch('open-block-drawer')&quot;" %}
+              {% include "components/_row_action.html" with kind="edit" extra_attrs="@click=&quot;$dispatch('edit-block', {...$el.closest('tr').dataset, mode: 'edit'}); $dispatch('open-block-drawer')&quot;" %}
+              {% include "components/_confirm.html" with confirm_id=b.delete_confirm_id title="Eliminar bloque" message=b.delete_message confirm_url=b.delete_url trigger_aria="Eliminar bloque" %}
+            </div></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-base-content/75">Aún no hay bloques.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include "components/_drawer.html" with id="block-drawer" title="Bloque de competencia" open_event="open-block-drawer" close_event="close-block-drawer" body_id="block-drawer-body" width_class="w-3/4 max-w-none" body_template="questionnaires/_block_drawer_form.html" %}
+{% endblock %}

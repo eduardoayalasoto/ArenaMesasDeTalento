@@ -109,6 +109,12 @@ Cada una nace de un bug real o de una corrección directa del usuario:
    o derecha. Todo botón de solo ícono lleva tooltip.
 6. **Etiquetas = `components/_tag_picker.html`** para las 3 entidades; color con
    círculos de los tokens del tema, nunca un `<select>` de nombres de color.
+8. **Botones de CRUD (regla dura, 2026-11-25).** Acciones de fila: **Ver `eye` · Editar `pencil` ·
+   Eliminar `trash-2` (rojo)** = SOLO ícono, mismo tamaño (`btn-circle btn-sm`), con tooltip; nunca texto
+   en el botón. Usa `components/_row_action.html` (`kind="view"|"edit"`) y `components/_confirm.html`.
+   Botón de crear = **`+` y «Nuevo/Nueva …»** con `components/_create_button.html` (nunca «Crear/Agregar»).
+   Sin `confirm()` nativo. Menú: catálogos en **Organización** (estructura) o **Modelo de evaluación**,
+   no en Administración (solo personas y acceso).
 7. **Filas de una card = lo mínimo relevante.** No mostrar metadatos técnicos que el
    usuario no pidió (nombre de archivo, peso en KB, etc.).
 8. **No agregar cards, campos ni secciones que no se pidieron, y no duplicar un
