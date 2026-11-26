@@ -1,0 +1,66 @@
+{% load callout_tags help_tags %}
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6">
+  <h3 class="text-lg font-semibold text-base-content mb-2">¿Cómo se evalúa el desempeño?</h3>
+  <p class="text-base-content/70 leading-relaxed">
+    Cada colaborador se evalúa cada <b>periodo</b> con <b>tres pilares</b>, todos en escala <b>1 a 4</b>. La <b>calificación final</b> es el promedio ponderado de los tres;
+    cuánto pesa cada pilar depende de la <b>Posición y el Nivel</b> de cada persona (no es igual para todos).
+  </p>
+</div>
+
+{% include "help/_pillars.html" %}
+
+<div class="grid gap-4 sm:grid-cols-3">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><i data-lucide="clipboard-list" class="w-5 h-5 text-primary" aria-hidden="true"></i><h4 class="font-semibold text-base-content">Ownership</h4></div><p class="text-base text-base-content/70">Cómo te ves y cómo te ve tu evaluador frente al cuestionario de tu posición. Lo contestas tú y lo valida tu evaluador en una sesión.</p></div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><i data-lucide="package" class="w-5 h-5 text-primary" aria-hidden="true"></i><h4 class="font-semibold text-base-content">Entrega de Valor</h4></div><p class="text-base text-base-content/70">El resultado de cada proyecto donde participas: lo captura su Responsable y lo valida su Validador.</p></div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5"><div class="flex items-center gap-2 mb-2"><i data-lucide="star" class="w-5 h-5 text-primary" aria-hidden="true"></i><h4 class="font-semibold text-base-content">Impacto Arena</h4></div><p class="text-base text-base-content/70">Tu contribución a Arena más allá de los proyectos. Lo captura Talento.</p></div>
+</div>
+
+<div class="grid gap-4 lg:grid-cols-2">
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+    <h4 class="font-semibold text-base-content mb-3">Escala de calificación</h4>
+    <ul class="space-y-1.5 text-base text-base-content/70">
+      <li><b class="text-base-content">1 · No cumple</b> — no se ejecutó o con deficiencias importantes.</li>
+      <li><b class="text-base-content">2 · Cumple parcial</b> — con omisiones o por debajo del estándar.</li>
+      <li><b class="text-base-content">3 · Cumple</b> — conforme al estándar de la posición.</li>
+      <li><b class="text-base-content">4 · Excede</b> — por encima del estándar, con impacto adicional.</li>
+      <li><b class="text-base-content">N/A</b> — no aplicó; <b>se excluye</b> del promedio.</li>
+    </ul>
+  </div>
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+    <h4 class="font-semibold text-base-content mb-3">Bandas de interpretación</h4>
+    <ul class="space-y-1.5 text-base">
+      <li><span class="badge badge-soft badge-success">≥ 3.50 Excede</span></li>
+      <li><span class="badge badge-soft badge-primary">3.00–3.49 Cumple</span></li>
+      <li><span class="badge badge-soft badge-warning">2.00–2.99 Cumple parcial</span></li>
+      <li><span class="badge badge-soft badge-error">&lt; 2.00 No cumple</span></li>
+    </ul>
+  </div>
+</div>
+
+{% if h.profile.admin %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 overflow-x-auto">
+    <h4 class="font-semibold text-base-content mb-1">Ponderación de pilares por posición (vigente)</h4>
+    <p class="text-base text-base-content/60 mb-3">Se edita en <b>Organización → Ponderación de pilares</b>. Una posición sin ponderación propia usa la de su nivel.</p>
+    <table class="table table-sm">
+      <thead><tr><th>Área</th><th>Posición</th><th>Nivel</th><th class="text-right">Ownership</th><th class="text-right">Entrega de Valor</th><th class="text-right">Impacto Arena</th></tr></thead>
+      <tbody>
+        {% for r in h.all_weights %}
+          <tr><td>{{ r.position.area.department.name|default:"—" }}</td><td>{{ r.position.name }}</td><td>{{ r.position.level.name|default:"Sin nivel" }}</td>
+              <td class="text-right tabular-nums">{{ r.ownership }}%</td><td class="text-right tabular-nums">{{ r.value_delivery }}%</td><td class="text-right tabular-nums">{{ r.arena_impact }}%</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+  <h4 class="font-semibold text-base-content mb-3">El ciclo, paso a paso</h4>
+  <ol class="space-y-2 text-base text-base-content/70 list-decimal list-inside">
+    <li>Talento define el organigrama (Área › Posición › Nivel), publica los cuestionarios y abre el periodo.</li>
+    <li>Cada colaborador hace su autoevaluación de Ownership y elige a su evaluador.</li>
+    <li>Colaborador y evaluador agendan una <b>sesión de validación</b>: revisan, el evaluador complementa Fortalezas/Oportunidades y cierra.</li>
+    <li>El Responsable de cada proyecto captura la Entrega de Valor y su Validador la aprueba.</li>
+    <li>Talento captura el Impacto Arena y el comité revisa a cada persona en la Mesa de Talento.</li>
+    <li>El sistema calcula la calificación final ponderada; se da la retroalimentación y se cierra el periodo.</li>
+  </ol>
+</div>

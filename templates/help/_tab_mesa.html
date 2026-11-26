@@ -1,0 +1,24 @@
+{% load callout_tags help_tags %}
+{% if h.can.talent_edit or h.profile.admin %}
+  {% help_step n=1 icon="table-2" title="Prepara y conduce la Mesa de Talento" %}
+    <b>Mesa de Talento → Mesa de Talento</b>: abre a cada persona, revisa su informe y captura <b>Fortalezas</b>, <b>Oportunidades</b>, comentarios y el <b>escenario actual</b>. Cuando el comité revisó a la persona en cada uno de sus proyectos, márcalos como <b>Revisados</b>.
+  {% end_help_step %}
+  {% help_step n=2 icon="user-plus" title="Asigna a los responsables de la retroalimentación" %}
+    En la persona, asigna un responsable <b>principal</b> (da la retroalimentación) y, si hace falta, uno <b>secundario</b> (asiste). Ellos verán la sesión en su menú.
+  {% end_help_step %}
+{% endif %}
+{% if h.feedback_given or h.profile.admin %}
+  {% help_step n=3 icon="message-circle" title="Da la retroalimentación (eres responsable)" %}
+    <b>Mesa de Talento → Mi retroalimentación → Doy retroalimentación</b>: abre la sesión de la persona. Antes, revisa el informe y las notas del comité.
+    Durante la sesión captura <b>objetivos de desarrollo</b>, expectativas profesionales y personales y comentarios; <b>Guardar</b> conserva el borrador.
+    Al terminar, <b>«Marcar como acordado con el colaborador»</b> cierra la sesión. Si eres secundario, solo asistes y apoyas.
+  {% end_help_step %}
+{% endif %}
+{% if h.feedback_received %}
+  {% help_step n=4 icon="inbox" title="Tu retroalimentación" %}
+    En <b>Mesa de Talento → Mi retroalimentación</b> ves la sesión que se registró sobre ti y cuándo quedó acordada. Prepárate llevando tus objetivos y expectativas.
+  {% end_help_step %}
+{% endif %}
+{% if not h.can.talent_edit and not h.feedback_given and not h.feedback_received and not h.profile.admin %}
+  {% callout "info" %}Cuando Talento te asigne como responsable de retroalimentación de alguien, aquí aparecerá cómo conducir la sesión.{% endcallout %}
+{% endif %}

@@ -184,3 +184,20 @@ def test_mis_evaluaciones_keeps_history_and_only_offers_active_projects(
     html = client.get(reverse("evaluations:ownership_list") + f"?periodo={period.pk}").content.decode()
     assert project_finite.name in html and "Proyecto cerrado" in html
     assert client.get(reverse("evaluations:ownership_start", args=[project_finite.pk])).status_code == 404
+
+
+@pytest.mark.django_db
+def test_evaluator_opening_the_evaluation_never_wipes_the_owners_answers(
+    client, v1, collaborator, period, project_finite, level_lead, ownership_template_lead, talento,
+):
+    """Regresión: «Usuario Prueba Gerente» abrió la autoevaluación de su Consultor y el sistema la resincronizó
+    (cambió de cuestionario y borró las respuestas). Solo la propia persona puede disparar esa sincronización."""
+    ev = _answered_eval(collaborator, period, project_finite, v1)
+    collaborator.level = level_lead            # el cuestionario guardado ya no coincide con su nivel
+    collaborator.save()
+    client.force_login(talento)                # evaluador/Talento, no el dueño
+    for name in ("evaluations:ownership_edit", "evaluations:ownership_view"):
+        assert client.get(reverse(name, args=[ev.pk])).status_code == 200
+    ev.refresh_from_db()
+    assert ev.template_id == v1.pk and ev.answers.count() == 1
+

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load callout_tags %}
+{% block content %}
+  <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
+    <div class="max-w-3xl">
+      <h2 class="text-xl font-semibold text-base-content">Evaluaciones 360</h2>
+      <p class="text-base-content/70">
+        El equipo de un proyecto califica a su owner. Es <strong>informativa</strong>: no cuenta para ninguna calificación.
+        Quien recibe el resultado no ve quién respondió qué.
+      </p>
+    </div>
+    {% if periods %}
+      <form method="get" class="flex items-center gap-2">
+        <label class="text-base text-base-content/60" for="periodo-select">Periodo</label>
+        <select id="periodo-select" name="periodo" class="select w-full" onchange="this.form.submit()">
+          {% for p in periods %}<option value="{{ p.pk }}" {% if period and p.pk == period.pk %}selected{% endif %}>{{ p.name }}{% if p.is_closed %} (Cerrado){% elif p.is_open %} (Abierto){% endif %}</option>{% endfor %}
+        </select>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if not has_template %}
+    {% callout "warning" cls="mb-5" title="Todavía no hay cuestionario 360 publicado" %}Talento lo crea en Modelo de evaluación › Cuestionarios (tipo «360 al owner»).{% endcallout %}
+  {% endif %}
+
+  {# --- Por responder --- #}
+  <h3 class="text-lg font-semibold text-base-content mb-2">Por responder</h3>
+  {% if to_answer %}
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-200 mb-8">
+      {% for row in to_answer %}
+        <div class="flex items-center justify-between gap-4 p-4">
+          <div class="min-w-0">
+            <p class="font-medium text-base-content truncate">{{ row.project.name }}</p>
+            <p class="text-base text-base-content/60 truncate">Evalúas a {{ row.project.owner.full_name }} (owner)</p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            {% if row.pending %}
+              <span class="badge badge-soft {% if row.response %}badge-warning{% else %}badge-info{% endif %}">{% if row.response %}Borrador{% else %}Sin iniciar{% endif %}</span>
+              {% url 'evaluations:three_sixty_respond' row.project.pk as respond_url %}
+              {% include "components/_row_action.html" with kind="custom" icon="pencil-line" label=row.response|yesno:"Continuar borrador,Responder" href=respond_url %}
+            {% else %}
+              <span class="badge badge-soft badge-success">Enviada</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="mb-8">{% include "partials/empty_state.html" with icon="check" title="No tienes 360 por responder" message="Cuando un proyecto de tu equipo active la evaluación 360 a su owner, aparecerá aquí." %}</div>
+  {% endif %}
+
+  {# --- Mi liderazgo --- #}
+  {% if mine %}
+    <h3 class="text-lg font-semibold text-base-content mb-2">Lo que mi equipo dijo de mí</h3>
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm divide-y divide-base-200 mb-8">
+      {% for row in mine %}
+        <div class="flex items-center justify-between gap-4 p-4">
+          <p class="font-medium text-base-content truncate">{{ row.project.name }}</p>
+          <div class="flex items-center gap-3 shrink-0">
+            {% if row.summary %}
+              <span class="text-lg font-semibold tabular-nums text-base-content">{{ row.summary.index|floatformat:1 }}<span class="text-sm font-normal text-base-content/60"> / 4</span></span>
+              <span class="badge badge-soft badge-primary">{{ row.summary.band }}</span>
+            {% else %}
+              <span class="badge badge-soft">Aún sin respuestas</span>
+            {% endif %}
+            {% url 'evaluations:three_sixty_result' row.project.pk as result_url %}
+            {% include "components/_row_action.html" with kind="view" label="Ver mi resultado" href=result_url %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# --- Seguimiento (Talento / Dirección) --- #}
+  {% if followup %}
+    <h3 class="text-lg font-semibold text-base-content mb-2">Seguimiento de proyectos con 360</h3>
+    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto mb-8">
+      <table class="table">
+        <thead><tr><th>Proyecto</th><th>Owner</th><th class="text-center">Respondieron</th><th class="text-right">Score</th><th class="text-right">Acciones</th></tr></thead>
+        <tbody>
+          {% for row in followup %}
+            <tr>
+              <td class="font-medium text-base-content">{{ row.project.name }}</td>
+              <td>{{ row.project.owner.full_name }}</td>
+              <td class="text-center tabular-nums">{{ row.result.n_sent }} de {{ row.result.n_expected }}</td>
+              <td class="text-right tabular-nums">{% if row.result.index %}{{ row.result.index|floatformat:1 }} / 4 · {{ row.result.band }}{% else %}—{% endif %}</td>
+              <td class="text-right">{% url 'evaluations:three_sixty_result' row.project.pk as result_url %}{% include "components/_row_action.html" with kind="view" label="Ver resultado y avance" href=result_url %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}

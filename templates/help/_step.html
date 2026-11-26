@@ -1,0 +1,11 @@
+{% comment %}Paso de ayuda (lo pinta el tag {% help_step %}). Params: n, icon (Lucide), title, body (HTML ya renderizado).{% endcomment %}
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex items-start gap-4">
+  <span class="relative grid place-items-center w-11 h-11 rounded-xl bg-primary/10 text-primary shrink-0">
+    <i data-lucide="{{ icon }}" class="w-5 h-5" aria-hidden="true"></i>
+    <span class="absolute -top-1.5 -left-1.5 grid place-items-center w-5 h-5 rounded-full bg-primary text-primary-content text-[11px] font-bold">{{ n }}</span>
+  </span>
+  <div class="min-w-0">
+    <h3 class="font-semibold text-base-content">{{ title }}</h3>
+    <div class="mt-0.5 text-base text-base-content/70 leading-relaxed space-y-1.5">{{ body }}</div>
+  </div>
+</div>

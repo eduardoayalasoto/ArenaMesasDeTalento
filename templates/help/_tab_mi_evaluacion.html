@@ -1,0 +1,40 @@
+{% load callout_tags help_tags %}
+{% include "help/_pillars.html" %}
+
+{% if h.questionnaire %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+    <h3 class="font-semibold text-base-content">Tu cuestionario de Ownership</h3>
+    <p class="text-base text-base-content/70 mt-1">
+      Te corresponde el de <strong>{{ h.profile.position|default:h.profile.area_name }}</strong>: <span class="tabular-nums">{{ h.questionnaire.n_questions }}</span> preguntas.
+      Cada una se califica de 1 a 4 (o N/A) y se agrupan en estas categorías, que ponderan así dentro de tu Ownership:
+    </p>
+    {% if h.questionnaire.categories %}
+      <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+        {% for c in h.questionnaire.categories %}
+          <li class="flex items-center justify-between gap-3 rounded-xl border border-base-300 px-3 py-2"><span class="text-base-content">{{ c.name }}</span><strong class="tabular-nums text-base-content">{{ c.weight }}%</strong></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if h.questionnaire.unweighted %}
+      <p class="mt-3 text-base text-base-content/60">Se califican pero <strong>no mueven</strong> tu calificación: {{ h.questionnaire.unweighted|join:", " }}.</p>
+    {% endif %}
+  </div>
+{% elif h.profile.area_name %}
+  {% callout "warning" title="Todavía no hay cuestionario para tu posición" %}Talento debe publicar el cuestionario de {{ h.profile.position|default:h.profile.area_name }}; hasta entonces no puedes iniciar tu evaluación.{% endcallout %}
+{% endif %}
+
+{% help_step n=1 icon="camera" title="Sube tu fotografía" %}Es obligatoria y aparece en tu informe: <b>menú de usuario → Mi perfil</b> (o la notificación de la campana).{% end_help_step %}
+{% help_step n=2 icon="user-check" title="Elige a tu evaluador" %}
+  En <b>Mesa de Talento → Mis evaluaciones</b> inicia tu evaluación por proyecto y elige a quien te evaluará (puedes sumar un secundario).
+  {% if h.evaluators %}Hoy tienes: {% for e in h.evaluators %}<b>{{ e.project }}</b> con {% for name, primary in e.evaluators %}{{ name }}{% if primary %} (principal){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}evaluador por elegir{% endfor %}{% if not forloop.last %}; {% endif %}{% endfor %}.{% endif %}
+{% end_help_step %}
+{% help_step n=3 icon="pencil-line" title="Haz tu cuestionario" %}Califica cada pregunta del 1 al 4 o N/A. Se <b>guarda solo</b> y ves tu <b>promedio en vivo</b>. Puedes cambiar respuestas hasta que tu evaluador cierre la evaluación.{% end_help_step %}
+{% help_step n=4 icon="calendar-clock" title="Avisa a tu evaluador y agenden la sesión de validación" %}
+  Cuando termines, <b>avísale a tu evaluador</b> y agenden una sesión para revisar tus calificaciones juntos.
+  <b>Recuérdale que tenga abierta tu evaluación</b> (en su menú <i>Validar Ownership</i>) durante la sesión: ahí ajustan respuestas y comentan.
+{% end_help_step %}
+{% help_step n=5 icon="circle-check-big" title="Cierre de tu evaluación" %}Tu evaluador complementa <b>Fortalezas</b> y <b>Oportunidades</b> y cierra la evaluación; desde ese momento queda bloqueada.{% end_help_step %}
+{% help_step n=6 icon="package" title="Entrega de Valor e Impacto Arena" %}
+  No los capturas tú: la <b>Entrega de Valor</b> de cada proyecto la captura su Responsable y la valida su Validador; el <b>Impacto Arena</b> lo captura Talento.
+{% end_help_step %}
+{% help_step n=7 icon="trophy" title="Consulta tu resultado" %}<b>Menú → Mi tablero</b>: tu calificación final, su banda y cada pilar con sus proyectos. {% if h.to_answer_360 %}Además tienes <b>{{ h.to_answer_360|length }}</b> evaluación{{ h.to_answer_360|length|pluralize:"es" }} 360 por responder (pestaña «Evaluación 360»).{% endif %}{% end_help_step %}

@@ -26,6 +26,7 @@
           {% include "components/_form_field.html" with field=form.client %}
         </div>
         <div class="grid gap-x-4 md:grid-cols-2">
+          {% include "components/_form_field.html" with field=form.three_sixty_enabled help="El equipo del proyecto califica a su owner (informativa: no cuenta para ninguna calificación). El owner ve el score, nunca quién respondió qué. Solo se pide mientras el proyecto esté abierto y haya un periodo abierto." %}
           {% include "components/_form_field.html" with field=form.is_active help="Un proyecto cerrado sigue evaluable si su fecha de entrega cae dentro del periodo abierto; fuera de esa ventana queda solo como registro." %}
         </div>
       </section>

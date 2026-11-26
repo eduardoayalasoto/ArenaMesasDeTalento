@@ -471,7 +471,7 @@ def test_period_admin_close_button_has_confirm_with_period_names(client, talento
     client.force_login(talento)
     resp = client.get(reverse("catalog:period_admin"))
     html = _decode_js_unicode_escapes(resp.content.decode())
-    assert f"confirm(" in html
+    assert "confirm(" not in html and 'class="modal"' in html     # diálogo modal propio, no confirm() nativo
     assert period.name in html
     assert next_period.name in html
     assert "no se puede deshacer" in html

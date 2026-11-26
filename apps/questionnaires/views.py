@@ -65,6 +65,7 @@ def _list_context(request, create_form=None):
         "templates": templates,
         "ownership_count": sum(1 for t in templates if t.kind == Kind.OWNERSHIP and t.is_published),
         "value_delivery_count": sum(1 for t in templates if t.kind == Kind.VALUE_DELIVERY and t.is_published),
+        "three_sixty_count": sum(1 for t in templates if t.kind == Kind.THREE_SIXTY and t.is_published),
         "draft_count": sum(1 for t in templates if t.status == Status.BORRADOR),
         "archived_count": sum(1 for t in templates if t.status == Status.ARCHIVADO),
         "answered_count": sum(1 for t in templates if t.has_answers),
@@ -245,6 +246,8 @@ def template_edit(request, pk):
         "editable": editable,
         "is_draft": is_draft,
         "is_ownership": is_ownership,
+        "is_360": template.kind == QuestionnaireTemplate.Kind.THREE_SIXTY,
+        "dimension_errors": editor.three_sixty_dimension_errors(template) if template.kind == QuestionnaireTemplate.Kind.THREE_SIXTY else [],
         "weight_groups": weight_groups,
         "category_choices": [g["link"].category for g in weight_groups],
         "available_categories": Category.objects.filter(is_active=True).exclude(pk__in=linked_ids),
@@ -425,7 +428,27 @@ def _move_scale_option(request, template):
         messages.error(request, " ".join(exc.messages))
 
 
+def _save_dimension_weights(request, template):
+    if template.kind != QuestionnaireTemplate.Kind.THREE_SIXTY:
+        return
+    weights = {int(k[2:]): v for k, v in request.POST.items() if k.startswith("w_") and k[2:].isdigit()}
+    try:
+        editor.save_dimension_weights(template, weights)
+    except ValidationError as exc:
+        messages.error(request, " ".join(exc.messages))
+        return
+    messages.success(request, "Guardé las ponderaciones de las dimensiones.")
+
+
+def _equalize_dimensions(request, template):
+    if template.kind == QuestionnaireTemplate.Kind.THREE_SIXTY:
+        editor.equalize_dimension_weights(template)
+        messages.success(request, "Repartí la ponderación en partes iguales entre las dimensiones.")
+
+
 _STRUCTURE_ACTIONS = {
+    "save_dimension_weights": _save_dimension_weights,
+    "equalize_dimensions": _equalize_dimensions,
     "add_section": _add_section,
     "rename_section": _rename_section,
     "move_section": _move_section,

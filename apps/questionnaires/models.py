@@ -11,6 +11,7 @@ class QuestionnaireTemplate(models.Model):
     class Kind(models.TextChoices):
         OWNERSHIP = "OWNERSHIP", "Ownership"
         VALUE_DELIVERY = "VALUE_DELIVERY", "Entrega de Valor"
+        THREE_SIXTY = "THREE_SIXTY", "360 al owner"
 
     class Status(models.TextChoices):
         BORRADOR = "BORRADOR", "Borrador"
@@ -67,6 +68,8 @@ class QuestionnaireTemplate(models.Model):
     def __str__(self):
         if self.kind == self.Kind.VALUE_DELIVERY:
             return f"Entrega de Valor v{self.version}"
+        if self.kind == self.Kind.THREE_SIXTY:
+            return f"360 al owner v{self.version}"
         level = f"/{self.level.code}" if self.level_id else ""
         return f"Ownership {self.area.code}{level} v{self.version}"
 
@@ -138,6 +141,8 @@ class Section(models.Model):
     )
     title = models.CharField("título", max_length=160)
     order = models.PositiveSmallIntegerField("orden", default=1)
+    # Solo cuestionarios 360: la sección es la dimensión y esta es su ponderación (Σ = 100.0; 0 = se califica, no pesa).
+    weight_pct = models.DecimalField("ponderación de la dimensión (%)", max_digits=4, decimal_places=1, null=True, blank=True)
 
     class Meta:
         verbose_name = "sección"

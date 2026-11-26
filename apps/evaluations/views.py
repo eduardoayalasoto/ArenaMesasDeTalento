@@ -267,9 +267,11 @@ def _render_ownership(request, pk, *, editing):
             "mensaje": "Esta evaluación pertenece a otra persona o área.",
         }, status=403)
 
-    # Solo en edición: la vista de consulta nunca cambia el cuestionario (spec 007, FR-001).
+    # Solo en edición Y solo la propia persona: la vista de consulta nunca cambia el cuestionario (spec 007,
+    # FR-001) y un evaluador que abre la evaluación NO puede resincronizarla (borraría las respuestas ajenas).
     if (
         editing
+        and evaluation.user_id == request.user.pk
         and _can_edit_answers(request.user, evaluation)
         and ownership_flow.sync_evaluation_template(evaluation)
     ):

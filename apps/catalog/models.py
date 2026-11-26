@@ -335,6 +335,8 @@ class Project(models.Model):
     status = models.CharField(
         "estatus", max_length=10, choices=Status.choices, default=Status.ON_TRACK
     )
+    # Spec 010: si está activa, el equipo del proyecto califica al owner (360 informativa, no pondera).
+    three_sixty_enabled = models.BooleanField("evaluación 360 al owner", default=False)
     history = HistoricalRecords()
 
     class Meta:

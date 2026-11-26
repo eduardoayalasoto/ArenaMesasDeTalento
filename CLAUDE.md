@@ -86,4 +86,10 @@ CUMPLE/NO CUMPLE), `django-backend-engineer.md` (backend); skills `daisyui`, `de
   X-Frame-Options en `settings`; la CSP conserva `unsafe-inline/unsafe-eval` por Alpine y `on*`/`hx-on` (para A+ estricta: build CSP de
   Alpine y nonces). **Editor de cuestionarios:** en modo automático (`ownership_weights.is_automatic`) editar preguntas recalcula el
   reparto solo; en manual avisa qué falta. Área «Desarrollo» (Director Héctor Rangel) con Gerente y Desarrollador·Snr.
-- Pendiente: evaluación 360 al Gerente y ponderación por proyecto de cada persona (ver memoria `talento-org-restructure`).
+- **360 al owner (spec 010, en producción):** informativa, NO alimenta ninguna calificación. `Project.three_sixty_enabled`; cuestionario tipo
+  `THREE_SIXTY` (sección = dimensión con `Section.weight_pct`); `ThreeSixtyResponse/Answer` guardan `respondent` (POC) pero ninguna vista lo
+  muestra; servicio `apps/core/services/three_sixty.py`; pantalla «Evaluaciones 360». Carga: `import_competency_matrix <xlsx> --360`.
+- **Centro de ayuda contextual (spec 011):** botón `circle-help` en la barra (junto a la campana). `apps/core/services/help_center.py`
+  decide las pestañas por permisos y relaciones y trae datos reales (ponderación de la persona, su cuestionario, evaluadores, organigrama);
+  Talento ve solo guías de catálogos con el diagrama del organigrama. Al agregar una función nueva, agrega su guía en `templates/help/`.
+- Pendiente: ponderación por proyecto de cada persona (ver memoria `talento-org-restructure`).

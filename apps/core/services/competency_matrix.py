@@ -153,7 +153,7 @@ def consolidate_categories(rows: list[dict]) -> dict:
     family_of = {r["competency"]: r["family"] for r in rows}
     keep = {code for _name, code, _pos in FAMILIES} | {Category.GENERAL_CODE}
     by_name = {c.name: c for c in Category.objects.filter(code__in=keep)}
-    general = Category.objects.get(code=Category.GENERAL_CODE)
+    general, _ = Category.objects.get_or_create(code=Category.GENERAL_CODE, defaults={"name": "General", "order": 0})
     summary = {"moved": {}, "deleted": []}
 
     for extra in Category.objects.exclude(code__in=keep):
@@ -196,3 +196,87 @@ def _max_deviation(template, puesto_rows) -> float:
         effective = float(links.get(q.category_id, 0)) * float(q.weight_pct or 0) / 100 if q.is_weighted else 0.0
         worst = max(worst, abs(effective - by_title.get(q.title, 0)))
     return round(worst, 2)
+
+
+# --- Hoja «03 · 360 al Gerente» → cuestionario 360 al owner (spec 010) -----------------------------
+
+SHEET_360 = "03 · 360 al Gerente"
+
+
+def read_360(path) -> dict:
+    """Escala y preguntas de la hoja 03: {"scale": [(valor, etiqueta)], "rows": [dict]} (una fila por pregunta)."""
+    import openpyxl
+
+    workbook = openpyxl.load_workbook(path, data_only=True)
+    if SHEET_360 not in workbook.sheetnames:
+        raise ValidationError(f"El archivo no tiene la hoja «{SHEET_360}».")
+    scale, rows, in_questions = [], [], False
+    for raw in workbook[SHEET_360].iter_rows(min_row=1, values_only=True):
+        cells = raw[1:]
+        first = cells[0] if cells else None
+        if first == "Dimensión":
+            in_questions = True
+            continue
+        if not in_questions:
+            if first is not None and str(first).strip().isdigit() and len(cells) > 1 and cells[1]:
+                scale.append((int(str(first).strip()), str(cells[1]).strip()))
+            continue
+        if not first or str(first).startswith("Total"):
+            if first:
+                break
+            continue
+        dimension, block, level, weight, number, question, detail = (list(cells) + [None] * 7)[:7]
+        if not question:
+            continue
+        level_text = str(level or "")
+        rows.append({
+            "dimension": str(dimension).strip(), "block": str(block or "").strip() or None,
+            "target_level": int(level_text[1]) if level_text[:1] == "N" and level_text[1:2].isdigit() else None,
+            "weight": float(weight) if isinstance(weight, (int, float)) else 0.0,
+            "question": str(question).strip(), "detail": str(detail or "").strip(),
+        })
+    if not rows:
+        raise ValidationError("La hoja no trae preguntas.")
+    return {"scale": sorted(scale, reverse=True), "rows": rows}
+
+
+@transaction.atomic
+def load_360(data: dict) -> dict:
+    """Crea y publica la versión nueva del cuestionario 360 con las dimensiones de la hoja (peso en la dimensión)."""
+    from apps.questionnaires.models import (
+        CompetencyBlock, Question, QuestionnaireTemplate as T, ScaleOption, Section,
+    )
+
+    existing = T.objects.filter(kind=T.Kind.THREE_SIXTY, area=None, level=None).order_by("-version")
+    draft = existing.filter(status=T.Status.BORRADOR).first()
+    source = existing.filter(status=T.Status.PUBLICADO).first() or existing.first()
+    if draft is None and source is None:
+        template = editor.create_template(T.Kind.THREE_SIXTY)
+    else:
+        template = draft or editor.duplicate_as_new_version(source)
+    Section.objects.filter(template=template).delete()
+    if data["scale"]:
+        template.scale_options.filter(question__isnull=True).delete()
+        ScaleOption.objects.bulk_create([
+            ScaleOption(template=template, value=v, label=label, order=i) for i, (v, label) in enumerate(data["scale"], 1)])
+
+    dimensions = []
+    for row in data["rows"]:
+        if row["dimension"] not in dimensions:
+            dimensions.append(row["dimension"])
+    for position, name in enumerate(dimensions, 1):
+        qs = [r for r in data["rows"] if r["dimension"] == name]
+        section = Section.objects.create(
+            template=template, title=name, order=position, weight_pct=Decimal(str(round(qs[0]["weight"] * 100, 1))))
+        for number, row in enumerate(qs, 1):
+            block = None
+            if row["block"]:
+                block, _ = CompetencyBlock.objects.get_or_create(
+                    code=slugify(row["block"])[:60], defaults={"name": row["block"], "order": 99})
+            Question.objects.create(
+                section=section, order=number, title=row["question"], text=row["detail"], qtype=Question.Type.SCALE,
+                block=block, target_level=row["target_level"], allow_na=False,
+            )
+    editor.publish_template(template)
+    return {"template": template, "dimensions": len(dimensions), "questions": len(data["rows"]),
+            "weights": {s.title: float(s.weight_pct) for s in template.sections.order_by("order")}}

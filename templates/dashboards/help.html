@@ -1,158 +1,41 @@
 {% extends "base.html" %}
+{% load callout_tags help_tags %}
 {% block content %}
-<div x-data="{ tab: 'modelo' }">
+<div x-data="{ tab: '{{ active_tab }}' }">
   <div class="mb-6">
-    <h2 class="text-xl font-semibold text-base-content flex items-center gap-2">{% include "partials/icon.html" with name="help" cls="w-6 h-6 text-primary" %} Centro de ayuda</h2>
-    <p class="text-base-content/70">Guías por rol: abre la pestaña que corresponda a lo que necesitas hacer.</p>
+    <h2 class="text-xl font-semibold text-base-content flex items-center gap-2"><i data-lucide="circle-help" class="w-6 h-6 text-primary" aria-hidden="true"></i> Centro de ayuda</h2>
+    <p class="text-base-content/70">
+      Esta guía es para <strong>{{ h.profile.name }}</strong>{% if h.profile.position %} · {{ h.profile.position }}{% endif %}{% if h.profile.department %} · Área {{ h.profile.department }}{% endif %}{% if h.profile.admin %} · Talento{% elif h.profile.director %} · Dirección{% elif h.profile.lead %} · Lead / Gerente{% endif %}.
+      Solo ves lo que corresponde a lo que puedes hacer en el sistema.
+    </p>
   </div>
 
-  <!-- Tabs -->
-  <div class="flex flex-wrap gap-2 mb-6 border-b border-base-300">
-    <template x-for="t in [
-        {k:'modelo', l:'El modelo', i:'rocket'},
-        {k:'colaborador', l:'Colaborador', i:'user'},
-        {k:'evaluador', l:'Evaluador', i:'check'},
-        {k:'lead', l:'Lead', i:'package'},
-        {k:'direccion', l:'Dirección', i:'shield'},
-        {k:'talento', l:'Talento', i:'settings'},
-        {k:'learn', l:'Arena Learn', i:'book'}
-      ]" :key="t.k">
-      <button @click="tab = t.k"
-              class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px transition"
-              :class="tab === t.k ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'"
-              x-text="t.l"></button>
-    </template>
+  <div class="flex flex-wrap gap-2 mb-6 border-b border-base-300" role="tablist">
+    {% for t in h.tabs %}
+      <button type="button" role="tab" @click="tab = '{{ t.key }}'"
+              class="px-4 py-2.5 text-base font-medium border-b-2 -mb-px transition inline-flex items-center gap-2"
+              :class="tab === '{{ t.key }}' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'"
+              :aria-selected="tab === '{{ t.key }}'">
+        <i data-lucide="{{ t.icon }}" class="w-4 h-4" aria-hidden="true"></i>{{ t.label }}
+      </button>
+    {% endfor %}
   </div>
 
-  <!-- El modelo -->
-  <div x-show="tab === 'modelo'" class="space-y-6">
-    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-6">
-      <h3 class="text-lg font-semibold text-base-content mb-2">¿Qué es el Modelo de Desempeño Analítica 2026?</h3>
-      <p class="text-base-content/70 leading-relaxed">Cada colaborador se evalúa de forma <b>semestral</b> mediante <b>tres pilares</b>, todos en escala <b>1 a 4</b> (4 es lo más alto). La <b>calificación final</b> es el promedio <b>ponderado</b> de los tres pilares, y las ponderaciones dependen del <b>nivel de seniority</b> de la persona.</p>
+  {% for t in h.tabs %}
+    <div x-show="tab === '{{ t.key }}'" {% if t.key != active_tab %}x-cloak{% endif %} class="space-y-4" role="tabpanel">
+      {% if t.key == "org" %}{% include "help/_tab_org.html" %}
+      {% elif t.key == "cuestionarios" %}{% include "help/_tab_cuestionarios.html" %}
+      {% elif t.key == "periodo" %}{% include "help/_tab_periodo.html" %}
+      {% elif t.key == "mi_evaluacion" %}{% include "help/_tab_mi_evaluacion.html" %}
+      {% elif t.key == "evaluador" %}{% include "help/_tab_evaluador.html" %}
+      {% elif t.key == "lider" %}{% include "help/_tab_lider.html" %}
+      {% elif t.key == "direccion" %}{% include "help/_tab_direccion.html" %}
+      {% elif t.key == "tres_sesenta" %}{% include "help/_tab_tres_sesenta.html" %}
+      {% elif t.key == "mesa" %}{% include "help/_tab_mesa.html" %}
+      {% elif t.key == "learn" %}{% include "help/_tab_learn.html" %}
+      {% elif t.key == "modelo" %}{% include "help/_tab_modelo.html" %}
+      {% endif %}
     </div>
-
-    <div>
-      <h3 class="font-semibold text-base-content mb-3">Los 3 pilares</h3>
-      <div class="grid gap-4 sm:grid-cols-3">
-        <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="clipboard" cls="w-5 h-5 text-primary" %}<h4 class="font-semibold text-base-content">Ownership</h4></div><p class="text-base text-base-content/70">Autoevaluación por proyecto con un <b>checklist</b> de actividades según tu área y nivel. El promedio excluye los ítems marcados N/A.</p></div>
-        <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="package" cls="w-5 h-5 text-primary" %}<h4 class="font-semibold text-base-content">Entrega de Valor</h4></div><p class="text-base text-base-content/70">Por proyecto: satisfacción del cliente, entregables y el criterio de <b>tiempo</b> según el tipo de proyecto. La captura el Lead y la valida Dirección.</p></div>
-        <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5"><div class="flex items-center gap-2 mb-2">{% include "partials/icon.html" with name="star" cls="w-5 h-5 text-primary" %}<h4 class="font-semibold text-base-content">Impacto Arena</h4></div><p class="text-base text-base-content/70">Contribución a la cultura y la organización, capturada por Talento y Cultura.</p></div>
-      </div>
-    </div>
-
-    <div class="grid gap-4 lg:grid-cols-2">
-      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
-        <h4 class="font-semibold text-base-content mb-3">Escala de calificación</h4>
-        <ul class="space-y-1.5 text-base text-base-content/70">
-          <li><b class="text-base-content">1 · No cumple</b> — no se ejecutó o con deficiencias importantes.</li>
-          <li><b class="text-base-content">2 · Cumple parcial</b> — con omisiones o por debajo del estándar.</li>
-          <li><b class="text-base-content">3 · Cumple</b> — conforme al estándar del nivel.</li>
-          <li><b class="text-base-content">4 · Excede</b> — por encima del estándar, con impacto adicional.</li>
-          <li><b class="text-base-content">N/A</b> — no aplicó; <b>se excluye</b> del promedio.</li>
-        </ul>
-      </div>
-      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
-        <h4 class="font-semibold text-base-content mb-3">Ponderación por nivel</h4>
-        <table class="w-full text-base">
-          <thead class="text-base-content/60 text-left"><tr><th class="py-1 font-medium">Nivel</th><th class="py-1 font-medium text-center">Ownership</th><th class="py-1 font-medium text-center">E. Valor</th><th class="py-1 font-medium text-center">Impacto</th></tr></thead>
-          <tbody class="divide-y divide-base-200">
-            <tr><td class="py-1.5">Junior</td><td class="text-center tabular-nums">60%</td><td class="text-center tabular-nums">20%</td><td class="text-center tabular-nums">20%</td></tr>
-            <tr><td class="py-1.5">Mid</td><td class="text-center tabular-nums">50%</td><td class="text-center tabular-nums">25%</td><td class="text-center tabular-nums">25%</td></tr>
-            <tr><td class="py-1.5">Senior</td><td class="text-center tabular-nums">40%</td><td class="text-center tabular-nums">30%</td><td class="text-center tabular-nums">30%</td></tr>
-            <tr><td class="py-1.5">Lead</td><td class="text-center tabular-nums">30%</td><td class="text-center tabular-nums">35%</td><td class="text-center tabular-nums">35%</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="grid gap-4 lg:grid-cols-2">
-      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
-        <h4 class="font-semibold text-base-content mb-3">Áreas</h4>
-        <div class="flex flex-wrap gap-2 text-base">
-          <span class="badge bg-primary/10 text-primary">ID · Ingeniería de Datos</span>
-          <span class="badge bg-primary/10 text-primary">CD · Ciencia de Datos</span>
-          <span class="badge bg-primary/10 text-primary">PM · Gestión de Proyectos</span>
-          <span class="badge bg-primary/10 text-primary">UXUI · UX/UI</span>
-        </div>
-        <p class="mt-3 text-base text-base-content/70">Cada área tiene 4 niveles: Junior, Mid, Senior y Lead.</p>
-      </div>
-      <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
-        <h4 class="font-semibold text-base-content mb-3">Bandas de interpretación</h4>
-        <ul class="space-y-1.5 text-base">
-          <li><span class="badge bg-success/10 text-success">≥ 3.50 Excede</span></li>
-          <li><span class="badge bg-primary/10 text-primary">3.00–3.49 Cumple</span></li>
-          <li><span class="badge bg-warning/10 text-warning">2.00–2.99 Cumple parcial</span></li>
-          <li><span class="badge bg-error/10 text-error">&lt; 2.00 No cumple</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
-      <h4 class="font-semibold text-base-content mb-3">El proceso, paso a paso</h4>
-      <ol class="space-y-2 text-base text-base-content/70 list-decimal list-inside">
-        <li>Talento asigna área, nivel y proyectos.</li>
-        <li>El colaborador hace su autoevaluación de Ownership por proyecto y elige a su evaluador.</li>
-        <li>El evaluador revisa con la persona, complementa Fortalezas/Oportunidades y cierra.</li>
-        <li>El Responsable del proyecto captura la Entrega de Valor; la valida quien esté asignado como Validador de ese proyecto.</li>
-        <li>Talento captura el Impacto Arena.</li>
-        <li>El sistema calcula la calificación final ponderada y su banda.</li>
-      </ol>
-    </div>
-  </div>
-
-  <!-- Colaborador -->
-  <div x-show="tab === 'colaborador'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="camera" title="Sube tu fotografía" text="Es obligatoria y aparece en tu informe. <b>Menú → Mi perfil</b> (o la notificación de la campana)." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="bell" title="Revisa tus pendientes" text="La <b>campana</b> (arriba a la derecha) lista los cuestionarios que te faltan por llenar." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="clipboard" title="Inicia tu evaluación de Ownership" text="<b>Menú → Mis evaluaciones → Comenzar</b>. Lo primero: elige a tu <b>evaluador</b> (quien trabajó más cerca contigo)." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="edit" title="Responde el checklist" text="Califica cada punto del 1 al 4 o N/A. Se <b>guarda solo</b> y ves tu <b>promedio en vivo</b>. Puedes cambiar de evaluador mientras esté abierta." %}
-    {% include "dashboards/_help_step.html" with n=5 icon="check" title="Sesión con tu evaluador" text="Tu evaluador revisa contigo, complementa <b>Fortalezas</b> y <b>Oportunidades</b> y cierra la evaluación. Al cerrarse ya no se edita." %}
-    {% include "dashboards/_help_step.html" with n=6 icon="trophy" title="Consulta tu resultado" text="<b>Menú → Mi tablero</b>: tu calificación final, banda, pilares y proyectos." %}
-  </div>
-
-  <!-- Evaluador -->
-  <div x-show="tab === 'evaluador'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="bell" title="Te eligen como evaluador" text="Cuando alguien te selecciona, su evaluación aparece en <b>Menú → Validación de Ownership</b> (el menú solo aparece si tienes validaciones)." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="edit" title="Revisa con la persona" text="Entra a <b>Revisar</b>. Pueden ajustar juntos las respuestas del checklist." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="clipboard" title="Complementa la retroalimentación" text="Escribe las <b>Fortalezas</b> y <b>Oportunidades</b> (obligatorias) y comentarios opcionales." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="lock" title="Guarda y cierra" text="<b>Guardar</b> deja la evaluación abierta; <b>Guardar y cerrar</b> la bloquea para todos y calcula la calificación." %}
-  </div>
-
-  <!-- Lead -->
-  <div x-show="tab === 'lead'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="users" title="Revisa tu área" text="<b>Menú → Mi área</b>: las personas de tu área con su avance y calificaciones." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="folder" title="Gestiona proyectos y equipos" text="<b>Menú → Proyectos</b>: puedes crear proyectos, asignar equipos y editarlos." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="package" title="Captura la Entrega de Valor" text="<b>Menú → Entrega de Valor</b>: una por proyecto donde seas Responsable. Califica satisfacción, entregables, el criterio de <b>tiempo</b> y agrega comentarios de contexto; se envía a validación de quien esté asignado como <b>Validador</b> de ese proyecto." %}
-    {% include "dashboards/_help_step.html" with n=5 icon="check" title="Aprueba solicitudes de cursos" text="<b>Menú → Aprobar cursos</b>: las solicitudes de Arena Learn donde eres el Lead (directo o de su área). Revisa la justificación y el historial; <b>Aprueba</b>, <b>Regresa con comentarios</b> o <b>Rechaza</b>. La campana te avisa cuando llega una." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="user" title="También puedes ser evaluador" text="Si alguien te elige como evaluador, revisa tu sección <b>Validación de Ownership</b>." %}
-  </div>
-
-  <!-- Dirección -->
-  <div x-show="tab === 'direccion'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="shield" title="Valida la Entrega de Valor" text="<b>Menú → Validar Entrega de Valor</b> aparece si estás asignado como <b>Validador</b> en algún proyecto (ya no es automático para todos los directores). Aprueba o regresa con un comentario al Responsable, y puedes leer y complementar sus comentarios." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="check" title="Aprueba solicitudes de cursos" text="<b>Menú → Aprobar cursos</b>: las solicitudes de Arena Learn que ya aprobó el Lead y esperan a Dirección (las de tu área si Talento te asignó como Director de área). En <b>Arena Learn → Seguimiento</b> ves el estado y costo de todas." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="table" title="Consulta la Mesa de Talento" text="<b>Menú → Mesa de Talento</b>: el informe de cada persona, con foto, scores y proyectos." %}
-  </div>
-
-  <!-- Talento -->
-  <div x-show="tab === 'talento'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="shield-user" title="Perfiles y permisos" text="<b>Menú → Catálogos → Perfiles y permisos</b>: cada persona tiene un perfil, y cada perfil define pantalla por pantalla qué puede hacer y con qué alcance (propio, asignado, su área o todos). Crea, duplica o edita perfiles sin tocar código, y asígnalos en <b>Usuarios</b> (columna Perfil). «Ver acceso» explica qué puede hacer cada persona." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="id" title="Asigna área, nivel y rol" text="<b>Menú → Usuarios</b>. Sin área/nivel, una persona no puede iniciar su evaluación." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="folder" title="Administra proyectos y equipos" text="<b>Menú → Proyectos</b>: Lead, tipo de duración y miembros." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="list" title="Administra los cuestionarios" text="<b>Menú → Cuestionarios</b>: edita preguntas y publica versiones (versionado seguro)." %}
-    {% include "dashboards/_help_step.html" with n=5 icon="calendar" title="Abre y cierra periodos" text="<b>Menú → Periodos</b>. Al cerrar, la captura queda en solo lectura." %}
-    {% include "dashboards/_help_step.html" with n=6 icon="star" title="Captura el Impacto Arena" text="<b>Menú → Impacto Arena</b>: tabla por persona; al guardar se recalcula la calificación final." %}
-    {% include "dashboards/_help_step.html" with n=7 icon="chart" title="Da seguimiento y exporta" text="<b>Avance del periodo</b> (% de avance) y <b>Mesa de Talento</b> (exporta CSV desde Mi área)." %}
-  </div>
-
-  <!-- Arena Learn (spec 004) -->
-  <div x-show="tab === 'learn'" x-cloak class="space-y-4">
-    {% include "dashboards/_help_step.html" with n=1 icon="book" title="Busca en el catálogo" text="<b>Menú → Arena Learn → Catálogo</b>: cursos recomendados por Talento, con la calificación y las reseñas de quienes ya los tomaron." %}
-    {% include "dashboards/_help_step.html" with n=2 icon="send" title="Solicita tu curso con costo" text="<b>Solicitar curso</b> te muestra primero los cursos del catálogo y los que tus compañeros ya tomaron con autorización (con costo, forma de pago y reseñas); elige uno o captura uno <b>nuevo</b>, con tu <b>justificación</b>. Pasa por tu <b>Lead directo</b> (o un Lead de tu área), el <b>Director</b> de tu área y <b>Talento</b>, que confirma fondos. Te pueden regresar la solicitud con comentarios; al reenviarla vuelve a quien la regresó." %}
-    {% include "dashboards/_help_step.html" with n=3 icon="briefcase" title="Compra y registra el pago" text="Al quedar autorizado verás las instrucciones fiscales (CFDI a nombre de Arena Analytics o nota/recibo con datos fiscales). Registra si es reembolso o pago directo; el reembolso sigue su proceso con Talento." %}
-    {% include "dashboards/_help_step.html" with n=4 icon="upload" title="Cierra el curso" text="Sube tu certificado, constancia o captura (PDF o imagen, máx. 4 MB) y tu reseña: calificación, opinión, a quién lo recomiendas y qué aprendiste. <b>Es indispensable para solicitar otro curso</b> (o márcalo como no concluido)." %}
-    {% include "dashboards/_help_step.html" with n=5 icon="users" title="Comparte lo aprendido" text="Tus cursos completados aparecen en tu perfil de Arena Learn, visible para todo Arena. El costo, el pago y la justificación son privados (tú, tus aprobadores, Talento y Dirección)." %}
-    {% include "dashboards/_help_step.html" with n=6 icon="star" title="¿Cursos gratuitos o que pagaste tú?" text="Usa <b>Registrar curso ya tomado</b>: no requieren autorización y suman a tu historial y al conocimiento del equipo." %}
-  </div>
+  {% endfor %}
 </div>
 {% endblock %}

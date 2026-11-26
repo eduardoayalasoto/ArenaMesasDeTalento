@@ -68,6 +68,19 @@ def _has_feedback(u):
     )
 
 
+def _has_three_sixty(u):
+    from apps.core.services import three_sixty
+
+    return (three_sixty.sees_followup(u) or three_sixty.owned_projects(u).exists()
+            or bool(three_sixty.to_answer(u, three_sixty.open_period())))
+
+
+def _three_sixty_pending(u):
+    from apps.core.services import three_sixty
+
+    return three_sixty.pending_count(u)
+
+
 def _captures_vd(u):
     return access.has(u, "value_delivery.capture", Scope.TODOS) or (
         access.has(u, "value_delivery.capture", Scope.ASIGNADO) and u.leads_projects
@@ -149,6 +162,9 @@ NAV: tuple[NavCategory, ...] = (
                 also_active=OWNERSHIP_ALSO, group="Mi evaluación"),
         NavItem("Mi retroalimentación", "dashboards:feedback_session_list", "message-circle", visible=_has_feedback,
                 also_active=("dashboards:feedback_session_detail",), group="Mi evaluación"),
+        NavItem("Evaluaciones 360", "evaluations:three_sixty_list", "message-square-heart", ("three_sixty.respond", P),
+                visible=_has_three_sixty, badge=_three_sixty_pending, group="Mi evaluación",
+                also_active=("evaluations:three_sixty_respond", "evaluations:three_sixty_result")),
         NavItem("Validar Ownership", "evaluations:ownership_validation", "circle-check-big", visible=_is_evaluator,
                 badge=_ownership_to_validate, group="Por validar"),
         NavItem("Entrega de Valor", "evaluations:value_delivery_list", "package", visible=_captures_vd,

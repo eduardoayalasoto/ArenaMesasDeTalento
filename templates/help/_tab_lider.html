@@ -1,0 +1,28 @@
+{% load callout_tags help_tags %}
+{% include "help/_pillars.html" %}
+{% if h.profile.lead %}
+  {% callout "neutral" title="Lead / Gerente" %}Eres Lead / Gerente de {{ h.profile.department|default:h.profile.area_name }}. Tu ponderación de arriba es la de tu posición y nivel; además de ser evaluado, puedes evaluar a otras personas y liderar proyectos.{% endcallout %}
+{% endif %}
+{% if h.can.area_view %}
+  {% help_step n=1 icon="users" title="Revisa tu área" %}<b>Mesa de Talento → Mi área</b>: las personas de tu área con su avance y calificaciones.{% end_help_step %}
+{% endif %}
+{% if h.owned or h.can.edit_projects %}
+  {% help_step n=2 icon="folder" title="Proyectos y equipos" %}
+    {% if h.can.edit_projects %}<b>Administración → Proyectos</b>: crea proyectos, asigna equipo y define Owner, Responsable y Validador.{% endif %}
+    {% if h.owned %}Eres <b>Owner</b> de: {% for p in h.owned %}{{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.{% endif %}
+  {% end_help_step %}
+{% endif %}
+{% if h.responsible %}
+  {% help_step n=3 icon="package" title="Captura la Entrega de Valor (eres Responsable)" %}
+    <b>Mesa de Talento → Entrega de Valor</b>: una por proyecto donde eres Responsable ({% for p in h.responsible %}{{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}). Califica los criterios y envíala a validar; tu Validador la aprueba o la regresa con comentarios.
+  {% end_help_step %}
+{% endif %}
+{% if h.validated %}
+  {% help_step n=4 icon="shield-check" title="Valida la Entrega de Valor (eres Validador)" %}
+    <b>Mesa de Talento → Validar Entrega de Valor</b>: revisa y aprueba o regresa lo que capturan los Responsables de {% for p in h.validated %}{{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.
+  {% end_help_step %}
+{% endif %}
+{% help_step n=5 icon="circle-check-big" title="Evaluar a tu gente" %}Si te eligen como evaluador, revisa la pestaña «Soy evaluador»: ahí está cómo preparar la sesión de validación.{% end_help_step %}
+{% if h.can.approve_lead %}
+  {% help_step n=6 icon="badge-check" title="Aprueba solicitudes de cursos" %}<b>Arena Learn → Aprobar cursos</b>: las solicitudes donde eres el Lead directo o el Lead de su área.{% end_help_step %}
+{% endif %}

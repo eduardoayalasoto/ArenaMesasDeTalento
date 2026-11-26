@@ -1,0 +1,28 @@
+{% load callout_tags help_tags %}
+{% callout "neutral" title="Qué es la 360 al owner" %}
+  El equipo de un proyecto califica a su <b>owner</b> con un cuestionario de dimensiones (liderazgo, planificación, cliente…). Es <b>informativa</b>:
+  <b>no cuenta</b> para Ownership, Entrega de Valor, Impacto Arena ni la calificación final; da un índice de 1 a 4 con su banda.
+  Solo existe en los proyectos donde Talento activó la casilla <i>«Activar evaluación 360 al owner»</i>.
+{% endcallout %}
+{% if h.to_answer_360 %}
+  {% help_step n=1 icon="pencil-line" title="Tienes 360 por responder" %}
+    En <b>Mesa de Talento → Evaluaciones 360 → Por responder</b>: {% for r in h.to_answer_360 %}{% if r.pending %}<b>{{ r.project.name }}</b> (evalúas a {{ r.project.owner.full_name }}){% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}.
+    Tu borrador se guarda solo; al <b>enviar</b> ya no puedes cambiarla. Quien recibe el resultado <b>no ve quién respondió qué</b>.
+  {% end_help_step %}
+{% endif %}
+{% if h.owner_360 %}
+  {% help_step n=2 icon="gauge" title="Lo que tu equipo dijo de ti" %}
+    En <b>Evaluaciones 360 → Lo que mi equipo dijo de mí</b> ves tu score por proyecto ({% for p in h.owner_360 %}{{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}), el desglose por dimensión y los comentarios, <b>sin nombres</b>.
+    Se actualiza en vivo; con una sola respuesta el score es esa calificación y con varias, el promedio.
+  {% end_help_step %}
+{% endif %}
+{% if h.profile.admin or h.profile.director %}
+  {% help_step n=3 icon="list-checks" title="Seguimiento" %}
+    <b>Evaluaciones 360 → Seguimiento</b>: por proyecto ves cuántos respondieron, quién falta y el score. Para activar la 360 en un proyecto: <b>Administración → Proyectos → editar → «Activar evaluación 360 al owner»</b>.
+  {% end_help_step %}
+{% endif %}
+{% if h.profile.admin %}
+  {% help_step n=4 icon="clipboard-check" title="Cuestionario 360" %}
+    Se crea en <b>Modelo de evaluación → Cuestionarios → + Nuevo cuestionario → tipo «360 al owner»</b>: cada sección es una dimensión con su ponderación (deben sumar 100%; una en 0% se califica pero no pesa).
+  {% end_help_step %}
+{% endif %}

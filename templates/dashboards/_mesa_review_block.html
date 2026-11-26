@@ -1,4 +1,4 @@
-{% load access_tags %}
+{% load access_tags three_sixty_tags %}
 <div id="mesa-review-block" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
   <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
     <div>
@@ -20,6 +20,18 @@
           <i data-lucide="folder" class="w-3.5 h-3.5 text-base-content/50 shrink-0"></i>
           {{ r.project.name }}
         </span>
+        {% three_sixty_for r.project target request.user as t360 %}
+        {% if t360 %}
+          <span class="text-base text-base-content/70 shrink-0 flex items-center gap-2">
+            {% if t360.pending %}
+              <span class="badge badge-ghost" title="La 360 está activa; todavía no hay respuestas">360 sin respuestas</span>
+            {% else %}
+              Tu equipo lo calificó con <strong class="tabular-nums text-base-content">{{ t360.index|floatformat:1 }} / 4</strong> · {{ t360.band }}
+            {% endif %}
+            {% url 'evaluations:three_sixty_result' r.project.pk as r360 %}
+            {% include "components/_row_action.html" with kind="view" label="Ver detalle 360" href=r360 %}
+          </span>
+        {% endif %}
         {% if request.user|can:"talent_table.edit" %}
           <button type="button"
             hx-post="{% url 'dashboards:talent_mesa_project_toggle' pk=target.pk project_id=r.project.pk %}"

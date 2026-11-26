@@ -10,7 +10,7 @@
     <div class="rounded-2xl border border-base-300 bg-base-100 p-4">
       <p class="text-sm text-base-content/60">Publicados</p>
       <p class="text-2xl font-semibold tabular-nums">{{ ownership_count|add:value_delivery_count }}</p>
-      <p class="text-sm text-base-content/60">{{ ownership_count }} de Ownership · {{ value_delivery_count }} de Entrega de Valor</p>
+      <p class="text-sm text-base-content/60">{{ ownership_count }} de Ownership · {{ value_delivery_count }} de Entrega de Valor · {{ three_sixty_count }} de 360</p>
     </div>
     <div class="rounded-2xl border border-base-300 bg-base-100 p-4">
       <p class="text-sm text-base-content/60">Borradores en edición</p>
@@ -57,6 +57,7 @@
         <select id="new-template-kind" name="kind" x-model="kind" class="select w-56">
           <option value="OWNERSHIP">Ownership</option>
           <option value="VALUE_DELIVERY">Entrega de Valor</option>
+          <option value="THREE_SIXTY">360 al owner del proyecto</option>
         </select>
         {% if create_form.kind.errors %}<p class="whitespace-normal text-base text-error">{{ create_form.kind.errors|join:", " }}</p>{% endif %}
       </fieldset>
@@ -111,6 +112,7 @@
         <option value="">Todos los tipos</option>
         <option value="OWNERSHIP">Ownership</option>
         <option value="VALUE_DELIVERY">Entrega de Valor</option>
+        <option value="THREE_SIXTY">360 al owner</option>
       </select>
       <select x-model="dept" class="select w-full sm:w-44" aria-label="Filtrar por área">
         <option value="">Todas las áreas</option>
@@ -144,7 +146,7 @@
           <tbody class="divide-y divide-base-200">
             {% for t in templates %}
               <tr class="hover:bg-base-200/50 transition-colors" data-row
-                  data-search="{% if t.kind == 'OWNERSHIP' %}ownership {{ t.area.department.name }} {{ t.area.name }} {{ t|puesto_de }} {{ t.level.name }}{% else %}entrega de valor{% endif %}"
+                  data-search="{% if t.kind == 'OWNERSHIP' %}ownership {{ t.area.department.name }} {{ t.area.name }} {{ t|puesto_de }} {{ t.level.name }}{% elif t.kind == 'THREE_SIXTY' %}360 owner proyecto{% else %}entrega de valor{% endif %}"
                   data-kind="{{ t.kind }}" data-dept="{{ t.area.department_id|default_if_none:'' }}" data-area="{{ t.area_id|default_if_none:'' }}" data-status="{{ t.status }}"
                   data-locked="{% if t.has_answers %}1{% endif %}"
                   x-show="(!q || $el.dataset.search.toLowerCase().includes(q.toLowerCase())) && (!kind || $el.dataset.kind === kind) && (!dept || $el.dataset.dept === dept) && (!area || $el.dataset.area === area)
@@ -152,9 +154,9 @@
                           && (previous || status === 'ARCHIVADO' || $el.dataset.status !== 'ARCHIVADO')">
                 <td class="px-4 py-3">
                   <p class="font-medium text-base-content">
-                    {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.department.name|default:"Sin área" }} · {{ t.area.name }}{% if t.level %} · {{ t.level.name }}{% endif %}{% else %}Entrega de Valor{% endif %}
+                    {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.department.name|default:"Sin área" }} · {{ t.area.name }}{% if t.level %} · {{ t.level.name }}{% endif %}{% elif t.kind == 'THREE_SIXTY' %}360 al owner del proyecto{% else %}Entrega de Valor{% endif %}
                   </p>
-                  <p class="text-sm text-base-content/60">{% if t.kind == 'OWNERSHIP' %}Se asigna a: {{ t|puesto_de }}{% else %}Un solo cuestionario para todos los proyectos{% endif %}</p>
+                  <p class="text-sm text-base-content/60">{% if t.kind == 'OWNERSHIP' %}Se asigna a: {{ t|puesto_de }}{% elif t.kind == 'THREE_SIXTY' %}Lo contesta el equipo de cada proyecto con la 360 activada (informativa, no pondera){% else %}Un solo cuestionario para todos los proyectos{% endif %}</p>
                 </td>
                 <td class="px-4 py-3 text-center tabular-nums whitespace-nowrap">v{{ t.version }}</td>
                 <td class="px-4 py-3 text-center hidden sm:table-cell whitespace-nowrap">

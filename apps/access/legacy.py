@@ -20,6 +20,9 @@ LEGACY = {
     "period.closed.correct":          (N,   N,   N,   T),
     "value_delivery.capture":         (A,   A,   T,   T),   # _is_admin incluía al Director
     "value_delivery.validate":        (A,   A,   A,   T),
+    "three_sixty.respond":            (P,   P,   P,   P),   # función nueva (spec 010): sin comportamiento previo
+    "three_sixty.results.own":        (P,   P,   P,   P),
+    "three_sixty.results.view":       (N,   N,   T,   T),
     "arena_impact.edit":              (N,   N,   N,   T),
     "feedback.view":                  (A,   A,   A,   T),
     "feedback.edit":                  (A,   A,   A,   T),

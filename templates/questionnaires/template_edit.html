@@ -160,6 +160,36 @@
       Una <strong>sección</strong> agrupa preguntas de un mismo tema y se muestra como un bloque al contestar. Cada <strong>pregunta</strong> tiene título, descripción y, si la completas, criterio de aceptación, entregable y guía para el evaluador.{% if is_ownership %} En Ownership toda pregunta necesita una categoría.{% endif %} Arrastra el asa <i data-lucide="grip-vertical" class="inline w-4 h-4" aria-hidden="true"></i> para reordenar secciones y preguntas (también puedes pasar una pregunta a otra sección) o usa el lápiz para editar.
     {% endcallout %}
 
+    {% if is_360 %}
+      {% callout "neutral" title="Cómo funciona la 360" cls="mb-4" %}
+        Cada <strong>sección es una dimensión</strong> (p. ej. «Liderazgo») y tiene su ponderación; las preguntas de una dimensión pesan igual entre sí.
+        Las ponderaciones deben sumar <strong>100%</strong>; una dimensión en 0% se califica pero no pesa. La 360 es <strong>informativa</strong>:
+        no cuenta para Ownership, Entrega de Valor, Impacto Arena ni la calificación final.
+      {% endcallout %}
+      {% if editable %}
+      <form method="post" class="mb-6 rounded-2xl border border-base-300 bg-base-100 p-4"
+            x-data="weightGroup('dimensions', [{% for s in sections %}'{{ s.weight_pct|default_if_none:'0.0' }}'{% if not forloop.last %}, {% endif %}{% endfor %}])">
+        {% csrf_token %}<input type="hidden" name="action" value="save_dimension_weights">
+        <h4 class="font-semibold text-base-content mb-3">Ponderación de las dimensiones</h4>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {% for s in sections %}
+            <label class="flex items-center justify-between gap-3 rounded-xl border border-base-300 px-3 py-2">
+              <span class="text-base text-base-content">{{ s.title }}</span>
+              <input type="text" inputmode="decimal" name="w_{{ s.pk }}" x-model="vals[{{ forloop.counter0 }}]" class="input w-24 text-right tabular-nums"
+                     :class="parse(vals[{{ forloop.counter0 }}]) === null ? 'input-error' : ''" aria-label="Ponderación de {{ s.title }}">
+            </label>
+          {% endfor %}
+        </div>
+        <div class="mt-3 flex flex-wrap items-center gap-3" role="status" aria-live="polite">
+          <span class="badge badge-success" x-show="ok" x-cloak>Suma 100.0%</span>
+          <span class="badge badge-warning" x-show="!ok" x-cloak>Suma actual <span x-text="totalLabel"></span>% — debe llegar a 100% (<span x-text="gapLabel"></span>)</span>
+          <button type="button" class="btn btn-ghost btn-sm" @click="equalize()">Repartir en partes iguales</button>
+          <button type="submit" class="btn btn-primary btn-sm" :disabled="!ok">Guardar ponderaciones</button>
+        </div>
+      </form>
+      {% endif %}
+      <script src="{% static_v 'js/ownership_weights.js' %}"></script>
+    {% endif %}
     <div id="sections-root" data-reorder-url="{% url 'questionnaires:template_reorder' pk=template.pk %}" {% if editable %}data-dnd="1"{% endif %}>
     {% for section in sections %}
       <div class="mb-6 bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-hidden" data-section-id="{{ section.pk }}">

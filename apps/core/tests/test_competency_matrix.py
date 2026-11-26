@@ -116,7 +116,7 @@ def test_load_matrix_creates_published_versions_with_blocks_families_and_integer
     assert not Question.objects.get(section__template=new, title="Valores").is_weighted
     assert BlockSkill.objects.filter(block__name="IA como productividad").count() == 2
     assert CompetencyBlock.objects.count() == 3
-    assert not Category.objects.get(code="delivery_cliente").is_active                # categorías de antes, retiradas
+    assert not Category.objects.filter(code="delivery_cliente").exists()               # categorías de antes, eliminadas
     assert report[0]["max_deviation"] == 0
 
 

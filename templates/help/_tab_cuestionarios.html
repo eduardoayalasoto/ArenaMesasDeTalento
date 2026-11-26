@@ -1,0 +1,18 @@
+{% load callout_tags help_tags %}
+{% help_step n=1 icon="list-checks" title="Crear un cuestionario de Ownership" %}
+  <b>Modelo de evaluación → Cuestionarios → + Nuevo cuestionario</b>: tipo <i>Ownership</i> y la Posición (y Nivel) a la que se asigna; nace como <b>borrador</b>. Los pasos del editor son:
+  <b>Escala</b> → <b>Categorías y ponderaciones</b> → <b>Secciones y preguntas</b> → <b>Publicar</b>.
+{% end_help_step %}
+{% help_step n=2 icon="scale" title="Ponderaciones: automática o manual" %}
+  Cada pregunta lleva su <b>nivel de dominio objetivo</b> (N1–N4): con él, el reparto se calcula solo (a mayor nivel, mayor ponderación) y <b>se recalcula al editar preguntas</b>.
+  Si ajustas ponderaciones a mano, el cuestionario pasa a <b>manual</b> y el panel te avisa qué quedó pendiente. Las preguntas que «no ponderan» se califican pero no mueven la calificación. Siempre deben sumar 100%.
+{% end_help_step %}
+{% help_step n=3 icon="grip-vertical" title="Ordenar y editar" %}Arrastra el asa de una pregunta para reordenarla o pasarla a otra sección; arrastra el asa de una sección para reordenar secciones. Editar un cuestionario publicado lo hace en sitio.{% end_help_step %}
+{% help_step n=4 icon="tags" title="Categorías y bloques" %}
+  <b>Categorías</b> (Persona, Proyecto, Cliente, Metodología y técnica, General) agrupan preguntas para ponderar. Los <b>Bloques de competencia</b> solo describen los skills de una pregunta (referencia; no cambian la calificación): se administran en <b>Modelo de evaluación → Bloques de competencia</b>.
+{% end_help_step %}
+{% help_step n=5 icon="message-square-heart" title="Cuestionario 360 al owner" %}
+  Tipo <i>360 al owner</i>: no pide Posición ni Nivel; cada sección es una <b>dimensión</b> con su ponderación (suman 100%; 0% = se califica pero no pesa). Solo se pide en los proyectos con la casilla <i>«Activar evaluación 360 al owner»</i>.
+{% end_help_step %}
+{% help_step n=6 icon="scale" title="Ponderación de pilares" %}<b>Organización → Ponderación de pilares</b>: cuánto pesan Ownership, Entrega de Valor e Impacto Arena por Posición × Nivel. Siempre se puede editar; los periodos cerrados conservan la ponderación con la que se calcularon.{% end_help_step %}
+{% help_step n=7 icon="rocket" title="Publicar y versionar" %}Publicar reemplaza a la versión vigente para las evaluaciones nuevas. Si una versión ya tiene respuestas y quieres cambiarla a fondo, crea una <b>nueva versión</b>; las respuestas ya capturadas no cambian.{% end_help_step %}

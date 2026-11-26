@@ -1,0 +1,13 @@
+{% load callout_tags help_tags %}
+{% if h.pending_as_evaluator %}
+  {% callout "info" title="Tienes evaluaciones por revisar" %}
+    <ul class="list-disc ml-5">{% for p in h.pending_as_evaluator %}<li><b>{{ p.person }}</b> · {{ p.project }} ({% if p.primary %}principal{% else %}secundario{% endif %})</li>{% endfor %}</ul>
+  {% endcallout %}
+{% endif %}
+{% help_step n=1 icon="bell" title="Te eligen como evaluador" %}Cuando alguien te selecciona, su evaluación aparece en <b>Mesa de Talento → Validar Ownership</b> (con un contador en el menú). Eres <b>principal</b> o <b>secundario</b>; ambos pueden revisar y cerrar.{% end_help_step %}
+{% help_step n=2 icon="calendar-clock" title="Cuando te agenden una sesión de validación" %}
+  La persona te avisará para agendar. <b>Ten abierta su evaluación</b> en <i>Validar Ownership → Revisar</i> durante la sesión: ahí ven juntos sus calificaciones y pueden ajustarlas.
+{% end_help_step %}
+{% help_step n=3 icon="pencil-line" title="Revisa con la persona" %}Pueden ajustar juntos las respuestas del checklist. Lo que capturas se guarda solo.{% end_help_step %}
+{% help_step n=4 icon="clipboard-list" title="Complementa la retroalimentación" %}Escribe las <b>Fortalezas</b> y <b>Oportunidades</b> (obligatorias) y, si quieres, comentarios generales.{% end_help_step %}
+{% help_step n=5 icon="lock" title="Guarda y cierra" %}<b>Guardar</b> deja la evaluación abierta; <b>Guardar y cerrar</b> la bloquea para todos y calcula la calificación. Si hubo un error, Talento puede reabrirla.{% end_help_step %}

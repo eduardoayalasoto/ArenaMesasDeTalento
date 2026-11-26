@@ -1,0 +1,13 @@
+{% load callout_tags help_tags %}
+{% include "help/_pillars.html" %}
+{% help_step n=1 icon="table-2" title="Consulta la Mesa de Talento" %}<b>Mesa de Talento → Mesa de Talento</b>: el informe de cada persona de tu alcance, con foto, calificaciones por pilar, proyectos y la nota del comité.{% end_help_step %}
+{% if h.can.scenario %}
+  {% help_step n=2 icon="move" title="Escenario Actual" %}<b>Mesa de Talento → Escenario Actual</b>: el tablero donde se mueve a cada persona entre escenarios durante la sesión de Mesa.{% end_help_step %}
+{% endif %}
+{% if h.can.vd_validate %}
+  {% help_step n=3 icon="shield-check" title="Valida la Entrega de Valor" %}<b>Mesa de Talento → Validar Entrega de Valor</b> aparece cuando eres Validador de algún proyecto: aprueba o regresa con comentarios.{% end_help_step %}
+{% endif %}
+{% if h.can.approve_direction %}
+  {% help_step n=4 icon="badge-check" title="Aprueba solicitudes de cursos" %}<b>Arena Learn → Aprobar cursos</b>: las solicitudes que ya aprobó el Lead y esperan tu decisión.{% end_help_step %}
+{% endif %}
+{% help_step n=5 icon="message-square-heart" title="Resultados de las 360" %}En <b>Evaluaciones 360</b> ves el seguimiento y el score de los owners de tu alcance. Nunca verás quién respondió qué.{% end_help_step %}

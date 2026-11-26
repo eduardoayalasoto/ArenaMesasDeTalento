@@ -34,7 +34,7 @@ def duplicate_as_new_version(template):
     ])
     for section in template.sections.all():
         new_section = Section.objects.create(
-            template=copy, title=section.title, order=section.order
+            template=copy, title=section.title, order=section.order, weight_pct=section.weight_pct
         )
         for q in section.questions.all():
             Question.objects.create(
@@ -72,7 +72,7 @@ def create_template(kind, area=None, level=None):
     if kind == Kind.OWNERSHIP:
         if area is None:
             raise ValidationError("Elige el Área y la posición del cuestionario de Ownership (el nivel es opcional).")
-    elif kind == Kind.VALUE_DELIVERY:
+    elif kind in (Kind.VALUE_DELIVERY, Kind.THREE_SIXTY):
         area = level = None
     else:
         raise ValidationError("Elige el tipo de cuestionario.")
@@ -103,9 +103,16 @@ def create_template(kind, area=None, level=None):
             code=Category.GENERAL_CODE, defaults={"name": "General", "order": 0},
         )
         TemplateCategory.objects.create(template=template, category=general, weight_pct=100)
+    if kind == Kind.THREE_SIXTY and not template.scale_options.exists():
+        ScaleOption.objects.bulk_create([
+            ScaleOption(template=template, value=v, label=label, order=i)
+            for i, (v, label) in enumerate(((4, "Totalmente de acuerdo"), (3, "De acuerdo"),
+                                            (2, "Ni de acuerdo ni en desacuerdo"), (1, "En desacuerdo")), 1)
+        ])
     Section.objects.create(
         template=template, order=1,
-        title="Criterios" if kind == Kind.VALUE_DELIVERY else "Preguntas",
+        title={"VALUE_DELIVERY": "Criterios", "THREE_SIXTY": "Dimensión 1"}.get(kind, "Preguntas"),
+        weight_pct=100 if kind == Kind.THREE_SIXTY else None,
     )
     return template
 
@@ -130,7 +137,10 @@ def add_section(template, title):
     from apps.questionnaires.models import Section
 
     last = template.sections.order_by("-order").values_list("order", flat=True).first() or 0
-    return Section.objects.create(template=template, title=title, order=last + 1)
+    return Section.objects.create(
+        template=template, title=title, order=last + 1,
+        weight_pct=0 if template.kind == template.Kind.THREE_SIXTY else None,
+    )
 
 
 def rename_section(section, title):
@@ -241,7 +251,53 @@ def validate_for_publish(template):
     if template.kind == template.Kind.OWNERSHIP:
         errors.extend(ownership_weights.validate_template_weights(template))
         errors.extend(_position_errors(template))
+    if template.kind == template.Kind.THREE_SIXTY:
+        errors.extend(three_sixty_dimension_errors(template))
     return errors
+
+
+def three_sixty_dimension_errors(template):
+    """Errores (en español) de las dimensiones de una 360: Σ ponderaciones = 100.0 y ninguna vacía."""
+    sections = list(template.sections.prefetch_related("questions").order_by("order"))
+    errors = []
+    empty = [s.title for s in sections if not s.questions.exists()]
+    if empty:
+        errors.append("Hay dimensiones sin preguntas: " + ", ".join(f"«{t}»" for t in empty) + ".")
+    error = ownership_weights.group_error("Dimensiones del cuestionario", [s.weight_pct or 0 for s in sections])
+    if error:
+        errors.append(error)
+    return errors
+
+
+@transaction.atomic
+def save_dimension_weights(template, weights: dict):
+    """`weights` = {id_sección: «12.5»}. Debe cuadrar a 100.0 (se valida con décimas enteras)."""
+    from apps.questionnaires.models import Section
+
+    sections = {s.pk: s for s in template.sections.all()}
+    if set(weights) != set(sections):
+        raise ValidationError("Faltan dimensiones por ponderar.")
+    for pk, raw in weights.items():
+        try:
+            tenths = ownership_weights.to_tenths(raw)
+        except ownership_weights.WeightError as exc:
+            raise ValidationError(str(exc)) from exc
+        sections[pk].weight_pct = ownership_weights.from_tenths(tenths)
+    error = ownership_weights.group_error("Dimensiones del cuestionario", [s.weight_pct for s in sections.values()])
+    if error:
+        raise ValidationError(error)
+    Section.objects.bulk_update(sections.values(), ["weight_pct"])
+
+
+@transaction.atomic
+def equalize_dimension_weights(template):
+    """Reparte 100.0 en partes iguales entre las dimensiones (la primera absorbe el residuo, 3 → 33.4/33.3/33.3)."""
+    from apps.questionnaires.models import Section
+
+    sections = list(template.sections.order_by("order"))
+    for s, w in zip(sections, ownership_weights.split_equal(len(sections))):
+        s.weight_pct = w
+    Section.objects.bulk_update(sections, ["weight_pct"])
 
 
 def _position_errors(template):

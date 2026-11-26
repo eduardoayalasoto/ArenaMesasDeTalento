@@ -214,13 +214,18 @@ def _user_model():
 
 
 class HelpView(LoginRequiredMixin, TemplateView):
-    """Centro de ayuda: guías por rol en pestañas."""
+    """Centro de ayuda contextual (spec 011): solo las pestañas y datos que le corresponden a cada persona."""
 
     template_name = "dashboards/help.html"
 
     def get_context_data(self, **kwargs):
+        from apps.core.services import help_center
+
         ctx = super().get_context_data(**kwargs)
         ctx["page_title"] = "Ayuda"
+        ctx["h"] = data = help_center.build(self.request.user)
+        wanted = self.request.GET.get("tab")
+        ctx["active_tab"] = wanted if wanted in {t["key"] for t in data["tabs"]} else data["default_tab"]
         return ctx
 
 

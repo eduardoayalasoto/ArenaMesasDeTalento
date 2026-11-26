@@ -1,0 +1,52 @@
+{% load callout_tags help_tags %}
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+  <h3 class="font-semibold text-base-content">Quién contiene a quién</h3>
+  <p class="text-base text-base-content/70 mt-1">
+    Cada recuadro contiene a los de adentro: un <b>Área</b> contiene <b>Posiciones</b>; cada Posición puede tener <b>Niveles</b> (opcionales); cada combinación
+    <b>Posición × Nivel</b> tiene su nombre visible, su <b>ponderación de pilares</b> y su <b>cuestionario de Ownership</b>, y a ella pertenecen las <b>personas</b>.
+    Es el organigrama real, tal como está hoy en el sistema.
+  </p>
+  <div class="mt-4 space-y-4">
+    {% for d in h.org_tree %}
+      <div class="rounded-3xl border-2 border-primary/40 bg-primary/5 p-4">
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <i data-lucide="building-2" class="w-5 h-5 text-primary" aria-hidden="true"></i>
+          <span class="font-semibold text-base-content">Área · {{ d.name }}</span>
+          {% if d.director %}<span class="badge badge-soft badge-primary">Director: {{ d.director }}</span>{% else %}<span class="badge badge-soft badge-warning">Sin Director</span>{% endif %}
+        </div>
+        <div class="grid gap-3 lg:grid-cols-2">
+          {% for a in d.areas %}
+            <div class="rounded-2xl border border-base-300 bg-base-100 p-3">
+              <p class="flex items-center gap-2 font-medium text-base-content mb-2"><i data-lucide="briefcase" class="w-4 h-4 text-base-content/60" aria-hidden="true"></i>Posición · {{ a.name }}</p>
+              <div class="flex flex-wrap gap-2">
+                {% for p in a.positions %}
+                  <span class="rounded-xl border px-3 py-1.5 text-base {% if p.active %}border-base-300 bg-base-200/60{% else %}border-dashed border-base-300 opacity-60{% endif %}" title="{{ p.name }} · {{ p.people }} persona{{ p.people|pluralize }}">
+                    <span class="text-base-content/60">{{ p.level }}</span> · <b class="text-base-content">{{ p.name }}</b> <span class="badge badge-ghost tabular-nums">{{ p.people }}</span>
+                  </span>
+                {% empty %}<span class="text-base text-base-content/60">Sin combinaciones (crea una en Posición × nivel).</span>{% endfor %}
+              </div>
+            </div>
+          {% empty %}<p class="text-base text-base-content/60">Esta Área aún no tiene Posiciones.</p>{% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <p class="text-base text-base-content/60 mt-3">El número gris es cuántas personas activas tiene cada combinación. Lo punteado es una combinación inactiva.</p>
+</div>
+
+<div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+  <h4 class="font-semibold text-base-content mb-2">Cómo se relacionan</h4>
+  <ul class="list-disc ml-5 space-y-1 text-base text-base-content/70">
+    <li>La <b>persona</b> pertenece a una Posición (y a un Nivel, si esa Posición los usa). Sin Área/Posición no puede iniciar su evaluación.</li>
+    <li>El <b>cuestionario de Ownership</b> se asigna por coincidencia exacta con Posición + Nivel.</li>
+    <li>La <b>ponderación de pilares</b> es por combinación Posición × Nivel (sin una propia, rige la del nivel).</li>
+    <li>El <b>Director del Área</b> aprueba la etapa Dirección de los cursos de Arena Learn de su gente.</li>
+    <li>«Lead / Gerente» y «Director» son <b>marcas</b> de la persona; los permisos salen de su <b>perfil</b>, no de la marca.</li>
+  </ul>
+</div>
+
+{% help_step n=1 icon="building-2" title="Crear una Área nueva" %}<b>Organización → Áreas → + Nueva área</b>: nombre, clave y, si aplica, su <b>Director</b>. Después crea sus Posiciones.{% end_help_step %}
+{% help_step n=2 icon="briefcase" title="Crear una Posición nueva" %}<b>Organización → Posiciones → + Nueva posición</b>: nombre, clave y el <b>Área</b> a la que pertenece (una Posición pertenece a una sola Área).{% end_help_step %}
+{% help_step n=3 icon="layers-3" title="Crear un Nivel nuevo" %}<b>Organización → Niveles → + Nuevo nivel</b>: nombre, clave y orden (1 = el más junior). Los niveles son opcionales: una Posición puede no usarlos.{% end_help_step %}
+{% help_step n=4 icon="grid-3x3" title="Dar de alta la combinación Posición × Nivel" %}<b>Organización → Posición × nivel → + Nueva combinación</b>: elige la Posición, el Nivel (o «Sin nivel») y el nombre que verá la persona. Si falta alguna, usa «Completar posiciones faltantes». Sin nivel, define su <b>ponderación de pilares</b> en <i>Ponderación de pilares</i>.{% end_help_step %}
+{% help_step n=5 icon="id-card" title="Ubicar a una persona" %}<b>Administración → Usuarios → Ver y editar</b>: Área/Posición/Nivel, marcas Lead / Director y perfil. Luego publica su cuestionario en <i>Modelo de evaluación → Cuestionarios</i>.{% end_help_step %}

@@ -401,3 +401,67 @@ class FeedbackResponsible(models.Model):
 
     def __str__(self):
         return f"{'Principal' if self.is_primary else 'Secundario'}: {self.user} — {self.note}"
+
+
+class ThreeSixtyResponse(models.Model):
+    """Respuesta de una persona del equipo a la 360 del owner de un proyecto en un periodo (spec 010).
+
+    Informativa: NO alimenta ninguna calificación. La interfaz nunca muestra `respondent` (la autoría se
+    conserva en la base para poder decidir después si Talento/Dirección la ven)."""
+
+    class Status(models.TextChoices):
+        BORRADOR = "BORRADOR", "Borrador"
+        ENVIADA = "ENVIADA", "Enviada"
+
+    project = models.ForeignKey("catalog.Project", on_delete=models.PROTECT, related_name="three_sixty_responses",
+                                verbose_name="proyecto")
+    period = models.ForeignKey("catalog.EvaluationPeriod", on_delete=models.PROTECT,
+                               related_name="three_sixty_responses", verbose_name="periodo")
+    template = models.ForeignKey("questionnaires.QuestionnaireTemplate", on_delete=models.PROTECT,
+                                 related_name="three_sixty_responses", verbose_name="cuestionario")
+    evaluee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+                                related_name="three_sixty_received", verbose_name="evaluado (owner)")
+    respondent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+                                   related_name="three_sixty_given", verbose_name="quien responde")
+    status = models.CharField("estado", max_length=10, choices=Status.choices, default=Status.BORRADOR)
+    comment = models.TextField("comentario general", blank=True)
+    started_at = models.DateTimeField("iniciada el", auto_now_add=True)
+    updated_at = models.DateTimeField("actualizada el", auto_now=True)
+    submitted_at = models.DateTimeField("enviada el", null=True, blank=True)
+    duration_seconds = models.PositiveIntegerField("segundos entre inicio y envío", null=True, blank=True)
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "respuesta 360"
+        verbose_name_plural = "respuestas 360"
+        constraints = [
+            models.UniqueConstraint(fields=["project", "period", "respondent"], name="unique_360_per_respondent"),
+        ]
+
+    def __str__(self):
+        return f"360 de {self.project} ({self.period}) — {self.get_status_display()}"
+
+    @property
+    def is_submitted(self):
+        return self.status == self.Status.ENVIADA
+
+
+class ThreeSixtyAnswer(models.Model):
+    """Calificación (1–4) de una pregunta del cuestionario 360."""
+
+    response = models.ForeignKey(ThreeSixtyResponse, on_delete=models.CASCADE, related_name="answers",
+                                 verbose_name="respuesta 360")
+    question = models.ForeignKey("questionnaires.Question", on_delete=models.PROTECT,
+                                 related_name="three_sixty_answers", verbose_name="pregunta")
+    value = models.PositiveSmallIntegerField("valor", null=True, blank=True)
+    answered_at = models.DateTimeField("contestada el", auto_now=True)
+
+    class Meta:
+        verbose_name = "respuesta de pregunta 360"
+        verbose_name_plural = "respuestas de preguntas 360"
+        constraints = [
+            models.UniqueConstraint(fields=["response", "question"], name="unique_360_answer_per_question"),
+        ]
+
+    def __str__(self):
+        return f"{self.question} = {self.value}"

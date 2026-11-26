@@ -16,7 +16,7 @@ componente `components/_nav_menu.html`, con íconos Lucide por categoría e íte
 - Avatar: foto real de la persona (`nice_avatar` de arena-talento) en lugar del ilustrado.
 - Campana: pendientes de Talento (context processor `notifications`) en el mismo panel.
 - Cerrar sesión es POST (Django 5+): `<button form="logout-form">` directo en el `<li>`, form oculto fuera del menú.
-- "Centro de ayuda" en el menú de usuario.
+- "Centro de ayuda" como botón en la barra, junto a la campana (spec 011).
 {% endcomment %}
 <nav class='navbar bg-neutral text-neutral-content border-b border-neutral-content/10 px-4 sm:px-6'
      x-data='{
@@ -51,6 +51,13 @@ componente `components/_nav_menu.html`, con íconos Lucide por categoría e íte
 
     {% if user.is_authenticated %}
     <div class='navbar-end gap-3 w-auto'>
+        <span class='tooltip tooltip-bottom' data-tip='Centro de ayuda'>
+            <a href='{% url "dashboards:help" %}' aria-label='Centro de ayuda'
+               class='btn btn-ghost btn-circle btn-sm text-neutral-content {% if request.resolver_match.url_name == "help" %}bg-neutral-content/10{% endif %}'
+               {% if request.resolver_match.url_name == "help" %}aria-current='page'{% endif %}>
+                <i data-lucide='circle-help' class='w-5 h-5'></i>
+            </a>
+        </span>
         <div class='dropdown dropdown-end'
              :class="{ 'dropdown-open': open }"
              x-data='{ open: false }'
@@ -121,9 +128,6 @@ componente `components/_nav_menu.html`, con íconos Lucide por categoría e íte
                 </li>
                 <li><a href='{% url "accounts:profile" %}'>
                     <i data-lucide='user-cog' class='w-4 h-4'></i> Mi perfil
-                </a></li>
-                <li><a href='{% url "dashboards:help" %}'>
-                    <i data-lucide='circle-help' class='w-4 h-4'></i> Centro de ayuda
                 </a></li>
                 <li class='my-1 border-t border-neutral-content/10' aria-hidden='true'></li>
                 <li><button type='submit' form='logout-form'>

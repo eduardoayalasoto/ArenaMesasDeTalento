@@ -38,7 +38,7 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = [
             "name", "client", "owner", "responsable", "validador", "suggested_evaluator",
-            "duration_type", "kickoff", "target_close", "is_active",
+            "duration_type", "kickoff", "target_close", "is_active", "three_sixty_enabled",
         ]
         labels = {
             "name": "Nombre del proyecto",
@@ -51,6 +51,7 @@ class ProjectForm(forms.ModelForm):
             "kickoff": "Kick-off",
             "target_close": "Fecha estimada de entrega",
             "is_active": "Proyecto abierto",
+            "three_sixty_enabled": "Activar evaluación 360 al owner",
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": _INPUT, "placeholder": "Ej. Tablero Comercial"}),
@@ -63,6 +64,7 @@ class ProjectForm(forms.ModelForm):
             "kickoff": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "target_close": forms.DateInput(attrs={"class": _INPUT, "type": "date"}, format="%Y-%m-%d"),
             "is_active": forms.CheckboxInput(attrs={"class": "checkbox"}),
+            "three_sixty_enabled": forms.CheckboxInput(attrs={"class": "checkbox"}),
         }
 
     def __init__(self, *args, **kwargs):

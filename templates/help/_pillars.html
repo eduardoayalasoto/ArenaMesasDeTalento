@@ -1,0 +1,21 @@
+{% load callout_tags %}
+{# Tarjetas con la ponderación de pilares PERSONAL (Área › Posición › Nivel). Params: h (contexto del centro de ayuda). #}
+{% if h.pillars %}
+  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5">
+    <h3 class="font-semibold text-base-content">Tu ponderación de pilares</h3>
+    <p class="text-base text-base-content/70 mt-1">
+      Como <strong>{{ h.profile.position|default:h.profile.area_name }}</strong>{% if h.profile.department %} del Área {{ h.profile.department }}{% endif %}, tu calificación final se compone así:
+    </p>
+    <div class="mt-3 grid gap-3 sm:grid-cols-3">
+      <div class="rounded-xl bg-primary/10 p-4"><p class="text-3xl font-semibold tabular-nums text-base-content">{{ h.pillars.ownership }}%</p><p class="text-base text-base-content/70">Ownership</p></div>
+      <div class="rounded-xl bg-primary/10 p-4"><p class="text-3xl font-semibold tabular-nums text-base-content">{{ h.pillars.value_delivery }}%</p><p class="text-base text-base-content/70">Entrega de Valor</p></div>
+      <div class="rounded-xl bg-primary/10 p-4"><p class="text-3xl font-semibold tabular-nums text-base-content">{{ h.pillars.arena_impact }}%</p><p class="text-base text-base-content/70">Impacto Arena</p></div>
+    </div>
+    <p class="text-base text-base-content/60 mt-3">Calificación final = Ownership × {{ h.pillars.ownership }}% + Entrega de Valor × {{ h.pillars.value_delivery }}% + Impacto Arena × {{ h.pillars.arena_impact }}%. Cada pilar va de 1 a 4. Si Talento cambia estas ponderaciones, los periodos ya cerrados conservan las que tenían.</p>
+  </div>
+{% elif not h.profile.admin %}
+  {% callout "warning" title="Aún no tienes ponderación de pilares" %}
+    {% if not h.profile.area_name %}Talento todavía no te asigna un Área y una Posición.{% else %}Tu posición ({{ h.profile.position|default:h.profile.area_name }}) todavía no tiene ponderación definida.{% endif %}
+    Avísale a Talento: sin ella no se puede calcular tu calificación final.
+  {% endcallout %}
+{% endif %}

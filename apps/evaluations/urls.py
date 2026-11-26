@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from . import views
+from . import views, views_360
 
 app_name = "evaluations"
 
@@ -26,6 +26,10 @@ urlpatterns = [
     path("entrega-valor/", views.value_delivery_list, name="value_delivery_list"),
     path("entrega-valor/capturar/<int:project_id>/", views.value_delivery_capture, name="value_delivery_capture"),
     path("entrega-valor/validar/", views.value_delivery_review, name="value_delivery_review"),
+    # 360 al owner del proyecto (spec 010)
+    path("360/", views_360.three_sixty_list, name="three_sixty_list"),
+    path("360/responder/<int:project_id>/", views_360.three_sixty_respond, name="three_sixty_respond"),
+    path("360/resultado/<int:project_id>/", views_360.three_sixty_result, name="three_sixty_result"),
     # Impacto Arena
     path("impacto-arena/", views.arena_impact, name="arena_impact"),
     path("impacto-arena/autosave/", views.arena_impact_autosave, name="arena_impact_autosave"),
