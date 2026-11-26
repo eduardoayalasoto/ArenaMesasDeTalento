@@ -6,9 +6,27 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
 {% endcomment %}
 
 <section class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 mb-6">
-  {% if editable and weights_errors %}
-    {% callout "warning" cls="mt-4" title="Antes de publicar" %}
+  {# Estado vivo de las ponderaciones: modo (automático/manual) y qué falta, siempre a la vista. #}
+  <div class="flex flex-wrap items-center gap-2 mb-3">
+    {% if weights_auto %}
+      <span class="badge badge-soft badge-primary" title="El reparto sigue al nivel de dominio de cada pregunta y se recalcula solo al editar preguntas">Ponderación automática</span>
+    {% else %}
+      <span class="badge badge-soft badge-warning" title="Ajustaste ponderaciones a mano: al editar preguntas te avisamos qué queda pendiente">Ponderación manual</span>
+    {% endif %}
+    {% if weights_errors %}<span class="badge badge-soft badge-warning">{{ weights_errors|length }} pendiente{{ weights_errors|length|pluralize }}</span>
+    {% else %}<span class="badge badge-soft badge-success">Todo suma 100%</span>{% endif %}
+  </div>
+  {% if weights_errors %}
+    {% callout "warning" cls="mb-3" title="Falta para que las ponderaciones sean válidas" %}
       <ul class="list-disc ml-5">{% for e in weights_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      {% if editable %}<p class="mt-2">Usa «Calcular» (abajo) para repartir con el nivel de dominio de cada pregunta, o ajusta a mano.</p>{% endif %}
+    {% endcallout %}
+  {% endif %}
+  {% if unweighted_questions %}
+    {% callout "neutral" cls="mb-3" title="Preguntas fuera del reparto (no ponderan)" %}
+      Se califican, pero no mueven la calificación, por eso no aparecen en las tablas de ponderación:
+      {% for q in unweighted_questions %}<strong>{{ q.title }}</strong>{% if not forloop.last %}, {% endif %}{% endfor %}.
+      Para que ponderen, edita la pregunta y marca «Pondera».
     {% endcallout %}
   {% endif %}
 
@@ -62,7 +80,7 @@ permite guardar mientras no sume exactamente 100%. El servidor repite la misma v
       {% csrf_token %}<input type="hidden" name="action" value="auto_weights">
       <div class="grow min-w-64">
         <p class="font-medium text-base-content">Calcular ponderaciones automáticamente</p>
-        <p class="text-base text-base-content/70">Cada pregunta pondera según su nivel de dominio objetivo (N1 a N4). Se guardan enteros que suman 100 y la última absorbe la diferencia. Reemplaza las ponderaciones actuales.</p>
+        <p class="text-base text-base-content/70">Cada pregunta pondera según su nivel de dominio objetivo (N1 a N4). Se guardan enteros que suman 100 y la última absorbe la diferencia. Si el cuestionario está en modo automático, esto se recalcula solo cada vez que agregas, editas o quitas una pregunta. Reemplaza las ponderaciones actuales.</p>
       </div>
       <button type="submit" class="btn btn-primary">Calcular</button>
     </form>

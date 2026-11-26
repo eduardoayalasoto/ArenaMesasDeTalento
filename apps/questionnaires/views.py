@@ -127,6 +127,9 @@ def template_edit(request, pk):
 
     if request.method == "POST":
         action = request.POST.get("action")
+        # ¿El reparto sigue al nivel de dominio de las preguntas? (se mide ANTES de editar)
+        was_auto = (editable and template.kind == QuestionnaireTemplate.Kind.OWNERSHIP
+                    and action in ("save_question", "add_question") and ownership_weights.is_automatic(template))
 
         if action == "duplicate":
             copy = editor.duplicate_as_new_version(template)
@@ -199,6 +202,9 @@ def template_edit(request, pk):
         elif action == "move_question":
             _move_question(template, request.POST.get("question"), request.POST.get("dir"))
 
+        if action in ("save_question", "add_question") and template.kind == QuestionnaireTemplate.Kind.OWNERSHIP:
+            _sync_weights(request, template, was_auto)
+
         return redirect("questionnaires:template_edit", pk=template.pk)
 
     sections = template.sections.prefetch_related(
@@ -243,7 +249,17 @@ def template_edit(request, pk):
         "category_choices": [g["link"].category for g in weight_groups],
         "available_categories": Category.objects.filter(is_active=True).exclude(pk__in=linked_ids),
         "weights_errors": ownership_weights.validate_template_weights(template) if is_ownership else [],
+        "weights_auto": is_ownership and ownership_weights.is_automatic(template),
+        "unweighted_questions": [q for s in sections for q in s.questions.all() if is_ownership and not q.is_weighted],
     })
+
+
+def _sync_weights(request, template, was_auto):
+    """Mantiene coherente el reparto tras editar una pregunta (toast: recalculado o qué falta)."""
+    outcome = ownership_weights.sync_after_edit(template, was_auto)
+    if outcome:
+        level, text = outcome
+        getattr(messages, level)(request, text)
 
 
 def _form_errors(form):
@@ -437,8 +453,11 @@ def question_delete(request, pk):
         if question.ownership_answers.exists():
             messages.error(request, "No se puede eliminar: la pregunta ya tiene respuestas. Edita su texto o su ponderación en su lugar.")
         else:
+            was_auto = template.kind == QuestionnaireTemplate.Kind.OWNERSHIP and ownership_weights.is_automatic(template)
             question.delete()
-            messages.info(request, "Eliminé la pregunta. Revisa que las ponderaciones sigan sumando 100%.")
+            messages.info(request, "Eliminé la pregunta.")
+            if template.kind == QuestionnaireTemplate.Kind.OWNERSHIP:
+                _sync_weights(request, template, was_auto)
     return redirect("questionnaires:template_edit", pk=template.pk)
 
 

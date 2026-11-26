@@ -82,4 +82,8 @@ CUMPLE/NO CUMPLE), `django-backend-engineer.md` (backend); skills `daisyui`, `de
 - **Categorías de pregunta** = solo las 4 familias de la matriz (Persona, Proyecto, Cliente, Metodología y técnica) +
   «General»; `consolidate_categories` reclasifica por el título de la competencia. **Ponderación de pilares**: el catálogo
   siempre se edita; `FinalScore` guarda la ponderación aplicada y los periodos cerrados la conservan.
+- **Seguridad HTTP:** `SecurityHeadersMiddleware` (CSP, Permissions-Policy, CORP) + HSTS 2 años, Referrer-Policy y
+  X-Frame-Options en `settings`; la CSP conserva `unsafe-inline/unsafe-eval` por Alpine y `on*`/`hx-on` (para A+ estricta: build CSP de
+  Alpine y nonces). **Editor de cuestionarios:** en modo automático (`ownership_weights.is_automatic`) editar preguntas recalcula el
+  reparto solo; en manual avisa qué falta. Área «Desarrollo» (Director Héctor Rangel) con Gerente y Desarrollador·Snr.
 - Pendiente: evaluación 360 al Gerente y ponderación por proyecto de cada persona (ver memoria `talento-org-restructure`).

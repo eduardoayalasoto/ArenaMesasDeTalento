@@ -141,3 +141,16 @@ def test_weight_drawer_edits_via_htmx_even_with_final_scores(client, talento):
     client.post(url, {"action": "reset", "w_ownership": "0", "w_value_delivery": "0", "w_arena_impact": "0"}, **hx)
     assert not PositionPillarWeight.objects.exists()
     assert reverse("catalog:weight_edit", args=[position.pk]) in client.get(reverse("catalog:weight_admin")).content.decode()
+
+
+@pytest.mark.django_db
+def test_security_headers_on_every_response(client, talento):
+    for url in (reverse("accounts:login"), reverse("catalog:category_admin")):
+        client.force_login(talento)
+        r = client.get(url, follow=True)
+        csp = r["Content-Security-Policy"]
+        for part in ("default-src 'self'", "object-src 'none'", "frame-ancestors 'none'", "base-uri 'self'", "form-action 'self'"):
+            assert part in csp
+        assert "camera=()" in r["Permissions-Policy"] and r["Cross-Origin-Resource-Policy"] == "same-origin"
+        assert r["X-Frame-Options"] == "DENY" and r["X-Content-Type-Options"] == "nosniff"
+        assert r["Referrer-Policy"]

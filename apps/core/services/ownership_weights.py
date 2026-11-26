@@ -264,3 +264,63 @@ def auto_distribute(template) -> dict:
                 q.weight_pct = Decimal(0)
                 q.save(update_fields=["weight_pct"])
     return {"categories": summary, "questions": len(weighted), "unweighted": len(questions) - len(weighted)}
+
+
+# --- Modo automático: el reparto sigue a las preguntas --------------------------------------------
+
+class _Rollback(Exception):
+    """Para calcular el reparto automático sin guardarlo (se deshace el savepoint)."""
+
+
+def _stored(template):
+    from apps.questionnaires.models import Question
+
+    cats = {l.category_id: l.weight_pct for l in template.template_categories.all()}
+    qs = dict(Question.objects.filter(section__template=template, qtype=Question.Type.SCALE)
+              .values_list("pk", "weight_pct"))
+    return cats, qs
+
+
+def expected_distribution(template):
+    """(ponderaciones de categorías, de preguntas) que daría el cálculo automático SIN guardarlas, o None si
+    no se puede calcular (falta nivel de dominio o categoría, o no hay preguntas que ponderen)."""
+    captured = {}
+    try:
+        with transaction.atomic():
+            auto_distribute(template)
+            captured["v"] = _stored(template)
+            raise _Rollback
+    except _Rollback:
+        return captured["v"]
+    except ValidationError:
+        return None
+
+
+def is_automatic(template) -> bool:
+    """True si las ponderaciones guardadas son exactamente las del cálculo automático (o si aún no se ha
+    tocado nada a mano). En ese modo, editar preguntas recalcula el reparto solo."""
+    cats, qs = _stored(template)
+    if not any(cats.values()) and all(v is None for v in qs.values()):
+        return True
+    expected = expected_distribution(template)
+    if expected is None:
+        return False
+    exp_cats, exp_qs = expected
+    norm = lambda d: {k: (v or 0) for k, v in d.items()}  # noqa: E731 — None y 0 cuentan igual
+    return norm(cats) == norm(exp_cats) and norm(qs) == norm(exp_qs)
+
+
+def sync_after_edit(template, was_automatic: bool):
+    """Tras cambiar una pregunta: en modo automático recalcula; en manual avisa qué quedó pendiente.
+
+    Devuelve (nivel, mensaje) para un toast, o None si no hay nada que decir."""
+    if was_automatic:
+        try:
+            auto_distribute(template)
+        except ValidationError as exc:
+            return ("warning", "No pude recalcular la ponderación automática: " + " ".join(exc.messages))
+        return ("info", "Recalculé las ponderaciones automáticamente con el nivel de dominio de cada pregunta.")
+    errors = validate_template_weights(template)
+    if errors:
+        return ("warning", "Las ponderaciones quedaron pendientes: " + errors[0] + " Ajústalas en el paso 2 o usa «Calcular».")
+    return None

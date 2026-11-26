@@ -89,3 +89,45 @@ def test_editor_renders_grips_and_dnd_script(client, talento, ownership_template
     html = client.get(reverse("questionnaires:template_edit", args=[ownership_template.pk])).content.decode()
     assert 'data-grip="question"' in html and 'data-grip="section"' in html and "questionnaire_dnd.js" in html
     assert "data-reorder-url" in html
+
+
+@pytest.mark.django_db
+def test_editing_questions_keeps_weights_in_sync(client, talento, ownership_template):
+    """En modo automático, quitar «pondera» o agregar una pregunta recalcula todo; en manual avisa qué falta."""
+    from apps.core.services import ownership_weights
+    from apps.questionnaires.models import Category, TemplateCategory
+
+    general = Category.objects.get(code="general")
+    TemplateCategory.objects.get_or_create(template=ownership_template, category=general)
+    qs = list(Question.objects.filter(section__template=ownership_template).order_by("order"))
+    for q in qs:
+        q.category, q.target_level, q.is_weighted = general, 2, True
+        q.save()
+    ownership_weights.auto_distribute(ownership_template)
+    assert ownership_weights.is_automatic(ownership_template)
+    client.force_login(talento)
+    url = reverse("questionnaires:template_edit", args=[ownership_template.pk])
+
+    # Quitar «pondera» de una pregunta: el resto se reparte solo y la suma sigue en 100
+    client.post(url, {"action": "save_question", "question": qs[0].pk, "title": qs[0].title, "weighting_fields": "1",
+                      "category": general.pk, "target_level": 2})  # sin is_weighted = desmarcada
+    qs[0].refresh_from_db()
+    assert not qs[0].is_weighted
+    assert not ownership_weights.validate_template_weights(ownership_template)
+    assert ownership_weights.is_automatic(ownership_template)
+
+    # Agregar una pregunta con nivel: entra al reparto automáticamente
+    section = ownership_template.sections.get()
+    client.post(url, {"action": "add_question", "section": section.pk, "title": "Nueva", "weighting_fields": "1",
+                      "category": general.pk, "target_level": 3, "is_weighted": "on"})
+    new = Question.objects.get(title="Nueva")
+    assert new.weight_pct and new.weight_pct > 0
+    assert not ownership_weights.validate_template_weights(ownership_template)
+
+    # Modo manual: se ajusta a mano y el panel lo dice
+    link = ownership_template.template_categories.get()
+    link.weight_pct = 90
+    link.save()
+    assert not ownership_weights.is_automatic(ownership_template)
+    html = client.get(url).content.decode()
+    assert "Ponderación manual" in html and "Falta para que las ponderaciones sean válidas" in html
