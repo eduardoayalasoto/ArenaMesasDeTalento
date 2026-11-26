@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+  <div x-data>
   <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
     <div class="max-w-3xl">
       <h2 class="text-xl font-semibold text-base-content">Bloques de competencia</h2>
@@ -38,4 +39,5 @@
   </div>
 
   {% include "components/_drawer.html" with id="block-drawer" title="Bloque de competencia" open_event="open-block-drawer" close_event="close-block-drawer" body_id="block-drawer-body" width_class="w-3/4 max-w-none" body_template="questionnaires/_block_drawer_form.html" %}
+  </div>
 {% endblock %}

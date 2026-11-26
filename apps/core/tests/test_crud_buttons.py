@@ -45,7 +45,7 @@ def test_lists_use_icon_only_row_actions_and_plus_new(client, talento, name):
 def test_row_icons_have_tooltips(client, talento):
     client.force_login(talento)
     html = client.get(reverse("catalog:position_admin")).content.decode()
-    for tip in ('data-tip="Ver"', 'data-tip="Editar"', 'data-tip="Eliminar'):
+    for tip in ('data-tip="Ver y editar"', 'data-tip="Eliminar'):
         assert tip in html
     assert "text-error" in html
 
@@ -96,3 +96,48 @@ def test_menu_is_split_in_three_admin_categories(client, talento):
     labels = [c["label"] for c in client.get(reverse("catalog:category_admin")).context["nav_categories"]]
     assert labels[-3:] == ["Organización", "Modelo de evaluación", "Administración"]
 
+
+
+@pytest.mark.django_db
+def test_position_x_level_drawer_creates_and_edits_via_htmx(client, talento):
+    from apps.catalog.models import CatalogAuditLog
+
+    client.force_login(talento)
+    hx = {"HTTP_HX_REQUEST": "true"}
+    area, mid = Area.objects.get(), SeniorityLevel.objects.create(code="MID", name="Mid", order=2)
+    assert "Nombre visible" in client.get(reverse("catalog:position_edit_new"), **hx).content.decode()
+    r = client.post(reverse("catalog:position_edit_new"), {"area": area.pk, "level": mid.pk, "name": "DE Mid", "is_active": "on"}, **hx)
+    assert "org-changed" in r["HX-Trigger"]
+    created = Position.objects.get(name="DE Mid")
+    assert CatalogAuditLog.objects.filter(entity="Posición × nivel", action="CREATED").exists()
+    # sin nivel
+    r = client.post(reverse("catalog:position_edit_new"), {"area": area.pk, "level": "", "name": "DE sin nivel", "is_active": "on"}, **hx)
+    assert Position.objects.filter(name="DE sin nivel", level__isnull=True).exists()
+    # duplicado: vuelve el formulario con el error
+    r = client.post(reverse("catalog:position_edit_new"), {"area": area.pk, "level": mid.pk, "name": "Otra", "is_active": "on"}, **hx)
+    assert "Ya existe la posición" in r.content.decode()
+    # editar
+    edit = reverse("catalog:position_edit", args=[created.pk])
+    assert "DE Mid" in client.get(edit, **hx).content.decode()
+    client.post(edit, {"area": area.pk, "level": mid.pk, "name": "DE Mid 2"}, **hx)
+    created.refresh_from_db()
+    assert created.name == "DE Mid 2" and not created.is_active
+    html = client.get(reverse("catalog:position_admin")).content.decode()
+    assert reverse("catalog:position_edit", args=[created.pk]) in html and reverse("catalog:position_edit_new") in html
+
+
+@pytest.mark.django_db
+def test_weight_drawer_edits_via_htmx_even_with_final_scores(client, talento):
+    from apps.catalog.models import PositionPillarWeight
+
+    client.force_login(talento)
+    hx = {"HTTP_HX_REQUEST": "true"}
+    position = Position.objects.get()
+    url = reverse("catalog:weight_edit", args=[position.pk])
+    assert "Ownership (%)" in client.get(url, **hx).content.decode()
+    assert "org-changed" in client.post(url, {"w_ownership": "50", "w_value_delivery": "30", "w_arena_impact": "20"}, **hx)["HX-Trigger"]
+    assert PositionPillarWeight.objects.get(position=position).w_ownership == 0.5
+    assert "sumar exactamente" in client.post(url, {"w_ownership": "50", "w_value_delivery": "30", "w_arena_impact": "30"}, **hx).content.decode()
+    client.post(url, {"action": "reset", "w_ownership": "0", "w_value_delivery": "0", "w_arena_impact": "0"}, **hx)
+    assert not PositionPillarWeight.objects.exists()
+    assert reverse("catalog:weight_edit", args=[position.pk]) in client.get(reverse("catalog:weight_admin")).content.decode()

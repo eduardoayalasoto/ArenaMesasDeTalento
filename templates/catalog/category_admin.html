@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+  <div x-data>
   <div class="mb-6 flex flex-wrap items-start justify-between gap-3">
     <div>
       <h2 class="text-xl font-semibold text-base-content">Categorías de pregunta</h2>
@@ -39,4 +40,5 @@
   </div>
 
   {% include "components/_drawer.html" with id="category-drawer" title="Categoría de pregunta" open_event="open-category-drawer" close_event="close-category-drawer" body_id="category-drawer-body" width_class="w-3/4 max-w-none" body_template="catalog/_category_drawer_form.html" %}
+  </div>
 {% endblock %}

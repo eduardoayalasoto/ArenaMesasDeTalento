@@ -14,11 +14,12 @@
           <button type="submit" class="btn btn-sm btn-outline">Completar {{ missing }} posición{{ missing|pluralize:"es" }} faltante{{ missing|pluralize }}</button>
         </form>
       {% endif %}
-      {% include "components/_create_button.html" with label="Nueva combinación" extra_attrs="data-mode=&quot;create&quot; @click=&quot;$dispatch('edit-position', $el.dataset); $dispatch('open-position-drawer')&quot;" %}
+      {% url 'catalog:position_edit_new' as create_url %}
+      {% include "components/_create_button.html" with label="Nueva combinación" hx_get=create_url hx_target="#org-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openOrgDrawer()"' %}
     </div>
   </div>
 
-  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto" x-data="{ q: '' }">
+  <div id="pos-results" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto" x-data="{ q: '' }">
     <div class="p-4 border-b border-base-200">
       <label class="sr-only" for="pos-filter">Buscar</label>
       <input id="pos-filter" type="search" x-model="q" class="input w-72" placeholder="Buscar posición, nombre o nivel">
@@ -27,8 +28,7 @@
       <thead><tr><th>Posición</th><th>Nombre visible</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
       <tbody>
         {% for r in rows %}
-          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())"
-              data-id="{{ r.position.pk }}" data-area="{{ r.position.area_id }}" data-level="{{ r.position.level_id }}" data-name="{{ r.position.name }}" data-active="{{ r.position.is_active|yesno:'1,' }}">
+          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
             <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
@@ -36,8 +36,8 @@
             <td>{% if r.own_weights %}<span class="badge badge-soft badge-primary">Propia</span>{% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}</td>
             <td>{% if r.position.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>
             <td class="text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1">
-              {% include "components/_row_action.html" with kind="view" extra_attrs="@click=&quot;$dispatch('edit-position', {...$el.closest('tr').dataset, mode: 'view'}); $dispatch('open-position-drawer')&quot;" %}
-              {% include "components/_row_action.html" with kind="edit" extra_attrs="@click=&quot;$dispatch('edit-position', {...$el.closest('tr').dataset, mode: 'edit'}); $dispatch('open-position-drawer')&quot;" %}
+              {% url 'catalog:position_edit' r.position.pk as edit_url %}
+              {% include "components/_row_action.html" with kind="edit" label="Ver y editar" hx_get=edit_url hx_target="#org-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openOrgDrawer()"' %}
               {% include "components/_confirm.html" with confirm_id=r.delete_confirm_id title="Eliminar posición" message=r.delete_confirm_message confirm_url=r.delete_url %}
             </div></td>
           </tr>
@@ -48,5 +48,19 @@
     </table>
   </div>
 
-  {% include "components/_drawer.html" with id="position-drawer" title="Posición" open_event="open-position-drawer" close_event="close-position-drawer" body_id="position-drawer-body" width_class="w-3/4 max-w-none" body_template="catalog/_position_drawer_form.html" %}
+  {% include "components/_drawer.html" with id="org-drawer" title="Posición × nivel" open_event="open-org-drawer" close_event="close-org-drawer" body_id="org-drawer-body" width_class="w-3/4 max-w-none" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Abre el drawer con un spinner mientras htmx trae el formulario; al guardar recarga la lista.
+  window.openOrgDrawer = function () {
+    document.getElementById("org-drawer-body").innerHTML =
+      '<div class="flex items-center justify-center py-10 text-base-content/40"><span class="loading loading-spinner loading-md" role="status" aria-label="Cargando"></span></div>';
+    window.dispatchEvent(new CustomEvent("open-org-drawer"));
+  };
+  document.body.addEventListener("org-changed", function () {
+    htmx.ajax("GET", window.location.href, { target: "#pos-results", select: "#pos-results", swap: "outerHTML" });
+  });
+</script>
 {% endblock %}

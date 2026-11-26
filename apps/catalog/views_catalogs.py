@@ -137,3 +137,37 @@ def _unique_code(base):
         suffix = f"-{n}"
         code, n = base[:40 - len(suffix)] + suffix, n + 1
     return code
+
+
+POSITION_LABELS = {"area": "Posición", "level": "Nivel", "name": "Nombre visible", "is_active": "Activa"}
+
+
+@login_required
+@requires("catalog.positions.manage")
+def position_edit(request, pk=None):
+    """Drawer (htmx) para crear o ver y editar una combinación posición × nivel, con bitácora."""
+    from apps.core.services import audit, positions as positions_service
+
+    from .forms import PositionLevelForm
+    from .views_org import _done, _drawer
+
+    if not request.headers.get("HX-Request"):
+        return redirect("catalog:position_admin")
+    obj = get_object_or_404(Position, pk=pk) if pk else None
+    form = PositionLevelForm(request.POST or None, instance=obj)
+    if request.method == "POST" and form.is_valid():
+        with transaction.atomic():
+            saved, created, changed = audit.save_form(form, request.user, "Posición × nivel", POSITION_LABELS)
+        positions_service.invalidate()
+        return _done(f"Creaste la posición «{saved.name}»." if created else
+                     (f"Actualizaste la posición «{saved.name}»." if changed else "No hubo cambios que guardar."),
+                     "success" if changed else "info")
+    items = []
+    if obj:
+        items = [f"{obj.area.members.filter(level_id=obj.level_id).count()} persona(s)",
+                 "Ponderación de pilares: " + ("propia" if hasattr(obj, "pillar_weight") else "la de su nivel")]
+    return _drawer(request, form=form, obj=obj, entity="Posición × nivel",
+                   title="Editar posición × nivel" if obj else "Nueva combinación",
+                   post_url=reverse("catalog:position_edit", args=[obj.pk]) if obj else reverse("catalog:position_edit_new"),
+                   aside_title="Dónde se usa", aside_items=items,
+                   aside_link=(reverse("catalog:weight_admin"), "Ponderación de pilares"))

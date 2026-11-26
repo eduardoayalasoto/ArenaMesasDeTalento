@@ -248,3 +248,40 @@ class LevelForm(_CodeMixin, forms.ModelForm):
             "order": forms.NumberInput(attrs={"class": _INPUT, "min": 1}),
         }
         help_texts = {"order": "Define el orden en listas y la escalera (1 = el más junior)."}
+
+
+class PositionLevelForm(forms.ModelForm):
+    """Posición × nivel: nombre visible y estado de una combinación (nivel opcional)."""
+
+    class Meta:
+        from .models import Position
+
+        model = Position
+        fields = ["area", "level", "name", "is_active"]
+        labels = {"area": "Posición", "level": "Nivel (opcional)", "name": "Nombre visible (lo que ve la persona)", "is_active": "Activa"}
+        widgets = {
+            "area": forms.Select(attrs={"class": _SELECT}),
+            "level": forms.Select(attrs={"class": _SELECT}),
+            "name": forms.TextInput(attrs={"class": _INPUT, "maxlength": 60, "placeholder": "Ej. Project Manager"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["level"].empty_label = "— Sin nivel —"
+        self.fields["area"].empty_label = "— Elige la posición —"
+
+    def clean(self):
+        data = super().clean()
+        area, level = data.get("area"), data.get("level")
+        if area is not None:
+            clash = type(self.instance).objects.filter(area=area, level=level).exclude(pk=self.instance.pk)
+            if clash.exists():
+                raise forms.ValidationError(
+                    f"Ya existe la posición de {area.name}{f' · {level.name}' if level else ''}: edítala en lugar de crear otra.")
+        return data
+
+    def clean_name(self):
+        name = self.cleaned_data["name"].strip()
+        if not name:
+            raise forms.ValidationError("El nombre de la posición es obligatorio.")
+        return name

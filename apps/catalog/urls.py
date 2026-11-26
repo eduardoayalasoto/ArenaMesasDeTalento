@@ -29,6 +29,8 @@ urlpatterns = [
     path("niveles/<int:pk>/editar/", views_org.level_edit, name="level_edit"),
     path("niveles/<int:pk>/borrar/", views_org.level_delete, name="level_delete"),
     path("puestos/", views_catalogs.position_admin, name="position_admin"),
+    path("puestos/nueva/", views_catalogs.position_edit, name="position_edit_new"),
+    path("puestos/<int:pk>/editar/", views_catalogs.position_edit, name="position_edit"),
     path("puestos/<int:pk>/borrar/", views_catalogs.position_delete, name="position_delete"),
     path("categorias/", views_catalogs.category_admin, name="category_admin"),
     path("categorias/<int:pk>/borrar/", views_catalogs.category_delete, name="category_delete"),
@@ -37,4 +39,5 @@ urlpatterns = [
     path("escenarios/<int:pk>/editar/", views.scenario_edit, name="scenario_edit"),
     path("ponderaciones/", views_weights.weight_admin, name="weight_admin"),
     path("ponderaciones/guardar/", views_weights.weight_save, name="weight_save"),
+    path("ponderaciones/<int:pk>/editar/", views_weights.weight_edit, name="weight_edit"),
 ]

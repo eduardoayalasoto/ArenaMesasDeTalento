@@ -11,7 +11,7 @@
     </p>
   </div>
 
-  <div class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto"
+  <div id="weight-results" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm overflow-x-auto"
        x-data="{ q: '' }">
     <div class="p-4 border-b border-base-200">
       <label class="sr-only" for="weight-filter">Buscar posición</label>
@@ -27,9 +27,7 @@
       </thead>
       <tbody>
         {% for r in rows %}
-          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())"
-              data-id="{{ r.position.pk }}" data-label="{{ r.position.area.name }} · {{ r.position.name }}{% if r.position.level %} · {{ r.position.level.name }}{% endif %}"
-              data-own="{{ r.own|yesno:'1,' }}" data-ownership="{{ r.ownership }}" data-vd="{{ r.value_delivery }}" data-arena="{{ r.arena_impact }}">
+          <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
             <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
@@ -41,7 +39,8 @@
               {% else %}<span class="badge badge-soft">Del nivel</span>{% endif %}
             </td>
             <td class="text-right">
-              {% include "components/_row_action.html" with kind="edit" label="Ver y editar" extra_attrs="@click=&quot;$dispatch('edit-weight', $el.closest('tr').dataset); $dispatch('open-weight-drawer')&quot;" %}
+              {% url 'catalog:weight_edit' r.position.pk as edit_url %}
+              {% include "components/_row_action.html" with kind="edit" label="Ver y editar" hx_get=edit_url hx_target="#org-drawer-body" hx_swap="innerHTML" extra_attrs='hx-on::before-request="window.openOrgDrawer()"' %}
             </td>
           </tr>
         {% empty %}
@@ -51,5 +50,19 @@
     </table>
   </div>
 
-  {% include "components/_drawer.html" with id="weight-drawer" title="Ponderación de pilares" open_event="open-weight-drawer" close_event="close-weight-drawer" body_id="weight-drawer-body" width_class="w-3/4 max-w-none" body_template="catalog/_weight_drawer_form.html" %}
+  {% include "components/_drawer.html" with id="org-drawer" title="Ponderación de pilares" open_event="open-org-drawer" close_event="close-org-drawer" body_id="org-drawer-body" width_class="w-3/4 max-w-none" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Abre el drawer con un spinner mientras htmx trae el formulario; al guardar recarga la lista.
+  window.openOrgDrawer = function () {
+    document.getElementById("org-drawer-body").innerHTML =
+      '<div class="flex items-center justify-center py-10 text-base-content/40"><span class="loading loading-spinner loading-md" role="status" aria-label="Cargando"></span></div>';
+    window.dispatchEvent(new CustomEvent("open-org-drawer"));
+  };
+  document.body.addEventListener("org-changed", function () {
+    htmx.ajax("GET", window.location.href, { target: "#weight-results", select: "#weight-results", swap: "outerHTML" });
+  });
+</script>
 {% endblock %}

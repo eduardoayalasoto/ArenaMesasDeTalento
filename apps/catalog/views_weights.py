@@ -44,3 +44,41 @@ def weight_save(request):
     except ValidationError as exc:
         messages.error(request, " ".join(exc.messages))
     return redirect("catalog:weight_admin")
+
+
+@login_required
+@requires("weights.manage")
+def weight_edit(request, pk):
+    """Drawer (htmx) de la ponderación de una posición: ver y editar; guardar o volver a la del nivel."""
+    from django.http import HttpResponseRedirect
+    from django.urls import reverse
+
+    from .views_org import _done
+
+    if not request.headers.get("HX-Request"):
+        return HttpResponseRedirect(reverse("catalog:weight_admin"))
+    position = get_object_or_404(Position.objects.select_related("area", "level"), pk=pk)
+    error = ""
+    if request.method == "POST":
+        form = PillarWeightForm({**request.POST.dict(), "position": position.pk})
+        if not form.is_valid():
+            error = " ".join(e for errs in form.errors.values() for e in errs)
+        else:
+            try:
+                if request.POST.get("action") == "reset":
+                    pillar_weights.reset_to_level(position)
+                    return _done(f"{position.name} vuelve a usar la ponderación de su nivel.")
+                pillar_weights.save_weights(
+                    position, form.cleaned_data["w_ownership"], form.cleaned_data["w_value_delivery"],
+                    form.cleaned_data["w_arena_impact"])
+                return _done(f"Guardaste la ponderación de {position.area.name} · {position.name}.")
+            except ValidationError as exc:
+                error = " ".join(exc.messages)
+    row = next(r for r in pillar_weights.matrix() if r["position"].pk == position.pk)
+    vals = ([request.POST.get("w_ownership"), request.POST.get("w_value_delivery"), request.POST.get("w_arena_impact")]
+            if error and request.method == "POST" else [row["ownership"] or "0.0", row["value_delivery"] or "0.0", row["arena_impact"] or "0.0"])
+    return render(request, "catalog/_weight_form.html", {
+        "position": position, "row": row, "vals": vals, "error": error,
+        "frozen": pillar_weights.frozen_scores(position),
+        "post_url": reverse("catalog:weight_edit", args=[position.pk]),
+    })
