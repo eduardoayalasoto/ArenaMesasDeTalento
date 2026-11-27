@@ -166,6 +166,6 @@ def test_import_rejects_weights_that_do_not_sum_100(cons):
         questionnaire_import.import_version("CONS", "JR", [{"title": "A", "category": "zzz"}], 1,
                                             categories=[{"code": "a", "name": "A", "weight": 100}, {"code": "b", "name": "B", "weight": 0}],
                                             scale=scale)
-    with pytest.raises(questionnaire_import.ImportRejected, match="no existe la v1"):
+    with pytest.raises(questionnaire_import.ImportRejected, match="no hay ningún cuestionario de Ownership publicado"):
         questionnaire_import.import_version("CONS", "JR", questions, 1)
     assert not T.objects.filter(area__code="CONS").exists()
