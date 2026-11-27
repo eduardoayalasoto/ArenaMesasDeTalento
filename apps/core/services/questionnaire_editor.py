@@ -416,3 +416,17 @@ def reorder_questions(template, layout):
     if sorted(seen) != sorted(questions):
         raise ValidationError("La lista de preguntas no coincide con el cuestionario.")
     Question.objects.bulk_update(questions.values(), ["section", "order"])
+
+
+@transaction.atomic
+def reorder_scale(template, option_ids):
+    """Fija el orden de las opciones de la escala según la lista de ids (el conjunto debe coincidir)."""
+    from apps.questionnaires.models import ScaleOption
+
+    options = {o.pk: o for o in template.scale_options.filter(question__isnull=True)}
+    ids = [int(i) for i in option_ids]
+    if set(ids) != set(options) or len(ids) != len(options):
+        raise ValidationError("La lista de opciones no coincide con la escala del cuestionario.")
+    for order, pk in enumerate(ids, 1):
+        options[pk].order = order
+    ScaleOption.objects.bulk_update(options.values(), ["order"])

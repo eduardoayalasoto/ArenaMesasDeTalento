@@ -10,7 +10,7 @@
       {% include "partials/avatar.html" with subject=target size="w-20 h-20" icon="w-10 h-10" %}
       <div class="min-w-0">
         <h2 class="text-2xl font-bold text-base-content truncate">{{ target.full_name }}</h2>
-        <p class="text-base-content/70">{{ target.area.name|default:"Sin área" }}{% if target.level %} · {{ target|puesto }}{% endif %}</p>
+        <p class="text-base-content/70">{{ target.area.full_name|default:"Sin área" }}{% if target.level %} · {{ target|puesto }}{% endif %}</p>
         <p class="text-base text-base-content/60">Periodo {{ period.name }}</p>
       </div>
     </div>

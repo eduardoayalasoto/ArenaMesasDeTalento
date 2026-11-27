@@ -17,4 +17,7 @@ urlpatterns = [
     path("admin/preguntas/<int:pk>/eliminar/", views.question_delete, name="question_delete"),
     path("admin/secciones/<int:pk>/eliminar/", views.section_delete, name="section_delete"),
     path("admin/escala/<int:pk>/eliminar/", views.scale_option_delete, name="scale_option_delete"),
+    path("admin/escala/<int:pk>/guardar/", views.scale_option_save, name="scale_option_save"),
+    path("admin/<int:pk>/escala/nueva/", views.scale_option_add, name="scale_option_add"),
+    path("admin/<int:pk>/escala/nota/", views.scale_note_save, name="scale_note_save"),
 ]

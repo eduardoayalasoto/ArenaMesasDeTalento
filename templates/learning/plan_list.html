@@ -17,7 +17,7 @@
       {% for p in year_plans %}
         <a href="{% url 'learning:plan_detail' p.pk %}" class="bg-base-100 border border-base-300 rounded-2xl shadow-sm p-5 flex flex-col gap-2 hover:border-primary/25 hover:shadow transition">
           <div class="flex items-center justify-between gap-2">
-            <span class="badge badge-soft badge-primary">{{ p.area.name }}</span>
+            <span class="badge badge-soft badge-primary">{{ p.area.full_name }}</span>
             {% if p.status == "BORRADOR" %}<span class="badge badge-soft badge-warning">Borrador</span>{% elif p.status == "ARCHIVADO" %}<span class="badge badge-soft">Archivado</span>{% endif %}
           </div>
           <p class="font-semibold text-base-content">{{ p.title }}</p>

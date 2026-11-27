@@ -31,7 +31,7 @@
 
   {% if missing_positions %}
     {% callout "warning" title="Posiciones activas sin cuestionario de Ownership" cls="mb-6" %}
-      {% for p in missing_positions|slice:":8" %}{{ p.area.name }} · {{ p.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if missing_positions|length > 8 %} y {{ missing_positions|length|add:"-8" }} más{% endif %}.
+      {% for p in missing_positions|slice:":8" %}<b>{{ p.area.department.name|default:"Sin área" }}</b> › {{ p.area.name }}{% if p.level %} · {{ p.level.name }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% if missing_positions|length > 8 %} y {{ missing_positions|length|add:"-8" }} más{% endif %}.
       Créalos abajo, en «Nuevo cuestionario».
     {% endcallout %}
   {% endif %}
@@ -156,7 +156,7 @@
                   <p class="font-medium text-base-content">
                     {% if t.kind == 'OWNERSHIP' %}Ownership · {{ t.area.department.name|default:"Sin área" }} · {{ t.area.name }}{% if t.level %} · {{ t.level.name }}{% endif %}{% elif t.kind == 'THREE_SIXTY' %}360 al owner del proyecto{% else %}Entrega de Valor{% endif %}
                   </p>
-                  <p class="text-sm text-base-content/60">{% if t.kind == 'OWNERSHIP' %}Se asigna a: {{ t|puesto_de }}{% elif t.kind == 'THREE_SIXTY' %}Lo contesta el equipo de cada proyecto con la 360 activada (informativa, no pondera){% else %}Un solo cuestionario para todos los proyectos{% endif %}</p>
+                  <p class="text-sm text-base-content/60">{% if t.kind == 'OWNERSHIP' %}Se asigna a: {{ t|puesto_de }} · Área {{ t.area.department.name|default:"sin área" }}{% elif t.kind == 'THREE_SIXTY' %}Lo contesta el equipo de cada proyecto con la 360 activada (informativa, no pondera){% else %}Un solo cuestionario para todos los proyectos{% endif %}</p>
                 </td>
                 <td class="px-4 py-3 text-center tabular-nums whitespace-nowrap">v{{ t.version }}</td>
                 <td class="px-4 py-3 text-center hidden sm:table-cell whitespace-nowrap">

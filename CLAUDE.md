@@ -85,7 +85,8 @@ CUMPLE/NO CUMPLE), `django-backend-engineer.md` (backend); skills `daisyui`, `de
 - **Seguridad HTTP:** `SecurityHeadersMiddleware` (CSP, Permissions-Policy, CORP) + HSTS 2 años, Referrer-Policy y
   X-Frame-Options en `settings`; la CSP conserva `unsafe-inline/unsafe-eval` por Alpine y `on*`/`hx-on` (para A+ estricta: build CSP de
   Alpine y nonces). **Editor de cuestionarios:** en modo automático (`ownership_weights.is_automatic`) editar preguntas recalcula el
-  reparto solo; en manual avisa qué falta. Área «Desarrollo» (Director Héctor Rangel) con Gerente y Desarrollador·Snr.
+  reparto solo; en manual avisa qué falta. Área «Desarrollo» (Director Héctor Rangel): Desarrollador Jr/Mid/Snr y Gerente (sin nivel), con sus 4 cuestionarios de Ownership
+  cargados con `scripts/checklists_dev_to_yaml.py` + `import_questionnaire_version` (posición nueva sin v1 hereda la escala del Ownership vigente).
 - **360 al owner (spec 010, en producción):** informativa, NO alimenta ninguna calificación. `Project.three_sixty_enabled`; cuestionario tipo
   `THREE_SIXTY` (sección = dimensión con `Section.weight_pct`); `ThreeSixtyResponse/Answer` guardan `respondent` (POC) pero ninguna vista lo
   muestra; servicio `apps/core/services/three_sixty.py`; pantalla «Evaluaciones 360». Carga: `import_competency_matrix <xlsx> --360`.

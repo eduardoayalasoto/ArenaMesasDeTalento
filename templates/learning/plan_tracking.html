@@ -34,7 +34,7 @@
         {% for r in data.rows %}
           <tr>
             <td class="font-medium">{{ r.person.full_name }}</td>
-            <td class="text-base-content/70">{{ r.person.area.name|default:"—" }}</td>
+            <td class="text-base-content/70">{{ r.person.area.full_name|default:"—" }}</td>
             <td class="text-right tabular-nums">{{ r.counts.PENDIENTE }}</td>
             <td class="text-right tabular-nums">{{ r.counts.EN_CURSO }}</td>
             <td class="text-right tabular-nums">{{ r.counts.COMPLETADO }}</td>

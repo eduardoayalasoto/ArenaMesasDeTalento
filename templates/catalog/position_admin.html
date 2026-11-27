@@ -25,10 +25,11 @@
       <input id="pos-filter" type="search" x-model="q" class="input w-72" placeholder="Buscar posición, nombre o nivel">
     </div>
     <table class="table">
-      <thead><tr><th>Posición</th><th>Nombre visible</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
+      <thead><tr><th>Área</th><th>Posición</th><th>Nombre visible</th><th>Nivel</th><th class="text-center">Personas</th><th>Ponderación</th><th>Estado</th><th class="text-right">Acciones</th></tr></thead>
       <tbody>
         {% for r in rows %}
           <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
+            <td>{{ r.position.area.department.name|default:"Sin área" }}</td>
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
             <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
@@ -42,7 +43,7 @@
             </div></td>
           </tr>
         {% empty %}
-          <tr><td colspan="7" class="text-base-content/75">No hay posiciones. Crea la primera o completa las faltantes.</td></tr>
+          <tr><td colspan="8" class="text-base-content/75">No hay posiciones. Crea la primera o completa las faltantes.</td></tr>
         {% endfor %}
       </tbody>
     </table>

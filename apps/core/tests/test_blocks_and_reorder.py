@@ -131,3 +131,50 @@ def test_editing_questions_keeps_weights_in_sync(client, talento, ownership_temp
     assert not ownership_weights.is_automatic(ownership_template)
     html = client.get(url).content.decode()
     assert "Ponderación manual" in html and "Falta para que las ponderaciones sean válidas" in html
+
+
+@pytest.mark.django_db
+def test_scale_is_dragged_and_autosaved_by_htmx_without_redirects(client, talento, ownership_template):
+    """Paso 1: reordenar, editar, agregar y quitar opciones por htmx (sin POST + redirect a la página)."""
+    from apps.questionnaires.models import ScaleOption
+
+    client.force_login(talento)
+    hx = {"HTTP_HX_REQUEST": "true"}
+    t = ownership_template
+    for i, (v, label) in enumerate(((1, "No cumple"), (2, "Parcial"), (3, "Cumple"), (4, "Excede")), 1):
+        ScaleOption.objects.create(template=t, value=v, label=label, order=i)
+    ids = list(t.scale_options.order_by("order").values_list("pk", flat=True))
+    html = client.get(reverse("questionnaires:template_edit", args=[t.pk])).content.decode()
+    assert 'id="scale-list"' in html and 'data-grip="scale"' in html and 'hx-post' in html
+    assert 'value="move_scale_option"' not in html and 'value="move_section"' not in html and 'value="move_question"' not in html
+
+    reorder = reverse("questionnaires:template_reorder", args=[t.pk])
+    r = client.post(reorder, {"kind": "scale", "order": json.dumps(ids[::-1])}, **hx)
+    assert r.status_code == 204
+    assert list(t.scale_options.order_by("order").values_list("pk", flat=True)) == ids[::-1]
+    assert client.post(reorder, {"kind": "scale", "order": json.dumps(ids[:2])}, **hx).status_code == 400
+
+    # Autoguardado: sin redirección, 204 (valor, etiqueta y descriptor)
+    opt = t.scale_options.get(value=3)
+    r = client.post(reverse("questionnaires:scale_option_save", args=[opt.pk]), {"value": "3", "label": "Cumple bien", "description": "Estándar"}, **hx)
+    assert r.status_code == 204
+    opt.refresh_from_db()
+    assert opt.label == "Cumple bien" and opt.description == "Estándar"
+    # Valor repetido: no se guarda y la fila vuelve con lo guardado + toast de error
+    r = client.post(reverse("questionnaires:scale_option_save", args=[opt.pk]), {"value": "4", "label": "X"}, **hx)
+    assert r.status_code == 200 and r["HX-Retarget"] == f"#scale-row-{opt.pk}"
+    assert "Ya hay una opción con valor 4" in json.loads(r["HX-Trigger"])["toast"]["message"]
+    opt.refresh_from_db()
+    assert opt.value == 3
+
+    # Alta: devuelve la fila; baja: 200 vacío con toast; ninguna redirige
+    n = t.scale_options.count()
+    r = client.post(reverse("questionnaires:scale_option_add", args=[t.pk]), {"value": "", "label": "N/A", "description": ""}, **hx)
+    assert r.status_code == 200 and b"scale-row-" in r.content and t.scale_options.count() == n + 1
+    new = t.scale_options.get(label="N/A")
+    r = client.post(reverse("questionnaires:scale_option_delete", args=[new.pk]), **hx)
+    assert r.status_code == 200 and not t.scale_options.filter(pk=new.pk).exists()
+    # Nota de escala
+    assert client.post(reverse("questionnaires:scale_note_save", args=[t.pk]), {"scale_note": "Nota nueva"}, **hx).status_code == 204
+    t.refresh_from_db()
+    assert t.scale_note == "Nota nueva"

@@ -271,6 +271,8 @@ class PositionLevelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["level"].empty_label = "— Sin nivel —"
         self.fields["area"].empty_label = "— Elige la posición —"
+        self.fields["area"].queryset = self.fields["area"].queryset.select_related("department").order_by("department__order", "name")
+        self.fields["area"].label_from_instance = lambda a: f"{a.department.name} › {a.name}" if a.department_id else a.name
 
     def clean(self):
         data = super().clean()

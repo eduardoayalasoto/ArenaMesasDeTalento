@@ -20,7 +20,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Área</th><th>Posición</th><th>Nivel</th>
+          <th>Área</th><th>Posición</th><th>Nombre visible</th><th>Nivel</th>
           <th class="text-right">Ownership</th><th class="text-right">Entrega de Valor</th><th class="text-right">Impacto Arena</th>
           <th>Origen</th><th class="text-right">Acciones</th>
         </tr>
@@ -28,6 +28,7 @@
       <tbody>
         {% for r in rows %}
           <tr x-show="!q || $el.textContent.toLowerCase().includes(q.toLowerCase())">
+            <td>{{ r.position.area.department.name|default:"Sin área" }}</td>
             <td>{{ r.position.area.name }}</td>
             <td class="font-medium text-base-content">{{ r.position.name }}</td>
             <td>{{ r.position.level.name|default:"Sin nivel" }}</td>
@@ -44,7 +45,7 @@
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="8" class="text-base-content/75">No hay posiciones. Créalas en Catálogos → Posiciones.</td></tr>
+          <tr><td colspan="9" class="text-base-content/75">No hay posiciones. Créalas en Catálogos → Posiciones.</td></tr>
         {% endfor %}
       </tbody>
     </table>

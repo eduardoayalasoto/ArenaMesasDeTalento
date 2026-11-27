@@ -105,3 +105,82 @@
     else send({ kind: "sections", order: JSON.stringify(sectionsOrder()) });
   });
 })();
+
+/**
+ * Escala de respuestas (paso 1): arrastrar para reordenar con movimiento visible y autoguardado por htmx.
+ * - Asa `[data-grip="scale"]` en cada fila `[data-scale-row]` de `#scale-list`; al soltar se manda el orden completo.
+ * - Los campos de cada fila se guardan solos (hx-post en la propia fila); aquí solo se muestra el «Guardado».
+ */
+(function () {
+  function toast(message, variant) {
+    window.dispatchEvent(new CustomEvent("toast", { detail: { message: message, variant: variant } }));
+  }
+
+  // «Guardado» junto a lo que se autoguardó (fila de la escala o nota de escala).
+  document.body.addEventListener("htmx:afterRequest", function (evt) {
+    var holder = evt.detail.elt && evt.detail.elt.closest && evt.detail.elt.closest("[data-autosave]");
+    if (!holder || !evt.detail.successful) return;
+    var badge = holder.querySelector("[data-saved]");
+    if (!badge) return;
+    badge.classList.remove("hidden"); badge.classList.add("inline-flex");
+    clearTimeout(badge._t);
+    badge._t = setTimeout(function () { badge.classList.add("hidden"); badge.classList.remove("inline-flex"); }, 1600);
+  });
+
+  // La primera opción agregada quita el aviso de «sin escala»; renumera íconos de las filas nuevas.
+  document.body.addEventListener("htmx:afterSwap", function (evt) {
+    if (evt.detail.target && evt.detail.target.id === "scale-list") {
+      var empty = document.getElementById("scale-empty");
+      if (empty) empty.classList.add("hidden");
+      if (window.renderIcons) window.renderIcons(evt.detail.target);
+    }
+  });
+
+  var list = document.getElementById("scale-list");
+  if (!list || !list.dataset.dnd) return;
+  var dragged = null;
+
+  function rows() { return Array.prototype.filter.call(list.children, function (el) { return el.matches("[data-scale-row]"); }); }
+
+  list.addEventListener("pointerdown", function (e) {
+    var grip = e.target.closest('[data-grip="scale"]');
+    if (!grip) return;
+    var row = grip.closest("[data-scale-row]");
+    if (row) row.draggable = true;
+  });
+  document.addEventListener("pointerup", function () {
+    if (dragged) return;
+    rows().forEach(function (r) { r.draggable = false; });
+  });
+  list.addEventListener("dragstart", function (e) {
+    var row = e.target.closest("[data-scale-row]");
+    if (!row || !row.draggable) return;
+    dragged = row;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", "scale");
+    row.classList.add("opacity-40", "shadow-lg", "rounded-xl", "ring-2", "ring-primary/40");
+  });
+  list.addEventListener("dragover", function (e) {
+    if (!dragged) return;
+    e.preventDefault();
+    var others = rows().filter(function (r) { return r !== dragged; });
+    var before = null;
+    for (var i = 0; i < others.length; i++) {
+      var box = others[i].getBoundingClientRect();
+      if (e.clientY < box.top + box.height / 2) { before = others[i]; break; }
+    }
+    if (before) list.insertBefore(dragged, before); else list.appendChild(dragged);
+  });
+  list.addEventListener("drop", function (e) { if (dragged) e.preventDefault(); });
+  list.addEventListener("dragend", function () {
+    if (!dragged) return;
+    dragged.classList.remove("opacity-40", "shadow-lg", "rounded-xl", "ring-2", "ring-primary/40");
+    dragged.draggable = false;
+    dragged = null;
+    var order = rows().map(function (r) { return Number(r.dataset.scaleId); });
+    htmx.ajax("POST", list.dataset.reorderUrl, { values: { kind: "scale", order: JSON.stringify(order) }, swap: "none" }).then(
+      function () { toast("Guardé el nuevo orden de la escala.", "success"); },
+      function () { toast("No pude guardar el orden; recargo la página.", "error"); window.location.reload(); }
+    );
+  });
+})();

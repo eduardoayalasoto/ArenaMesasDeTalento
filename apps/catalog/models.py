@@ -69,6 +69,11 @@ class Area(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def full_name(self) -> str:
+        """«Gerente · Desarrollo»: la posición calificada con su Área (hay posiciones con el mismo nombre en varias Áreas)."""
+        return f"{self.name} · {self.department.name}" if self.department_id else self.name
+
 
 class CatalogAuditLog(models.Model):
     """Bitácora inmutable de los catálogos (Áreas, Posiciones, Niveles…): quién cambió qué y cuándo."""

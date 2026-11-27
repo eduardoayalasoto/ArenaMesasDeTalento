@@ -154,3 +154,25 @@ def test_security_headers_on_every_response(client, talento):
         assert "camera=()" in r["Permissions-Policy"] and r["Cross-Origin-Resource-Policy"] == "same-origin"
         assert r["X-Frame-Options"] == "DENY" and r["X-Content-Type-Options"] == "nosniff"
         assert r["Referrer-Policy"]
+
+
+@pytest.mark.django_db
+def test_same_position_name_in_two_areas_is_never_ambiguous(client, talento):
+    """«Gerente» existe en Consultoría y en Desarrollo: toda lista lo muestra con su Área."""
+    consul = Department.objects.create(code="CONSUL", name="Consultoría", order=2)
+    desarr = Department.objects.create(code="DESARR", name="Desarrollo", order=3)
+    g1 = Area.objects.create(code="GERENTE", name="Gerente", department=consul)
+    g2 = Area.objects.create(code="GERDES", name="Gerente", department=desarr)
+    for a in (g1, g2):
+        Position.objects.create(area=a, level=None, name="Gerente")
+    assert g1.full_name == "Gerente · Consultoría" and g2.full_name == "Gerente · Desarrollo"
+    client.force_login(talento)
+    html = client.get(reverse("catalog:position_admin")).content.decode()
+    assert "<th>Área</th><th>Posición</th><th>Nombre visible</th>" in html
+    assert "<td>Consultoría</td>" in html and "<td>Desarrollo</td>" in html
+    html = client.get(reverse("questionnaires:admin_list")).content.decode()
+    assert "<b>Desarrollo</b> › Gerente" in html and "<b>Consultoría</b> › Gerente" in html
+    html = client.get(reverse("catalog:weight_admin")).content.decode()
+    assert "<td>Desarrollo</td>" in html and "<td>Consultoría</td>" in html
+    form_html = client.get(reverse("catalog:position_edit_new"), HTTP_HX_REQUEST="true").content.decode()
+    assert "Desarrollo › Gerente" in form_html and "Consultoría › Gerente" in form_html

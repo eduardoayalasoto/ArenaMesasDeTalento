@@ -12,7 +12,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
       <i data-lucide="user" class="w-4 h-4 text-primary shrink-0"></i>
       <span class="text-base font-medium text-base-content">{{ primary.user.full_name }}</span>
       {% if primary.user.area %}
-        <span class="text-base text-base-content/50">· {{ primary.user.area.name }}</span>
+        <span class="text-base text-base-content/50">· {{ primary.user.area.full_name }}</span>
       {% endif %}
       {% if request.user|can:"talent_table.assign_feedback" %}
         <button type="button" @click="editingPrimary = !editingPrimary"
@@ -43,7 +43,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
         class="select w-full py-1.5 w-auto max-w-[16rem]" required>
         <option value="">— Nuevo responsable principal —</option>
         {% for u in all_users %}
-          <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
+          <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.full_name }}{% endif %}</option>
         {% endfor %}
         {% if primary %}
           <option value="{{ primary.user.pk }}">{{ primary.user.full_name }} (actual)</option>
@@ -68,7 +68,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
       <i data-lucide="user" class="w-4 h-4 text-base-content/50 shrink-0"></i>
       <span class="text-base font-medium text-base-content/80">{{ r.user.full_name }}</span>
       {% if r.user.area %}
-        <span class="text-base text-base-content/50">· {{ r.user.area.name }}</span>
+        <span class="text-base text-base-content/50">· {{ r.user.area.full_name }}</span>
       {% endif %}
       {% if request.user|can:"talent_table.assign_feedback" %}
         <form method="post" class="inline"
@@ -102,7 +102,7 @@ Params: note, target, primary (FeedbackResponsible|None), secondaries (list), al
           class="select w-full py-1.5 w-auto max-w-[16rem]" required>
           <option value="">— Elegir persona —</option>
           {% for u in all_users %}
-            <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.name }}{% endif %}</option>
+            <option value="{{ u.pk }}">{{ u.full_name }}{% if u.area %} · {{ u.area.full_name }}{% endif %}</option>
           {% endfor %}
         </select>
         <button type="button" class="btn btn-sm btn-soft btn-primary py-1.5" @click="addingSecondary = false">Cancelar</button>

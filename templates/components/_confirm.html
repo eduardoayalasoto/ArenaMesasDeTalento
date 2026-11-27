@@ -36,6 +36,7 @@ Props:
     la página junto a otros botones de tamaño normal (todos del mismo alto).
   trigger_aria: nombre accesible del disparador de solo ícono (default:
     `title`, p. ej. "Eliminar"); con `trigger_label` el nombre es el texto.
+  confirm_hx_target: si viene (p. ej. "closest [data-row]"), el borrado va por htmx y quita ese elemento sin recargar.
   confirm_fields: dict opcional de campos ocultos que viaja en el POST (p. ej. {"period": 3, "action": "close"}).
   confirm_label (default "Eliminar") / cancel_label (default "Cancelar").
 {% endcomment %}
@@ -56,7 +57,7 @@ Props:
         <form method="dialog">
           <button type="submit" class="btn btn-ghost btn-sm">{{ cancel_label|default:"Cancelar" }}</button>
         </form>
-        <form method="post" action="{{ confirm_url }}">
+        <form method="post" action="{{ confirm_url }}"{% if confirm_hx_target %} hx-post="{{ confirm_url }}" hx-target="{{ confirm_hx_target }}" hx-swap="delete"{% endif %}>
           {% csrf_token %}
           {% for name, value in confirm_fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
           <button type="submit" class="btn btn-error btn-sm">{{ confirm_label|default:"Eliminar" }}</button>

@@ -108,28 +108,31 @@ def import_version(area_code, level_code, questions, version, publish=False, *,
     )
 
     T = QuestionnaireTemplate
-    label = f"{area_code}/{level_code} v{version}"
+    shown = f"{area_code}/{level_code or 'sin nivel'}"
+    label = f"{shown} v{version}"
     area = Area.objects.get(code=area_code)
-    level = SeniorityLevel.objects.get(code=level_code)
+    level = SeniorityLevel.objects.get(code=level_code) if level_code else None   # None = posición sin nivel
     siblings = T.objects.filter(kind=T.Kind.OWNERSHIP, area=area, level=level)
 
     base = siblings.filter(version=1).first()
     if scale is None and base is None:
-        raise ImportRejected(f"{area_code}/{level_code}: no existe la v1 de la cual copiar la escala.")
-    if version == 1 and scale is None:
-        raise ImportRejected(f"{label}: la versión 1 solo se importa con una escala propia en el YAML.")
+        # Posición nueva sin v1: hereda la escala y su nota del cuestionario de Ownership vigente más reciente.
+        base = (T.objects.filter(kind=T.Kind.OWNERSHIP, status=T.Status.PUBLICADO, scale_options__isnull=False)
+                .order_by("-version", "-pk").distinct().first())
+        if base is None:
+            raise ImportRejected(f"{shown}: no hay ningún cuestionario de Ownership publicado del cual copiar la escala.")
 
     newer = siblings.filter(version__gt=version, status=T.Status.PUBLICADO).first()
     if newer:
         # Ya hay una versión posterior vigente (p. ej. CD/JR v3): nunca se publica una menor encima.
-        return ImportResult(area_code, level_code, version, 0, f"omitido (v{newer.version} publicada)", [])
+        return ImportResult(area_code, level_code or "sin nivel", version, 0, f"omitido (v{newer.version} publicada)", [])
 
     plan = _plan_categories(label, categories, questions)
 
     template = siblings.filter(version=version).first()
     if template and _has_answers(template):
         raise ImportRejected(
-            f"{area_code}/{level_code} v{version}: ya tiene respuestas capturadas; no se modifica."
+            f"{shown} v{version}: ya tiene respuestas capturadas; no se modifica."
         )
     note = scale_note if scale_note is not None else (base.scale_note if base else "")
     if template is None:
@@ -198,7 +201,7 @@ def import_version(area_code, level_code, questions, version, publish=False, *,
     elif template.status == T.Status.PUBLICADO:
         errors = questionnaire_editor.validate_for_publish(template)
         if errors:
-            raise ImportRejected(f"{area_code}/{level_code} v{version}: " + " ".join(errors))
+            raise ImportRejected(f"{shown} v{version}: " + " ".join(errors))
 
     template.refresh_from_db()
-    return ImportResult(area_code, level_code, version, len(questions), template.get_status_display(), archived)
+    return ImportResult(area_code, level_code or "sin nivel", version, len(questions), template.get_status_display(), archived)

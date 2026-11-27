@@ -220,13 +220,13 @@
       </h3>
       <p class="text-base font-semibold text-base-content/50 uppercase tracking-wide mb-2">Principal</p>
       {% if primary %}
-        <p class="text-base text-base-content/80 mb-3">{{ primary.user.full_name }}{% if primary.user.area %} <span class="text-base-content/50">· {{ primary.user.area.name }}</span>{% endif %}</p>
+        <p class="text-base text-base-content/80 mb-3">{{ primary.user.full_name }}{% if primary.user.area %} <span class="text-base-content/50">· {{ primary.user.area.full_name }}</span>{% endif %}</p>
       {% else %}
         <p class="text-base text-base-content/50 italic mb-3">Sin responsable principal.</p>
       {% endif %}
       <p class="text-base font-semibold text-base-content/50 uppercase tracking-wide mb-2">Secundarios</p>
       {% for r in secondaries %}
-        <p class="text-base text-base-content/80 mb-1.5">{{ r.user.full_name }}{% if r.user.area %} <span class="text-base-content/50">· {{ r.user.area.name }}</span>{% endif %}</p>
+        <p class="text-base text-base-content/80 mb-1.5">{{ r.user.full_name }}{% if r.user.area %} <span class="text-base-content/50">· {{ r.user.area.full_name }}</span>{% endif %}</p>
       {% empty %}
         <p class="text-base text-base-content/50 italic">Sin responsables secundarios.</p>
       {% endfor %}

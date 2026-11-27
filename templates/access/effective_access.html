@@ -7,7 +7,7 @@
     {% include "partials/avatar.html" with subject=person size="w-14 h-14" %}
     <div class="min-w-0">
       <h2 class="text-lg font-semibold text-base-content">{{ person.full_name }}</h2>
-      <p class="text-base text-base-content/70">{{ person.area.name|default:"Sin área" }}{% if person.level %} · {{ person|puesto }}{% endif %}</p>
+      <p class="text-base text-base-content/70">{{ person.area.full_name|default:"Sin área" }}{% if person.level %} · {{ person|puesto }}{% endif %}</p>
     </div>
     <div class="ml-auto text-right">
       <p class="text-base text-base-content/60">Perfil</p>

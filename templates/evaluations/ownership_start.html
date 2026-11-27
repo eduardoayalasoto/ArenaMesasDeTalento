@@ -18,7 +18,7 @@
         <select name="evaluator" id="evaluator" class="select w-full" required x-model="primaryId">
           <option value="">— Selecciona una persona —</option>
           {% for e in evaluators %}
-            <option value="{{ e.id }}" {% if e.id == suggested_id %}selected{% endif %}>{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>
+            <option value="{{ e.id }}" {% if e.id == suggested_id %}selected{% endif %}>{{ e.full_name }}{% if e.area %} · {{ e.area.full_name }}{% endif %}</option>
           {% endfor %}
         </select>
         {% if suggested_id %}<p class="mt-1 text-base text-base-content/60">Preseleccionamos al evaluador sugerido para este proyecto; puedes cambiarlo.</p>{% endif %}
@@ -33,7 +33,7 @@
               <input type="checkbox" name="secondary_evaluators" value="{{ e.id }}"
                      class="rounded border-base-300 text-primary"
                      @change="secondaries = $el.checked ? [...secondaries, '{{ e.id }}'] : secondaries.filter(x => x !== '{{ e.id }}')">
-              <span class="text-base text-base-content/80">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</span>
+              <span class="text-base text-base-content/80">{{ e.full_name }}{% if e.area %} · {{ e.area.full_name }}{% endif %}</span>
             </label>
           {% endfor %}
         </div>

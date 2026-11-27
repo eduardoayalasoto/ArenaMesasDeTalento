@@ -2,7 +2,7 @@
 <form method="post" hx-post="{{ post_url }}" hx-target="#org-drawer-body" hx-swap="innerHTML" hx-indicator="#org-save-spinner"
       x-data="weightGroup('weight-drawer', [{% for v in vals %}'{{ v }}'{% if not forloop.last %}, {% endif %}{% endfor %}])">
   {% csrf_token %}
-  <p class="text-base font-medium text-base-content mb-1">{{ position.area.name }} · {{ position.name }}{% if position.level %} · {{ position.level.name }}{% endif %}</p>
+  <p class="text-base font-medium text-base-content mb-1">{{ position.area.department.name|default:"Sin área" }} › {{ position.area.name }} · {{ position.name }}{% if position.level %} · {{ position.level.name }}{% endif %}</p>
   <p class="text-base text-base-content/70 mb-4">
     {% if row.own %}Ponderación propia de esta posición.{% else %}Usa la ponderación de su nivel; al guardar se vuelve propia.{% endif %}
     Los periodos cerrados conservan la ponderación con la que se calcularon{% if frozen %} ({{ frozen }} calificación{{ frozen|pluralize:"es" }} ya cerrada{{ frozen|pluralize }}){% endif %}; el cambio aplica a los periodos abiertos y futuros.

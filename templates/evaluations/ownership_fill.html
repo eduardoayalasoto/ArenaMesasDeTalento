@@ -80,7 +80,7 @@
           {% include "partials/avatar.html" with subject=evaluation.user size="w-8 h-8" mini=True %}
           <span class="min-w-0">
             <span class="block font-medium text-base-content truncate">{{ evaluation.user.full_name }}</span>
-            <span class="block text-sm text-base-content/60 truncate">{{ evaluation.template.area.name }} · {{ evaluation.template|puesto_de }}</span>
+            <span class="block text-sm text-base-content/60 truncate">{{ evaluation.template.area.full_name }} · {{ evaluation.template|puesto_de }}</span>
           </span>
         </dd>
       </div>
@@ -136,7 +136,7 @@
         <label class="text-base text-base-content/70" for="new-primary">Nuevo evaluador principal</label>
         <select id="new-primary" name="evaluator" class="select select-sm w-full sm:w-72" required>
           <option value="">— Elegir persona —</option>
-          {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
+          {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.full_name }}{% endif %}</option>{% endfor %}
         </select>
         <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
         <button type="button" class="btn btn-sm btn-ghost" @click="editingPrimary = false">Cancelar</button>
@@ -147,7 +147,7 @@
         <label class="text-base text-base-content/70" for="new-secondary">Evaluador secundario</label>
         <select id="new-secondary" name="evaluator" class="select select-sm w-full sm:w-72" required>
           <option value="">— Elegir persona —</option>
-          {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.name }}{% endif %}</option>{% endfor %}
+          {% for e in all_users %}<option value="{{ e.id }}">{{ e.full_name }}{% if e.area %} · {{ e.area.full_name }}{% endif %}</option>{% endfor %}
         </select>
         <button type="submit" class="btn btn-sm btn-primary">Agregar</button>
         <button type="button" class="btn btn-sm btn-ghost" @click="addingSecondary = false">Cancelar</button>

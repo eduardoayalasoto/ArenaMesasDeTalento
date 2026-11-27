@@ -1,0 +1,22 @@
+{# Fila de la escala de respuestas: arrastrable, con autoguardado por htmx. Params: opt, editable. #}
+<div id="scale-row-{{ opt.pk }}" data-scale-id="{{ opt.pk }}" data-scale-row data-autosave class="flex flex-wrap items-start gap-2 py-3 bg-base-100">
+  <span class="tooltip tooltip-right" data-tip="Arrastra para reordenar">
+    <button type="button" class="btn btn-ghost btn-circle btn-sm cursor-grab" data-grip="scale" aria-label="Arrastrar para reordenar {{ opt.label }}"><i data-lucide="grip-vertical" class="w-[18px] h-[18px]" aria-hidden="true"></i></button>
+  </span>
+  <form class="flex flex-wrap items-start gap-2 grow" method="post" hx-post="{% url 'questionnaires:scale_option_save' opt.pk %}"
+        hx-trigger="change, input delay:700ms" hx-swap="none" hx-sync="this:replace">
+    {% csrf_token %}
+    <input type="number" name="value" min="1" max="4" value="{{ opt.value|default_if_none:'' }}" placeholder="N/A" class="input w-24" aria-label="Valor de {{ opt.label }}">
+    <input type="text" name="label" value="{{ opt.label }}" maxlength="40" required class="input w-48" aria-label="Etiqueta de la opción {{ opt.label }}">
+    <input type="text" name="description" value="{{ opt.description }}" class="input grow min-w-64" placeholder="Descriptor (qué significa esta opción)" aria-label="Descriptor de {{ opt.label }}">
+  </form>
+  <span data-saved class="hidden items-center gap-1 text-success text-base self-center" role="status"><i data-lucide="check" class="w-4 h-4" aria-hidden="true"></i> Guardado</span>
+  <div class="shrink-0 self-center">
+    {% with pk_s=opt.pk|stringformat:"s" %}
+      {% with cid="delete-scale-"|add:pk_s %}
+        {% url 'questionnaires:scale_option_delete' pk=opt.pk as opt_delete_url %}
+        {% include "components/_confirm.html" with confirm_id=cid title="Eliminar opción de la escala" message="Se quita esta opción de la escala del cuestionario." confirm_url=opt_delete_url confirm_hx_target="closest [data-scale-row]" trigger_aria="Eliminar opción de la escala" %}
+      {% endwith %}
+    {% endwith %}
+  </div>
+</div>

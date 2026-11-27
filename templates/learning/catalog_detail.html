@@ -27,7 +27,7 @@
         <ul class="divide-y divide-base-300">
           {% for pc in plan_items %}
             <li class="py-2 flex flex-wrap items-center justify-between gap-2">
-              <a href="{% url 'learning:plan_detail' pc.plan.pk %}" class="text-base text-base-content hover:underline">{{ pc.plan.area.name }} · {{ pc.plan.year }}{% if pc.plan.is_archived %} <span class="text-base-content/50">(archivado)</span>{% endif %}</a>
+              <a href="{% url 'learning:plan_detail' pc.plan.pk %}" class="text-base text-base-content hover:underline">{{ pc.plan.area.full_name }} · {{ pc.plan.year }}{% if pc.plan.is_archived %} <span class="text-base-content/50">(archivado)</span>{% endif %}</a>
               <span class="flex flex-wrap gap-1">
                 {% for lv in pc.levels.all %}<span class="badge badge-soft">{{ lv.name }}</span>{% empty %}<span class="badge badge-soft">Todos los niveles</span>{% endfor %}
               </span>

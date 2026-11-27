@@ -508,6 +508,13 @@ def scale_option_delete(request, pk):
         ScaleOption.objects.select_related("template"), pk=pk, template__isnull=False, question__isnull=True,
     )
     template = option.template
+    if request.headers.get("HX-Request"):   # baja sin recargar: la fila se quita del DOM
+        if not editor.is_editable(template):
+            return _hx_toast("Esta versión es de solo lectura.", "error", HX_Reswap="none")
+        if editor.has_responses(template):
+            return _hx_toast("No se puede quitar una opción de la escala: ya hay respuestas con esta escala.", "error", HX_Reswap="none")
+        editor.delete_scale_option(option)
+        return _hx_toast("Eliminé la opción de la escala.", "info")
     if _is_draft(request, template):
         if editor.has_responses(template):
             messages.error(request, "No se puede quitar una opción de la escala: ya hay respuestas con esta escala. Puedes editar su etiqueta y descriptor.")
@@ -546,8 +553,91 @@ def template_reorder(request, pk):
     try:
         if request.POST.get("kind") == "sections":
             editor.reorder_sections(template, json.loads(request.POST.get("order", "[]")))
+        elif request.POST.get("kind") == "scale":
+            editor.reorder_scale(template, json.loads(request.POST.get("order", "[]")))
         else:
             editor.reorder_questions(template, json.loads(request.POST.get("layout", "{}")))
     except (ValidationError, ValueError, TypeError) as exc:
         return HttpResponse(" ".join(getattr(exc, "messages", [str(exc)])), status=400)
+    return HttpResponse(status=204)
+
+
+# --- Escala de respuestas por htmx: autoguardado, alta y baja sin recargar la página -------------------
+
+def _hx_toast(message, variant="success", **headers):
+    import json
+
+    from django.http import HttpResponse
+
+    response = HttpResponse("")
+    response["HX-Trigger"] = json.dumps({"toast": {"message": message, "variant": variant}})
+    for k, v in headers.items():
+        response[k.replace("_", "-")] = v
+    return response
+
+
+def _scale_row_response(request, option, message=None, variant="error"):
+    """Devuelve la fila con lo que SÍ está guardado (revierte lo que el servidor rechazó) y avisa por toast."""
+    import json
+
+    option.refresh_from_db()
+    response = render(request, "questionnaires/_scale_row.html", {"opt": option, "editable": True})
+    response["HX-Retarget"] = f"#scale-row-{option.pk}"
+    response["HX-Reswap"] = "outerHTML"
+    if message:
+        response["HX-Trigger"] = json.dumps({"toast": {"message": message, "variant": variant}})
+    return response
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def scale_option_save(request, pk):
+    """Autoguardado de una opción de la escala (valor, etiqueta, descriptor)."""
+    from django.http import HttpResponse
+
+    option = get_object_or_404(ScaleOption.objects.select_related("template"), pk=pk, template__isnull=False, question__isnull=True)
+    template = option.template
+    if not editor.is_editable(template):
+        return _hx_toast("Esta versión es de solo lectura.", "error", HX_Reswap="none")
+    form = ScaleOptionForm(request.POST, template=template, option=option)
+    if not form.is_valid():
+        return _scale_row_response(request, option, _form_errors(form))
+    if form.cleaned_data.get("value") != option.value and editor.has_responses(template):
+        return _scale_row_response(request, option, "No se puede cambiar el valor de una opción: ya hay respuestas con esta escala. Puedes editar su etiqueta y descriptor.")
+    editor.save_scale_option(template, option=option, **form.cleaned_data)
+    return HttpResponse(status=204)
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def scale_option_add(request, pk):
+    """Agrega una opción a la escala y devuelve su fila para anexarla a la lista."""
+    template = get_object_or_404(QuestionnaireTemplate, pk=pk)
+    if not editor.is_editable(template):
+        return _hx_toast("Esta versión es de solo lectura.", "error", HX_Reswap="none")
+    form = ScaleOptionForm(request.POST, template=template)
+    if not form.is_valid():
+        return _hx_toast(_form_errors(form), "error", HX_Reswap="none")
+    option = editor.save_scale_option(template, **form.cleaned_data)
+    response = render(request, "questionnaires/_scale_row.html", {"opt": option, "editable": True})
+    import json
+
+    response["HX-Trigger"] = json.dumps({"toast": {"message": "Agregué la opción a la escala.", "variant": "success"}})
+    return response
+
+
+@login_required
+@requires("questionnaires.manage")
+@require_POST
+def scale_note_save(request, pk):
+    """Autoguardado de la nota de escala."""
+    from django.http import HttpResponse
+
+    template = get_object_or_404(QuestionnaireTemplate, pk=pk)
+    if not editor.is_editable(template):
+        return _hx_toast("Esta versión es de solo lectura.", "error", HX_Reswap="none")
+    template.scale_note = request.POST.get("scale_note", "").strip()
+    template.save(update_fields=["scale_note"])
     return HttpResponse(status=204)

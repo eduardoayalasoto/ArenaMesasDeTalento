@@ -58,7 +58,7 @@
 
           <dl class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
             <div><dt class="text-base text-base-content/60">Correo</dt><dd class="text-base font-medium text-base-content truncate">{{ user.email }}</dd></div>
-            <div><dt class="text-base text-base-content/60">Área</dt><dd class="text-base font-medium text-base-content">{{ user.area.name|default:"—" }}</dd></div>
+            <div><dt class="text-base text-base-content/60">Área</dt><dd class="text-base font-medium text-base-content">{{ user.area.department.name|default:"—" }}</dd></div>
             <div><dt class="text-base text-base-content/60">Posición</dt><dd class="text-base font-medium text-base-content">{{ user|puesto|default:"—" }}</dd></div>
             <div><dt class="text-base text-base-content/60">Nivel</dt><dd class="text-base font-medium text-base-content">{{ user.level.name|default:"—" }}</dd></div>
           </dl>

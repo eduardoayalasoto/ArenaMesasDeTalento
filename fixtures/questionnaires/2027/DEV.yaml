@@ -1,0 +1,990 @@
+source: Checklist de Actividades Desarrolladores (Checklist de Actividades Desarrolladores (en proceso) 1.xlsx)
+templates:
+- area: DEV
+  level: JR
+  questions:
+  - title: Notas de alcance
+    text: Ejecutar proceso de discovery para identificar los módulos principales del sistema, el flujo E2E de la aplicación y los primeros pasos a tomar una vez que el proyecto arranca. Levantar dudas antes de empezar a desarrollar, no solo durante.
+    acceptance_criteria: El documento existe, está versionado e incluye objetivos, supuestos, riesgos y próximos pasos. El Dev Jr puede explicar verbalmente los diagramas sin leerlos. El QA o Product no descubre inconsistencias en el sprint que el Dev Jr debió haber identificado en el discovery. Las ambigüedades identificadas están documentadas como riesgos, no ignoradas.
+    deliverable: Diagrama de flujo del proceso E2E de la aplicación y del ciclo de vida de los datos en la aplicación.
+    deliverable_format: LucidChart, Mermaid, Draw.io, etc.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El Dev Jr identifica módulos principales y construye los diagramas con base en lo proporcionado por el cliente o el Dev Sr/Mid. Cuando algo no está claro, lo documenta como supuesto o riesgo y lo escala antes de continuar.
+    guidance: El Dev Jr documenta lo que entiende y lo que no entiende con la misma claridad. Una duda no documentada es un riesgo oculto.
+  - title: Documento de alcance técnico
+    text: Contribuir en la definición de qué se construye y qué no en el proyecto, documentando los componentes asignados a su nivel con precisión. No asumir que algo está en scope si no está explícitamente documentado.
+    acceptance_criteria: Las secciones contribuidas por el Dev Jr están alineadas con las notas de alcance y no generan observaciones de redacción o precisión técnica por parte del Dev Mid/Sr. El documento está versionado y accesible al equipo. El Dev Jr no desarrolla componentes que no están en el alcance documentado.
+    deliverable: Secciones del documento de alcance técnico correspondientes al Dev Jr, con sign-off del Dev Sr o Mid.
+    deliverable_format: Notion, Word, Jira, etc.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El Dev Jr contribuye secciones del documento bajo supervisión del Dev Mid/Sr. Su responsabilidad es que lo que escribe sea preciso y no requiera rehacerse.
+    guidance: El Dev Jr no define el alcance solo, pero sí es responsable de entenderlo completamente antes de comenzar a desarrollar.
+  - title: Checklist de requerimientos
+    text: Completar el checklist de requerimientos técnicos y funcionales para los componentes bajo su responsabilidad, verificando que cada ítem tiene un estado claro (cumple / no cumple / pendiente) y escalando los pendientes críticos antes del inicio del desarrollo.
+    acceptance_criteria: Todos los requerimientos de los componentes del Dev Jr están listados y evaluados. No hay requerimientos críticos sin estado definido. El Dev Jr escala requerimientos ambiguos o faltantes antes de comenzar a desarrollar, no cuando ya está a la mitad. El Dev Mid no descubre requerimientos mal interpretados en el sprint review.
+    deliverable: Checklist de requerimientos validado para los componentes asignados al Dev Jr.
+    deliverable_format: Excel, Notion.
+    frequency: Inicio del proyecto y ante cambios de alcance.
+    level_expectation: El Dev Jr completa el checklist con criterio, no mecánicamente. Si un requerimiento no está claro, lo pregunta antes de marcarlo como cumplido.
+    guidance: El checklist de requerimientos es el contrato técnico del Dev Jr con el proyecto.
+  - title: Propuesta de integraciones y APIs
+    text: 'Documentar las integraciones y APIs asignadas a su nivel: endpoints consumidos o expuestos, autenticación, contratos de request/response y dependencias externas. Levantar dudas sobre accesos, credenciales o permisos antes de comenzar el desarrollo.'
+    acceptance_criteria: Las integraciones documentadas por el Dev Jr tienen endpoints, método de autenticación y contrato claramente especificados. El Dev Sr no descubre integraciones mal documentadas durante la validación técnica. El Dev Jr no empieza a desarrollar contra una API sin tener acceso confirmado al endpoint.
+    deliverable: Documentación de integraciones y APIs asignadas al Dev Jr dentro de la propuesta técnica.
+    deliverable_format: Swagger, Markdown, Postman.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: El Dev Jr documenta las integraciones que le asignan. Su responsabilidad es levantar bloqueos de acceso o credenciales proactivamente, no al momento del deployment.
+    guidance: El Dev Jr no documenta integraciones que no ha validado que funcionan. Si no tiene acceso a una API, lo comunica antes de asumir que sí lo tiene.
+  - title: Reporte de calidad de código
+    text: Ejecutar los checks de calidad de código asignados a su nivel (linters, formatters, análisis estático, cobertura) para los componentes bajo su responsabilidad. Documentar los resultados y comunicar issues detectados de forma inmediata.
+    acceptance_criteria: Los checks ejecutados por el Dev Jr son reproducibles y sus resultados están documentados. El Dev Jr comunica issues detectados antes de la siguiente ceremonia, no las oculta o ignora. El Dev Mid no descubre problemas de calidad de código en producción que el Dev Jr ya había detectado en sus checks.
+    deliverable: Reporte de checks de calidad de código ejecutados con resultados documentados.
+    deliverable_format: Reporte de linter/SonarQube, dashboard de cobertura.
+    frequency: Al conectarse a una fuente o al terminar el desarrollo de una nueva.
+    level_expectation: El Dev Jr ejecuta los checks de calidad asignados y reporta resultados, incluyendo los negativos. No declara un componente como 'listo' sin haber ejecutado los checks.
+    guidance: Detectar un problema de calidad de código y no comunicarlo es peor que no haberlo detectado.
+  - title: Reportes de pruebas
+    text: Ejecutar y crear los casos de prueba asignados a su nivel (unitarias, de integración, funcionales, segridad), documentando resultados esperados vs obtenidos y registrando issues o defectos detectados. No declarar un componente como 'done' sin haber ejecutado, documentado y presentado sus pruebas.
+    acceptance_criteria: Los casos de prueba del Dev Jr están documentados con resultado esperado vs obtenido. Los defectos están registrados y clasificados. El Dev Jr no declara un componente como terminado sin evidencia de pruebas ejecutadas. El Dev Mid no descubre durante el sprint review defectos que el Dev Jr debió haber detectado en sus pruebas.
+    deliverable: Reporte de pruebas con casos ejecutados (coverage) al menos del 80% de la funcionalidad o método o vista creada, resultados y defectos registrados.
+    deliverable_format: MarkDown, HTML, Excel.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr ejecuta las pruebas asignadas y documenta tanto los casos que pasan como los que no. Un resultado de prueba negativo documentado es más valioso que uno positivo sin evidencia.
+    guidance: Done' significa que pasó las pruebas documentadas, no que el código compila.
+  - title: Reporte técnico de QA
+    text: Ejecutar y compartir los reportes de QA de los componentes bajo su responsabilidad, documentando los casos validados, los resultados obtenidos y las excepciones encontradas.
+    acceptance_criteria: El reporte del Dev Jr incluye los casos aplicados, los resultados por caso y las excepciones con sus causas. El Dev Jr puede explicar verbalmente cada excepción documentada. El Dev Mid no necesita reescribir el reporte para que sea comprensible para QA o el PM.
+    deliverable: Reporte técnico de QA con casos, resultados y excepciones documentadas.
+    deliverable_format: .doc, .docx, Notion.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr ejecuta los reportes de QA y los comparte con el equipo. Su responsabilidad es que el reporte sea legible y completo, no solo correcto.
+    guidance: El reporte de QA es una herramienta de comunicación, no un trámite. Debe ser comprensible para alguien que no escribió el código.
+  - title: Scripts de validación y pruebas automatizadas
+    text: Ejecutar los scripts de validación automática y las pruebas automatizadas asignadas a su nivel. Comunicar de inmediato cuando una prueba falla o genera resultados inesperados.
+    acceptance_criteria: Los scripts ejecutados por el Dev Jr generan resultados reproducibles. Cuando una prueba falla, el Dev Jr lo comunica antes de la siguiente ceremonia con el log o evidencia del error. El Dev Jr no reutiliza scripts sin verificar que aplican al contexto del nuevo componente.
+    deliverable: Scripts y pruebas automatizadas ejecutadas con resultados documentados. Alertas o logs de fallas comunicados al Dev Mid.
+    deliverable_format: Lenguaje del proyecto.
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr ejecuta las pruebas automatizadas asignadas y revisa sus resultados. No asume que si el script corrió sin error, el componente funciona correctamente.
+    guidance: Ejecutar una prueba automatizada sin revisar sus resultados es equivalente a no ejecutarla.
+  - title: Modelo de datos preliminar
+    text: Construir el modelo de datos preliminar (entidades, contratos de API, DTOs) para los componentes asignados con base en los comentarios y mockups producto, aplicando correctamente las convenciones de nombres, tipos de datos y relaciones definidas.
+    acceptance_criteria: El modelo del Dev Jr aplica correctamente las convenciones del proyecto sin necesidad de correcciones recurrentes por el mismo punto. El Dev Mid no descubre errores de tipado o naming en el sprint review. El Dev Jr revisa el modelo con el Dev Mid antes de comenzar el desarrollo, no después.
+    deliverable: Modelo de datos (entidades, contratos, DTOs) con tipos, claves, relaciones y convenciones aplicadas para los componentes asignados.
+    deliverable_format: Mermaid, Draw.io., Postgresql Diagram
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El Dev Jr construye el modelo con los mockups y comentarios que recibe. Si algo no está claro en la convención, pregunta antes de aplicar su propio criterio.
+    guidance: Una convención de nombres inconsistente en el modelo de datos se propaga a todo el desarrollo. El Dev Jr debe preguntar antes de improvisar.
+  - title: Notas técnicas
+    text: Registrar las decisiones técnicas, supuestos, trade-offs y dudas relevantes de los componentes bajo su responsabilidad durante todo el proyecto. Externalizar dudas al Dev Mid/Sr antes de tomar decisiones técnicas por cuenta propia.
+    acceptance_criteria: Las notas del Dev Jr son comprensibles para otro Dev que no participó en las sesiones. Las dudas están documentadas y tienen respuesta o están escaladas. El Dev Jr no toma decisiones técnicas que no están registradas en las notas. El Dev Mid no descubre decisiones técnicas del Dev Jr que no sabía que se habían tomado.
+    deliverable: Notas técnicas actualizadas y centralizadas, accesibles al equipo. Documentación técnica de arquitectura y/o componentes en la wiki del proyecto (GitHub)
+    deliverable_format: .doc, .docx, Notion, Teams, Wiki.
+    frequency: Durante todo el proyecto, actualización continua.
+    level_expectation: El Dev Jr toma notas y externaliza sus dudas. No avanza con supuestos no documentados. Si tomó una decisión técnica, la registra.
+    guidance: Una nota técnica que solo entiende quien la escribió no sirve para la transferencia de conocimiento.
+  - title: Código, componentes y módulos
+    text: Implementar las tareas de desarrollo asignadas a su nivel siguiendo los estándares de calidad y versionado del proyecto (SOLID, naming conventions, modularidad, patrones definidos). No entregar código sin haber ejecutado pruebas básicas  o hardcode o credenciales expuestas.
+    acceptance_criteria: El código del Dev Jr es ejecutable sin errores, cumple con los estándares del proyecto y está versionado. El Dev Mid no encuentra el mismo error de estándar más de una vez en el mismo Dev Jr. El Dev Jr no sube código al repositorio sin haber ejecutado al menos una prueba básica end-to-end del componente.
+    deliverable: Desarrollos versionados en el repositorio del proyecto con evidencia de pruebas básicas.
+    deliverable_format: git
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr implementa tareas simples con guía del Dev Mid. Su responsabilidad es cumplir estándares y no entregar código que no funcionó ni una vez en su ambiente.
+    guidance: Versionar código con errores de estándar recurrentes es una señal de que el Dev Jr no revisó su propio trabajo antes de entregarlo.
+  - title: Checklist de ejecución / despliegue
+    text: Completar el checklist de ejecución y despliegue para los componentes bajo su responsabilidad antes del release, verificando que todos los ítems están marcados como completos y que no existen bloqueadores críticos sin resolver. Ejecución exitosa de todas las etapas de la pipeline, en caso de contar con ella en el proyecto.
+    acceptance_criteria: El Dev Jr no declara un componente listo para despliegue sin haber completado el checklist. Los ítems marcados como completos han sido verificados, no solo marcados. El Dev Mid no descubre durante el despliegue un bloqueador que el Dev Jr ya había identificado pero no resolvió ni comunicó.
+    deliverable: Checklist de ejecución completado y sin bloqueadores críticos abiertos para los componentes del Dev Jr.
+    deliverable_format: Documento, Excel, Markdown, HTML
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr implementa el checklist con criterio. Un ítem marcado como completo significa que lo verificó, no que asume que está bien.
+    guidance: La pipeline de ejecución es el último filtro antes del deployment. No es un trámite, es una garantía.
+  - title: Documentación de código
+    text: 'Documentar el código desarrollado explicando propósito, inputs, outputs, dependencias y consideraciones de uso (incluyendo docstrings, comentarios relevantes, diagramas de apoyo: arquitectura, C4, estado y READMEs cuando aplica). La documentación es parte del entregable, no un paso opcional al final.'
+    acceptance_criteria: Otro Dev puede entender y ejecutar el código del Dev Jr sin necesidad de preguntarle al autor. La documentación está actualizada con el código final. El Dev Mid no pide correcciones de documentación en más del 20% de los entregables del Dev Jr.
+    deliverable: Documentación de código con propósito, inputs, outputs y dependencias para cada componente desarrollado.
+    deliverable_format: .doc, .docx, Notion, Markdown, Mermaid, Draw.io
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr realiza la documentación de su código como parte del desarrollo, no como un paso adicional. Si no tiene tiempo para documentar, no tiene tiempo para terminar.
+    guidance: El Dev Jr documenta mientras desarrolla, no al final. 'El código se explica solo' no es un criterio aceptable en Arena.
+  - title: Inventario de dependencias e integraciones
+    text: 'Recopilar la información básica de las dependencias e integraciones asignadas a su nivel: nombre, owner, versión, frecuencia de actualización, tipo (librería, servicio externo, API) y nivel de criticidad. Escalar cuando una dependencia no tiene owner claro o cuando su disponibilidad es incierta.'
+    acceptance_criteria: La información de las dependencias documentada por el Dev Jr es precisa y verificada, no estimada sin fundamento. El Dev Jr comunica proactivamente cuando una dependencia no tiene owner claro o cuando el acceso es incierto. El Dev Sr/Mid no descubre dependencias sin documentar que el Dev Jr ya conocía. El Dev Sr/Mid no descubre versiones incompatibles con frameworks o tecnologías en productivo
+    deliverable: 'Tabla con metadatos básicos de las dependencias asignadas al Dev Jr: nombre, owner, versión, tipo y criticidad.'
+    deliverable_format: Documento, Excel.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El Dev Jr recopila información básica de las dependencias asignadas. Su responsabilidad es verificar lo que documenta y escalar lo que no puede verificar solo.
+    guidance: Una dependencia sin owner documentado es un riesgo de bloqueo para todo el equipo.
+  - title: Diagrama de arquitectura
+    text: Entender completamente la arquitectura del proyecto y sus componentes (front, back, base de datos, servicios externos). Identificar la posición de los desarrollos bajo su responsabilidad dentro del flujo end-to-end y comunicar al Dev Mid/Sr/Lead cuando detecta que algo en su implementación se desvía del diseño arquitectónico.
+    acceptance_criteria: El Dev Jr puede explicar el rol de sus componentes dentro de la arquitectura end-to-end sin necesidad de consultar el diagrama en cada pregunta. Cuando detecta una inconsistencia entre su implementación y el diseño, la comunica antes de continuar. El Dev Sr no descubre desviaciones arquitectónicas en el roll-out que el Dev Jr ya había identificado.
+    deliverable: Evidencia de comprensión del diagrama de arquitectura (puede explicarlo verbalmente sin leerlo). Desviaciones detectadas documentadas en Teams o minuta.
+    deliverable_format: Draw.io, Mermaid, LucidChart.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El Dev Jr entiende la arquitectura y sus componentes. No improvisa implementaciones que no están contempladas en el diseño sin antes comunicarlo al Dev Mid/Sr.
+    guidance: El Dev Jr no diseña arquitectura, pero sí es responsable de implementar dentro del diseño definido sin desviarse.
+  - title: Modelado de datos y contratos
+    text: Documentar los campos, tipos de datos y contratos (entidades, DTOs, payloads de API) de los componentes asignados correctamente, siguiendo las convenciones del proyecto. Verificar con el Dev Mid/Sr/Lead antes de implementar si hay dudas sobre relaciones, cardinalidad o nullability.
+    acceptance_criteria: Los campos y tipos documentados por el Dev Jr son correctos y consistentes con el modelo de datos preliminar. El Dev Jr no implementa un campo con un tipo de dato distinto al definido sin antes comunicarlo al Dev Mid/Sr. El Dev Sr no descubre errores de modelado del Dev Jr durante el QA.
+    deliverable: Documentación de campos, tipos y contratos para los componentes asignados al Dev Jr, alineada con el modelo aprobado.
+    deliverable_format: Postgres, Draw.io., Mermaid, LucidChart
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El Dev Jr documenta campos y tipos correctamente con base en el modelo definido. Si hay algo que no entiende del modelo, pregunta antes de codificar.
+    guidance: Un campo con el tipo de dato incorrecto puede propagarse a todo el sistema. El Dev Jr verifica antes de implementar.
+  - title: Diseño de módulos y componentes
+    text: Entender el diseño lógico del módulo o componente y documentar las partes correspondientes a los componentes bajo su responsabilidad. Comunicar al Dev Mid/Sr/Lead cuando la implementación requiere ajustes al diseño definido.
+    acceptance_criteria: El Dev Jr entiende el diseño del módulo y puede explicar el rol de sus componentes dentro del flujo completo. Cuando detecta que la implementación requiere un ajuste al diseño, lo comunica antes de improvisar. El Dev Mid no descubre modificaciones al diseño hechas por el Dev Jr sin comunicación previa.
+    deliverable: Documentación de los módulos y componentes asignados al Dev Jr, alineada con el diseño lógico aprobado.
+    deliverable_format: Draw.io., Mermaid, Lucidchart
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr entiende el diseño y lo documenta. Si algo en el diseño no cuadra con la realidad de la implementación, lo comunica antes de tomar una decisión por su cuenta.
+    guidance: El Dev Jr no modifica el diseño de un módulo sin comunicarlo. Si el diseño no es implementable, lo escala.
+  - title: Desarrollo de funcionalidades
+    text: 'Implementar las tareas de desarrollo asignadas a su nivel: componentes UI, endpoints, lógica de negocio simple, integraciones básicas, bajo supervisión del Dev Mid/Sr/Lead. No entregar componentes sin haber ejecutado una prueba end-to-end básica.'
+    acceptance_criteria: Las funcionalidades del Dev Jr ejecutan correctamente para los casos de prueba definidos. El Dev Mid no descubre errores de implementación básicos en el sprint review. El Dev Jr no declara un componente como done sin haberlo ejecutado al menos una vez end-to-end en su ambiente de desarrollo. El dev Mid no detecta criterios de aceptación no implementados en la funcionalidad.
+    deliverable: Código de funcionalidades versionado en el repositorio para los componentes asignados al Dev Jr.
+    deliverable_format: Git,  GitHub Actions, Claude, Markdown
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr desarrolla tareas simples con guía del Dev Mid. Su responsabilidad es ejecutar y probar lo que desarrolla antes de declararlo terminado.
+    guidance: Una funcionalidad que nunca corrió en el ambiente del Dev Jr antes de llegar al sprint review es un riesgo de retrabajo para todo el equipo.
+  - title: Scripts de validación y calidad de código
+    text: Ejecutar los scripts de validación técnica asignados a su nivel (linters, pruebas automáticas, análisis estático), verificando cobertura, estándares y consistencia básica. Analizar los resultados y comunicar al Dev Mid/Sr/Lead cualquier incumplimiento detectado.
+    acceptance_criteria: El Dev Jr ejecuta los scripts de validación y analiza sus resultados, no solo los corre y los adjunta. Cuando detecta un incumplimiento, lo comunica antes de la siguiente ceremonia con una descripción del hallazgo. El Dev Mid no descubre incumplimientos de validación que el Dev Jr ya había detectado pero no comunicó.
+    deliverable: Scripts de validación ejecutados con resultados documentados y análisis inicial de incumplimientos.
+    deliverable_format: Lenguaje del proyecto
+    frequency: Al terminar el desarrollo, ante cambios o ajustes.
+    level_expectation: El Dev Jr ejecuta scripts y analiza resultados básicos. Su responsabilidad es entender lo que reporta el script, no solo ejecutarlo.
+    guidance: Ejecutar un script de validación y no revisar sus resultados es equivalente a no ejecutarlo.
+  - title: Code Review y Pull Requests
+    text: Crear pull requests claros y autocontenidos para el código desarrollado, con descripción del cambio, contexto y evidencia de pruebas. Atender los comentarios de revisores Mid/Sr en tiempo razonable y participar en la revisión de PRs de pares al nivel que su seniority permite.
+    acceptance_criteria: Cada PR del Dev Jr explica qué cambia, por qué y cómo se probó. Los comentarios del revisor se atienden con un cambio de código o una respuesta argumentada — nunca se ignoran. El Dev Jr no abre PRs gigantes ni mezcla cambios no relacionados en un mismo PR.
+    deliverable: Pull requests con descripción completa, checklist de pruebas, evidencia cuando aplique, y comentarios respondidos o resueltos.
+    deliverable_format: GitHub, GitLab, Bitbucket.
+    frequency: Continuo, por cada feature o fix.
+    level_expectation: El Dev Jr abre PRs pequeños y bien descritos, acepta feedback sin defensividad y aprende del code review. Revisar PRs de pares es recomendado para acelerar el aprendizaje, aunque la revisión formal recae en Mid/Sr.
+    guidance: Un PR es comunicación, no solo código. Si el revisor no entiende el PR sin preguntar, el PR está incompleto.
+  - title: Manejo de incidencias y corrección de defectos
+    text: 'Atender los defectos asignados a su nivel: reproducir el problema, identificar la causa raíz básica, aplicar la corrección, verificar con pruebas y comunicar el resultado a QA o al reportante. Escalar al Dev Mid/Sr cuando el defecto excede su nivel técnico.'
+    acceptance_criteria: El Dev Jr no cierra un defecto sin haberlo reproducido primero. La causa raíz está identificada, no solo el síntoma. Existe al menos una prueba (manual o automatizada) que demuestra que el defecto ya no ocurre.
+    deliverable: Ticket de defecto cerrado con descripción de la causa raíz, fix aplicado, evidencia de la verificación y notas para regresión.
+    deliverable_format: Jira, Linear, GitHub Issues.
+    frequency: Continuo, según asignación.
+    level_expectation: El Dev Jr resuelve defectos de baja y media complejidad. Pide ayuda temprano cuando lleva tiempo razonable sin avanzar, en lugar de quedarse atascado en silencio.
+    guidance: Un fix sin prueba de verificación es una hipótesis, no una solución.
+  - title: Buenas prácticas de seguridad
+    text: 'Aplicar prácticas básicas de seguridad en el código y la operación diaria: manejo correcto de secrets y credenciales, validación de inputs, control de dependencias vulnerables, principio de menor privilegio y no exposición de información sensible en logs ni repositorios.'
+    acceptance_criteria: Cero credenciales en el repositorio. Inputs de usuario validados antes de procesarlos o persistirlos. Dependencias con vulnerabilidades críticas reportadas al Mid/Sr antes de hacer merge. Logs sin datos sensibles (passwords, tokens, PII).
+    deliverable: Código sin credenciales hardcodeadas, secrets gestionados por la herramienta del proyecto, dependencias revisadas y validaciones de input documentadas en los componentes desarrollados.
+    deliverable_format: Vault, AWS Secrets Manager, .env, Dependabot, Snyk, npm audit.
+    frequency: Continuo, en cada desarrollo.
+    level_expectation: El Dev Jr conoce y aplica las prácticas básicas. No diseña esquemas de seguridad ni evalúa amenazas (eso lo lidera el Sr), pero no introduce vulnerabilidades evidentes.
+    guidance: La seguridad no es una fase final, se diseña desde el primer commit.
+  - title: Gestión de ambientes y configuración
+    text: Manejar correctamente las configuraciones por ambiente (dev), variables de entorno y feature flags. Verificar que el código funciona con la configuración del ambiente destino antes de promover el cambio.
+    acceptance_criteria: El código no tiene valores específicos de ambiente hardcodeados. Cada variable nueva queda documentada. El Dev Jr verifica en el ambiente destino antes de marcar una tarea como terminada.
+    deliverable: Configuraciones parametrizadas por ambiente, documentación de variables requeridas y verificación previa a promoción.
+    deliverable_format: .env, ConfigMaps, AWS Parameter Store, LaunchDarkly, README.
+    frequency: Continuo, ante cambios de configuración o despliegues.
+    level_expectation: El Dev Jr respeta la separación de ambientes y pide acceso o validación al Mid/Sr antes de tocar configuraciones de staging o producción.
+    guidance: '"Funciona en mi máquina" no es un criterio de aceptación.'
+  - title: Uso e implementación de herramientas de IA
+    text: Utilizar herramientas de IA (asistentes de código, generación, revisión y documentación) de forma responsable y productiva en el trabajo diario. Validar siempre el output generado, proponer nuevos usos al equipo y aplicar las políticas de IA y manejo de información del proyecto.
+    acceptance_criteria: El Dev Jr no commitea código generado por IA sin entenderlo y probarlo. No comparte información confidencial del cliente o del proyecto con herramientas no autorizadas. Propone al menos un caso de uso nuevo al trimestre.
+    deliverable: Código asistido por IA revisado y validado por el desarrollador, propuestas de uso documentadas, cumplimiento de las políticas internas de IA del proyecto.
+    deliverable_format: Copilot, Claude, Cursor, ChatGPT, según herramientas autorizadas.
+    frequency: Continuo, según política del proyecto.
+    level_expectation: El Dev Jr usa IA como apoyo de aprendizaje y productividad, nunca como reemplazo del entendimiento. Sabe explicar cualquier línea que commiteó, generada por IA o no.
+    guidance: La IA acelera al que ya sabe. Al que no, lo expone. La responsabilidad sobre el código generado es del desarrollador, no de la herramienta.
+  - title: Autoformación y actualización técnica
+    text: Mantener un plan activo de aprendizaje sobre el stack del proyecto, las prácticas del equipo y las tecnologías emergentes relevantes a su rol. Participar en sesiones de pair programming, code reviews ajenos y espacios de conocimiento del equipo.
+    acceptance_criteria: El Dev Jr tiene objetivos de aprendizaje claros y revisables cada trimestre. Aplica al menos parte de lo aprendido en su trabajo. Asiste activamente a las sesiones de conocimiento del equipo.
+    deliverable: Plan personal de aprendizaje trimestral, registro de cursos, lecturas y sesiones, evidencia de aplicación en el trabajo diario.
+    deliverable_format: Documento de plan personal, certificados, wiki del equipo.
+    frequency: Plan trimestral, ejecución continua.
+    level_expectation: Para el Dev Jr la autoformación es parte explícita del rol, no extracurricular. El Mid/Sr/Lead apoyan con guía pero la iniciativa es del Jr.
+    guidance: El stack cambia más rápido que el seniority. Quien no aprende, retrocede.
+  - title: Cumplimiento de lineamientos de trabajo remoto
+    text: Responder correos y mensajes de Teams dentro de las 24 horas hábiles de haberlos recibido. Si necesita más tiempo, confirmar recepción y estimar cuándo tendrá la respuesta.
+    acceptance_criteria: El Dev Jr responde dentro de las 24 horas hábiles. Si no puede dar una respuesta completa, confirma recepción y estima cuándo la tendrá. No deja mensajes sin respuesta por más de un día hábil.
+    deliverable: Respuesta documentada por correo o Teams.
+    deliverable_format: Teams, Mail.
+    frequency: Por evento.
+    level_expectation: El Dev Jr entiende que su falta de respuesta puede bloquear a QA, Product o al PM. La comunicación responsiva es parte del ownership profesional.
+    guidance: No responder a tiempo genera bloqueos en el equipo. Confirmar recepción ya es una respuesta válida.
+  - title: 'Observabilidad: logs, métricas y monitoreo'
+    text: Instrumentar los componentes desarrollados con logs estructurados, métricas y trazas según los estándares del proyecto. Revisar dashboards y alertas relevantes a sus componentes, y responder a incidentes detectados por el APM con la información de observabilidad como punto de partida.
+    acceptance_criteria: Los componentes del Dev Jr emiten logs con nivel apropiado (info/warn/error), sin información sensible. Las métricas clave del componente están publicadas. Ante un incidente, el Dev Jr usa primero el APM y los logs antes de pedir información a otros. No agrega logs de debug a producción.
+    deliverable: Componentes instrumentados con logs estructurados y métricas, evidencia de revisión de dashboards y alertas configuradas según el estándar del proyecto.
+    deliverable_format: Datadog, New Relic, Grafana, Prometheus, ELK, CloudWatch, OpenTelemetry, Sentry, LogRocket, etc.
+    frequency: Continuo, en cada desarrollo.
+    level_expectation: El Dev Jr instrumenta sus componentes siguiendo el estándar definido por el Mid/Sr/Lead. No diseña la estrategia de observabilidad ni define qué métricas son críticas — eso lo lidera el Sr — pero sí aplica el estándar consistentemente.
+    guidance: Lo que no se mide no se puede mejorar. Un componente sin observabilidad es una caja negra en producción.
+- area: DEV
+  level: MID
+  questions:
+  - title: Notas de alcance
+    text: Liderar el proceso de discovery junto con el Dev Sr/Lead, identificando módulos principales, dependencias entre componentes, integraciones y riesgos técnicos. Documentar supuestos y bloqueos potenciales que el Dev Jr no podría anticipar. Validar que el Dev Jr entendió el flujo E2E antes de comenzar.
+    acceptance_criteria: El Dev Mid identifica bloqueos técnicos que el Dev Jr no vería. El Dev Sr/Lead no descubre dependencias críticas en sprint que el Mid debió detectar en discovery. El Dev Jr entiende el flujo end-to-end antes de empezar a desarrollar — si no lo entiende, es responsabilidad del Mid asegurar la nivelación.
+    deliverable: Diagrama E2E con bloqueos potenciales, dependencias y riesgos documentados. Evidencia de revisión del entendimiento del Dev Jr.
+    deliverable_format: LucidChart, Mermaid, Draw.io, etc.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: 'El Dev Mid lidera el discovery con el Sr/Lead. Su valor es anticipar problemas de integración, dependencias y riesgos técnicos. No solo documenta lo que ve: predice lo que puede salir mal.'
+    guidance: Un discovery sin bloqueos documentados es un discovery incompleto. El Mid anticipa lo que el Jr no puede ver.
+  - title: Documento de alcance técnico
+    text: Redactar las secciones del alcance técnico bajo su responsabilidad y revisar las secciones del Dev Jr antes del sign-off. Definir explícitamente qué se construye y qué queda fuera para los módulos asignados. Levantar inconsistencias entre alcance y arquitectura antes del inicio del desarrollo.
+    acceptance_criteria: Las secciones del Dev Mid no generan observaciones de precisión técnica por parte del Sr/Lead. La revisión del Mid sobre las secciones del Jr identifica imprecisiones antes del sign-off. El Mid no inicia desarrollo de componentes que no están explícitamente en el alcance documentado.
+    deliverable: Secciones del documento de alcance técnico del Dev Mid con sign-off del Sr/Lead. Revisión documentada de las secciones del Dev Jr.
+    deliverable_format: Notion, Word, Jira, etc.
+    frequency: 1 vez al inicio del proyecto.
+    level_expectation: 'El Dev Mid redacta con criterio y revisa lo que escribe el Jr. No es solo un autor: es revisor del alcance del equipo.'
+    guidance: El alcance técnico es el contrato del equipo con el proyecto. El Mid es responsable de que sus secciones y las del Jr cumplan el estándar antes del sign-off.
+  - title: Checklist de requerimientos
+    text: Validar técnicamente los requerimientos de los componentes propios y de los asignados al Dev Jr, identificando ambigüedades, conflictos e implementabilidad. Asegurar que el Dev Jr tiene claridad sobre cada requerimiento antes de comenzar a desarrollar.
+    acceptance_criteria: El Dev Mid puede defender técnicamente el estado de cada requerimiento. No hay requerimientos críticos sin estado al inicio del sprint. El Dev Jr no hace preguntas sobre requerimientos que el Mid debió aclarar antes del kickoff. El Sr/Lead no descubre conflictos entre requerimientos durante el desarrollo.
+    deliverable: Checklist de requerimientos validado técnicamente para los componentes propios. Evidencia de revisión y aclaración de los requerimientos asignados al Dev Jr.
+    deliverable_format: Excel, Notion.
+    frequency: Inicio del proyecto y ante cambios de alcance.
+    level_expectation: El Dev Mid valida con criterio técnico, no mecánicamente. Su responsabilidad es identificar lo implementable y lo que necesita aclaración antes del desarrollo, tanto para él como para el Jr.
+    guidance: Un requerimiento marcado como 'cumple' sin validación técnica es un riesgo. El Mid valida no solo los suyos sino los del Jr.
+  - title: Propuesta de integraciones y APIs
+    text: 'Diseñar y documentar las integraciones y APIs del proyecto: contratos, autenticación, manejo de errores, versionado y estrategias de retry. Validar accesos y credenciales antes del desarrollo. Revisar la documentación de integraciones del Dev Jr y dar retroalimentación específica.'
+    acceptance_criteria: Las integraciones del Mid tienen contratos completos, manejo de errores documentado y estrategia de retry definida. El Sr no descubre integraciones mal diseñadas en la validación técnica. El Dev Jr no implementa contra una API que el Mid no validó que está accesible.
+    deliverable: Documentación de integraciones y APIs propias en la propuesta técnica. Revisión documentada de las integraciones del Dev Jr.
+    deliverable_format: Swagger, Markdown, Postman.
+    frequency: 1 vez al inicio del proyecto y ante nuevas integraciones.
+    level_expectation: El Dev Mid diseña contratos de integración con criterio. Evalúa opciones (REST vs eventos, sync vs async) y propone la mejor dado el contexto, no solo documenta lo que el cliente pide.
+    guidance: Una API mal contratada se propaga a todo el sistema. El Mid valida antes de que el Jr empiece.
+  - title: Diseño de módulos y componentes
+    text: 'Diseñar la estructura interna de los módulos y componentes bajo su responsabilidad: separación de capas, patrones aplicables, contratos entre componentes y puntos de extensión. Aprobar el diseño con el Sr/Lead antes de comenzar el desarrollo. Comunicar el diseño al Dev Jr de forma que pueda implementar sin ambigüedades.'
+    acceptance_criteria: El diseño del Mid es implementable sin ambigüedades por el Dev Jr. El Sr aprueba el diseño antes del sprint de desarrollo. El Dev Jr no improvisa estructura de módulos por falta de definición. El Mid detecta desviaciones del diseño durante el sprint, no en el roll-out.
+    deliverable: Documento o diagrama de diseño de módulos con patrones, contratos y puntos de extensión. Aprobación del Sr/Lead. Evidencia de comunicación al Dev Jr.
+    deliverable_format: Draw.io, Mermaid, LucidChart, Markdown.
+    frequency: Inicio del desarrollo de cada feature/módulo.
+    level_expectation: 'El Dev Mid diseña módulos con criterio de mantenibilidad y extensibilidad. No solo escribe código: define cómo el código se organiza para que otros puedan extenderlo.'
+    guidance: Un módulo sin diseño documentado se convierte en deuda técnica desde el primer commit.
+  - title: Modelo de datos y contratos
+    text: Diseñar las entidades, DTOs, payloads de API y contratos para los componentes propios. Validar granularidad, tipos, nullability y relaciones con el Sr/Lead. Revisar el modelo del Dev Jr y dar retroalimentación específica antes de que comience la implementación.
+    acceptance_criteria: El modelo del Mid es coherente con el negocio y aprobado por el Sr sin observaciones mayores. La retroalimentación al Jr es específica y accionable. El mismo error de modelado no se repite en el Jr más de una vez. El Sr no descubre errores de tipado o granularidad en el sprint review.
+    deliverable: Modelo de datos con entidades, DTOs, contratos y relaciones para componentes propios. Revisión y retroalimentación al modelo del Dev Jr.
+    deliverable_format: Mermaid, Draw.io, Postgres Diagram, Swagger.
+    frequency: Inicio del proyecto y ante cambios.
+    level_expectation: El Dev Mid diseña el modelo con criterio. Valida con el Sr y se asegura de que el Jr lo entiende antes de implementar.
+    guidance: Un modelo con granularidad incorrecta invalida todo el código que se construya sobre él. El Mid valida antes de que el Jr empiece a programar.
+  - title: Diagrama de arquitectura
+    text: Entender la arquitectura del proyecto completa y poder comunicarla al Dev Jr con precisión. Identificar y comunicar al Sr/Lead desviaciones de implementación del equipo respecto al diseño durante el sprint, antes del roll-out. Proponer ajustes arquitectónicos justificados cuando la implementación los requiera.
+    acceptance_criteria: El Dev Jr no implementa componentes fuera del diseño por falta de información. El Mid responde preguntas arquitectónicas del Jr sin escalarlas todas al Sr. Las desviaciones se detectan en sprint, no en roll-out. Las propuestas de ajuste arquitectónico están justificadas con evidencia, no por preferencia personal.
+    deliverable: Evidencia de comunicación del diseño arquitectónico al Dev Jr. Desviaciones detectadas documentadas y comunicadas al lead técnico.
+    deliverable_format: Draw.io, Mermaid, LucidChart, C4 model.
+    frequency: Inicio del proyecto y ante cambios arquitectónicos.
+    level_expectation: El Dev Mid entiende la arquitectura suficientemente para comunicarla y detectar desviaciones. No es solo receptor del diseño del Sr.
+    guidance: El Mid es el puente entre el diseño del Sr y la ejecución del Jr.
+  - title: Desarrollo de funcionalidades
+    text: 'Implementar funcionalidades de complejidad media a alta: lógica de negocio compleja, integraciones críticas, optimizaciones, refactors. Asegurar que las funcionalidades están correctamente integradas en el flujo end-to-end. Apoyar al Dev Jr cuando enfrenta un problema técnico que excede su nivel.'
+    acceptance_criteria: Las funcionalidades del Mid ejecutan correctamente end-to-end antes del sprint review. El Sr no descubre errores de integración entre componentes en el review. El Mid responde a los escalamientos del Jr en tiempo razonable y deja registro de la solución para evitar repetir el problema.
+    deliverable: Funcionalidades versionadas en el repositorio con pruebas end-to-end ejecutadas. Evidencia de apoyo al Dev Jr en problemas escalados.
+    deliverable_format: Git, GitHub Actions, lenguaje del proyecto.
+    frequency: Continuo, por cada feature.
+    level_expectation: El Dev Mid implementa funcionalidades complejas con ownership del flujo end-to-end. Aporta soluciones técnicas, no solo código.
+    guidance: Una funcionalidad no está terminada hasta que corre end-to-end. El Mid no declara done sin haber probado el flujo completo.
+  - title: Código, componentes y módulos
+    text: Entregar código siguiendo los estándares del proyecto (SOLID, naming, modularidad, patrones definidos), aplicando criterio de mantenibilidad y reutilización. Identificar oportunidades de refactor en código propio y del equipo. No introducir hardcode, credenciales o atajos técnicos.
+    acceptance_criteria: El código del Mid pasa code review sin observaciones recurrentes de estándar. El Sr no encuentra el mismo error de estándar dos veces en el Mid. Las propuestas de refactor del Mid están justificadas con impacto y no se hacen como cambios oportunistas en PRs no relacionados.
+    deliverable: Código versionado, sin hardcode, con pruebas asociadas. Propuestas de refactor documentadas cuando aplique.
+    deliverable_format: Git, lenguaje del proyecto.
+    frequency: Continuo.
+    level_expectation: El Dev Mid entrega código de calidad sostenida. Su código es referencia para el Jr, no fuente de deuda técnica.
+    guidance: El Mid no se permite atajos técnicos que después tendrá que pagar el equipo.
+  - title: Documentación de código y técnica
+    text: Documentar el código desarrollado y la documentación técnica de los módulos bajo su responsabilidad (arquitectura local, decisiones, ADRs, READMEs). Revisar la documentación del Dev Jr y dar retroalimentación sobre completitud y claridad antes de aceptarla como entregable.
+    acceptance_criteria: Otro Dev puede entender y operar los módulos del Mid sin preguntarle al autor. La revisión del Mid sobre la doc del Jr identifica gaps específicos, no comentarios genéricos. El Sr/Lead no pide correcciones de doc en más del 15% de los entregables del Mid.
+    deliverable: Documentación técnica de módulos propios (READMEs, ADRs, diagramas). Revisión documentada de la documentación del Jr.
+    deliverable_format: Markdown, Mermaid, Notion, Wiki del proyecto.
+    frequency: Continuo, a la par del desarrollo.
+    level_expectation: El Dev Mid documenta mientras desarrolla y revisa lo del Jr con criterio. No la aprueba porque existe — la aprueba porque cumple el estándar.
+    guidance: Documentar es parte de terminar. El Mid revisa la doc del Jr para que cumpla estándar antes de ser entregable.
+  - title: Pruebas y reporte de QA
+    text: Diseñar e implementar casos de prueba (unitarias, integración, funcionales, seguridad) para los componentes propios. Revisar las pruebas del Dev Jr y validar cobertura, casos límite y escenarios de error. Tomar la decisión de si un componente está listo para producción basado en evidencia.
+    acceptance_criteria: El Mid puede justificar con evidencia la decisión de liberar o no cada componente. Los defectos críticos no pasan a producción sin resolverse. El Dev Jr no declara componentes como done sin el aval del Mid. Las pruebas del Mid incluyen casos límite y escenarios de error, no solo el camino feliz.
+    deliverable: Reporte de pruebas con cobertura ≥80%, casos límite documentados y defectos clasificados. Decisión de liberación documentada.
+    deliverable_format: Lenguaje del proyecto, frameworks de testing, MarkDown, Excel.
+    frequency: Al terminar el desarrollo de cada componente.
+    level_expectation: El Dev Mid diseña pruebas con criterio de cobertura. Su firma significa que revisó la evidencia, no que confió en que el Jr lo hizo bien.
+    guidance: La decisión de liberar a producción es responsabilidad del Mid, no del Jr.
+  - title: Code Review y Pull Requests
+    text: Crear PRs claros, autocontenidos y de tamaño razonable para el código propio. Revisar formalmente los PRs del Dev Jr con retroalimentación específica y accionable, no comentarios genéricos. Bloquear el merge cuando el PR no cumple estándar. Atender comentarios del Sr en sus propios PRs en tiempo razonable.
+    acceptance_criteria: Los PRs del Mid pasan revisión del Sr sin observaciones recurrentes. Las revisiones del Mid sobre PRs del Jr identifican issues específicos (no 'mejor esto'). Los mismos errores del Jr no se repiten porque el Mid los explica al revisar. El Mid no aprueba PRs sin haberlos leído completos.
+    deliverable: PRs propios con descripción, contexto y evidencia de pruebas. Revisiones formales de PRs del Jr con comentarios específicos documentados.
+    deliverable_format: GitHub, GitLab, Bitbucket.
+    frequency: Continuo, por cada PR.
+    level_expectation: El Dev Mid revisa PRs como parte central de su rol. Su retroalimentación es específica, accionable y deja al Jr en mejor lugar para el siguiente PR.
+    guidance: Revisar un PR es enseñar. El Mid no puede aprobar PRs sin leerlos — firma calidad.
+  - title: Manejo de incidencias y corrección de defectos
+    text: 'Atender defectos de complejidad media a alta: reproducir, identificar causa raíz, aplicar fix, verificar con pruebas y documentar. Apoyar al Dev Jr cuando un defecto excede su nivel. Identificar patrones recurrentes de defectos y proponer mejoras estructurales (no solo parches).'
+    acceptance_criteria: El Mid no cierra defectos sin reproducirlos. La causa raíz está identificada, no solo el síntoma. Cuando el mismo tipo de defecto aparece tres veces, el Mid propone una mejora estructural. El Sr no descubre regresiones que el Mid debió prevenir con pruebas.
+    deliverable: Tickets de defectos cerrados con causa raíz, fix, pruebas de verificación y notas para regresión. Propuestas de mejora estructural cuando hay patrón.
+    deliverable_format: Jira, Linear, GitHub Issues.
+    frequency: Continuo, según asignación.
+    level_expectation: 'El Dev Mid resuelve defectos complejos y detecta patrones. No solo apaga incendios: previene los siguientes.'
+    guidance: Un fix sin causa raíz es una hipótesis. Tres defectos similares son un patrón que el Mid debe atacar de raíz.
+  - title: Seguridad y manejo de credenciales
+    text: 'Aplicar prácticas de seguridad en el código y las integraciones: validación de input, sanitización, manejo seguro de secretos, principio de menor privilegio. Revisar los componentes del Dev Jr para detectar vulnerabilidades o malas prácticas antes del merge. No tolerar credenciales en código o en commits.'
+    acceptance_criteria: Cero credenciales en el repo en cualquier commit del Mid. El Mid bloquea PRs del Jr que introducen vulnerabilidades. El Sr no descubre malas prácticas de seguridad en módulos que el Mid revisó.
+    deliverable: Código sin credenciales ni secretos en repositorio. Revisión de seguridad documentada en PRs propios y del Jr.
+    deliverable_format: Vaults, .env, secret managers, herramientas de SAST.
+    frequency: Continuo.
+    level_expectation: El Dev Mid aplica seguridad por defecto y revisa la del Jr. No espera a que el equipo de seguridad lo audite.
+    guidance: Una credencial en el repo es un incidente. El Mid es la última línea antes del merge.
+  - title: Ambientes y configuración
+    text: Configurar correctamente ambientes (dev, staging) según el proyecto, asegurar paridad razonable entre ellos y documentar diferencias. Apoyar al Dev Jr en el setup inicial. Identificar problemas de configuración que generen comportamientos inconsistentes entre ambientes.
+    acceptance_criteria: El código del Mid corre en todos los ambientes sin modificaciones manuales. Los problemas de 'funciona en mi máquina' no aparecen en componentes que el Mid es responsable. El Dev Jr no pierde tiempo en problemas de setup que el Mid podía anticipar.
+    deliverable: Ambientes configurados y documentados. Diferencias relevantes entre ambientes explicitadas.
+    deliverable_format: Docker, .env, archivos de configuración, IaC.
+    frequency: Inicio del proyecto y ante cambios de infraestructura.
+    level_expectation: El Dev Mid configura ambientes con criterio de reproducibilidad. Documenta diferencias antes de que generen incidencias.
+    guidance: Un ambiente inconsistente esconde bugs hasta producción.
+  - title: Uso de IA en el desarrollo
+    text: 'Usar herramientas de IA como aceleradores con criterio: validar siempre el output, no aceptar código sin entenderlo, identificar cuando una sugerencia es incorrecta o subóptima. Mentorar al Dev Jr sobre uso responsable de IA: enseñar a validar, no a copiar.'
+    acceptance_criteria: El Mid puede explicar cualquier línea de código generada por IA en sus PRs. El Mid detecta cuando el Jr está copiando código sin entenderlo y lo corrige. El Mid no aprueba PRs del Jr donde el código evidentemente proviene de IA sin validación.
+    deliverable: Código asistido por IA revisado y entendido. Evidencia de mentoría al Jr sobre uso de IA cuando aplique.
+    deliverable_format: Copilot, Cursor, Claude, ChatGPT.
+    frequency: Continuo.
+    level_expectation: El Dev Mid usa IA con criterio y forma al Jr en el mismo criterio. Sabe cuándo una sugerencia está mal.
+    guidance: La IA es acelerador, no autor. El Mid valida y enseña a validar.
+  - title: Autoformación y actualización técnica
+    text: Mantenerse actualizado en tecnologías del stack del proyecto y en prácticas de la industria. Proponer la adopción de herramientas o prácticas que aporten valor demostrable al equipo. Compartir aprendizajes relevantes con el Jr y con el resto del equipo cuando aplique.
+    acceptance_criteria: El Mid propone al menos una mejora técnica al trimestre con justificación. Las propuestas no son por moda — están justificadas con impacto al proyecto. El Mid puede sostener una conversación técnica en el stack del proyecto al nivel del Sr.
+    deliverable: Propuestas técnicas justificadas al equipo. Aprendizajes compartidos en foros internos o sesiones con el Jr.
+    deliverable_format: Documentación oficial, blogs técnicos, cursos, comunidad.
+    frequency: Continuo.
+    level_expectation: El Dev Mid se forma activamente y eleva el nivel del equipo compartiendo lo que aprende.
+    guidance: 'El Mid se actualiza con criterio: lo que aporta al proyecto, no lo que está de moda.'
+  - title: Trabajo remoto y presencia visual
+    text: 'Mantener la cámara encendida en reuniones de equipo y con cliente. Garantizar entorno de trabajo profesional. Modelar buenas prácticas de trabajo remoto para el Dev Jr: presencia, puntualidad y respuesta.'
+    acceptance_criteria: Cámara encendida en el 100% de reuniones (salvo justificación previa). Llega puntual y presente. El Dev Jr toma el comportamiento del Mid como referencia.
+    deliverable: Cámara encendida en reuniones. Entorno de trabajo adecuado.
+    deliverable_format: Meet, Teams, Zoom.
+    frequency: En cada reunión.
+    level_expectation: El Dev Mid es referencia visible de profesionalismo remoto para el Jr.
+    guidance: El Mid modela el estándar de trabajo remoto.
+  - title: Comunicación y respuesta
+    text: Responder en menos de 24 horas hábiles a comunicaciones del equipo y del cliente. Comunicar bloqueos, riesgos y avances proactivamente, no solo cuando se le pregunta. Apoyar al Dev Jr en comunicación con cliente o stakeholders cuando se requiera. Levantar alertas tempranas al Sr/Lead ante riesgos del proyecto.
+    acceptance_criteria: Cero hilos del Mid sin respuesta >24h hábiles. El Sr/Lead no se entera de bloqueos del Mid en daily — los conoce antes. El Mid comunica riesgos antes de que se vuelvan problemas. El Dev Jr aprende a comunicar viendo al Mid.
+    deliverable: Hilos de comunicación respondidos dentro de SLA. Alertas tempranas documentadas en canal apropiado.
+    deliverable_format: Slack, Teams, correo, Jira.
+    frequency: Continuo.
+    level_expectation: El Dev Mid comunica proactivamente y modela este estándar para el Jr.
+    guidance: Comunicar tarde es comunicar mal. El Mid anticipa, no informa post-mortem.
+  - title: Observabilidad y monitoreo
+    text: Implementar logs, métricas y trazas en los componentes propios con criterio (qué loguear, en qué nivel, qué métricas son relevantes). Revisar la instrumentación del Dev Jr. Usar las herramientas de observabilidad existentes para diagnosticar incidencias, no solo para implementarlas.
+    acceptance_criteria: Los logs del Mid permiten diagnosticar incidencias sin agregar logs adicionales en producción. Las métricas son relevantes, no ruido. El Mid usa observabilidad para diagnosticar, no se limita a programar logs. El Sr no encuentra componentes sin instrumentación del Mid.
+    deliverable: Componentes con logs y métricas útiles en producción. Instrumentación del Jr revisada y validada.
+    deliverable_format: Datadog, Grafana, ELK, CloudWatch, OpenTelemetry.
+    frequency: Continuo, a la par del desarrollo.
+    level_expectation: El Dev Mid instrumenta con criterio y usa observabilidad como herramienta de trabajo, no como entregable.
+    guidance: Sin observabilidad, cada incidencia es a ciegas. El Mid instrumenta y diagnostica.
+  - title: Mentoría al Dev Jr
+    text: 'Acompañar al Dev Jr en su crecimiento técnico: responder dudas, hacer pair programming, revisar código con foco pedagógico, identificar gaps y dar retroalimentación constructiva. Levantar al Sr/Lead cuando el Jr necesita formación estructurada que excede el día a día.'
+    acceptance_criteria: El Dev Jr mejora medibles entre sprints (menos errores recurrentes, mayor autonomía). El Mid identifica los gaps específicos del Jr y los comunica al Sr. La retroalimentación del Mid es accionable, no genérica. El Jr puede recurrir al Mid sin sentir que pierde el tiempo.
+    deliverable: Sesiones de mentoría documentadas (notas, PRs revisados, pair programming). Reporte periódico al Sr/Lead sobre avance del Jr.
+    deliverable_format: Notion, Office, sesiones de pair programming.
+    frequency: Continuo.
+    level_expectation: El Dev Mid eleva al Jr. Su éxito se mide también por el crecimiento del Jr.
+    guidance: 'Mentorar no es opcional para el Mid: es parte del rol. El crecimiento del Jr es responsabilidad del Mid.'
+  - title: Estimaciones y planning técnico
+    text: Estimar con criterio el esfuerzo de funcionalidades propias y validar estimaciones del Dev Jr. Identificar dependencias, riesgos técnicos y supuestos que afectan los plazos. Levantar al Sr/Lead cuando una estimación del equipo es inviable o falta información crítica.
+    acceptance_criteria: Las estimaciones del Mid tienen desviación promedio menor al 25%. Las estimaciones del Jr revisadas por el Mid no se quedan cortas por gaps obvios. El Mid no se compromete a plazos sin haber identificado supuestos críticos. El Sr/Lead se entera de riesgos de plazo antes del incumplimiento.
+    deliverable: Estimaciones con desglose de tareas, supuestos y dependencias. Revisión documentada de estimaciones del Jr.
+    deliverable_format: Jira, Scrum, Excel.
+    frequency: Por sprint o entregable.
+    level_expectation: El Dev Mid estima con criterio profesional y valida lo del Jr. Sus desviaciones están justificadas, no son aleatorias.
+    guidance: Estimar sin desglose es adivinar. El Mid desglosa y valida los supuestos.
+  - title: Participación en sprint review y retrospectiva
+    text: 'Demostrar los entregables del sprint con claridad: contexto, alcance, evidencia y limitaciones. En la retrospectiva, identificar causas raíz de problemas (propios y del equipo) y proponer acciones específicas. No solo describir síntomas.'
+    acceptance_criteria: Las demos del Mid no requieren aclaraciones básicas por parte del cliente. En cada retro el Mid identifica al menos una mejora estructural con acción concreta. El Mid no se ausenta de retros sin justificación. Las acciones de retro propuestas por el Mid se cierran en el siguiente sprint.
+    deliverable: Demos preparadas con casos de prueba ejecutados. Acciones de mejora propuestas en retro con dueño y fecha.
+    deliverable_format: Slides, demo en vivo, herramientas del proyecto.
+    frequency: Cada sprint.
+    level_expectation: El Dev Mid participa con preparación y aporte estructural en ceremonias. Sus demos y propuestas elevan el sprint.
+    guidance: Una retro sin causas raíz es una conversación. El Mid lleva soluciones, no quejas.
+  - title: Coordinación con PM y QA
+    text: Mantener interacción directa con Product Manager/Owner y QA para aclarar requerimientos, validar criterios de aceptación y coordinar entregas. Levantar bloqueos no técnicos (alcance, prioridad, accesos) al Sr/Lead cuando exceden su nivel de decisión.
+    acceptance_criteria: El Mid no espera al Sr para aclarar requerimientos rutinarios con PM. QA recibe builds del Mid con criterios de aceptación claros. Los bloqueos de alcance se escalan al Sr antes de afectar el sprint, no después. El Dev Jr aprende del Mid cómo coordinar con PM y QA.
+    deliverable: Hilos de coordinación con PM y QA documentados. Bloqueos no técnicos escalados a tiempo.
+    deliverable_format: Teams, Jira.
+    frequency: Continuo.
+    level_expectation: El Dev Mid interactúa directamente con PM y QA con criterio profesional. No delega al Sr lo que puede resolver.
+    guidance: Coordinar con PM y QA es responsabilidad propia del Mid, no del Sr.
+  - title: Refactoring y manejo de deuda técnica
+    text: Identificar deuda técnica en el código y proponer refactors con justificación (impacto, riesgo, esfuerzo). Ejecutar refactors aprobados sin romper funcionalidad existente. No mezclar refactors oportunistas con PRs de feature. Documentar la deuda técnica que se posterga.
+    acceptance_criteria: El Mid documenta deuda técnica con impacto y propone priorización. Los refactors no rompen funcionalidad (validado con pruebas). El Mid no introduce refactors no autorizados en PRs de feature. La deuda postergada queda documentada, no olvidada.
+    deliverable: Backlog de deuda técnica documentado. Refactors ejecutados con pruebas que garantizan no-regresión.
+    deliverable_format: Jira, Notion, herramientas del proyecto.
+    frequency: Continuo.
+    level_expectation: El Dev Mid maneja deuda técnica con criterio. Propone, justifica, ejecuta con disciplina.
+    guidance: Refactorizar sin pruebas es romper sin saberlo. El Mid refactoriza con red de seguridad.
+  - title: Performance y optimización
+    text: 'Identificar problemas de performance en los componentes propios y del equipo: consultas lentas, loops innecesarios, llamadas excesivas a APIs, uso ineficiente de memoria. Proponer optimizaciones justificadas con métricas. Validar que las optimizaciones no degraden funcionalidad.'
+    acceptance_criteria: Las optimizaciones del Mid están respaldadas por métricas, no por intuición. El Mid no optimiza prematuramente — ataca cuellos de botella reales. El Sr no descubre componentes con performance evidente en review.
+    deliverable: Propuestas de optimización con métricas antes/después. Componentes optimizados con pruebas de regresión ejecutadas.
+    deliverable_format: Profilers, herramientas de APM, benchmarks.
+    frequency: Cuando aplique, ante problemas de performance detectados.
+    level_expectation: El Dev Mid detecta y resuelve problemas de performance con métricas, no con suposiciones.
+    guidance: Optimizar sin medir es adivinar. El Mid mide, optimiza y valida.
+  - title: Inventario de dependencias y librerías
+    text: Mantener trazabilidad de las dependencias y librerías usadas en los módulos propios. Validar licencias, mantenimiento activo, vulnerabilidades conocidas y compatibilidad antes de adoptar nuevas dependencias. Comunicar al equipo cambios mayores de dependencias.
+    acceptance_criteria: El Mid no adopta dependencias sin validar licencia, mantenimiento y seguridad. El equipo no se entera por sorpresa de cambios mayores en dependencias. El Sr no descubre dependencias abandonadas o vulnerables en componentes del Mid.
+    deliverable: Inventario de dependencias con versión, licencia y propósito. Validación documentada antes de adoptar nuevas dependencias.
+    deliverable_format: package.json, requirements.txt, gestores de dependencias, Snyk, Dependabot.
+    frequency: Continuo, especialmente al adoptar o actualizar dependencias.
+    level_expectation: El Dev Mid administra dependencias con criterio. Cada adopción está justificada y validada.
+    guidance: Una dependencia adoptada es deuda futura si no se validó al inicio.
+  - title: Scripts de validación y automatización
+    text: 'Crear y mantener scripts de validación para tareas repetitivas: pruebas de humo, validación de configuración, smoke tests, generación de data de prueba. Apoyar al Dev Jr en el uso y creación de estos scripts.'
+    acceptance_criteria: Los scripts del Mid son ejecutables por el Jr sin ayuda. Las validaciones repetitivas están automatizadas, no se ejecutan manualmente. El Sr no encuentra el equipo perdiendo tiempo en validaciones que el Mid pudo automatizar.
+    deliverable: Scripts versionados en el repo con documentación de uso. Evidencia de transferencia al Dev Jr.
+    deliverable_format: Bash, Python, lenguaje del proyecto, herramientas de CI/CD.
+    frequency: Continuo, según necesidad del proyecto.
+    level_expectation: El Dev Mid automatiza con criterio y forma al Jr en estas prácticas.
+    guidance: Lo que se hace más de tres veces, se automatiza.
+  - title: Uso de Agentic AI en el ciclo de desarrollo
+    text: 'Usar agentes de IA (Claude Code, Cursor Agent, Copilot Workspace, agentes propios) para tareas multi-paso del SDLC con criterio profesional: definir alcance acotado, revisar el plan antes de ejecutar, validar diffs completos antes de commit, no permitir que el agente toque ambientes productivos sin revisión humana. Mentorar al Jr sobre cuándo conviene usarlos y cuándo no.'
+    acceptance_criteria: El Mid revisa el 100% del diff generado por un agente antes de aprobar el merge. Ningún agente ejecuta contra producción sin validación humana documentada. El Mid acota el scope de la tarea antes de invocar al agente — no le pide 'arregla el bug' sino 'arregla este bug, en este archivo, con estos límites'. El Jr no usa agentes sin haber recibido lineamientos del Mid.
+    deliverable: PRs generados con agentes revisados línea por línea y firmados por el Mid. Bitácora de tareas delegadas a agentes con scope, resultado y validación.
+    deliverable_format: Claude Code, Cursor Agent, Copilot Workspace, agentes propios.
+    frequency: Continuo.
+    level_expectation: El Dev Mid usa Agentic AI como amplificador con criterio y disciplina. Define guardrails, no delega responsabilidad — sigue firmando lo que se entrega.
+    guidance: Un agente sin scope acotado es un riesgo. El Mid define el scope y firma el resultado.
+- area: DEV
+  level: SNR
+  questions:
+  - title: Discovery técnico y mapeo de riesgos
+    text: 'Liderar el discovery técnico del proyecto: identificar dominios, sistemas involucrados, integraciones, dependencias externas y riesgos técnicos. Anticipar bloqueos que el Mid no vería. Validar viabilidad técnica del alcance antes del compromiso comercial. Asegurar que el equipo entiende el contexto end-to-end.'
+    acceptance_criteria: El Sr identifica al menos un riesgo crítico antes del kickoff que de otra forma se habría descubierto en sprint. Ningún compromiso comercial se firma sin validación técnica del Sr. El Mid entiende el discovery y puede explicarlo al Jr. Los riesgos identificados tienen plan de mitigación, no solo enunciado.
+    deliverable: Documento de discovery con mapa de sistemas, integraciones, riesgos técnicos priorizados y supuestos críticos. Validación con cliente y equipo.
+    deliverable_format: LucidChart, Miro, C4 Model, Markdown.
+    frequency: 1 vez al inicio del proyecto y ante cambios de alcance mayores.
+    level_expectation: El Dev Sr es responsable de que el proyecto arranque con los ojos abiertos. Su criterio decide la viabilidad técnica.
+    guidance: El Sr ve lo que el cliente y el equipo no ven. Un discovery sin riesgos mapeados es un discovery incompleto.
+  - title: Documento de alcance técnico y sign-off
+    text: 'Redactar y validar el documento de alcance técnico completo del proyecto: qué se construye, qué queda fuera, restricciones, supuestos y dependencias. Obtener sign-off formal del cliente y stakeholders técnicos antes del desarrollo. Identificar inconsistencias entre alcance comercial y técnico.'
+    acceptance_criteria: El sign-off está documentado antes del primer sprint. Las inconsistencias entre alcance comercial y técnico se resuelven antes del desarrollo, no durante. El equipo no construye nada que no esté explícito en el documento firmado. Cambios al alcance generan adenda formal.
+    deliverable: Documento de alcance técnico firmado por cliente y stakeholders. Inconsistencias documentadas y resueltas antes del sign-off.
+    deliverable_format: Notion, Word, Confluence, Jira.
+    frequency: 1 vez al inicio del proyecto y por cada cambio de alcance.
+    level_expectation: El Dev Sr negocia el alcance con criterio técnico y firmeza. Protege al equipo y al cliente de compromisos no sostenibles.
+    guidance: Sin sign-off no hay proyecto. Es responsabilidad del Sr proteger al equipo de scope creep.
+  - title: Validación técnica de requerimientos
+    text: 'Validar técnicamente cada requerimiento del proyecto antes de aceptarlo en backlog: implementabilidad, dependencias, conflictos, costo-beneficio. Definir criterios de aceptación técnicos. Rechazar o negociar requerimientos inviables con justificación técnica.'
+    acceptance_criteria: Ningún requerimiento entra al sprint sin validación del Sr. Los requerimientos rechazados tienen justificación técnica documentada. El Mid ve el patrón de validación y lo replica. El equipo no descubre conflictos entre requerimientos durante la implementación.
+    deliverable: Backlog con cada requerimiento validado técnicamente, con criterios de aceptación y dependencias identificadas.
+    deliverable_format: Jira, Linear, Notion.
+    frequency: Continuo, antes de cada sprint o ante nuevos requerimientos.
+    level_expectation: El Dev Sr decide qué entra al backlog. Su validación protege la viabilidad técnica del proyecto.
+    guidance: Aceptar un requerimiento inviable es un compromiso futuro de fracaso. El Sr negocia ahora, no después.
+  - title: Diseño de arquitectura E2E del proyecto
+    text: 'Diseñar la arquitectura completa del proyecto: capas, módulos, integraciones, flujos de datos, contratos entre componentes y puntos de extensión. Documentar con diagramas C4 o equivalentes. Aprobar la arquitectura con stakeholders técnicos del cliente. Asegurar que el Mid puede explicarla al Jr.'
+    acceptance_criteria: La arquitectura está aprobada antes del inicio del desarrollo. Cualquier desviación durante implementación se documenta y aprueba. El Mid puede explicar la arquitectura al Jr sin ayuda del Sr. Los cambios arquitectónicos no se introducen sin discusión con stakeholders.
+    deliverable: Diagrama de arquitectura E2E aprobado por stakeholders técnicos. Documento con decisiones, alternativas evaluadas y trade-offs.
+    deliverable_format: C4 Model, Draw.io, Mermaid, LucidChart.
+    frequency: 1 vez al inicio del proyecto y ante cambios estructurales.
+    level_expectation: El Dev Sr diseña arquitecturas con criterio de mantenibilidad, escalabilidad y costo a largo plazo. Justifica cada decisión estructural.
+    guidance: La arquitectura es el plano del proyecto. El Sr decide dónde van las paredes y por qué.
+  - title: Patrones de diseño y arquitectura del ecosistema
+    text: 'Mantener visión transversal de los sistemas del cliente: identificar patrones reutilizables, oportunidades de consolidación y riesgos arquitectónicos entre proyectos. Proponer estándares de arquitectura aplicables al ecosistema, no solo al proyecto actual. Alinear con arquitectura empresarial del cliente cuando exista.'
+    acceptance_criteria: El Sr identifica al menos una oportunidad de reutilización entre proyectos por trimestre. Los nuevos módulos respetan patrones existentes en el ecosistema o justifican la desviación. El cliente reconoce el aporte del Sr más allá del proyecto inmediato.
+    deliverable: Documento de patrones del ecosistema con recomendaciones de consolidación. Alineación documentada con arquitectura empresarial.
+    deliverable_format: Documentación del cliente, ADRs, Confluence, repositorio de patrones.
+    frequency: Continuo, especialmente al inicio de cada proyecto.
+    level_expectation: El Dev Sr piensa en arquitectura del cliente, no solo del proyecto. Aporta visión transversal.
+    guidance: El Sr no construye en silos. Su valor crece cuando ve el ecosistema completo.
+  - title: Decisiones técnicas (ADRs) y selección tecnológica
+    text: 'Tomar y documentar decisiones técnicas relevantes del proyecto con formato ADR: contexto, alternativas evaluadas, decisión, consecuencias. Liderar la selección tecnológica (frameworks, librerías, servicios cloud) con criterio de costo-beneficio, soporte y largo plazo. No decidir por moda.'
+    acceptance_criteria: Toda decisión estructural del proyecto tiene ADR. Las decisiones del Sr están justificadas con evidencia, no con preferencia personal. El equipo puede consultar ADRs y entender el porqué sin preguntar al Sr. Una decisión sin ADR se revierte hasta documentarla.
+    deliverable: Repositorio de ADRs versionado. Decisiones tecnológicas con análisis comparativo documentado.
+    deliverable_format: ADR Markdown, repositorio git, Notion.
+    frequency: Continuo, ante cada decisión técnica relevante.
+    level_expectation: El Dev Sr decide con criterio profesional y deja trazabilidad. Su firma significa que la decisión está justificada.
+    guidance: Una decisión sin ADR es una decisión que el equipo olvidará y revertirá. El Sr documenta para que las decisiones perduren.
+  - title: Diseño de módulos críticos
+    text: 'Diseñar personalmente los módulos críticos del proyecto: motor de negocio, integraciones de alta complejidad, componentes con requisitos no funcionales exigentes. Delegar al Mid módulos de complejidad media con diseño aprobado. Asegurar que los módulos críticos no son responsabilidad del Jr.'
+    acceptance_criteria: Los módulos críticos no se asignan al Jr. El Mid implementa con diseño del Sr o con diseño propio aprobado. Los módulos críticos pasan a producción sin defectos de diseño detectados en sprint review. El Sr identifica patrones que se replican en el resto del proyecto.
+    deliverable: Documento de diseño de módulos críticos con patrones, contratos, puntos de extensión y consideraciones no funcionales.
+    deliverable_format: Draw.io, Mermaid, Markdown, ADRs.
+    frequency: Inicio del proyecto y ante nuevos módulos críticos.
+    level_expectation: El Dev Sr diseña personalmente lo crítico. Identifica qué es crítico y qué se puede delegar.
+    guidance: Un módulo crítico mal diseñado bloquea el proyecto. El Sr no delega lo que define la viabilidad técnica.
+  - title: Modelo de datos y contratos de integración
+    text: Diseñar el modelo de datos global del proyecto y los contratos de integración entre componentes y sistemas externos. Validar consistencia, normalización adecuada, evolución del esquema y versionado de contratos. Aprobar modelos del Mid antes del desarrollo.
+    acceptance_criteria: El modelo de datos está aprobado antes del primer commit. Los contratos tienen versionado y estrategia de breaking changes. El Mid no avanza con modelos sin aprobación del Sr. El cliente no descubre errores de modelado en UAT.
+    deliverable: Modelo de datos global versionado. Contratos de integración con versionado y estrategia de evolución.
+    deliverable_format: Mermaid, Draw.io, dbdiagram, OpenAPI, AsyncAPI.
+    frequency: Inicio del proyecto y ante cambios estructurales del modelo.
+    level_expectation: El Dev Sr diseña el modelo con criterio de evolución. Anticipa cómo cambiará el modelo en el tiempo.
+    guidance: Un modelo de datos mal diseñado invalida el código construido sobre él. El Sr valida antes de que el equipo programe.
+  - title: Estándares de código y guidelines del equipo
+    text: 'Definir y mantener los estándares de código del proyecto: convenciones de naming, estructura, patrones aceptados, linters, formatters. Documentar excepciones justificadas. Asegurar que el equipo conoce y aplica los estándares. Actualizar guidelines ante nuevos aprendizajes.'
+    acceptance_criteria: Los estándares están documentados y aplicados por linters automáticos. El Mid hace cumplir los estándares en code review del Jr. El Sr no encuentra el mismo tipo de desviación en el equipo dos veces sin actualizar el guideline. Las excepciones tienen justificación documentada.
+    deliverable: Documento de estándares del proyecto versionado. Configuración de linters/formatters en el repositorio.
+    deliverable_format: Markdown, configuración de linters (ESLint, Prettier, Ruff, etc.).
+    frequency: Inicio del proyecto, actualización continua.
+    level_expectation: El Dev Sr define el estándar del equipo. Su criterio fija la barra de calidad.
+    guidance: Un estándar no aplicado por linter es un estándar que no existe. El Sr automatiza el cumplimiento.
+  - title: Desarrollo de funcionalidades críticas
+    text: 'Implementar personalmente las funcionalidades críticas del proyecto: lógica de negocio compleja, integraciones de alto riesgo, motor de reglas, componentes con requisitos de performance o seguridad exigentes. Establecer el patrón que el equipo replicará.'
+    acceptance_criteria: Las funcionalidades críticas implementadas por el Sr no tienen defectos en sprint review. El código del Sr es referencia para el equipo. Los patrones aplicados por el Sr se replican en el resto del proyecto sin ambigüedad.
+    deliverable: Funcionalidades críticas en el repositorio con pruebas exhaustivas y documentación técnica.
+    deliverable_format: Git, lenguaje del proyecto, frameworks de testing.
+    frequency: Continuo, sobre funcionalidades críticas.
+    level_expectation: El Dev Sr sigue programando lo crítico. Mantiene credibilidad técnica frente al equipo y al cliente.
+    guidance: El Sr no se desconecta del código. Su valor técnico se ejerce, no se delega.
+  - title: Refactoring estratégico y gestión de deuda técnica
+    text: Identificar deuda técnica relevante del proyecto y priorizarla con criterio de impacto vs esfuerzo. Negociar con PM/Product la asignación de capacidad para refactoring. Liderar refactors estructurales que el Mid no podría ejecutar solo. Documentar la deuda que se posterga y por qué.
+    acceptance_criteria: La deuda técnica está visible al PM/Product con impacto cuantificado. El Sr negocia capacidad para deuda en cada release planning. Los refactors estructurales no introducen regresiones. La deuda postergada queda documentada con fecha de revisión.
+    deliverable: Backlog priorizado de deuda técnica. Refactors estructurales ejecutados con pruebas de regresión. Negociaciones documentadas con PM/Product.
+    deliverable_format: Jira, Notion, herramientas del proyecto.
+    frequency: Continuo, revisión por release.
+    level_expectation: El Dev Sr gestiona la deuda como parte de la salud del proyecto. La negocia, prioriza y ejecuta.
+    guidance: Si el Sr no negocia capacidad para deuda, nadie más lo hará. La deuda crece silenciosa hasta detener el proyecto.
+  - title: Estrategia de testing y aprobación de pase a producción
+    text: 'Definir la estrategia de testing del proyecto: pirámide de pruebas, cobertura objetivo, tipos de pruebas por componente, criterios de aceptación. Aprobar formalmente cada pase a producción basado en evidencia: reporte de pruebas, métricas, riesgos residuales. Es la última firma antes de prod.'
+    acceptance_criteria: Ningún release entra a producción sin la firma del Sr. Las firmas tienen evidencia adjunta, no son trámite. Los riesgos residuales son comunicados al cliente antes del pase. Cuando un incidente en prod tiene origen en algo aprobado, el Sr puede explicar la decisión con la evidencia que tenía.
+    deliverable: Estrategia de testing documentada. Aprobaciones de pase a prod firmadas con evidencia adjunta y riesgos residuales declarados.
+    deliverable_format: Frameworks de testing, reportes de cobertura, Markdown, Confluence.
+    frequency: 'Por release. Estrategia: 1 vez al inicio, revisada por release.'
+    level_expectation: El Dev Sr decide qué entra a producción. Su firma es la última línea de defensa.
+    guidance: La firma del Sr es garantía técnica. No se firma lo que no se validó.
+  - title: Code Review estratégico
+    text: 'Revisar PRs con foco estructural: arquitectura, patrones, decisiones de diseño, deuda futura. Delegar code review táctico al Mid. Aprobar personalmente PRs que tocan módulos críticos o introducen patrones nuevos. Usar code review como herramienta de formación del Mid y Jr.'
+    acceptance_criteria: Los PRs críticos tienen aprobación del Sr. El Sr no aprueba sin haber leído. Los comentarios del Sr son estructurales, no estilísticos. Los patrones recurrentes detectados generan actualización de guidelines, no comentarios repetidos.
+    deliverable: Aprobaciones de PRs críticos. Comentarios estructurales documentados. Patrones detectados como issues recurrentes que ameritan actualización de guidelines.
+    deliverable_format: GitHub, GitLab, Bitbucket.
+    frequency: Continuo, foco en PRs críticos.
+    level_expectation: El Dev Sr usa code review como palanca de calidad y formación. Su criterio fija el estándar.
+    guidance: El Sr no revisa todo. Revisa lo que define la viabilidad técnica del proyecto.
+  - title: Observabilidad, métricas y SLOs
+    text: 'Definir la estrategia de observabilidad del proyecto: métricas de negocio y técnicas, SLIs, SLOs y error budgets. Validar que los módulos críticos están instrumentados antes del pase a prod. Usar observabilidad para decisiones técnicas y de negocio, no solo para diagnóstico.'
+    acceptance_criteria: Los módulos críticos no entran a producción sin instrumentación aprobada. Los SLOs están definidos con el cliente, no inventados por el equipo. Las alertas tienen runbook. El Sr usa métricas para tomar decisiones técnicas (refactor, rediseño, escalamiento).
+    deliverable: Documento de estrategia de observabilidad con SLOs definidos. Dashboards operativos en producción. Alertas configuradas con runbooks.
+    deliverable_format: Datadog, Grafana, Prometheus, ELK, OpenTelemetry.
+    frequency: Inicio del proyecto, revisión por release.
+    level_expectation: El Dev Sr define qué se mide y cómo se interpreta. Su criterio de SLO es referencia del proyecto.
+    guidance: Sin observabilidad, el equipo opera a ciegas. Sin SLOs, no se sabe qué es aceptable.
+  - title: Manejo de incidentes críticos y postmortems
+    text: 'Liderar la respuesta a incidentes críticos en producción: coordinar al equipo, comunicar al cliente, decidir acciones de mitigación. Conducir postmortems con foco en causa raíz y acciones estructurales (no parches). Asegurar que las acciones del postmortem se cierran en sprint siguiente.'
+    acceptance_criteria: Los incidentes críticos tienen postmortem dentro de 5 días hábiles. Las acciones estructurales se cierran en el sprint siguiente. El mismo tipo de incidente no se repite. La comunicación al cliente durante el incidente es manejada por el Sr, no por el Mid.
+    deliverable: Documento de respuesta a incidente. Postmortem con causa raíz, línea de tiempo, decisiones tomadas y acciones estructurales con dueño y fecha.
+    deliverable_format: Notion, Confluence, incident management tools, Markdown.
+    frequency: Ante cada incidente crítico.
+    level_expectation: El Dev Sr lidera incidentes con calma y criterio. Convierte cada incidente en mejora estructural.
+    guidance: Un incidente sin postmortem es un incidente que se repetirá. El Sr extrae aprendizaje estructural.
+  - title: Estrategia DevOps y cultura del equipo
+    text: 'Definir y promover la cultura DevOps del proyecto: automatización, GitOps, infraestructura como código, integración y despliegue continuos, ownership compartido entre Dev y operaciones. Eliminar trabajo manual repetitivo. Asegurar que el equipo opera con mentalidad DevOps, no en silos.'
+    acceptance_criteria: Las métricas DORA del equipo mejoran trimestre a trimestre. El equipo no opera en silos Dev/Ops. Los procesos manuales repetitivos se automatizan al detectarlos por tercera vez. El Mid replica la mentalidad DevOps con el Jr.
+    deliverable: Documento de estrategia DevOps del proyecto. Métricas DORA (lead time, deploy frequency, MTTR, change failure rate) visibles y revisadas.
+    deliverable_format: Confluence, Notion, dashboards DevOps.
+    frequency: Continuo. Revisión de métricas mensual.
+    level_expectation: El Dev Sr instala cultura DevOps en el equipo. Mide y mejora con DORA.
+    guidance: DevOps no es una herramienta, es una cultura. El Sr la implanta y la sostiene.
+  - title: Pipeline CI/CD y estrategia de release
+    text: 'Diseñar e implementar el pipeline CI/CD del proyecto: build, test, security gates, deploy. Definir estrategia de branching (trunk-based, GitFlow, etc.), estrategia de release (blue-green, canary, feature flags) y plan de rollback. Asegurar que el equipo puede desplegar a producción con confianza.'
+    acceptance_criteria: El pipeline ejecuta automáticamente en cada PR. Los gates bloquean lo que no cumple estándar. Cualquier integrante del equipo puede desplegar sin asistencia del Sr. El rollback está probado, no solo documentado. Despliegues a prod no requieren intervención manual.
+    deliverable: Pipeline CI/CD funcional con gates documentados. Estrategia de branching y release documentada. Plan de rollback probado.
+    deliverable_format: GitHub Actions, GitLab CI, Jenkins.
+    frequency: Inicio del proyecto. Revisión por release.
+    level_expectation: El Dev Sr diseña pipelines robustos. El equipo despliega solo, no depende del Sr para producción.
+    guidance: Un pipeline fragíl es deuda operacional. El Sr asegura que el equipo despliega con confianza.
+  - title: Infraestructura como Código (IaC)
+    text: 'Definir la infraestructura del proyecto como código: Terraform, CloudFormation o equivalente. Versionar la infraestructura en repositorio. Asegurar reproducibilidad de ambientes (dev, staging, prod). Aplicar revisión de cambios de infraestructura como se hace con código de aplicación.'
+    acceptance_criteria: Ningún recurso de infraestructura se crea manualmente en consola. Los ambientes pueden recrearse desde cero con el código IaC. Los cambios de infraestructura pasan por PR review. El drift entre IaC y realidad cloud se detecta y corrige.
+    deliverable: Infraestructura versionada en repositorio IaC. Ambientes reproducibles desde código. PRs de infraestructura con review formal.
+    deliverable_format: Terraform, AWS CDK, Pulumi, CloudFormation, Ansible.
+    frequency: Inicio del proyecto. Continuo ante cambios.
+    level_expectation: El Dev Sr trata la infraestructura como código. Versiona, revisa y reproduce.
+    guidance: Infraestructura manual es deuda operacional invisible. El Sr exige IaC desde el primer recurso.
+  - title: Seguridad por diseño y threat modeling
+    text: 'Aplicar seguridad por diseño desde la arquitectura: principio de menor privilegio, defense in depth, secret management, segmentación de red, autenticación y autorización robustas. Conducir threat modeling (STRIDE u otro) sobre componentes críticos. Definir requisitos de seguridad no negociables.'
+    acceptance_criteria: Los componentes críticos tienen threat modeling antes del desarrollo. Las credenciales nunca están en código o configuración versionada. El principio de menor privilegio está aplicado y verificable. El Sr es consultado en cualquier decisión con impacto de seguridad.
+    deliverable: Documento de threat modeling de componentes críticos. Políticas de seguridad del proyecto documentadas. Decisiones de seguridad documentadas como ADRs.
+    deliverable_format: STRIDE, OWASP, Markdown, draw.io para diagramas de amenaza.
+    frequency: Inicio del proyecto. Ante nuevos componentes críticos.
+    level_expectation: El Dev Sr piensa como atacante para defender. Su threat modeling protege al proyecto.
+    guidance: La seguridad se diseña, no se parcha. El Sr la incorpora desde la arquitectura.
+  - title: 'Pipeline DevSecOps: SAST, DAST, SCA y secret scanning'
+    text: 'Implementar y operar el pipeline DevSecOps: SAST (análisis estático), DAST (dinámico), SCA (composición de software), secret scanning, container scanning. Definir gates de severidad (no se mergea con vulnerabilidades críticas o altas). Gestionar el backlog de vulnerabilidades con SLA por severidad.'
+    acceptance_criteria: Ningún PR se mergea con vulnerabilidades críticas/altas pendientes. Las vulnerabilidades se cierran dentro del SLA por severidad. Cero secretos detectados en repositorio. El cliente recibe reporte de seguridad por release sin necesidad de pedirlo.
+    deliverable: Pipeline DevSecOps integrado con gates configurados. Backlog de vulnerabilidades con SLA por severidad. Reporte de seguridad por release.
+    deliverable_format: SonarQube, Snyk, Dependabot, Trivy, Checkov, GitGuardian, OWASP ZAP.
+    frequency: Continuo. Revisión por release.
+    level_expectation: El Dev Sr implanta DevSecOps. La seguridad es responsabilidad del equipo, no de un área externa.
+    guidance: 'Shift-left de seguridad: detectar en pipeline, no en producción. El Sr no negocia gates de seguridad críticos.'
+  - title: Performance, costos y FinOps
+    text: 'Monitorear performance del sistema y costos de cloud. Identificar y atacar cuellos de botella, sobre-aprovisionamiento, recursos huérfanos, consultas ineficientes. Aplicar prácticas FinOps: tagging, presupuestos, alertas de costo, optimización continua. Reportar costo del proyecto al cliente con transparencia.'
+    acceptance_criteria: El costo del proyecto está controlado y reportado al cliente. Las optimizaciones están respaldadas por métricas. El Sr identifica desviaciones de costo antes del cierre de mes. Cero recursos huérfanos en cloud.
+    deliverable: Dashboard de performance y costos. Plan de optimización con métricas antes/después. Reporte mensual de costo al cliente.
+    deliverable_format: AWS Cost Explorer, GCP Billing, Azure Cost Management, Datadog, Grafana.
+    frequency: Mensual. Continuo ante alertas.
+    level_expectation: El Dev Sr aplica FinOps. El costo cloud es responsabilidad del equipo, no del cliente.
+    guidance: Performance sin costo es ingenuidad. Costo sin performance es desperdicio. El Sr balancea ambos.
+  - title: Gestión SCRUM del equipo
+    text: 'Asegurar la correcta ejecución del marco SCRUM en el equipo: ceremonias con propósito (no rituales vacíos), artefactos actualizados, métricas de equipo (velocity, predictibilidad, lead time). Colaborar con el Scrum Master/Agile Coach cuando exista. Identificar y corregir disfunciones del proceso. Modelar la disciplina al equipo.'
+    acceptance_criteria: Las ceremonias tienen propósito y duración acotada. La velocity del equipo es predecible (±15%). Las disfunciones del proceso se detectan en retro y se corrigen. El Sr modela la disciplina (puntualidad, preparación, aporte). El equipo no opera por inercia.
+    deliverable: Métricas del equipo (velocity, predictibilidad, lead time) visibles. Ceremonias con asistencia y aporte registrado. Acciones de mejora del proceso documentadas.
+    deliverable_format: Jira, Linear, herramientas ágiles, Confluence.
+    frequency: Continuo. Revisión de métricas por sprint.
+    level_expectation: El Dev Sr gestiona la ejecución del marco SCRUM con criterio. No es Scrum Master, pero asegura que el marco funcione.
+    guidance: SCRUM mal ejecutado es teatro. El Sr asegura que sirva al proyecto, no al revés.
+  - title: Sprint planning y estimaciones técnicas
+    text: 'Liderar la planificación técnica del sprint: descomposición de historias, identificación de dependencias, asignación por nivel (críticos al Sr/Mid, básicos al Jr), estimaciones con desglose. Validar estimaciones del equipo. No comprometer al equipo más allá de su capacidad sostenible.'
+    acceptance_criteria: La predictibilidad del equipo es ≥85% (lo comprometido se entrega). Las estimaciones tienen desviación promedio menor al 20%. El Jr no recibe tareas críticas. El Mid recibe tareas que lo desafían sin desbordarlo. El compromiso de sprint no se basa en presión del PM.
+    deliverable: Sprint backlog con descomposición, dependencias y asignaciones. Estimaciones validadas. Capacidad del equipo declarada.
+    deliverable_format: Jira, Linear, Planning Poker, Excel.
+    frequency: Cada sprint.
+    level_expectation: El Dev Sr lidera planning con criterio técnico. Protege al equipo de compromisos no sostenibles.
+    guidance: Comprometer más allá de la capacidad sostenible quema al equipo. El Sr protege el ritmo.
+  - title: Sprint review y retrospectiva
+    text: 'Liderar la sprint review con el cliente: presentar entregables con contexto, gestionar feedback y negociar cambios. Conducir la retrospectiva del equipo con foco en causa raíz y acciones estructurales. Asegurar que las acciones de retro se ejecutan en el sprint siguiente.'
+    acceptance_criteria: El cliente sale del sprint review con claridad de lo entregado. Las retros generan al menos una acción estructural por sprint. Las acciones de retro se cierran en ≥85%. La retro no se convierte en sesión de quejas. El Sr modela autocrítica antes de pedirla al equipo.
+    deliverable: Demos preparadas con evidencia. Retros con acciones de mejora documentadas, con dueño y fecha. Tasa de cierre de acciones de retro ≥80%.
+    deliverable_format: Slides, demo en vivo, Jira, Notion.
+    frequency: Cada sprint.
+    level_expectation: El Dev Sr conduce ceremonias con propósito. Su criterio extrae aprendizaje de cada sprint.
+    guidance: Una retro sin acciones que se cierran es teatro. El Sr asegura cierre, no solo conversación.
+  - title: Definition of Ready y Definition of Done
+    text: Definir y mantener actualizada la Definition of Ready (cuándo una historia está lista para entrar al sprint) y la Definition of Done (cuándo una historia está terminada de verdad). Hacer cumplir ambas. Rechazar entrada de historias que no cumplen DoR. Rechazar cierre de historias que no cumplen DoD.
+    acceptance_criteria: Ninguna historia entra al sprint sin cumplir DoR. Ninguna historia se cierra sin cumplir DoD. El equipo respeta DoR/DoD sin que el Sr deba intervenir en cada caso. La DoD incluye pruebas, doc, observabilidad y revisión de seguridad cuando aplica.
+    deliverable: Documentos DoR y DoD visibles para el equipo y stakeholders. Histórico de historias rechazadas por incumplimiento de DoR/DoD.
+    deliverable_format: Confluence, Notion, Jira.
+    frequency: Inicio del proyecto. Revisión trimestral.
+    level_expectation: El Dev Sr define qué es 'terminado' en este proyecto. Su DoD es contrato del equipo.
+    guidance: Sin DoR/DoD el equipo opera con estándar variable. El Sr fija la barra.
+  - title: Sesiones 1:1 con el equipo
+    text: 'Mantener sesiones 1:1 periódicas con cada integrante del equipo (Mid y Jr): bloqueos, crecimiento, feedback bidireccional, contexto personal. Detectar problemas tempranos (desmotivación, sobrecarga, conflictos) antes de que afecten el proyecto. Documentar acuerdos y compromisos.'
+    acceptance_criteria: Cada integrante tiene 1:1 al menos quincenal con el Sr. Los acuerdos se documentan y revisan en la siguiente sesión. El Sr detecta bloqueos personales y de motivación antes de que se vuelvan problemas. Los integrantes pueden dar feedback al Sr en 1:1 sin filtro.
+    deliverable: Calendario de 1:1 establecido. Notas de cada sesión con acuerdos y seguimiento.
+    deliverable_format: Calendar, Notion, Google Docs, plantilla 1:1.
+    frequency: Quincenal por integrante.
+    level_expectation: El Dev Sr lidera con cercanía profesional. Sus 1:1 son espacio seguro para el equipo.
+    guidance: Las 1:1 no se cancelan. Un Sr que no tiene 1:1 con su equipo no está liderando, está supervisando.
+  - title: Mentoría técnica y desarrollo de carrera
+    text: Mentorar al Mid y supervisar la mentoría del Mid al Jr. Definir planes de desarrollo individuales con metas técnicas. Crear oportunidades de crecimiento (asignaciones que estiren, exposición a cliente, líderazgo de iniciativas). Dar feedback específico y oportuno.
+    acceptance_criteria: Cada integrante tiene plan de desarrollo activo. El Mid mejora en habilidades de liderazgo técnico medible por período. El Jr promueve a Mid con apoyo demostrable del Sr. El feedback del Sr es específico y accionable, no genérico.
+    deliverable: Plan de desarrollo por integrante. Sesiones de mentoría con notas. Feedback de 360 documentado por período.
+    deliverable_format: Notion, Google Docs, plantilla de plan de desarrollo.
+    frequency: Continuo. Revisión formal trimestral.
+    level_expectation: El Dev Sr desarrolla a su equipo. Su legado es el crecimiento del Mid y Jr.
+    guidance: El éxito del Sr se mide también por el crecimiento del equipo. Un Sr sin equipo que crece no es Sr.
+  - title: Coordinación con PM, QA y Product
+    text: Mantener comunicación directa con Product Manager/Owner y QA Lead. Alinear prioridades, criterios de aceptación y secuencia de entregas. Negociar trade-offs entre alcance, calidad y plazos con visión técnica. Modelar al Mid la coordinación con stakeholders no técnicos.
+    acceptance_criteria: PM y QA tienen claridad sobre estado técnico del proyecto en cada momento. Los trade-offs se negocian con datos, no con intuición. El Mid replica el patrón de coordinación del Sr. El cliente no recibe sorpresas porque PM no estaba alineado.
+    deliverable: Hilos de coordinación documentados. Decisiones de trade-off registradas con justificación.
+    deliverable_format: Slack, Teams, Jira, Confluence.
+    frequency: Continuo.
+    level_expectation: El Dev Sr coordina con PM y QA al nivel de pares. Su criterio técnico es respetado en decisiones de producto.
+    guidance: Coordinar es proteger al equipo. El Sr negocia trade-offs, no los acepta.
+  - title: Comunicación con cliente y stakeholders técnicos
+    text: 'Liderar la comunicación técnica con el cliente: arquitectura, decisiones, riesgos, avances. Traducir complejidad técnica a lenguaje accesible para stakeholders no técnicos sin perder precisión. Construir relación de confianza técnica con contrapartes del cliente.'
+    acceptance_criteria: El cliente reconoce al Sr como interlocutor técnico confiable. Las comunicaciones técnicas del Sr no requieren correcciones posteriores. Stakeholders no técnicos entienden las decisiones técnicas relevantes. El Sr no oculta riesgos al cliente — los comunica con plan.
+    deliverable: Reuniones técnicas con cliente documentadas. Material de comunicación preparado para cada audiencia.
+    deliverable_format: Slides, demos en vivo, documentos ejecutivos.
+    frequency: Continuo, según ceremonia del proyecto.
+    level_expectation: El Dev Sr representa al equipo ante el cliente. Su comunicación construye o destruye la relación técnica.
+    guidance: La confianza técnica del cliente se gana con claridad y honestidad. El Sr es la cara técnica del equipo.
+  - title: Negociación técnica de alcance y plazos
+    text: 'Negociar ajustes de alcance, plazos y prioridades con cliente y comercial cuando los riesgos lo requieran. Sustentar la negociación con datos: estimaciones, evidencia de riesgo, impacto en calidad. No aceptar compromisos técnicamente inviables. Proponer alternativas viables.'
+    acceptance_criteria: El Sr no acepta plazos inviables sin negociar. Cada negociación está sustentada con datos. Las alternativas propuestas son viables y mantienen el valor para el cliente. Ningún compromiso se firma sin involucrar al Sr cuando aplica.
+    deliverable: Negociaciones documentadas con sustento técnico. Acuerdos formalizados con cliente.
+    deliverable_format: Correo, Confluence, Jira.
+    frequency: Ante riesgos de plazo, alcance o calidad.
+    level_expectation: El Dev Sr defiende viabilidad técnica con firmeza profesional. Su no técnico se respeta.
+    guidance: Aceptar lo inviable es comprometer al equipo a fallar. El Sr negocia con criterio técnico y firmeza profesional.
+  - title: Reporte ejecutivo de avance técnico
+    text: 'Preparar reportes ejecutivos periódicos para gerencia y stakeholders del cliente: avance, riesgos, hitos, calidad, métricas. Dirigir el mensaje a la audiencia. No ocultar problemas — presentar plan de acción. Mantener el reporte conciso y orientado a decisiones.'
+    acceptance_criteria: Los reportes del Sr son recibidos sin necesidad de aclaraciones. Los riesgos se reportan con plan, no solo se enuncian. Gerencia y cliente toman decisiones con base en los reportes del Sr. No hay sorpresas en steerings que el Sr debía anticipar.
+    deliverable: Reportes ejecutivos periódicos entregados a tiempo. Métricas de salud del proyecto consistentes.
+    deliverable_format: Slides, dashboards, Confluence.
+    frequency: Según cadencia del proyecto (semanal o quincenal típico).
+    level_expectation: El Dev Sr comunica avance al nivel ejecutivo con claridad y precisión. Sus reportes son referencia.
+    guidance: Un reporte sin plan de acción para los riesgos es solo malas noticias. El Sr reporta con criterio.
+  - title: Gestión de riesgos técnicos y escalamiento
+    text: Mantener el registro vivo de riesgos técnicos del proyecto con probabilidad, impacto y plan de mitigación. Escalar a gerencia y cliente con anticipación cuando un riesgo se materializa o cambia su perfil. No esperar al incidente para escalar.
+    acceptance_criteria: Cada riesgo crítico tiene dueño y plan. Los escalamientos del Sr llegan antes del incidente, no después. Gerencia y cliente no se enteran tarde de riesgos materializados. El Mid aprende a anticipar riesgos viendo al Sr.
+    deliverable: Risk register actualizado con cadencia definida. Escalamientos documentados con anticipación.
+    deliverable_format: Excel, Jira, Confluence.
+    frequency: Continuo, revisión mínima quincenal.
+    level_expectation: El Dev Sr gestiona riesgos con criterio profesional. Su anticipación es el valor que ningún junior aporta.
+    guidance: Un riesgo no escalado es un incidente esperando ocurrir. El Sr escala con anticipación.
+  - title: Adopción y evolución de la metodología de trabajo
+    text: 'Definir y evolucionar la metodología de trabajo del equipo: prácticas de ingeniería, ceremonias, herramientas, métricas. Adaptar la metodología al contexto del cliente sin sacrificar disciplina técnica. Documentar el way of working y velar por su adopción consistente.'
+    acceptance_criteria: El equipo tiene metodología documentada y la sigue. El Sr ajusta la metodología con evidencia de mejora, no por moda. Nuevos integrantes se incorporan a la metodología sin fricción. Las mejoras propuestas se miden y se mantienen o revierten con datos.
+    deliverable: Documento de way of working del equipo. Retros con mejoras metodológicas adoptadas y validadas.
+    deliverable_format: Confluence, Notion, repositorio del equipo.
+    frequency: Revisión periódica trimestral mínima.
+    level_expectation: El Dev Sr define cómo trabaja el equipo. Su criterio metodológico marca el estándar.
+    guidance: Una metodología sin evidencia de impacto es ceremonia. El Sr la evoluciona con datos.
+  - title: Inventario de dependencias y gobierno de librerías
+    text: 'Establecer políticas de gobierno de dependencias: licencias permitidas, criterios de adopción, cadencia de actualización, manejo de vulnerabilidades. Auditar el inventario completo del proyecto periódicamente. Aprobar la adopción de nuevas dependencias con criterio de largo plazo.'
+    acceptance_criteria: Cero dependencias con licencias prohibidas. Cero vulnerabilidades críticas sin plan de remediación. El Mid y el Jr conocen y aplican la política de gobierno. El Sr aprueba nuevas dependencias con criterio, no por conveniencia inmediata.
+    deliverable: Política de gobierno de dependencias documentada. Inventario auditado con cadencia definida.
+    deliverable_format: Dependabot, Snyk, package.json, requirements.txt, SBOM.
+    frequency: Continuo. Auditoría formal trimestral.
+    level_expectation: El Dev Sr establece las reglas de adopción de dependencias. Su gobierno protege al proyecto a largo plazo.
+    guidance: Una dependencia mal gobernada es un riesgo legal o de seguridad. El Sr gobierna con disciplina.
+  - title: Uso de IA y Agentic AI con gobernanza
+    text: 'Definir la política de uso de IA y agentes (Claude Code, Cursor Agent, Copilot Workspace) en el equipo: cuándo se usa, qué se valida, qué no se delega. Aprobar el uso de agentes autónomos en tareas no triviales. Asegurar que el código asistido por IA mantiene los estándares de calidad y seguridad. Formar al Mid y Jr en uso responsable.'
+    acceptance_criteria: Ningún código generado por IA llega a producción sin revisión. El Mid y el Jr saben qué pueden y no pueden delegar a IA. El Sr identifica cuando un PR del equipo evidencia uso de IA sin validación y lo corrige. Agentes autónomos operan en scope acotado y con review humano del diff.
+    deliverable: Política de uso de IA documentada. Revisión de PRs asistidos por IA con el mismo rigor que cualquier PR.
+    deliverable_format: Copilot, Cursor, Claude Code, ChatGPT, Copilot Workspace.
+    frequency: Continuo.
+    level_expectation: El Dev Sr establece las reglas de uso de IA y agentes. Su criterio define qué se puede delegar al modelo.
+    guidance: La IA es acelerador, no autor. Un agente sin gobernanza es deuda técnica industrializada.
+  - title: Cumplimiento de trabajo remoto y comunicación
+    text: 'Modelar el estándar de trabajo remoto: cámara encendida, puntualidad, respuesta en menos de 24h hábiles, comunicación proactiva de bloqueos y riesgos. Levantar al Mid y al Jr cuando no cumplen el estándar. El Sr es la referencia visible del comportamiento profesional remoto.'
+    acceptance_criteria: Cámara encendida en el 100% de reuniones del Sr. Cero hilos sin respuesta >24h hábiles. El Sr es el primero en cumplir el estándar y el primero en levantar cuando otros no lo hacen. El equipo replica el comportamiento.
+    deliverable: Cumplimiento personal del estándar y correctivos documentados al equipo cuando aplican.
+    deliverable_format: Meet, Teams, Zoom, Slack, correo.
+    frequency: Continuo.
+    level_expectation: El Dev Sr es el espejo profesional del equipo. Su comportamiento define el estándar.
+    guidance: El Sr modela. Si el Sr no cumple, el equipo tampoco lo hará.
+  - title: Cierre de proyecto, handover y transferencia de conocimiento
+    text: 'Liderar el cierre formal del proyecto: documentación final, handover a equipo de operación o al cliente, transferencia de conocimiento, lecciones aprendidas. Asegurar que el proyecto puede sostenerse sin el equipo original. Capturar aprendizajes para el ecosistema del cliente y de la organización.'
+    acceptance_criteria: El equipo receptor puede operar el proyecto sin escalar al equipo original por dudas básicas. Las lecciones aprendidas se aplican en el siguiente proyecto. El cliente firma el cierre formal. Cero pendientes ocultos al momento del cierre.
+    deliverable: Documento de cierre formal. Handover firmado. Lecciones aprendidas documentadas y compartidas.
+    deliverable_format: Confluence, Notion, sesiones de handover grabadas.
+    frequency: Al cierre de cada proyecto.
+    level_expectation: El Dev Sr cierra proyectos con la misma disciplina con que los inicia. Su handover protege al cliente y al equipo.
+    guidance: Un proyecto sin cierre formal es un proyecto que vuelve. El Sr cierra con disciplina.
+- area: GERDES
+  level: null
+  questions:
+  - title: Seguimiento al Dev Sr y Dev Mid del equipo
+    text: Hacer seguimiento sistemático al desempeño del Dev Sr y Dev Mid del equipo usando sus respectivos checklists. Sostener 1:1 periódicos. Identificar gaps de cumplimiento y acordar planes de mejora. Escalar cuando un Sr no está cumpliendo su rol de garante técnico del proyecto.
+    acceptance_criteria: Cada Sr y Mid del equipo tiene evaluación periódica con evidencia. Los gaps detectados tienen plan de mejora con fecha de cierre. El Lead no descubre tarde que un Sr no está cumpliendo su rol. Las evaluaciones se sustentan con evidencia, no con percepción.
+    deliverable: Checklists del Sr y Mid evaluados con cadencia definida. Notas de 1:1 con acuerdos y fechas. Planes de mejora documentados cuando aplique.
+    deliverable_format: Excel, Notion, Confluence.
+    frequency: Mensual mínimo, 1:1 quincenal.
+    level_expectation: El Dev Lead conoce el desempeño real de cada Sr y Mid. Su evaluación es referencia para promociones y staffing.
+    guidance: El Lead garantiza que el Sr garantiza. Sin seguimiento sistemático no hay garantía.
+  - title: Cumplimiento de PMO y estándares de arquitectura de software
+    text: Asegurar que los proyectos cumplen los procedimientos de PMO de Arena y los estándares de arquitectura de software definidos para la práctica de desarrollo. Validar artefactos técnicos clave (alcance, arquitectura, ADRs, plan de release) antes de hitos. Identificar desviaciones y alinear con el Sr del proyecto.
+    acceptance_criteria: El 100% de los proyectos del Lead cumple artefactos mínimos de PMO. Las desviaciones de estándar tienen justificación documentada o se corrigen. PMO no levanta hallazgos repetidos en proyectos del Lead.
+    deliverable: Artefactos de PMO completos por proyecto. Auditorías periódicas de cumplimiento de estándares de arquitectura.
+    deliverable_format: Confluence, plantillas PMO de Arena.
+    frequency: Continuo. Revisión formal por hito.
+    level_expectation: El Dev Lead es responsable del cumplimiento metodológico de sus proyectos. No delega esta responsabilidad al Sr.
+    guidance: 'El cumplimiento PMO no es burocracia: es la disciplina que protege al proyecto cuando algo sale mal.'
+  - title: Coordinación con leads de QA, Product y UX
+    text: Mantener comunicación directa con los leads de QA, Product y UX de los proyectos del Lead. Alinear prioridades, dependencias inter-equipo, plan de release y criterios de aceptación a nivel de portafolio. Resolver fricciones entre disciplinas antes de que afecten al equipo del Lead.
+    acceptance_criteria: Los leads de QA, Product y UX consideran al Dev Lead un interlocutor de pares. Las dependencias inter-equipo no bloquean al equipo del Lead por falta de coordinación. Las fricciones se resuelven al nivel Lead sin escalar a dirección innecesariamente.
+    deliverable: Reuniones de sincronías periódicas documentadas. Acuerdos de dependencia inter-equipo registrados.
+    deliverable_format: Teams, Confluence, Jira.
+    frequency: Quincenal mínimo, ad-hoc según proyecto.
+    level_expectation: 'El Dev Lead coordina con sus pares con visión de portafolio. No defiende solo a su equipo: optimiza el conjunto.'
+    guidance: Las fricciones entre disciplinas las resuelven los leads. Si escalan a dirección, hubo fallo de coordinación.
+  - title: Aprobación del pase a producción de los proyectos
+    text: 'Firmar el go-live de cada proyecto del equipo. Validar que el Sr cumplió su rol técnico: pruebas, seguridad, observabilidad, plan de rollback, runbook. No aprobar pases sin evidencia. Bloquear pases riesgosos aunque haya presión comercial.'
+    acceptance_criteria: Ningún pase a producción se ejecuta sin firma del Lead. Cero pases revertidos por fallas que la checklist debía detectar. El Lead bloquea pases riesgosos con sustento técnico y los re-agenda con plan.
+    deliverable: Checklist de go-live firmado por Lead y Sr. Evidencia de pruebas, seguridad y plan de rollback adjunta.
+    deliverable_format: Confluence, Jira, plantilla de go-live de Arena.
+    frequency: Por cada go-live.
+    level_expectation: El Dev Lead aprueba el go-live con criterio propio, no por confianza ciega en el Sr. Su firma significa responsabilidad.
+    guidance: La firma del Lead en un go-live es un compromiso personal. Sin evidencia no hay firma.
+  - title: Participación en dailys críticos
+    text: 'Participar en los dailys de los proyectos en momentos críticos: inicio, hitos, riesgos materializados, incidentes, cierres. No asistir a todos los dailys — el rol del Lead no es operativo. Reconocer cuándo su presencia aporta y cuándo interrumpe la autonomía del Sr.'
+    acceptance_criteria: El Lead asiste a dailys críticos sin saturar la agenda del equipo. Su presencia desbloquea, no interrumpe. El Sr del proyecto sabe cuándo solicitar al Lead y cuándo resolver con autonomía.
+    deliverable: Asistencia documentada a dailys críticos. Notas con decisiones tomadas.
+    deliverable_format: Meet, Teams
+    frequency: Ad-hoc según criticidad.
+    level_expectation: El Dev Lead aplica criterio para acompañar. Su presencia se mide por valor agregado, no por asistencia.
+    guidance: 'El Lead que asiste a todos los dailys no es Lead: es Sr en doble jornada. El Lead que no asiste a ninguno no acompaña.'
+  - title: Participación en sprint planning y review con challenge técnico
+    text: Participar en sprint planning y sprint review cuando aplique. Cuestionar técnicamente las estimaciones, la arquitectura propuesta y los compromisos del equipo. Levantar riesgos que el Sr puede no ver por estar inmerso en el día a día. Validar que los entregables del review cumplen calidad.
+    acceptance_criteria: El Lead aporta al menos un challenge técnico relevante por planning/review en proyectos críticos. Los riesgos levantados por el Lead se materializan menos del 30% del tiempo porque se mitigan a tiempo. El Sr reconoce el aporte del Lead como challenge útil, no como auditoría.
+    deliverable: Notas de planning y review con preguntas y decisiones documentadas. Riesgos levantados con plan de mitigación.
+    deliverable_format: Jira, Confluence, Slides.
+    frequency: Por sprint en proyectos críticos.
+    level_expectation: El Dev Lead cuestiona técnicamente sin invadir el rol del Sr. Su mirada externa identifica lo que el equipo deja de ver.
+    guidance: El Lead cuestiona con respeto y criterio. Su challenge eleva al equipo, no lo desautoriza.
+  - title: Material técnico de sesiones con stakeholders senior del cliente
+    text: Preparar material técnico de calidad ejecutiva para sesiones con stakeholders senior del cliente (CTO, VP Engineering, arquitectos enterprise, comités). Acompañar al Sr en estas sesiones. Asegurar que el mensaje técnico es claro, sustentado y dirigido a la audiencia.
+    acceptance_criteria: El material del Lead pasa revisión del director sin re-trabajo mayor. Los stakeholders senior del cliente reconocen al Lead como interlocutor. No hay improvisación en sesiones de alto nivel.
+    deliverable: Slides, documentos y demos preparados con tiempo de revisión previo. Sesiones acompañadas con presencia del Lead.
+    deliverable_format: Slides,  demos en vivo.
+    frequency: Por cada sesión con stakeholders senior.
+    level_expectation: El Dev Lead es la cara técnica del equipo ante stakeholders senior. Su material y presencia construyen credibilidad.
+    guidance: En sesiones senior, una slide mal hecha es una credibilidad perdida. El Lead prepara con criterio.
+  - title: Mapeo de stakeholders técnicos y de negocio del cliente
+    text: 'Mantener mapeado actualizado a los stakeholders técnicos y de negocio del cliente: roles, influencia, intereses, relación con cada proyecto. Identificar aliados, escépticos y bloqueadores. Usar el mapa para planear comunicaciones y manejo de cambios.'
+    acceptance_criteria: El Lead puede explicar en cualquier momento quién es quién del lado cliente y cuál es su posición frente al equipo. Los cambios de stakeholders no toman al equipo por sorpresa. El plan de comunicación se ajusta cuando el mapa cambia.
+    deliverable: Mapa de stakeholders actualizado con cadencia. Plan de comunicación por stakeholder relevante.
+    deliverable_format: Excel, Miro, Confluence.
+    frequency: Revisión mensual mínima.
+    level_expectation: El Dev Lead conoce el ecosistema político-técnico del cliente. Su mapa es activo, no documento muerto.
+    guidance: Quien no mapea a los stakeholders, es mapeado por ellos. El Lead conoce el tablero.
+  - title: One-on-ones con stakeholders técnicos senior del cliente
+    text: Sostener 1:1 periódicos con los stakeholders técnicos senior del cliente (CTO, arquitectos, líderes técnicos). Detectar preocupaciones, expectativas no explícitas y oportunidades. Construir confianza técnica más allá del proyecto inmediato.
+    acceptance_criteria: Cada stakeholder técnico clave tiene 1:1 con el Lead mínimo mensual. Las preocupaciones se identifican y atienden antes de que escalen al director comercial. La confianza del cliente con el Lead se traduce en oportunidades para Arena.
+    deliverable: Cadencia de 1:1 establecida. Notas con temas, preocupaciones y compromisos.
+    deliverable_format: Meet, Teams, presencial.
+    frequency: Mensual mínimo, ad-hoc según necesidad.
+    level_expectation: El Dev Lead invierte en relación con stakeholders técnicos del cliente. Su capital relacional protege al proyecto.
+    guidance: La confianza técnica se construye en 1:1, no en steerings.
+  - title: Coordinación con dirección y participación en momentos críticos
+    text: 'Coordinar con el director del área la participación en momentos críticos del proyecto: hitos comerciales, escalamientos, decisiones estratégicas. Briefár al director con anticipación. No usar al director como escudo: convocarlo cuando aporta valor real.'
+    acceptance_criteria: El director llega informado a cada sesión crítica. El Lead no escala lo que puede resolver. Cuando el director participa, su intervención es decisiva, no acompañamiento.
+    deliverable: Director briefado antes de cada sesión crítica. Participaciones del director planeadas, no reactivas.
+    deliverable_format: Slides ejecutivos, correos brief, agenda compartida.
+    frequency: Ad-hoc según ceremonia del proyecto.
+    level_expectation: El Dev Lead protege el tiempo del director y maximiza su impacto cuando participa.
+    guidance: El director debe llegar a la sesión con contexto, no a leer slides en vivo.
+  - title: Plan de transición, onboarding y KT ante cambios de staffing
+    text: 'Planificar cambios de staffing en sus proyectos: incorporaciones, rotaciones, salidas. Documentar plan de onboarding y KT con responsables y fechas. Asegurar continuidad del proyecto ante cambios. Comunicar al cliente con anticipación cuando aplica.'
+    acceptance_criteria: Cero rotaciones sin plan de KT documentado y ejecutado. El cliente conoce los cambios antes de ocurrir, no después. La productividad del nuevo integrante alcanza nivel esperado en el plazo acordado.
+    deliverable: Plan de staffing actualizado. Plan de onboarding y KT firmado para cada cambio.
+    deliverable_format: Excel, Confluence.
+    frequency: Por cada cambio de staffing.
+    level_expectation: El Dev Lead anticipa cambios de equipo y los gestiona con disciplina. Las transiciones no afectan al cliente.
+    guidance: Una rotación sin KT es un proyecto reiniciado. El Lead protege la continuidad.
+  - title: Gestión de incidentes críticos escalados a nivel Lead
+    text: 'Asumir liderazgo en incidentes críticos que exceden el alcance del Sr: caídas extendidas en producción, incidentes de seguridad, problemas reputacionales con cliente. Coordinar respuesta, comunicar a stakeholders y dirección, asegurar postmortem y plan de prevención.'
+    acceptance_criteria: El Lead toma comando ante incidentes críticos sin demora. Stakeholders y dirección reciben información estructurada durante el incidente. Las acciones de prevención se ejecutan, no quedan en documento. Incidentes similares no se repiten.
+    deliverable: Bitácora de incidente, comunicaciones a stakeholders, postmortem con acciones de prevención.
+    deliverable_format: Confluence, Slack, plantillas de IR.
+    frequency: Ante cada incidente crítico.
+    level_expectation: El Dev Lead lidera la respuesta a incidentes críticos con calma y método. Después del evento, deja el sistema más resistente.
+    guidance: El incidente crítico es la prueba del Lead. Su respuesta define la confianza del cliente después del evento.
+  - title: Cumplimiento Mesa de Talento y evaluaciones
+    text: 'Liderar la Mesa de Talento del equipo Dev: evaluaciones formales, calibración con otros leads, recomendaciones de promoción y planes de desarrollo. Sustentar cada evaluación con evidencia de los checklists del rol. Comunicar evaluaciones con responsabilidad.'
+    acceptance_criteria: El 100% del equipo del Lead tiene evaluación formal en cada ciclo. Las evaluaciones se sustentan con evidencia, no con percepción. Las decisiones de promoción del Lead se respetan en calibración. Los planes de desarrollo se ejecutan, no se archivan.
+    deliverable: Evaluaciones documentadas por persona del equipo. Actas de calibración. Planes de desarrollo individual.
+    deliverable_format: Plantillas internas de Arena, Confluence, Excel.
+    frequency: Según ciclo formal de Arena.
+    level_expectation: El Dev Lead es responsable del desarrollo de su gente. Sus evaluaciones marcan trayectorias profesionales.
+    guidance: Una evaluación sin evidencia es una opinión. El Lead evalúa con criterio y datos.
+  - title: Seguimiento a planes de capacitación técnica
+    text: 'Definir y dar seguimiento al plan de capacitación técnica del equipo Dev: tecnologías del stack, prácticas de ingeniería, seguridad, DevOps, IA. Validar la utilidad real de las capacitaciones, no solo la asistencia.'
+    acceptance_criteria: Cada Dev del equipo tiene plan de capacitación personalizado al rol y al proyecto. La capacitación se traduce en mejora de prácticas del día a día, no en certificados sin impacto. El Lead detecta cuándo el plan no funciona y lo ajusta.
+    deliverable: Plan de capacitación por persona. Reporte de cumplimiento y aplicación al trabajo diario.
+    deliverable_format: Plataformas de capacitación, Confluence.
+    frequency: Plan anual con revisión trimestral.
+    level_expectation: El Dev Lead invierte en el equipo con criterio. La capacitación del Lead se ve en el código del equipo.
+    guidance: Capacitación sin aplicación es presupuesto perdido. El Lead conecta capacitación con proyecto.
+  - title: Monitoreo del mentoring del Sr y Mid
+    text: Monitorear que el Dev Sr mentore al Dev Mid y al Dev Jr, y que el Dev Mid mentore al Dev Jr, conforme a sus checklists. Detectar cuando el mentoring no está ocurriendo o no está funcionando. Intervenir cuando un Sr o Mid no asume su rol de mentor.
+    acceptance_criteria: El Lead puede demostrar que el Sr está mentorando al Mid y al Jr, y que el Mid está mentorando al Jr. La rotación y el burnout no provienen de gaps de mentoring sin atender. El Mid y el Jr crecen medibles bajo el equipo del Lead.
+    deliverable: Evidencia de mentoring en cada nivel (notas de 1:1, PRs revisados con foco pedagógico, pair programming). Intervenciones del Lead cuando aplica.
+    deliverable_format: Confluence, Notion, repositorio del equipo.
+    frequency: Mensual mínimo.
+    level_expectation: El Dev Lead garantiza que el equipo se cuida técnicamente entre niveles. El mentoring es responsabilidad colectiva que el Lead vela.
+    guidance: El mentoring no es opcional para Sr y Mid. El Lead garantiza que ocurre.
+  - title: Planeación de vacaciones y ausencias como riesgo de continuidad
+    text: Gestionar vacaciones y ausencias del equipo como riesgo de continuidad. Validar coberturas y backup para roles críticos. Evitar que el proyecto dependa de una sola persona en una fecha crítica. Aprobar vacaciones con visión de proyecto, no solo de RRHH.
+    acceptance_criteria: 'Ningún hito crítico ocurre con el equipo descubierto. Cero ausencias del Sr o Mid en momentos críticos sin backup. El equipo descansa: el Lead no premia el sacrificio ni la culpa por vacacionar.'
+    deliverable: Calendario de ausencias actualizado. Plan de cobertura documentado por proyecto.
+    deliverable_format: Calendario compartido, Excel.
+    frequency: Continuo, planeación trimestral mínima.
+    level_expectation: El Dev Lead gestiona ausencias con disciplina. Su equipo descansa sin afectar al cliente.
+    guidance: Las vacaciones son un derecho, no un riesgo. La planeación las convierte en compatibles con el proyecto.
+  - title: Punto de referencia para procedimientos internos de Arena
+    text: 'Ser el punto de referencia del equipo Dev para procedimientos internos de Arena: PMO, RRHH, finanzas, seguridad, legal. Conocer los procedimientos, comunicarlos al equipo y velar por su cumplimiento. Levantar inconsistencias o necesidades de actualización al área correspondiente.'
+    acceptance_criteria: El equipo del Lead no incumple procedimientos por desconocimiento. El Lead responde dudas del equipo sin necesidad de escalar a RRHH/PMO. Las inconsistencias detectadas se comunican y mejoran procedimientos.
+    deliverable: Procedimientos comunicados al equipo. Cumplimiento monitoreado. Mejoras propuestas a procedimientos cuando aplique.
+    deliverable_format: Confluence interno de Arena.
+    frequency: Continuo.
+    level_expectation: El Dev Lead representa a Arena ante su equipo y al equipo ante Arena. Su conocimiento procedimental evita fricciones.
+    guidance: El Lead es la cara de Arena para su equipo. Conoce los procedimientos.
+  - title: Sesiones de aprendizaje técnico con el equipo Dev
+    text: 'Liderar sesiones de aprendizaje técnico periódicas con el equipo Dev: tech talks, code labs, postmortems compartidos, lecturas dirigidas. Promover que el Sr y el Mid lideren sesiones. Convertir el equipo en una comunidad de aprendizaje continuo.'
+    acceptance_criteria: El equipo tiene mínimo una sesión de aprendizaje al mes con asistencia y aporte real. Sr y Mid lideran sesiones, no solo el Lead. Los aprendizajes se aplican a los proyectos. El equipo del Lead es percibido como un equipo que aprende.
+    deliverable: Agenda de sesiones de aprendizaje con cadencia. Asistencia y aportes documentados.
+    deliverable_format: Slides, demos en vivo, repositorio de aprendizajes.
+    frequency: Mensual mínimo.
+    level_expectation: El Dev Lead construye comunidad técnica. El equipo aprende como sistema, no solo individualmente.
+    guidance: Un equipo que no aprende juntos se estanca por separado. El Lead crea el espacio.
+  - title: Mejora de metodologías, estándares de arquitectura y herramientas
+    text: Proponer y liderar la evolución de metodologías, estándares de arquitectura y herramientas de la práctica de desarrollo. Capturar lecciones de proyectos y convertirlas en mejoras institucionales. Coordinar con otros leads para alinear estándares transversales.
+    acceptance_criteria: El Lead propone al menos una mejora institucional por semestre con adopción medida. Las mejoras se sustentan con evidencia de proyectos, no por moda. Otros leads adoptan o adaptan las propuestas. Las lecciones no se pierden entre proyectos.
+    deliverable: Propuestas de mejora documentadas. Adopción medida y validada con datos. Actas de coordinación con otros leads.
+    deliverable_format: Confluence, ADRs de práctica, repositorio de patrones.
+    frequency: Continuo. Propuesta formal semestral mínima.
+    level_expectation: El Dev Lead eleva la práctica de Arena, no solo a su equipo. Su contribución trasciende sus proyectos.
+    guidance: Un lead que no evoluciona la práctica es solo un Sr senior.
+  - title: Gobernanza de DevOps, DevSecOps e IA en el equipo Dev
+    text: 'Definir y velar por la gobernanza de DevOps, DevSecOps y uso de IA y Agentic AI en el equipo Dev: políticas, herramientas, métricas DORA, estándares de seguridad en pipeline, criterios de uso de agentes. Auditar periódicamente el cumplimiento entre proyectos.'
+    acceptance_criteria: El 100% de proyectos del Lead cumple estándares de pipeline, DevSecOps y uso de IA. Las métricas DORA mejoran trimestre a trimestre. Cero incidentes de seguridad por incumplimiento de política conocida. El uso de IA genera valor medible, no riesgo.
+    deliverable: Políticas documentadas. Métricas DORA reportadas. Auditorías de cumplimiento DevSecOps e IA.
+    deliverable_format: Confluence, dashboards de métricas, herramientas de seguridad.
+    frequency: Revisión trimestral.
+    level_expectation: El Dev Lead define cómo el equipo entrega software con seguridad y usa IA con criterio. Su gobernanza protege a Arena y al cliente.
+    guidance: Sin gobernanza, la velocidad de DevOps e IA se convierte en deuda industrializada. El Lead gobierna.
+  - title: Visión transversal de deuda técnica del portafolio
+    text: Mantener visión consolidada de la deuda técnica de todos los proyectos del Lead. Identificar patrones de deuda recurrentes entre proyectos. Negociar con cliente y comercial espacios para atacar deuda técnica crítica. Priorizar deuda con criterio de impacto, no de antigüedad.
+    acceptance_criteria: El Lead conoce la deuda crítica de todos sus proyectos. La deuda priorizada se ataca en cada ciclo, no se acumula indefinidamente. Los patrones recurrentes generan ajustes estructurales (estándar, herramienta, formación). El cliente acepta espacios para remediar deuda porque el Lead lo sustenta.
+    deliverable: Registro consolidado de deuda técnica por proyecto. Plan de remediación priorizado y negociado.
+    deliverable_format: Confluence, Jira, dashboard de deuda técnica.
+    frequency: Revisión mensual mínima.
+    level_expectation: El Dev Lead ve la deuda técnica del portafolio como un sistema. Su gobierno protege la velocidad futura del equipo.
+    guidance: La deuda técnica no se elimina sola. El Lead la gobierna a nivel portafolio, no proyecto por proyecto.
+  - title: Cumplimiento de estándares de seguridad y compliance en todos los proyectos
+    text: 'Velar por el cumplimiento de estándares de seguridad y compliance del cliente y de Arena en todos los proyectos del Lead: políticas de acceso, manejo de datos sensibles, normativas sectoriales, auditorías. Auditar periódicamente y coordinar con seguridad y legal del cliente cuando aplique.'
+    acceptance_criteria: 'Cero hallazgos críticos sin plan de remediación. El Lead no se entera de incumplimientos por auditoría externa: los anticipa. La coordinación con seguridad/legal del cliente es fluida y el Lead es interlocutor reconocido.'
+    deliverable: Auditorías de cumplimiento por proyecto. Hallazgos atendidos con plan y fecha. Coordinación con seguridad/legal documentada.
+    deliverable_format: Confluence, plantillas de auditoría interna, herramientas de seguridad.
+    frequency: Auditoría trimestral, monitoreo continuo.
+    level_expectation: El Dev Lead garantiza el cumplimiento de seguridad y compliance del portafolio. Su disciplina protege al cliente y a Arena.
+    guidance: Un incumplimiento de seguridad descubierto por el cliente es una pérdida de confianza. El Lead audita antes.
+  - title: Patrones de arquitectura del ecosistema y reutilización entre proyectos
+    text: Identificar y consolidar patrones de arquitectura reutilizables entre proyectos del cliente. Promover la reutilización de componentes, librerías internas, plantillas y soluciones probadas. Evitar que cada proyecto reinvente lo que otro ya resolvió en el ecosistema.
+    acceptance_criteria: El Lead identifica mínimo una oportunidad de reutilización por trimestre. Los proyectos nuevos arrancan reutilizando patrones existentes, no de cero. El catálogo crece con cada proyecto cerrado. El cliente reconoce el valor del ecosistema, no solo del proyecto.
+    deliverable: Catálogo de patrones y componentes reutilizables. Casos de reutilización documentados por proyecto.
+    deliverable_format: Repositorio interno de patrones, Confluence.
+    frequency: Continuo. Revisión trimestral del catálogo.
+    level_expectation: El Dev Lead piensa en ecosistema, no en proyectos aislados. Su visión transversal multiplica el valor entregado al cliente.
+    guidance: Cada proyecto que arranca de cero es valor desperdiciado del ecosistema. El Lead reutiliza con disciplina.
+  - title: Identificación de oportunidades de expansión Dev
+    text: 'Identificar activamente oportunidades de expansión comercial dentro del cliente: nuevos proyectos, ampliaciones de scope, servicios complementarios. Levantar oportunidades al director comercial con sustento de viabilidad técnica y relevancia para el cliente. No esperar a que el cliente las pida.'
+    acceptance_criteria: El Lead identifica mínimo una oportunidad de expansión por trimestre por cliente. Las oportunidades llegan al director comercial calificadas, no como rumores. El cliente reconoce que el Lead aporta visión más allá del proyecto inmediato.
+    deliverable: Oportunidades documentadas con contexto, viabilidad técnica y stakeholder de referencia.
+    deliverable_format: Confluence, correo, CRM interno.
+    frequency: Continuo.
+    level_expectation: El Dev Lead aporta visión comercial técnica al cliente. Su relación abre oportunidades para Arena.
+    guidance: El Lead que solo entrega su proyecto no crece la cuenta. El Lead profesional escucha y propone.
+  - title: Validación técnica de propuestas comerciales
+    text: 'Validar técnicamente las propuestas comerciales relacionadas con desarrollo: alcance, supuestos, estimaciones, riesgos, viabilidad. No firmar propuestas con compromisos técnicamente inviables. Proponer alternativas viables que mantengan el valor para el cliente.'
+    acceptance_criteria: Ninguna propuesta de desarrollo se firma sin validación del Lead. Las estimaciones validadas por el Lead tienen desviación menor al 30% en ejecución. El Lead rechaza compromisos inviables aunque comercial presione. Las alternativas propuestas conservan el valor para el cliente.
+    deliverable: Propuestas validadas con observaciones técnicas y supuestos documentados. Ajustes acordados con área comercial.
+    deliverable_format: Slides comerciales, plantillas de propuesta.
+    frequency: Por cada propuesta comercial.
+    level_expectation: El Dev Lead valida con criterio comercial y técnico. Su no técnico tiene peso comercial.
+    guidance: Firmar una propuesta inviable es comprometer al equipo a fallar. El Lead protege la viabilidad.
+  - title: Soporte a facturación y temas administrativos
+    text: 'Soportar a las áreas administrativas y financieras de Arena en los temas relacionados con sus proyectos: facturación, licencias, etc'
+    acceptance_criteria: Cero facturas devueltas por inconsistencias atribuibles al equipo del Lead. El equipo registra horas y entregables conforme al estándar. Las inconsistencias se resuelven sin escalar al director financiero.
+    deliverable: Reportes administrativos al día. Inconsistencias resueltas con cliente y área administrativa.
+    deliverable_format: Herramientas administrativas de Arena.
+    frequency: Continuo.
+    level_expectation: El Dev Lead se ocupa de los temas administrativos con la misma disciplina que los técnicos. Su rigor protege a Arena.
+    guidance: La parte administrativa no es opcional para el Lead. Una factura mal hecha es una señal al cliente.
+  - title: Confirmación, puntualidad, cámara y participación en reuniones
+    text: Confirmar asistencia a reuniones, llegar puntual, mantener la cámara encendida y participar activamente. El Lead es la referencia visible del estándar profesional remoto del equipo. Levantar al Sr y al Mid cuando no cumplen, sin tolerar excepciones recurrentes.
+    acceptance_criteria: Cámara encendida en el 100% de reuniones del Lead salvo justificación previa. Cero retrasos sin aviso. El Lead participa activamente, no asiste como observador. El equipo replica el comportamiento porque ve al Lead modelarlo.
+    deliverable: Cumplimiento personal del estándar. Correctivos al equipo cuando aplica.
+    deliverable_format: Meet, Teams
+    frequency: Continuo.
+    level_expectation: El Dev Lead modela el estándar profesional. Su comportamiento es el límite inferior aceptado en el equipo.
+    guidance: Si el Lead no cumple el estándar, ningún correctivo al equipo tiene autoridad.
+  - title: Respuesta a correos y Teams en menos de 24h hábiles
+    text: Responder en menos de 24h hábiles a comunicaciones del cliente, del equipo y de las áreas internas de Arena. Comunicar bloqueos y riesgos proactivamente. El silencio del Lead se interpreta como falta de control sobre el proyecto.
+    acceptance_criteria: Cero hilos del Lead sin respuesta >24h hábiles. Cliente y dirección no descubren riesgos del proyecto por canales alternos. La comunicación del Lead es referencia de claridad y oportunidad.
+    deliverable: Hilos respondidos dentro de SLA. Alertas tempranas en canal apropiado.
+    deliverable_format: Correo, Teams
+    frequency: Continuo.
+    level_expectation: El Dev Lead comunica con disciplina y oportunidad. Su SLA personal es referencia para el equipo.
+    guidance: Un Lead que no responde es un Lead que pierde el proyecto sin saberlo.
+  - title: Modelado del estándar profesional del equipo Dev
+    text: 'Modelar consistentemente el estándar profesional del equipo Dev en todos los frentes: rigor técnico, comunicación, cumplimiento, presencia, manejo de stakeholders, trato al equipo. El Lead es la referencia visible. Lo que el Lead permite en sí mismo se convierte en límite aceptable del equipo.'
+    acceptance_criteria: El equipo describe al Lead como referente profesional. La cultura del equipo refleja los valores que el Lead modela. Cuando el Lead falla en cumplir el estándar, lo reconoce y lo corrige públicamente — sin justificarse.
+    deliverable: Conducta y artefactos del Lead consistentes con el estándar comunicado al equipo.
+    deliverable_format: Aplica en toda interacción y artefacto.
+    frequency: Continuo.
+    level_expectation: El Dev Lead encarna el estándar del equipo. Su consistencia es el activo intangible más valioso del rol.
+    guidance: 'El equipo no escucha lo que el Lead dice: copia lo que el Lead hace. El estándar es el Lead.'

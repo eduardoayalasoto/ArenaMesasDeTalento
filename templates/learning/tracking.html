@@ -55,7 +55,7 @@
       <tbody class="divide-y divide-base-200">
         {% for row in data.rows %}{% with r=row.req %}
           <tr class="hover:bg-base-200/50">
-            <td class="px-4 py-2.5"><p class="font-medium text-base-content">{{ r.user.full_name }}</p><p class="text-base text-base-content/60">{{ r.user.area.name|default:"Sin área" }}</p></td>
+            <td class="px-4 py-2.5"><p class="font-medium text-base-content">{{ r.user.full_name }}</p><p class="text-base text-base-content/60">{{ r.user.area.full_name|default:"Sin área" }}</p></td>
             <td class="px-4 py-2.5"><a href="{% url 'learning:request_detail' r.pk %}" class="text-primary hover:underline">{{ r.name }}</a><p class="text-base text-base-content/60">{{ r.provider }} · {{ r.get_origin_display }}</p></td>
             <td class="px-4 py-2.5">{% include "learning/_badge.html" with tone=r.status_tone label=r.status_display %}</td>
             <td class="px-4 py-2.5 text-right tabular-nums">{% if r.estimated_cost is not None %}${{ r.estimated_cost|floatformat:"0g" }} {{ r.currency }}{% else %}—{% endif %}</td>

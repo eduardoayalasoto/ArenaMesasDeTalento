@@ -8,7 +8,7 @@
       {% include "partials/avatar.html" with subject=subject size="w-24 h-24 sm:w-28 sm:h-28" icon="w-12 h-12" %}
       <div class="min-w-0">
         <h2 class="text-3xl font-bold text-base-content leading-tight truncate">{{ subject.full_name }}</h2>
-        <p class="mt-1 text-lg text-base-content/70">{{ subject.area.name|default:"Sin área" }}{% if subject.level %} · {{ subject|puesto }}{% endif %}</p>
+        <p class="mt-1 text-lg text-base-content/70">{{ subject.area.full_name|default:"Sin área" }}{% if subject.level %} · {{ subject|puesto }}{% endif %}</p>
         <p class="mt-1 text-base text-base-content/60">Periodo {{ period.name }}</p>
       </div>
     </div>

@@ -201,3 +201,21 @@ def test_evaluator_opening_the_evaluation_never_wipes_the_owners_answers(
     ev.refresh_from_db()
     assert ev.template_id == v1.pk and ev.answers.count() == 1
 
+
+
+@pytest.mark.django_db
+def test_import_for_a_new_position_without_level_copies_the_scale_from_the_published_ownership(v1, area):
+    """Desarrollo: posición sin nivel y sin v1 propia → hereda escala y nota del Ownership vigente; todo en «General»."""
+    from apps.catalog.models import Area, Department, Position
+
+    dept = Department.objects.create(code="DESARR", name="Desarrollo", order=3)
+    gerente = Area.objects.create(code="GERDES", name="Gerente", department=dept)
+    Position.objects.create(area=gerente, level=None, name="Gerente")
+    result = questionnaire_import.import_version(
+        "GERDES", None, [{"title": "A", "text": "a"}, {"title": "B", "text": "b"}], 1, publish=True)
+    assert result.questions == 2 and result.status == "Publicado" and "sin nivel" in str(result)
+    t = T.objects.get(area=gerente, level=None)
+    assert t.status == T.Status.PUBLICADO and t.scale_note == "Nota v1"
+    assert [o.label for o in t.scale_options.order_by("order")] == ["Cumple", "N/A"]
+    assert [(l.category.name, float(l.weight_pct)) for l in t.template_categories.select_related("category")] == [("General", 100.0)]
+    assert set(Question.objects.filter(section__template=t).values_list("weight_pct", flat=True)) == {None}

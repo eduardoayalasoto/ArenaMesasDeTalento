@@ -111,7 +111,7 @@
                       <p class="font-medium text-base-content truncate">{{ row.user.full_name }}</p>
                       {% if row.mesa_ready %}<span class="badge bg-success/10 text-success text-base shrink-0">Listo</span>{% endif %}
                     </div>
-                    <p class="text-base text-base-content/60 truncate">{{ row.user.area.name|default:"Sin área" }} · {{ row.user|puesto|default:"Sin nivel" }}</p>
+                    <p class="text-base text-base-content/60 truncate">{{ row.user.area.full_name|default:"Sin área" }} · {{ row.user|puesto|default:"Sin nivel" }}</p>
                   </div>
                 </div>
               </td>
