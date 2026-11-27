@@ -176,3 +176,23 @@ def test_same_position_name_in_two_areas_is_never_ambiguous(client, talento):
     assert "<td>Desarrollo</td>" in html and "<td>Consultoría</td>" in html
     form_html = client.get(reverse("catalog:position_edit_new"), HTTP_HX_REQUEST="true").content.decode()
     assert "Desarrollo › Gerente" in form_html and "Consultoría › Gerente" in form_html
+
+
+@pytest.mark.django_db
+def test_click_handlers_are_real_quoted_html_attributes(client, talento):
+    """Regresión: `@click=&quot;…&quot;` sin comillas reales dejaba muertos los botones de ver/editar/nuevo."""
+    from apps.questionnaires.models import Category, CompetencyBlock, Question, QuestionnaireTemplate, Section
+
+    ownership_template = QuestionnaireTemplate.objects.create(
+        kind="OWNERSHIP", area=Area.objects.get(code="ID"), level=None, version=1, status="BORRADOR")
+    Question.objects.create(section=Section.objects.create(template=ownership_template, title="S", order=1), order=1, title="P1", qtype="SCALE")
+
+    Category.objects.get_or_create(code="persona", defaults={"name": "Persona", "order": 1})
+    CompetencyBlock.objects.create(code="b1", name="Bloque 1", order=1)
+    client.force_login(talento)
+    for url in (reverse("catalog:category_admin"), reverse("questionnaires:block_admin")):
+        html = client.get(url).content.decode()
+        assert "&quot;" not in html
+        assert re.search(r'@click="\$dispatch\(`edit-(category|block)`', html), url
+    html = client.get(reverse("questionnaires:template_edit", args=[ownership_template.pk])).content.decode()
+    assert '@click="edit = true"' in html and "&quot;" not in html

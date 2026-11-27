@@ -10,7 +10,7 @@
       </p>
     </div>
     <span data-order="{{ categories|length|add:1 }}">
-      {% include "components/_create_button.html" with label="Nueva categoría" extra_attrs="@click=&quot;$dispatch('edit-category', {mode: 'create', order: $el.closest('[data-order]').dataset.order}); $dispatch('open-category-drawer')&quot;" %}
+      {% include "components/_create_button.html" with label="Nueva categoría" extra_attrs='@click="$dispatch(`edit-category`, {mode: `create`, order: $el.closest(`[data-order]`).dataset.order}); $dispatch(`open-category-drawer`)"' %}
     </span>
   </div>
 
@@ -27,8 +27,8 @@
             <td class="text-center tabular-nums">{{ c.template_links.all|length }}</td>
             <td>{% if c.is_active %}<span class="badge badge-soft badge-success">Activa</span>{% else %}<span class="badge badge-soft">Inactiva</span>{% endif %}</td>
             <td class="text-right whitespace-nowrap"><div class="flex items-center justify-end gap-1">
-              {% include "components/_row_action.html" with kind="view" extra_attrs="@click=&quot;$dispatch('edit-category', {...$el.closest('tr').dataset, mode: 'view'}); $dispatch('open-category-drawer')&quot;" %}
-              {% include "components/_row_action.html" with kind="edit" extra_attrs="@click=&quot;$dispatch('edit-category', {...$el.closest('tr').dataset, mode: 'edit'}); $dispatch('open-category-drawer')&quot;" %}
+              {% include "components/_row_action.html" with kind="view" extra_attrs='@click="$dispatch(`edit-category`, {...$el.closest(`tr`).dataset, mode: `view`}); $dispatch(`open-category-drawer`)"' %}
+              {% include "components/_row_action.html" with kind="edit" extra_attrs='@click="$dispatch(`edit-category`, {...$el.closest(`tr`).dataset, mode: `edit`}); $dispatch(`open-category-drawer`)"' %}
               {% include "components/_confirm.html" with confirm_id=c.delete_confirm_id title="Eliminar categoría" message=c.delete_confirm_message confirm_url=c.delete_url %}
             </div></td>
           </tr>

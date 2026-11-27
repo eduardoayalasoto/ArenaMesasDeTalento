@@ -226,7 +226,7 @@
                   </div>
                   {% if editable %}
                   <div class="flex items-center gap-1 shrink-0">
-                    {% include "components/_row_action.html" with kind="edit" label="Editar pregunta" extra_attrs="@click=&quot;edit = true&quot;" %}
+                    {% include "components/_row_action.html" with kind="edit" label="Editar pregunta" extra_attrs='@click="edit = true"' %}
                     {% with pk_s=q.pk|stringformat:"s" %}
                       {% with cid="delete-question-"|add:pk_s %}
                         {% url 'questionnaires:question_delete' pk=q.pk as question_delete_url %}
