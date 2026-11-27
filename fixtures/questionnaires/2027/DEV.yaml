@@ -172,7 +172,7 @@ templates:
     level_expectation: El Dev Jr resuelve defectos de baja y media complejidad. Pide ayuda temprano cuando lleva tiempo razonable sin avanzar, en lugar de quedarse atascado en silencio.
     guidance: Un fix sin prueba de verificación es una hipótesis, no una solución.
   - title: Buenas prácticas de seguridad
-    text: 'Aplicar prácticas básicas de seguridad en el código y la operación diaria: manejo correcto de secrets y credenciales, validación de inputs, control de dependencias vulnerables, principio de menor privilegio y no exposición de información sensible en logs ni repositorios.'
+    text: 'Aplicar prácticas básicas de seguridad en el código y la operación diaria: manejo correcto de secrets y credenciales, validación de inputs, control de dependencias vulnerables, principio de menor privilegio y no exposición de información sensible en logs ni repositorios. Referencias: OWASP, DAST.'
     acceptance_criteria: Cero credenciales en el repositorio. Inputs de usuario validados antes de procesarlos o persistirlos. Dependencias con vulnerabilidades críticas reportadas al Mid/Sr antes de hacer merge. Logs sin datos sensibles (passwords, tokens, PII).
     deliverable: Código sin credenciales hardcodeadas, secrets gestionados por la herramienta del proyecto, dependencias revisadas y validaciones de input documentadas en los componentes desarrollados.
     deliverable_format: Vault, AWS Secrets Manager, .env, Dependabot, Snyk, npm audit.
@@ -180,7 +180,7 @@ templates:
     level_expectation: El Dev Jr conoce y aplica las prácticas básicas. No diseña esquemas de seguridad ni evalúa amenazas (eso lo lidera el Sr), pero no introduce vulnerabilidades evidentes.
     guidance: La seguridad no es una fase final, se diseña desde el primer commit.
   - title: Gestión de ambientes y configuración
-    text: Manejar correctamente las configuraciones por ambiente (dev), variables de entorno y feature flags. Verificar que el código funciona con la configuración del ambiente destino antes de promover el cambio.
+    text: Manejar correctamente las configuraciones por ambiente (dev, staging, prod), variables de entorno y feature flags. Verificar que el código funciona con la configuración del ambiente destino antes de promover el cambio.
     acceptance_criteria: El código no tiene valores específicos de ambiente hardcodeados. Cada variable nueva queda documentada. El Dev Jr verifica en el ambiente destino antes de marcar una tarea como terminada.
     deliverable: Configuraciones parametrizadas por ambiente, documentación de variables requeridas y verificación previa a promoción.
     deliverable_format: .env, ConfigMaps, AWS Parameter Store, LaunchDarkly, README.

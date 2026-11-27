@@ -219,3 +219,19 @@ def test_import_for_a_new_position_without_level_copies_the_scale_from_the_publi
     assert [o.label for o in t.scale_options.order_by("order")] == ["Cumple", "N/A"]
     assert [(l.category.name, float(l.weight_pct)) for l in t.template_categories.select_related("category")] == [("General", 100.0)]
     assert set(Question.objects.filter(section__template=t).values_list("weight_pct", flat=True)) == {None}
+
+
+@pytest.mark.django_db
+def test_reimporting_a_published_new_position_keeps_its_scale(v1):
+    """Regresión: rehacer una versión cuya escala se heredó no debe vaciarla."""
+    from apps.catalog.models import Area, Department, Position
+
+    dept = Department.objects.create(code="DESARR", name="Desarrollo", order=3)
+    gerente = Area.objects.create(code="GERDES", name="Gerente", department=dept)
+    Position.objects.create(area=gerente, level=None, name="Gerente")
+    questionnaire_import.import_version("GERDES", None, [{"title": "A", "text": "a"}], 1, publish=True)
+    questionnaire_import.import_version("GERDES", None, [{"title": "A", "text": "a2"}, {"title": "B", "text": "b"}], 1, publish=True)
+    t = T.objects.get(area=gerente, level=None)
+    assert t.status == T.Status.PUBLICADO and Question.objects.filter(section__template=t).count() == 2
+    assert [o.label for o in t.scale_options.order_by("order")] == ["Cumple", "N/A"]
+

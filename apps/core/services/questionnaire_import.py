@@ -128,6 +128,11 @@ def import_version(area_code, level_code, questions, version, publish=False, *,
         return ImportResult(area_code, level_code or "sin nivel", version, 0, f"omitido (v{newer.version} publicada)", [])
 
     plan = _plan_categories(label, categories, questions)
+    # La escala heredada se lee ANTES de reconstruir: si `base` es la propia versión que se rehace, borrarla la vaciaría.
+    inherited = [] if scale is not None else [
+        (o.value, o.label, o.description, o.order)
+        for o in base.scale_options.filter(question__isnull=True).order_by("order")
+    ]
 
     template = siblings.filter(version=version).first()
     if template and _has_answers(template):
@@ -179,11 +184,8 @@ def import_version(area_code, level_code, questions, version, publish=False, *,
         ])
     else:
         ScaleOption.objects.bulk_create([
-            ScaleOption(
-                template=template, value=opt.value, label=opt.label,
-                description=opt.description, order=opt.order,
-            )
-            for opt in base.scale_options.filter(question__isnull=True).order_by("order")
+            ScaleOption(template=template, value=value, label=label, description=description, order=order)
+            for value, label, description, order in inherited
         ])
 
     archived = []

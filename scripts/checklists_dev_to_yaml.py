@@ -24,6 +24,16 @@ SHEETS = {
 }
 
 
+# Decisión de Talento (2026-11-27): el checklist de Jr traía 6 actividades repetidas con textos distintos; se conserva la
+# versión con más detalle (la primera) y se suma lo único que aportaba la segunda. (hoja, actividad, campo) -> (antes, después)
+ENRICHMENTS = {
+    ("jr", "Buenas prácticas de seguridad", "text"): (
+        "ni repositorios.", "ni repositorios. Referencias: OWASP, DAST."),
+    ("jr", "Gestión de ambientes y configuración", "text"): (
+        "por ambiente (dev),", "por ambiente (dev, staging, prod),"),
+}
+
+
 def main(path):
     specific = base.v1_specific_titles()
     wb = openpyxl.load_workbook(path, data_only=True)
@@ -38,6 +48,12 @@ def main(path):
                 print(f"  (se omite la repetida «{row['activity']}» de la hoja {ws.title})")
                 continue
             seen.add(row["activity"])
+            for field in ("text",):
+                key = (ws.title.split()[-1].lower(), row["activity"], field)
+                if key in ENRICHMENTS:
+                    old, new = ENRICHMENTS[key]
+                    assert old in row[field], f"El texto de «{row['activity']}» ya no contiene «{old}»"
+                    row[field] = row[field].replace(old, new, 1)
             rows.append(row)
         questions, missing, dupes = base.build_questions(rows, specific, f"{area}/{level}")
         errors += missing + dupes
